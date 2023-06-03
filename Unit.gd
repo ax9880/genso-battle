@@ -14,7 +14,7 @@ enum STATE {
 ## Exports
 
 export var velocity_pixels_per_second: float = 10.0
-export var snap_velocity_pixels_per_second: float = 100.0
+export var snap_velocity_pixels_per_second: float = 200.0
 export var swap_velocity_pixels_per_second: float = 200.0
 export var max_velocity_pixels_per_second: float = 2048.0 # 2048
 
@@ -115,6 +115,10 @@ func snap_to_grid(cell_origin: Vector2) -> void:
 		Tween.TRANS_SINE)
 	
 	tween.start()
+
+
+func is_snapping() -> bool:
+	return current_state == STATE.SNAPPING_TO_GRID
 
 
 func _pick_up() -> void:

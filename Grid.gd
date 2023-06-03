@@ -80,9 +80,8 @@ func _on_cell_body_exited(area: Area2D, cell: CellArea2D) -> void:
 	
 	var active_unit = area.get_unit()
 	
-	if cell.unit != active_unit:
-		
-		pass
+	if active_unit.is_snapping():
+		return
 	
 	var _is_present: bool = active_unit_entered_cells.erase(cell.name)
 	
@@ -136,21 +135,20 @@ func _swap_units(active_unit: Node2D, unit_to_swap: Node2D, next_active_cell: Ce
 	next_active_cell.unit = active_unit
 	last_valid_cell.unit = unit_to_swap
 	
-	print("Swapped from %s to %s" % [next_active_cell.coordinates, last_valid_cell.coordinates])
-	
 	if unit_to_swap != null and active_unit != unit_to_swap:
+		print("Swapped from %s to %s" % [next_active_cell.coordinates, last_valid_cell.coordinates])
+		
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
 
 func _on_Unit_released(unit: Node2D, unit_position: Vector2) -> void:
 	var cell_origin: Vector2 = Vector2.ZERO
-	
 	var selected_cell: CellArea2D = _find_closest_cell(unit.position)
 	
 	# FIXME: The other branches may not be necessary
 	# The null check may not be necessary either
 	if selected_cell != null:
-		if selected_cell.unit == null or selected_cell.unit == unit:
+		if false: #selected_cell.unit == null or selected_cell.unit == unit:
 			active_unit_current_cell.unit = null
 			selected_cell.unit = unit
 			cell_origin = selected_cell.position
@@ -179,6 +177,8 @@ func _on_Unit_released(unit: Node2D, unit_position: Vector2) -> void:
 	
 	unit.snap_to_grid(cell_origin)
 	
+	# TODO: do this when it's the player's turn
+	# TODO: add drag timer
 	for other_unit in $Units.get_children():
 		other_unit.enable_selection_area()
 
