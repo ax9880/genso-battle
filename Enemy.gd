@@ -62,6 +62,7 @@ func _move() -> void:
 	else:
 		emit_signal("action_done")
 		
+		# Use state in Enemy?
 		self.current_state = STATE.IDLE
 		
 		_restore_sprite_size()

@@ -151,7 +151,7 @@ func _on_CellArea2D_area_exited(area: Area2D, cell: CellArea2D) -> void:
 		_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
 
 
-func _on_Unit_picked_up(unit: Unit, unit_position: Vector2) -> void:
+func _on_Unit_picked_up(unit: Unit) -> void:
 	_update_active_unit(unit)
 	
 	for other_unit in $Units.get_children():

@@ -37,7 +37,7 @@ onready var sprite := $Sprite
 
 ## Signals
 
-signal picked_up(unit, unit_position)
+signal picked_up(unit)
 signal released(unit)
 signal snapped_to_grid()
 
@@ -143,7 +143,7 @@ func set_current_state(new_state) -> void:
 		STATE.PICKED_UP:
 			enable_swap_area()
 			
-			emit_signal("picked_up", self, position)
+			emit_signal("picked_up", self)
 			
 			_increase_sprite_size()
 			
