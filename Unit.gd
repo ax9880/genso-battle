@@ -15,6 +15,7 @@ enum STATE {
 
 export var velocity_pixels_per_second: float = 10.0
 export var snap_velocity_pixels_per_second: float = 100.0
+export var swap_velocity_pixels_per_second: float = 200.0
 export var max_velocity_pixels_per_second: float = 2048.0 # 2048
 
 # Proportional control constant
@@ -33,6 +34,7 @@ onready var sprite := $Sprite
 
 signal picked_up(unit, unit_position)
 signal released(unit, unit_position)
+signal snapped_to_grid()
 
 
 func _ready() -> void:
@@ -50,6 +52,9 @@ func _physics_process(_delta: float) -> void:
 func move_to_new_cell(target_position: Vector2) -> void:
 	tween.remove(self, ":position")
 	
+	var distance: float = position.distance_to(target_position)
+	var tween_time_seconds: float = distance / swap_velocity_pixels_per_second
+	
 	tween.interpolate_property(self, "position",
 				position, target_position,
 				0.25,
@@ -64,6 +69,14 @@ func enable_swap_area() -> void:
 
 func disable_swap_area() -> void:
 	Utils.disable_object($SwapArea2D/CollisionShape2D)
+
+
+func enable_selection_area() -> void:
+	Utils.enable_object($SelectionArea2D/CollisionShape2D)
+
+
+func disable_selection_area() -> void:
+	Utils.disable_object($SelectionArea2D/CollisionShape2D)
 
 
 func _move_towards_mouse() -> void:
@@ -150,6 +163,8 @@ func set_current_state(new_state) -> void:
 				Tween.TRANS_SINE)
 			
 			tween.start()
+		STATE.SNAPPING_TO_GRID:
+			disable_swap_area()
 	
 	current_state = new_state
 
