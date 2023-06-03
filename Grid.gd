@@ -49,6 +49,7 @@ func _initialize_grid() -> void:
 
 func _build_cell(x_position: float, y_position: float) -> CellArea2D:
 	var cell: CellArea2D = cell_packed_scene.instance()
+	
 	$Cells.add_child(cell)
 	
 	var cell_coordinates := Vector2(x_position, y_position)
@@ -203,7 +204,8 @@ func _on_Unit_released(unit: Unit) -> void:
 	
 	# TODO: If ally, then swap
 	# Else, pick the last valid cell
-	if active_unit_current_cell != selected_cell:
+	# FIXME: May not work always
+	if active_unit_last_valid_cell != selected_cell:
 		has_active_unit_exited_cell = true
 	
 	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
