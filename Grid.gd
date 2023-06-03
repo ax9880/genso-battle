@@ -73,7 +73,7 @@ func _on_cell_body_entered(_area: Area2D, cell: CellArea2D) -> void:
 
 # Bugs to fix:
 # [x] Tunneling
-# [-] Dropping in same tile as unit
+# [x] Dropping in same tile as unit
 # [-] Unit sometimes dropped but then it can't be swapped
 func _on_cell_body_exited(area: Area2D, cell: CellArea2D) -> void:
 	cell.modulate = Color.white

@@ -11,7 +11,8 @@ extents = Vector2( 32, 32 )
 extents = Vector2( 49, 49 )
 
 [node name="Unit" type="KinematicBody2D"]
-collision_mask = 0
+collision_layer = 2
+collision_mask = 9
 collision/safe_margin = 0.16
 script = ExtResource( 1 )
 
@@ -29,6 +30,7 @@ __meta__ = {
 }
 
 [node name="SwapArea2D" type="Area2D" parent="."]
+collision_layer = 4
 collision_mask = 0
 monitoring = false
 script = ExtResource( 3 )
