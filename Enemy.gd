@@ -51,12 +51,12 @@ func _move() -> void:
 	var target_position = path.pop_front()
 	
 	if target_position != null:
-		var tween_time_seconds: float = Utils.calculate_time(position, target_position, snap_velocity_pixels_per_second)
+		var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
 		
 		tween.interpolate_property(self, "position",
 					position, target_position,
-					0.25,
-					Tween.TRANS_SINE)
+					tween_time_seconds,
+					Tween.TRANS_LINEAR)
 			
 		tween.start()
 	else:
