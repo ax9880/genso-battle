@@ -93,23 +93,25 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Unit" type="KinematicBody2D" parent="Grid"]
-position = Vector2( 151, 151 )
+[node name="Units" type="Node2D" parent="Grid"]
+
+[node name="Unit" type="KinematicBody2D" parent="Grid/Units"]
+position = Vector2( 176, 176 )
 script = ExtResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="Grid/Unit"]
+[node name="Sprite" type="Sprite" parent="Grid/Units/Unit"]
 texture = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Unit"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Units/Unit"]
 shape = SubResource( 3 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="SelectionArea2D" type="Area2D" parent="Grid/Unit"]
+[node name="SelectionArea2D" type="Area2D" parent="Grid/Units/Unit"]
 collision_layer = 2
 collision_mask = 0
 monitoring = false
@@ -117,16 +119,16 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Unit/SelectionArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Units/Unit/SelectionArea2D"]
 visible = false
 shape = SubResource( 4 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Tween" type="Tween" parent="Grid/Unit"]
+[node name="Tween" type="Tween" parent="Grid/Units/Unit"]
 
-[connection signal="picked_up" from="Grid/Unit" to="Grid" method="_on_Unit_picked_up"]
-[connection signal="released" from="Grid/Unit" to="Grid" method="_on_Unit_released"]
-[connection signal="input_event" from="Grid/Unit/SelectionArea2D" to="Grid/Unit" method="_on_SelectionArea2D_input_event"]
-[connection signal="tween_completed" from="Grid/Unit/Tween" to="Grid/Unit" method="_on_Tween_tween_completed"]
+[connection signal="picked_up" from="Grid/Units/Unit" to="Grid" method="_on_Unit_picked_up"]
+[connection signal="released" from="Grid/Units/Unit" to="Grid" method="_on_Unit_released"]
+[connection signal="input_event" from="Grid/Units/Unit/SelectionArea2D" to="Grid/Units/Unit" method="_on_SelectionArea2D_input_event"]
+[connection signal="tween_completed" from="Grid/Units/Unit/Tween" to="Grid/Units/Unit" method="_on_Tween_tween_completed"]

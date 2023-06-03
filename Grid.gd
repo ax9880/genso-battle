@@ -22,8 +22,11 @@ var grid := []
 
 func _ready() -> void:
 	_initialize_grid()
+	_assign_units_to_cells()
 
 
+# Create the grid matrix and populate it with cell objects.
+# Connect body enter and exit signals.
 func _initialize_grid() -> void:
 	for x in range(grid_width):
 		grid.append([])
@@ -34,19 +37,6 @@ func _initialize_grid() -> void:
 			grid[x][y] = _build_cell(x, y)
 			
 			# TODO: detect where units are and add them to the grid / cell
-
-
-func _initialize_cells() -> void:
-	for x in range(grid.size()):
-		for y in range(grid[x].size()):
-			var cell_origin: Vector2 = _cell_coordinates_to_cell_origin(Vector2(x, y))
-			
-			var cell = cell_packed_scene.instance()
-			add_child(cell)
-			cell.position = cell_origin
-			
-			cell.connect("body_entered", self, "_on_cell_body_entered")
-			cell.connect("body_exited", self, "_on_cell_body_exited")
 
 
 func _build_cell(x_position: float, y_position: float) -> CellArea2D:
@@ -65,6 +55,15 @@ func _build_cell(x_position: float, y_position: float) -> CellArea2D:
 	return cell
 
 
+func _assign_units_to_cells() -> void:
+	for unit in $Units.get_children():
+		var cell_coordinates: Vector2 = _get_cell(unit.position)
+		
+		unit.position = _cell_coordinates_to_cell_origin(cell_coordinates)
+		
+		grid[cell_coordinates.x][cell_coordinates.y].unit = unit
+
+
 func _on_cell_body_entered(body: Node, cell: CellArea2D) -> void:
 	active_unit_entered_cells[cell.name] = cell
 	
@@ -79,6 +78,7 @@ func _on_cell_body_exited(body: Node, cell: CellArea2D) -> void:
 	var distance = 10000
 	var selected_cell = null
 	
+	# Sets the currently active area to the cell closest to the unit's origin
 	for active_cell in active_unit_entered_cells.values():
 		if active_cell != null:
 			var distance_squared: float = body.position.distance_squared_to(active_cell.position)
