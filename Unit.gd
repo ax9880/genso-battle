@@ -139,31 +139,39 @@ func set_current_state(new_state) -> void:
 			# TODO: snap to grid ?
 			set_physics_process(false)
 			
-			tween.remove(sprite, ":scale")
-			
-			tween.interpolate_property(sprite, "scale",
-				sprite.scale, Vector2.ONE, # TODO: Save original sprite scale
-				0.25,
-				Tween.TRANS_SINE)
-			
-			tween.start()
+			_restore_sprite_size()
 		STATE.PICKED_UP:
 			enable_swap_area()
 			
 			emit_signal("picked_up", self, position)
 			
+			_increase_sprite_size()
+			
 			set_physics_process(true)
-			
-			tween.remove(sprite, ":scale")
-			
-			tween.interpolate_property(sprite, "scale",
-				sprite.scale, Vector2(1.1, 1.1),
-				0.25,
-				Tween.TRANS_SINE)
-			
-			tween.start()
 		STATE.SNAPPING_TO_GRID:
 			disable_swap_area()
+
+
+func _increase_sprite_size() -> void:
+	tween.remove(sprite, ":scale")
+	
+	tween.interpolate_property(sprite, "scale",
+		sprite.scale, Vector2(1.1, 1.1),
+		0.25,
+		Tween.TRANS_SINE)
+	
+	tween.start()
+
+
+func _restore_sprite_size() -> void:
+	tween.remove(sprite, ":scale")
+	
+	tween.interpolate_property(sprite, "scale",
+		sprite.scale, Vector2.ONE, # TODO: Save original sprite scale
+		0.25,
+		Tween.TRANS_SINE)
+	
+	tween.start()
 
 
 ## Signals

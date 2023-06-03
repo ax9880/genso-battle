@@ -38,8 +38,10 @@ func decrease_turn_counter() -> void:
 func _start_moving() -> void:
 	_move()
 	
-	#emit_signal("started_moving", self)
-	self.current_state = STATE.PICKED_UP
+	emit_signal("started_moving", self)
+	
+	enable_swap_area()
+	_increase_sprite_size()
 
 func _move_towards_mouse() -> void:
 	pass
@@ -59,6 +61,10 @@ func _move() -> void:
 		tween.start()
 	else:
 		emit_signal("action_done")
+		
+		self.current_state = STATE.IDLE
+		
+		_restore_sprite_size()
 
 
 func _build_graph(grid: Array) -> void:
