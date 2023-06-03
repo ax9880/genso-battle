@@ -106,8 +106,14 @@ func _start_enemy_turn() -> void:
 	for enemy in $Enemies.get_children():
 		enemy_queue.push_back(enemy)
 	
+	_update_enemy()
+
+
+func _update_enemy() -> void:
 	if not enemy_queue.empty():
-		enemy_queue.front().decrease_turn_counter()
+		enemy_queue.pop_front().act(self)
+		
+		build_navigation_graph(Vector2(0,0))
 	else:
 		_start_player_turn()
 
@@ -226,15 +232,91 @@ func _on_Unit_snapped_to_grid() -> void:
 
 
 func _on_Enemy_action_done() -> void:
-	enemy_queue.pop_front()
+	_update_enemy()
+
+
+func build_navigation_graph(unit_position: Vector2) -> void:
+	var cell_coordinates: Vector2 = _get_cell(unit_position)
 	
-	if not enemy_queue.empty():
-		enemy_queue.front().decrease_turn_counter()
+	var start_cell: CellArea2D = grid[cell_coordinates.x][cell_coordinates.y]
+	
+	# processed
+	# discovered
+	# parent
+	
+	var max_vertices: int = grid_width * grid_height
+	
+	var processed := []
+	var discovered := []
+	var parent := []
+	
+	processed.resize(max_vertices)
+	discovered.resize(max_vertices)
+	parent.resize(max_vertices)
+	
+	for i in range(max_vertices):
+		processed[i] = false
+		discovered[i] = false
+		parent[i] = -1
+	
+	var queue := []
+	
+	queue.push_back(start_cell)
+	
+	# {String, bool}
+	var discovered_dict := {}
+	
+	# {String, CellArea2D}
+	var navigation_graph := {}
+	
+	while not queue.empty():
+		var node: CellArea2D = queue.pop_front()
+		
+		navigation_graph[node.name] = node
+		
+		# Flag as discovered
+		discovered_dict[node.name] = true
+		
+		var neighbors = _get_neighbors(node)
+		
+		for neighbor in neighbors:
+			# TODO: check if unit is ally or foe
+			if not discovered_dict.has(neighbor.name):
+				queue.push_back(neighbor)
+	
+	for n in navigation_graph.values():
+		print("Cell: %s" % [n.coordinates])
+
+
+func _get_neighbors(node: CellArea2D) -> Array:
+	var cell_coordinates: Vector2 = node.coordinates
+	
+	var up := Vector2(cell_coordinates.x, cell_coordinates.y - 1)
+	var down := Vector2(cell_coordinates.x, cell_coordinates.y + 1)
+	var right := Vector2(cell_coordinates.x + 1, cell_coordinates.y)
+	var left := Vector2(cell_coordinates.x - 1, cell_coordinates.y)
+	
+	var candidates := [up, down, right, left]
+	var neighbors := []
+	
+	for candidate in candidates:
+		if _is_in_range(candidate):
+			neighbors.push_back(grid[candidate.x][candidate.y])
+	
+	return neighbors
+
+
+func _is_in_range(cell_coordinates: Vector2) -> bool:
+	if cell_coordinates.x < 0 or cell_coordinates.x >= grid_width:
+		return false
+	elif cell_coordinates.y < 0 or cell_coordinates.y >= grid_height:
+		return false
 	else:
-		_start_player_turn()
+		return true
 
 
 # Returns the x, y coordinates of a cell (whole numbers)
+# TODO: rename
 func _get_cell(unit_position: Vector2) -> Vector2:
 	return Vector2(floor(unit_position.x / tilesize), floor(unit_position.y / tilesize))
 

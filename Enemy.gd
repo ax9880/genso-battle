@@ -21,12 +21,18 @@ signal started_moving(unit)
 var path := []
 
 
-func decrease_turn_counter() -> void:
+func act(grid: Grid) -> void:
 	if turn_counter > 0:
 		turn_counter -= 1
 	
 	if turn_counter == 0:
 		turn_counter = turn_counter_max_value
+		
+		# build graph
+		# evaluate positions
+		# pick one
+		# move or perform skill (in any order)
+		
 		path.push_back(Vector2(50, 50))
 		path.push_back(Vector2(50, 150))
 		
@@ -42,6 +48,7 @@ func _start_moving() -> void:
 	
 	enable_swap_area()
 	_increase_sprite_size()
+
 
 func _move_towards_mouse() -> void:
 	pass
