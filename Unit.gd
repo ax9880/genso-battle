@@ -15,6 +15,7 @@ enum STATE {
 
 export var velocity_pixels_per_second: float = 10.0
 export var snap_velocity_pixels_per_second: float = 100.0
+export var max_velocity_pixels_per_second: float = 2048.0 # 2048
 
 # Proportional control constant
 export var kp: float = 1.4
@@ -46,12 +47,37 @@ func _physics_process(_delta: float) -> void:
 			_move_towards_mouse()
 
 
+func move_to_new_cell(target_position: Vector2) -> void:
+	tween.remove(self, ":position")
+	
+	tween.interpolate_property(self, "position",
+				position, target_position,
+				0.25,
+				Tween.TRANS_SINE)
+			
+	tween.start()
+
+
+func enable_swap_area() -> void:
+	Utils.enable_object($SwapArea2D/CollisionShape2D)
+
+
+func disable_swap_area() -> void:
+	Utils.disable_object($SwapArea2D/CollisionShape2D)
+
+
 func _move_towards_mouse() -> void:
 	var error: Vector2 = get_global_mouse_position() - global_position
 	
-	var control: Vector2 = error * Vector2(kp, kp) * velocity_pixels_per_second
+	#var control_x: float = error.x * kp * velocity_pixels_per_second, -max_velocity_pixels_per_second, max_velocity_pixels_per_second)
+	#var control_y: float = error.y * kp * velocity_pixels_per_second, -max_velocity_pixels_per_second, max_velocity_pixels_per_second)
 	
-	var _velocity = move_and_slide(control, Vector2.ZERO)
+	var velocity = Vector2(error * kp * velocity_pixels_per_second).limit_length(max_velocity_pixels_per_second)
+	
+	var _velocity = move_and_slide(velocity, Vector2.ZERO)
+	
+	#print("Velocity: %s" % [velocity])
+	
 
 
 func _input(event: InputEvent):
@@ -96,6 +122,8 @@ func _release() -> void:
 func set_current_state(new_state) -> void:
 	match(new_state):
 		STATE.IDLE:
+			disable_swap_area()
+			
 			# TODO: snap to grid ?
 			set_physics_process(false)
 			
@@ -108,6 +136,8 @@ func set_current_state(new_state) -> void:
 			
 			tween.start()
 		STATE.PICKED_UP:
+			enable_swap_area()
+			
 			emit_signal("picked_up", self, position)
 			
 			set_physics_process(true)
@@ -130,6 +160,7 @@ func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_
 	if event is InputEventMouseButton:
 		if event.pressed:
 			_pick_up()
+
 
 func _on_Tween_tween_completed(_object: Object, key: String):
 	if current_state == STATE.SNAPPING_TO_GRID:

@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://grid.png" type="Texture" id=1]
-[ext_resource path="res://unit_rect.png" type="Texture" id=2]
-[ext_resource path="res://Unit.gd" type="Script" id=3]
+[ext_resource path="res://Unit.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Grid.gd" type="Script" id=4]
 [ext_resource path="res://CellArea2D.tscn" type="PackedScene" id=5]
 
@@ -11,12 +10,6 @@ extents = Vector2( 324, 8 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 12, 399 )
-
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 24, 24 )
-
-[sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 49, 49 )
 
 [node name="Node2D" type="Node2D"]
 __meta__ = {
@@ -95,40 +88,8 @@ __meta__ = {
 
 [node name="Units" type="Node2D" parent="Grid"]
 
-[node name="Unit" type="KinematicBody2D" parent="Grid/Units"]
-position = Vector2( 176, 176 )
-script = ExtResource( 3 )
+[node name="Unit" parent="Grid/Units" instance=ExtResource( 2 )]
+position = Vector2( 144, 176 )
 
-[node name="Sprite" type="Sprite" parent="Grid/Units/Unit"]
-texture = ExtResource( 2 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Units/Unit"]
-shape = SubResource( 3 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="SelectionArea2D" type="Area2D" parent="Grid/Units/Unit"]
-collision_layer = 2
-collision_mask = 0
-monitoring = false
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Units/Unit/SelectionArea2D"]
-visible = false
-shape = SubResource( 4 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="Tween" type="Tween" parent="Grid/Units/Unit"]
-
-[connection signal="picked_up" from="Grid/Units/Unit" to="Grid" method="_on_Unit_picked_up"]
-[connection signal="released" from="Grid/Units/Unit" to="Grid" method="_on_Unit_released"]
-[connection signal="input_event" from="Grid/Units/Unit/SelectionArea2D" to="Grid/Units/Unit" method="_on_SelectionArea2D_input_event"]
-[connection signal="tween_completed" from="Grid/Units/Unit/Tween" to="Grid/Units/Unit" method="_on_Tween_tween_completed"]
+[node name="Unit2" parent="Grid/Units" instance=ExtResource( 2 )]
+position = Vector2( 352, 328 )

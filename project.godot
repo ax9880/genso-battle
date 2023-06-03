@@ -24,12 +24,16 @@ config/name="TouhouPrideGameJam5"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Utils="*res://Utils.gd"
+
 [display]
 
 window/size/width=720
 window/size/height=1080
-window/size/test_width=360
-window/size/test_height=540
+window/size/test_width=540
+window/size/test_height=810
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
 window/stretch/aspect="expand"
