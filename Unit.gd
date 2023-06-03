@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+class_name Unit
+
 
 enum STATE {
 	# Idle
@@ -15,7 +17,10 @@ enum STATE {
 
 export var velocity_pixels_per_second: float = 10.0
 export var snap_velocity_pixels_per_second: float = 200.0
-export var swap_velocity_pixels_per_second: float = 200.0
+export var swap_velocity_pixels_per_second: float = 500.0
+
+# Max velocity when dragging the unit. It can't be too fast or the unit
+# will tunnel through cells and other units.
 export var max_velocity_pixels_per_second: float = 2048.0 # 2048
 
 # Proportional control constant
@@ -33,7 +38,7 @@ onready var sprite := $Sprite
 ## Signals
 
 signal picked_up(unit, unit_position)
-signal released(unit, unit_position)
+signal released(unit)
 signal snapped_to_grid()
 
 
@@ -52,12 +57,11 @@ func _physics_process(_delta: float) -> void:
 func move_to_new_cell(target_position: Vector2) -> void:
 	tween.remove(self, ":position")
 	
-	var distance: float = position.distance_to(target_position)
-	var tween_time_seconds: float = distance / swap_velocity_pixels_per_second
+	var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
 	
 	tween.interpolate_property(self, "position",
 				position, target_position,
-				0.25,
+				tween_time_seconds,
 				Tween.TRANS_SINE)
 			
 	tween.start()
@@ -82,15 +86,9 @@ func disable_selection_area() -> void:
 func _move_towards_mouse() -> void:
 	var error: Vector2 = get_global_mouse_position() - global_position
 	
-	#var control_x: float = error.x * kp * velocity_pixels_per_second, -max_velocity_pixels_per_second, max_velocity_pixels_per_second)
-	#var control_y: float = error.y * kp * velocity_pixels_per_second, -max_velocity_pixels_per_second, max_velocity_pixels_per_second)
-	
 	var velocity = Vector2(error * kp * velocity_pixels_per_second).limit_length(max_velocity_pixels_per_second)
 	
 	var _velocity = move_and_slide(velocity, Vector2.ZERO)
-	
-	#print("Velocity: %s" % [velocity])
-	
 
 
 func _input(event: InputEvent):
@@ -99,19 +97,14 @@ func _input(event: InputEvent):
 
 
 func snap_to_grid(cell_origin: Vector2) -> void:
-	# Disable collision shape so it doesn't complain ?
-	# tween to position at fixed speed
-	# so calculate how long it will take you to get there and use that time for the tween
-	#emit_signal("released", position)
-	
 	self.current_state = STATE.SNAPPING_TO_GRID
 	
-	var distance_pixels: float = position.distance_to(cell_origin)
-	var snap_time_seconds: float = distance_pixels / snap_velocity_pixels_per_second
+	# Tween to position at fixed speed
+	var tween_time_seconds: float = Utils.calculate_time(position, cell_origin, snap_velocity_pixels_per_second)
 	
 	tween.interpolate_property(self, "position",
 		position, cell_origin,
-		snap_time_seconds, # TODO: calculate time based on a fixed speed
+		tween_time_seconds,
 		Tween.TRANS_SINE)
 	
 	tween.start()
@@ -130,13 +123,15 @@ func _release() -> void:
 	if current_state == STATE.PICKED_UP:
 		self.current_state = STATE.IDLE
 		
-		emit_signal("released", self, position)
+		emit_signal("released", self)
 
 
 ## Setters
 
 # Setter function for current_state.
 func set_current_state(new_state) -> void:
+	current_state = new_state
+	
 	match(new_state):
 		STATE.IDLE:
 			disable_swap_area()
@@ -169,8 +164,6 @@ func set_current_state(new_state) -> void:
 			tween.start()
 		STATE.SNAPPING_TO_GRID:
 			disable_swap_area()
-	
-	current_state = new_state
 
 
 ## Signals
@@ -185,3 +178,5 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 	if current_state == STATE.SNAPPING_TO_GRID:
 		if key == ":position":
 			self.current_state = STATE.IDLE
+			
+			emit_signal("snapped_to_grid")

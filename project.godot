@@ -13,9 +13,21 @@ _global_script_classes=[ {
 "class": "CellArea2D",
 "language": "GDScript",
 "path": "res://CellArea2D.gd"
+}, {
+"base": "Node2D",
+"class": "Grid",
+"language": "GDScript",
+"path": "res://Grid.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Unit",
+"language": "GDScript",
+"path": "res://Unit.gd"
 } ]
 _global_script_class_icons={
-"CellArea2D": ""
+"CellArea2D": "",
+"Grid": "",
+"Unit": ""
 }
 
 [application]

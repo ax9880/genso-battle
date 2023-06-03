@@ -86,6 +86,8 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Enemies" type="Node2D" parent="Grid"]
+
 [node name="Units" type="Node2D" parent="Grid"]
 
 [node name="Unit" parent="Grid/Units" instance=ExtResource( 2 )]

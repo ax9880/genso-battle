@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name Grid
+
 
 export var tilesize: float = 100.0
 export var tile_offset: float = 0.0
@@ -19,10 +21,18 @@ var active_unit_entered_cells := {}
 
 var grid := []
 
+var has_active_unit_exited_cell: bool = false
+
+var enemy_queue := []
+
 
 func _ready() -> void:
 	_initialize_grid()
+	
 	_assign_units_to_cells()
+	_assign_enemies_to_cells()
+	
+	_start_player_turn()
 
 
 # Create the grid matrix and populate it with cell objects.
@@ -38,34 +48,70 @@ func _initialize_grid() -> void:
 
 
 func _build_cell(x_position: float, y_position: float) -> CellArea2D:
-	var cell_coordinates := Vector2(x_position, y_position)
-	var cell_origin: Vector2 = _cell_coordinates_to_cell_origin(cell_coordinates)
-	
 	var cell: CellArea2D = cell_packed_scene.instance()
 	$Cells.add_child(cell)
 	
-	cell.position = cell_origin
+	var cell_coordinates := Vector2(x_position, y_position)
+	cell.position = _cell_coordinates_to_cell_origin(cell_coordinates)
 	cell.coordinates = cell_coordinates
 	
-	cell.connect("area_entered", self, "_on_cell_body_entered", [cell])
-	cell.connect("area_exited", self, "_on_cell_body_exited", [cell])
+	cell.connect("area_entered", self, "_on_CellArea2D_area_entered", [cell])
+	cell.connect("area_exited", self, "_on_CellArea2D_area_exited", [cell])
 	
 	return cell
 
 
 func _assign_units_to_cells() -> void:
 	for unit in $Units.get_children():
-		var cell_coordinates: Vector2 = _get_cell(unit.position)
-		
-		unit.position = _cell_coordinates_to_cell_origin(cell_coordinates)
-		
-		grid[cell_coordinates.x][cell_coordinates.y].unit = unit
+		_assign_unit_to_cell(unit)
 		
 		unit.connect("picked_up", self, "_on_Unit_picked_up")
 		unit.connect("released", self, "_on_Unit_released")
+		unit.connect("snapped_to_grid", self, "_on_Unit_snapped_to_grid")
 
 
-func _on_cell_body_entered(_area: Area2D, cell: CellArea2D) -> void:
+func _assign_enemies_to_cells() -> void:
+	for enemy in $Enemies.get_children():
+		_assign_unit_to_cell(enemy)
+		
+		enemy.connect("action_done", self, "_on_Enemy_action_done")
+		enemy.connect("started_moving", self, "_on_Enemy_started_moving")
+
+
+func _assign_unit_to_cell(unit: Unit) -> void:
+	var cell_coordinates: Vector2 = _get_cell(unit.position)
+	
+	unit.position = _cell_coordinates_to_cell_origin(cell_coordinates)
+	
+	grid[cell_coordinates.x][cell_coordinates.y].unit = unit
+
+
+func _start_player_turn() -> void:
+	for unit in $Units.get_children():
+		unit.enable_selection_area()
+
+
+func _start_enemy_turn() -> void:
+	for unit in $Units.get_children():
+		unit.disable_selection_area()
+	
+	# enemy turn starts right away, there's no animation
+	# enqueue enemies
+	# decrease turn counter
+	# if counter is zero, then move
+	# after AI made its move, check for attacks
+	# after that, decrease the counter of the next enemy
+	# when the queue is empty, start player turn
+	for enemy in $Enemies.get_children():
+		enemy_queue.push_back(enemy)
+	
+	if not enemy_queue.empty():
+		enemy_queue.front().decrease_turn_counter()
+	else:
+		_start_player_turn()
+
+
+func _on_CellArea2D_area_entered(_area: Area2D, cell: CellArea2D) -> void:
 	active_unit_entered_cells[cell.name] = cell
 	
 	cell.modulate = Color.red
@@ -75,7 +121,7 @@ func _on_cell_body_entered(_area: Area2D, cell: CellArea2D) -> void:
 # [x] Tunneling
 # [x] Dropping in same tile as unit
 # [-] Unit sometimes dropped but then it can't be swapped
-func _on_cell_body_exited(area: Area2D, cell: CellArea2D) -> void:
+func _on_CellArea2D_area_exited(area: Area2D, cell: CellArea2D) -> void:
 	cell.modulate = Color.white
 	
 	var active_unit = area.get_unit()
@@ -91,6 +137,8 @@ func _on_cell_body_exited(area: Area2D, cell: CellArea2D) -> void:
 		# TODO: If there's an enemy in the selected cell then don't do this assignment
 		if active_unit_last_valid_cell != active_unit_current_cell:
 			active_unit_last_valid_cell = active_unit_current_cell
+			
+			has_active_unit_exited_cell = true
 		
 		active_unit_current_cell = selected_cell
 		
@@ -100,21 +148,29 @@ func _on_cell_body_exited(area: Area2D, cell: CellArea2D) -> void:
 			active_unit_last_valid_cell.modulate = Color.red
 			print("Warning! Jumped more than 1 tile")
 		
-		var unit_to_swap: Node2D = active_unit_current_cell.unit
-		
-		_swap_units(active_unit, unit_to_swap, active_unit_current_cell, active_unit_last_valid_cell)
+		_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
 
 
-func _on_Unit_picked_up(unit: Node2D, unit_position: Vector2) -> void:
-	var cell_coordinates := _get_cell(unit_position)
-	
-	active_unit_current_cell = grid[cell_coordinates.x][cell_coordinates.y]
-	active_unit_last_valid_cell = active_unit_current_cell
-	active_unit_entered_cells.clear()
+func _on_Unit_picked_up(unit: Unit, unit_position: Vector2) -> void:
+	_update_active_unit(unit)
 	
 	for other_unit in $Units.get_children():
 		if other_unit != unit:
 			other_unit.disable_selection_area()
+
+
+func _on_Enemy_started_moving(enemy: Unit) -> void:
+	_update_active_unit(enemy)
+
+
+func _update_active_unit(unit: Unit) -> void:
+	var cell_coordinates: Vector2 = _get_cell(unit.position)
+	
+	# Store this in unit?
+	active_unit_current_cell = grid[cell_coordinates.x][cell_coordinates.y]
+	active_unit_last_valid_cell = active_unit_current_cell
+	has_active_unit_exited_cell = false
+	active_unit_entered_cells.clear()
 
 
 func _find_closest_cell(unit_position: Vector2) -> CellArea2D:
@@ -132,8 +188,9 @@ func _find_closest_cell(unit_position: Vector2) -> CellArea2D:
 
 
 func _swap_units(active_unit: Node2D, unit_to_swap: Node2D, next_active_cell: CellArea2D, last_valid_cell: CellArea2D) -> void:
-	next_active_cell.unit = active_unit
-	last_valid_cell.unit = unit_to_swap
+	if active_unit != unit_to_swap:
+		next_active_cell.unit = active_unit
+		last_valid_cell.unit = unit_to_swap
 	
 	if unit_to_swap != null and active_unit != unit_to_swap:
 		print("Swapped from %s to %s" % [next_active_cell.coordinates, last_valid_cell.coordinates])
@@ -141,46 +198,38 @@ func _swap_units(active_unit: Node2D, unit_to_swap: Node2D, next_active_cell: Ce
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
 
-func _on_Unit_released(unit: Node2D, unit_position: Vector2) -> void:
-	var cell_origin: Vector2 = Vector2.ZERO
+func _on_Unit_released(unit: Unit) -> void:
 	var selected_cell: CellArea2D = _find_closest_cell(unit.position)
 	
-	# FIXME: The other branches may not be necessary
-	# The null check may not be necessary either
-	if selected_cell != null:
-		if false: #selected_cell.unit == null or selected_cell.unit == unit:
-			active_unit_current_cell.unit = null
-			selected_cell.unit = unit
-			cell_origin = selected_cell.position
-		else:
-			# TODO: If ally, then swap
-			# Else, pick the last valid cell
-			
-			# Now, if the cell is not null but there is an ally, swap them
-			_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
-			
-			cell_origin = selected_cell.position
-	elif active_unit_current_cell.unit == null:
-		active_unit_last_valid_cell.unit = null
-		active_unit_current_cell.unit = unit
-		
-		cell_origin = active_unit_current_cell.position
-	else:
-		# If there's a unit there then go to the last valid position
-		# Although you should have swapped with a unit before that happens...
-		cell_origin = active_unit_last_valid_cell.position
-		
-		if active_unit_current_cell.unit == unit:
-			active_unit_current_cell.unit = null
-		
-		active_unit_last_valid_cell.unit = unit
+	# TODO: If ally, then swap
+	# Else, pick the last valid cell
+	if active_unit_current_cell != selected_cell:
+		has_active_unit_exited_cell = true
 	
-	unit.snap_to_grid(cell_origin)
+	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
 	
-	# TODO: do this when it's the player's turn
+	unit.snap_to_grid(selected_cell.position)
+	
 	# TODO: add drag timer
-	for other_unit in $Units.get_children():
-		other_unit.enable_selection_area()
+
+
+func _on_Unit_snapped_to_grid() -> void:
+	if has_active_unit_exited_cell:
+		#_check_pincers(unit)
+		
+		_start_enemy_turn()
+	else:
+		# Do nothing
+		_start_player_turn()
+
+
+func _on_Enemy_action_done() -> void:
+	enemy_queue.pop_front()
+	
+	if not enemy_queue.empty():
+		enemy_queue.front().decrease_turn_counter()
+	else:
+		_start_player_turn()
 
 
 # Returns the x, y coordinates of a cell (whole numbers)
