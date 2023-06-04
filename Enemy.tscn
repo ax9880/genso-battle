@@ -8,10 +8,10 @@ collision_layer = 8
 script = ExtResource( 2 )
 turn_counter = 1
 
-[node name="Sprite" parent="." index="0"]
+[node name="Sprite" parent="." index="1"]
 modulate = Color( 1, 0.384314, 0.384314, 1 )
 
-[node name="SelectionArea2D" parent="." index="3"]
+[node name="SelectionArea2D" parent="." index="4"]
 visible = false
 monitorable = false
 

@@ -20,7 +20,7 @@ onready var half_tilesize: float = tilesize / 2.0
 var active_unit_current_cell: CellArea2D = null
 var active_unit_last_valid_cell: CellArea2D = null
 
-# String (node name): CellArea2D
+# Dictionary<CellArea2D, bool>
 var active_unit_entered_cells := {}
 
 var grid := []
@@ -124,6 +124,8 @@ func _start_enemy_turn() -> void:
 	for unit in $Units.get_children():
 		unit.disable_selection_area()
 	
+	enemy_queue.clear()
+	
 	# enemy turn starts right away, there's no animation
 	# enqueue enemies
 	# decrease turn counter
@@ -145,7 +147,7 @@ func _update_enemy() -> void:
 
 
 func _on_CellArea2D_area_entered(_area: Area2D, cell: CellArea2D) -> void:
-	active_unit_entered_cells[cell.name] = cell
+	active_unit_entered_cells[cell] = cell
 	
 	cell.modulate = Color.red
 
@@ -157,12 +159,12 @@ func _on_CellArea2D_area_entered(_area: Area2D, cell: CellArea2D) -> void:
 func _on_CellArea2D_area_exited(area: Area2D, cell: CellArea2D) -> void:
 	cell.modulate = Color.white
 	
-	var active_unit = area.get_unit()
+	var active_unit: Unit = area.get_unit()
 	
-	if active_unit.is_snapping():
+	if not active_unit.is_picked_up():
 		return
 	
-	var _is_present: bool = active_unit_entered_cells.erase(cell.name)
+	var _is_present: bool = active_unit_entered_cells.erase(cell)
 	
 	var selected_cell: CellArea2D = _find_closest_cell(active_unit.position)
 	
@@ -179,7 +181,7 @@ func _on_CellArea2D_area_exited(area: Area2D, cell: CellArea2D) -> void:
 		
 		if selected_cell.coordinates.distance_to(active_unit_last_valid_cell.coordinates) > 1.9:
 			active_unit_last_valid_cell.modulate = Color.red
-			print("Warning! Jumped more than 1 tile")
+			printerr("Warning! Jumped more than 1 tile")
 		
 		_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
 
@@ -203,6 +205,16 @@ func _update_active_unit(unit: Unit) -> void:
 	active_unit_last_valid_cell = active_unit_current_cell
 	has_active_unit_exited_cell = false
 	
+	assert(active_unit_current_cell.unit == unit, "Unit %s is not in cell %s" % [unit.name, active_unit_current_cell.coordinates])
+	
+	active_unit_entered_cells.clear()
+
+
+func _clear_active_cells() -> void:
+	active_unit_current_cell = null
+	active_unit_last_valid_cell = null
+	has_active_unit_exited_cell = false
+	
 	active_unit_entered_cells.clear()
 
 
@@ -220,13 +232,16 @@ func _find_closest_cell(unit_position: Vector2) -> CellArea2D:
 	return selected_cell
 
 
-func _swap_units(active_unit: Node2D, unit_to_swap: Node2D, next_active_cell: CellArea2D, last_valid_cell: CellArea2D) -> void:
+func _swap_units(active_unit: Unit, unit_to_swap: Unit, next_active_cell: CellArea2D, last_valid_cell: CellArea2D) -> void:
 	if active_unit != unit_to_swap:
 		next_active_cell.unit = active_unit
 		last_valid_cell.unit = unit_to_swap
 	
 	if unit_to_swap != null and active_unit != unit_to_swap:
 		print("Swapped from %s to %s" % [next_active_cell.coordinates, last_valid_cell.coordinates])
+		
+		if active_unit.is_enemy(unit_to_swap.faction):
+			printerr("swapped with an enemy")
 		
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
@@ -249,6 +264,8 @@ func _on_Unit_released(unit: Unit) -> void:
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if has_active_unit_exited_cell:
+		_clear_active_cells()
+		
 		# Adds pincers to pincer queue
 		_find_pincers(unit, unit.faction)
 		
@@ -259,7 +276,12 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 		_start_player_turn()
 
 
-func _on_Enemy_action_done() -> void:
+func _on_Enemy_action_done(unit: Unit) -> void:
+	_clear_active_cells()
+	
+	if _get_cell_from_position(unit.position).unit != unit:
+		print("ya done goofed")
+	
 	_update_enemy()
 
 
@@ -540,7 +562,7 @@ func _execute_pincers() -> void:
 		
 		$Attacker.start_attacks(attack_queue)
 	else:
-		print("all pincers done!")
+		print("All pincers done!")
 		
 		if current_turn == Turn.PLAYER:
 			_start_enemy_turn()

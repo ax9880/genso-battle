@@ -11,6 +11,7 @@ signal started_moving(unit)
 var path := []
 
 
+
 func act(grid: Grid) -> void:
 	if turn_counter > 0:
 		turn_counter -= 1
@@ -19,7 +20,7 @@ func act(grid: Grid) -> void:
 		turn_counter = turn_counter_max_value
 		
 		# Build graph
-		var navigation_graph: Dictionary = grid.build_navigation_graph(self.position, faction)
+		var navigation_graph: Dictionary = grid.build_navigation_graph(position, faction)
 		
 		# Evaluate positions (requires having the whole graph)
 		var i = 0
@@ -40,12 +41,19 @@ func act(grid: Grid) -> void:
 			# Move or perform skill (in any order)
 			_start_moving()
 		else:
-			emit_signal("action_done")
+			emit_signal("action_done", self)
 	else:
-		emit_signal("action_done")
+		emit_signal("action_done", self)
 
 
 func _start_moving() -> void:
+	if current_state == STATE.SWAPPING:
+		# Wait for tween to end before you start moving (see signal callback)
+		# Otherwise you might start moving from the wrong cell, because the active
+		# cell is determined from the position of the unit (this is a problem of
+		# the unit not having a reference to its cell)
+		return
+
 	emit_signal("started_moving", self)
 	
 	self.current_state = STATE.PICKED_UP
@@ -72,10 +80,17 @@ func _move() -> void:
 	else:
 		self.current_state = STATE.IDLE
 		
-		emit_signal("action_done")
+		emit_signal("action_done", self)
 
 
 func _on_Tween_tween_completed(_object: Object, key: String) -> void:
-	if current_state == STATE.PICKED_UP:
-		if key == ":position":
-			_move()
+	match(current_state):
+		STATE.PICKED_UP:
+			if key == ":position":
+				_move()
+		STATE.SWAPPING:
+			if key == ":position":
+				self.current_state = STATE.IDLE
+				
+				if !path.empty():
+					_start_moving()

@@ -10,7 +10,9 @@ enum STATE {
 	# Picked up, being dragged by the player
 	PICKED_UP = 1,
 	
-	SNAPPING_TO_GRID = 2
+	SNAPPING_TO_GRID = 2,
+	
+	SWAPPING = 3
 }
 
 const INVALID_FACTION: int = -1
@@ -71,6 +73,8 @@ func move_to_new_cell(target_position: Vector2) -> void:
 				Tween.TRANS_SINE)
 			
 	tween.start()
+	
+	self.current_state = STATE.SWAPPING
 
 
 func enable_swap_area() -> void:
@@ -115,8 +119,16 @@ func snap_to_grid(cell_origin: Vector2) -> void:
 	tween.start()
 
 
+func is_picked_up() -> bool:
+	return current_state == STATE.PICKED_UP
+
+
 func is_snapping() -> bool:
 	return current_state == STATE.SNAPPING_TO_GRID
+
+
+func is_idle() -> bool:
+	return current_state == STATE.IDLE
 
 
 func _pick_up() -> void:
@@ -153,6 +165,8 @@ func set_current_state(new_state) -> void:
 			
 			_increase_sprite_size()
 		STATE.SNAPPING_TO_GRID:
+			disable_swap_area()
+		STATE.SWAPPING:
 			disable_swap_area()
 
 
@@ -220,8 +234,12 @@ func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_
 
 
 func _on_Tween_tween_completed(_object: Object, key: String):
-	if current_state == STATE.SNAPPING_TO_GRID:
-		if key == ":position":
-			self.current_state = STATE.IDLE
-			
-			emit_signal("snapped_to_grid", self)
+	match(current_state):
+		STATE.SNAPPING_TO_GRID:
+			if key == ":position":
+				self.current_state = STATE.IDLE
+				
+				emit_signal("snapped_to_grid", self)
+		STATE.SWAPPING:
+			if key == ":position":
+				self.current_state = STATE.IDLE
