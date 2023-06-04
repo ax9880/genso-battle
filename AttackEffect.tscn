@@ -1,0 +1,85 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://assets/fonts/CinzelDecorativeBold.tres" type="DynamicFont" id=1]
+[ext_resource path="res://AttackEffect.gd" type="Script" id=2]
+[ext_resource path="res://assets/vfx/hit_cross.png" type="Texture" id=3]
+
+[sub_resource type="CanvasItemMaterial" id=1]
+blend_mode = 1
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 5
+atlas = ExtResource( 3 )
+region = Rect2( 0, 0, 512, 512 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 5
+atlas = ExtResource( 3 )
+region = Rect2( 512, 0, 512, 512 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 5
+atlas = ExtResource( 3 )
+region = Rect2( 1024, 0, 512, 512 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 5
+atlas = ExtResource( 3 )
+region = Rect2( 0, 512, 512, 512 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 5
+atlas = ExtResource( 3 )
+region = Rect2( 512, 512, 512, 512 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 5
+atlas = ExtResource( 3 )
+region = Rect2( 1024, 512, 512, 512 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 5
+atlas = ExtResource( 3 )
+region = Rect2( 0, 1024, 512, 512 )
+
+[sub_resource type="SpriteFrames" id=8]
+animations = [ {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 9 ) ],
+"loop": false,
+"name": "default",
+"speed": 16.0
+} ]
+
+[node name="AttackEffect" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+modulate = Color( 0.0196078, 0.862745, 1, 1 )
+material = SubResource( 1 )
+scale = Vector2( 0.175, 0.175 )
+frames = SubResource( 8 )
+frame = 6
+playing = true
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="LabelContainer" type="Node2D" parent="."]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Label" type="Label" parent="LabelContainer"]
+margin_left = -120.0
+margin_top = -64.0
+margin_right = 120.0
+margin_bottom = 64.0
+custom_fonts/font = ExtResource( 1 )
+text = "9999"
+align = 1
+valign = 1
+
+[node name="Position2D" type="Position2D" parent="."]
+visible = false
+position = Vector2( 0, -96 )
+
+[connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]

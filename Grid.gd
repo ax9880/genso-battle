@@ -2,15 +2,6 @@ extends Node2D
 
 class_name Grid
 
-
-class Attack extends Reference:
-	var targeted_units: Array = []
-	var attacking_unit: Unit
-	
-	# When in a chain
-	var pincering_unit: Unit
-
-
 export var tilesize: float = 100.0
 export var tile_offset: float = 0.0
 
@@ -18,6 +9,7 @@ export var grid_width: int = 6
 export var grid_height: int = 8
 
 export(PackedScene) var cell_packed_scene: PackedScene = null
+export(PackedScene) var attack_effect_packed_scene: PackedScene = null
 
 onready var half_tilesize: float = tilesize / 2.0
 
@@ -36,8 +28,6 @@ var enemy_queue := []
 # Array<Array<Unit>>
 # Where each list consists of start unit + ... pincered units ... + end unit
 var pincer_queue := []
-
-var attack_queue := []
 
 var skill_queue := []
 var heal_queue := []
@@ -251,9 +241,9 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 		# Adds pincers to pincer queue
 		_find_pincers(unit, unit.faction)
 		
-		_attack()
+		_execute_pincers()
 		
-		_start_enemy_turn()
+		#_start_enemy_turn()
 	else:
 		# Do nothing
 		_start_player_turn()
@@ -528,21 +518,21 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 	return path
 
 
-func _attack() -> void:
+func _execute_pincers() -> void:
 	var pincer = pincer_queue.pop_front()
 	
 	if pincer != null:
 		# play pincer animation
 		
-		#_evaluate_pincer()
-		
 		var chain_families: Dictionary = _find_chains(pincer)
 		
-		_queue_attacks(pincer, chain_families)
+		var attack_queue: Array = _queue_attacks(pincer, chain_families)
+		
+		$Attacker.start_attacks(attack_queue)
 	else:
 		# finish turn
 		# but whose turn?
-		pass
+		print("all pincers done!")
 
 
 func _find_chains(pincer: Array) -> Dictionary:
@@ -605,13 +595,12 @@ func _find_chain(cell: CellArea2D, direction: int, chain_families: Dictionary, f
 		neighbor = neighbor.get_neighbor(direction)
 
 
-func _queue_attacks(pincer: Array, chain_families: Dictionary) -> void:
+func _queue_attacks(pincer: Array, chain_families: Dictionary) -> Array:
 	var start_unit: Unit = pincer.front()
 	var end_unit: Unit = pincer.back()
 	
 	var targeted_units = pincer.slice(1, pincer.size() - 2)
-	
-	attack_queue.clear()
+	var attack_queue := []
 	
 	_queue_attack(attack_queue, targeted_units, start_unit)
 	_queue_attack(attack_queue, targeted_units, end_unit)
@@ -623,7 +612,7 @@ func _queue_attacks(pincer: Array, chain_families: Dictionary) -> void:
 	_queue_chain_attacks(attack_queue, start_unit_chains, targeted_units, start_unit)
 	_queue_chain_attacks(attack_queue, end_unit_chains, targeted_units, end_unit)
 	
-	print(attack_queue.size())
+	return attack_queue
 
 
 func _queue_attack(queue: Array, targeted_units: Array, attacking_unit: Unit, pincering_unit: Unit = null) -> void:
@@ -631,7 +620,11 @@ func _queue_attack(queue: Array, targeted_units: Array, attacking_unit: Unit, pi
 	
 	attack.targeted_units = targeted_units
 	attack.attacking_unit = attacking_unit
-	attack.pincering_unit = null
+	
+	if pincering_unit == null:
+		attack.pincering_unit = attacking_unit
+	else:
+		attack.pincering_unit = pincering_unit
 	
 	queue.push_back(attack)
 
@@ -639,7 +632,7 @@ func _queue_attack(queue: Array, targeted_units: Array, attacking_unit: Unit, pi
 func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pincering_unit: Unit) -> void:
 	for chain in chains:
 		for unit in chain:
-			_queue_attack(attack_queue, targeted_units, unit, pincering_unit)
+			_queue_attack(queue, targeted_units, unit, pincering_unit)
 
 
 ## Grid utils
@@ -670,3 +663,7 @@ func _get_cell_from_coordinates(cell_coordinates: Vector2) -> CellArea2D:
 
 func _cell_coordinates_to_cell_origin(cell_coordinates: Vector2) -> Vector2:
 	return Vector2(cell_coordinates.x * tilesize + half_tilesize + tile_offset, cell_coordinates.y * tilesize + + half_tilesize + tile_offset)
+
+
+func _on_Attacker_attacks_done() -> void:
+	_execute_pincers()

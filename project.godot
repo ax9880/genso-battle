@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "Attack",
+"language": "GDScript",
+"path": "res://Attack.gd"
+}, {
+"base": "Node2D",
+"class": "Attacker",
+"language": "GDScript",
+"path": "res://Attacker.gd"
+}, {
 "base": "Area2D",
 "class": "CellArea2D",
 "language": "GDScript",
@@ -30,6 +40,8 @@ _global_script_classes=[ {
 "path": "res://Unit.gd"
 } ]
 _global_script_class_icons={
+"Attack": "",
+"Attacker": "",
 "CellArea2D": "",
 "Grid": "",
 "StartingStats": "",
