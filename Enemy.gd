@@ -36,18 +36,21 @@ func act(grid: Grid) -> void:
 		
 		path = grid.find_path(navigation_graph, position, target_cell)
 		
-		# Move or perform skill (in any order)
-		_start_moving()
+		if !path.empty():
+			# Move or perform skill (in any order)
+			_start_moving()
+		else:
+			emit_signal("action_done")
 	else:
 		emit_signal("action_done")
 
 
 func _start_moving() -> void:
+	emit_signal("started_moving", self)
+	
 	_increase_sprite_size()
 	
 	_move()
-	
-	emit_signal("started_moving", self)
 	
 	enable_swap_area()
 
