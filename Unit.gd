@@ -190,6 +190,27 @@ func get_stats() -> StartingStats:
 	return $Job.current_stats
 
 
+func calculate_damage(attacking_unit_stats: StartingStats) -> int:
+	var damage: float = 0
+	var power = 1
+	
+	if attacking_unit_stats.weapon_type == StartingStats.WeaponType.STAFF:
+		damage = 1.395 * power * pow(attacking_unit_stats.attack, 1.7) / pow(get_stats().defense, 0.7)
+	else:
+		damage = 1.5 * power * pow(attacking_unit_stats.spiritual_attack, 1.7) / pow(get_stats().spiritual_defense, 0.7)
+	
+	# TODO: randomize
+	# TODO: circle of carnage
+	# TODO: elemental resistances
+	
+	return int(damage)
+
+
+func inflict_damage(damage: int) -> void:
+	# tween HP down
+	pass
+
+
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):

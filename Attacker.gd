@@ -33,13 +33,16 @@ func _execute_next_attack() -> void:
 func _exec_attack(attack: Attack) -> void:
 	for targeted_unit in attack.targeted_units:
 		#var damage: int = targeted_unit.calculate_damage(attack.attacking_unit.get_stats(), attack.pincering_unit.get_stats())
-		var damage: int = 5123
+		
+		var damage: int = targeted_unit.calculate_damage(attack.attacking_unit.get_stats())
 		
 		var attack_effect: Node2D = attack_effect_packed_scene.instance()
 		add_child(attack_effect)
 		
 		attack_effect.position = targeted_unit.position
 		attack_effect.set_value(damage)
+		
+		# TODO: shake targeted unit
 
 
 func _on_Timer_timeout() -> void:
