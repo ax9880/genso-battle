@@ -3,6 +3,10 @@ extends Node2D
 class_name Grid
 
 
+const PLAYER_GROUP := "player"
+const ENEMY_GROUP := "enemy"
+
+
 export var tilesize: float = 100.0
 export var tile_offset: float = 0.0
 
@@ -45,6 +49,13 @@ func _initialize_grid() -> void:
 		# For each column:
 		for y in range(grid_height):
 			grid[x][y] = _build_cell(x, y)
+	
+	# Populate cell neighbors
+	for x in range(grid_width):
+		for y in range(grid_height):
+			var cell: CellArea2D = grid[x][y]
+			
+			cell.neighbors = _get_neighbors(cell)
 
 
 func _build_cell(x_position: float, y_position: float) -> CellArea2D:
@@ -69,6 +80,8 @@ func _assign_units_to_cells() -> void:
 		unit.connect("picked_up", self, "_on_Unit_picked_up")
 		unit.connect("released", self, "_on_Unit_released")
 		unit.connect("snapped_to_grid", self, "_on_Unit_snapped_to_grid")
+		
+		unit.add_to_group(PLAYER_GROUP)
 
 
 func _assign_enemies_to_cells() -> void:
@@ -77,6 +90,8 @@ func _assign_enemies_to_cells() -> void:
 		
 		enemy.connect("action_done", self, "_on_Enemy_action_done")
 		enemy.connect("started_moving", self, "_on_Enemy_started_moving")
+		
+		enemy.add_to_group(ENEMY_GROUP)
 
 
 func _assign_unit_to_cell(unit: Unit) -> void:
@@ -112,8 +127,6 @@ func _start_enemy_turn() -> void:
 func _update_enemy() -> void:
 	if not enemy_queue.empty():
 		enemy_queue.pop_front().act(self)
-		
-		build_navigation_graph(Vector2(0,0))
 	else:
 		_start_player_turn()
 
@@ -235,7 +248,7 @@ func _on_Enemy_action_done() -> void:
 	_update_enemy()
 
 
-func build_navigation_graph(unit_position: Vector2) -> void:
+func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary:
 	var cell_coordinates: Vector2 = _get_cell(unit_position)
 	
 	var start_cell: CellArea2D = grid[cell_coordinates.x][cell_coordinates.y]
@@ -255,7 +268,6 @@ func build_navigation_graph(unit_position: Vector2) -> void:
 	parent.resize(max_vertices)
 	
 	for i in range(max_vertices):
-		processed[i] = false
 		discovered[i] = false
 		parent[i] = -1
 	
@@ -266,26 +278,26 @@ func build_navigation_graph(unit_position: Vector2) -> void:
 	# {String, bool}
 	var discovered_dict := {}
 	
-	# {String, CellArea2D}
+	# {CellArea2D, [CellArea2D] (cells connected to this cell)}
+	# Graph as adjacency list
 	var navigation_graph := {}
 	
 	while not queue.empty():
 		var node: CellArea2D = queue.pop_front()
 		
-		navigation_graph[node.name] = node
+		navigation_graph[node] = []
 		
 		# Flag as discovered
 		discovered_dict[node.name] = true
 		
-		var neighbors = _get_neighbors(node)
-		
-		for neighbor in neighbors:
-			# TODO: check if unit is ally or foe
+		for neighbor in node.neighbors:
 			if not discovered_dict.has(neighbor.name):
-				queue.push_back(neighbor)
+				if neighbor.unit == null or neighbor.unit.is_in_group(group):
+					navigation_graph[node].push_back(neighbor)
+					
+					queue.push_back(neighbor)
 	
-	for n in navigation_graph.values():
-		print("Cell: %s" % [n.coordinates])
+	return navigation_graph
 
 
 func _get_neighbors(node: CellArea2D) -> Array:
@@ -304,6 +316,51 @@ func _get_neighbors(node: CellArea2D) -> Array:
 			neighbors.push_back(grid[candidate.x][candidate.y])
 	
 	return neighbors
+
+
+func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: CellArea2D) -> Array:
+	# TODO: when planning for chaining, some tiles have to be avoided
+	# and the path has to be split
+	var cell_coordinates: Vector2 = _get_cell(unit_position)
+	var start_cell: CellArea2D = grid[cell_coordinates.x][cell_coordinates.y]
+	
+	# build A Star graph?
+	
+	# {CellArea2D, bool}
+	var discovered_dict := {}
+	
+	# {CellArea2D, CellArea2D}
+	var parent_dict := {}
+	
+	var queue := []
+	queue.push_back(start_cell)
+	
+	parent_dict[start_cell] = null
+	
+	# Breadth-first search (again)
+	while not queue.empty():
+		var node: CellArea2D = queue.pop_front()
+		
+		# Flag as discovered
+		discovered_dict[node] = true
+		
+		for neighbor in navigation_graph[node]:
+			if not discovered_dict.has(neighbor):
+				queue.push_back(neighbor)
+				
+				parent_dict[neighbor] = node
+	
+	# Array of CellArea2D
+	var path := []
+	
+	if parent_dict.has(target_cell):
+		var node_parent = parent_dict[target_cell]
+		
+		while node_parent != null:
+			path.push_front(node_parent.position)
+			node_parent = parent_dict[node_parent]
+	
+	return path
 
 
 func _is_in_range(cell_coordinates: Vector2) -> bool:

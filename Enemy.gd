@@ -28,26 +28,40 @@ func act(grid: Grid) -> void:
 	if turn_counter == 0:
 		turn_counter = turn_counter_max_value
 		
-		# build graph
-		# evaluate positions
-		# pick one
-		# move or perform skill (in any order)
+		# Build graph
+		var navigation_graph: Dictionary = grid.build_navigation_graph(self.position, Grid.ENEMY_GROUP)
 		
-		path.push_back(Vector2(50, 50))
-		path.push_back(Vector2(50, 150))
+		print("Size: ", navigation_graph.size())
 		
+		# Evaluate positions (requires having the whole graph)
+		var i = 0
+		
+		var target_cell: CellArea2D = null
+		
+		# Pick one
+		for node in navigation_graph.keys():
+			i += 1
+			
+			if i > 6:
+				target_cell = node
+				break
+		
+		path = grid.find_path(navigation_graph, position, target_cell)
+		
+		# Move or perform skill (in any order)
 		_start_moving()
 	else:
 		emit_signal("action_done")
 
 
 func _start_moving() -> void:
+	_increase_sprite_size()
+	
 	_move()
 	
 	emit_signal("started_moving", self)
 	
 	enable_swap_area()
-	_increase_sprite_size()
 
 
 func _move_towards_mouse() -> void:
@@ -75,15 +89,8 @@ func _move() -> void:
 		_restore_sprite_size()
 
 
-func _build_graph(grid: Array) -> void:
-	# _get_cell()
-	var cell: Vector2 = Vector2.ZERO
-	
-	var start_cell: CellArea2D = grid[cell.x][cell.y]
-	
-	var queue := []
-	
-	queue.push_back(start_cell)
+func _find_path(navigation_graph: Dictionary) -> void:
+	return
 
 
 func _on_Tween_tween_completed(_object: Object, key: String):

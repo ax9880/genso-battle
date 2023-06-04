@@ -6,4 +6,7 @@ class_name CellArea2D
 var coordinates: Vector2 = Vector2.ZERO
 
 # Unit inside this cell.
-var unit = null
+var unit: Unit = null
+
+# Array of CellArea2D
+var neighbors: Array = []
