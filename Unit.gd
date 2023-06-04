@@ -39,7 +39,7 @@ onready var sprite := $Sprite
 
 signal picked_up(unit)
 signal released(unit)
-signal snapped_to_grid()
+signal snapped_to_grid(unit)
 
 
 func _ready() -> void:
@@ -99,7 +99,6 @@ func _input(event: InputEvent):
 func snap_to_grid(cell_origin: Vector2) -> void:
 	self.current_state = STATE.SNAPPING_TO_GRID
 	
-	# Tween to position at fixed speed
 	var tween_time_seconds: float = Utils.calculate_time(position, cell_origin, snap_velocity_pixels_per_second)
 	
 	tween.interpolate_property(self, "position",
@@ -136,18 +135,17 @@ func set_current_state(new_state) -> void:
 		STATE.IDLE:
 			disable_swap_area()
 			
-			# TODO: snap to grid ?
 			set_physics_process(false)
 			
 			_restore_sprite_size()
 		STATE.PICKED_UP:
 			enable_swap_area()
 			
+			set_physics_process(true)
+			
 			emit_signal("picked_up", self)
 			
 			_increase_sprite_size()
-			
-			set_physics_process(true)
 		STATE.SNAPPING_TO_GRID:
 			disable_swap_area()
 
@@ -156,7 +154,7 @@ func _increase_sprite_size() -> void:
 	tween.remove(sprite, ":scale")
 	
 	tween.interpolate_property(sprite, "scale",
-		sprite.scale, Vector2(1.1, 1.1),
+		sprite.scale, Vector2(1.2, 1.2),
 		0.25,
 		Tween.TRANS_SINE)
 	
@@ -174,6 +172,10 @@ func _restore_sprite_size() -> void:
 	tween.start()
 
 
+func is_enemy(unit: Unit) -> bool:
+	# TODO
+	return false
+
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
@@ -187,4 +189,4 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 		if key == ":position":
 			self.current_state = STATE.IDLE
 			
-			emit_signal("snapped_to_grid")
+			emit_signal("snapped_to_grid", self)

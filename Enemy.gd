@@ -1,15 +1,5 @@
 extends Unit
 
-
-class GraphCell extends Reference:
-	var cell: CellArea2D
-	var parent: GraphCell
-
-
-class Graph extends Reference:
-	var adjacency_list: Array
-
-
 export var turn_counter: int = 1
 
 onready var turn_counter_max_value: int = turn_counter
@@ -30,8 +20,6 @@ func act(grid: Grid) -> void:
 		
 		# Build graph
 		var navigation_graph: Dictionary = grid.build_navigation_graph(self.position, Grid.ENEMY_GROUP)
-		
-		print("Size: ", navigation_graph.size())
 		
 		# Evaluate positions (requires having the whole graph)
 		var i = 0

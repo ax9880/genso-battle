@@ -88,13 +88,20 @@ __meta__ = {
 }
 
 [node name="Enemies" type="Node2D" parent="Grid"]
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Enemy" parent="Grid/Enemies" instance=ExtResource( 3 )]
+position = Vector2( 152, 144 )
 
 [node name="Units" type="Node2D" parent="Grid"]
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Unit" parent="Grid/Units" instance=ExtResource( 2 )]
-position = Vector2( 152, 152 )
+position = Vector2( 64, 152 )
 
 [node name="Unit2" parent="Grid/Units" instance=ExtResource( 2 )]
 position = Vector2( 248, 152 )

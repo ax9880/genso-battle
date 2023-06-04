@@ -55,7 +55,7 @@ func _initialize_grid() -> void:
 		for y in range(grid_height):
 			var cell: CellArea2D = grid[x][y]
 			
-			cell.neighbors = _get_neighbors(cell)
+			_set_neighbors(cell)
 
 
 func _build_cell(x_position: float, y_position: float) -> CellArea2D:
@@ -234,9 +234,9 @@ func _on_Unit_released(unit: Unit) -> void:
 	# TODO: add drag timer
 
 
-func _on_Unit_snapped_to_grid() -> void:
+func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if has_active_unit_exited_cell:
-		#_check_pincers(unit)
+		_check_pincers(unit, PLAYER_GROUP)
 		
 		_start_enemy_turn()
 	else:
@@ -246,6 +246,58 @@ func _on_Unit_snapped_to_grid() -> void:
 
 func _on_Enemy_action_done() -> void:
 	_update_enemy()
+
+
+func _check_pincers(active_unit: Unit, group: String) -> void:
+	# Check left to right, down to up
+	
+	# from X - 1, step -1, while > -1
+	for y in range(grid_height - 1, -1, -1):
+		var x: int = 0
+		
+		while x < grid_width:
+			var cell: CellArea2D = grid[x][y]
+			
+			var unit = cell.unit
+			
+			if unit != null and unit.is_in_group(group):
+				var units := []
+				
+				units.push_back(unit)
+				
+				var right_neighbor: CellArea2D = cell.right_neighbor 
+				
+				while right_neighbor != null:
+					var next_unit = right_neighbor.unit
+					
+					if next_unit == null:
+						break
+					elif not next_unit.is_in_group(group):
+						# Is an enemy
+						units.push_back(next_unit)
+						
+						right_neighbor = right_neighbor.right_neighbor
+					else:
+						# Is an ally
+						
+						# Last unit added to list was an enemy
+						if not units.back().is_in_group(group):
+							print("Pincer!")
+							
+							units.push_back(next_unit)
+							
+							x += units.size() - 1
+							break
+						else:
+							break
+			
+			x += 1
+	
+	# Check vertical pincers
+	
+	# Check corners
+	
+	pass
 
 
 func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary:
@@ -300,7 +352,7 @@ func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary
 	return navigation_graph
 
 
-func _get_neighbors(node: CellArea2D) -> Array:
+func _set_neighbors(node: CellArea2D) -> void:
 	var cell_coordinates: Vector2 = node.coordinates
 	
 	var up := Vector2(cell_coordinates.x, cell_coordinates.y - 1)
@@ -308,14 +360,22 @@ func _get_neighbors(node: CellArea2D) -> Array:
 	var right := Vector2(cell_coordinates.x + 1, cell_coordinates.y)
 	var left := Vector2(cell_coordinates.x - 1, cell_coordinates.y)
 	
-	var candidates := [up, down, right, left]
-	var neighbors := []
+	_set_neighbor(node, up, "up")
+	_set_neighbor(node, down, "down")
+	_set_neighbor(node, right, "right")
+	_set_neighbor(node, left, "left")
+
+
+func _set_neighbor(cell: CellArea2D, neighbor_position: Vector2, direction: String) -> void:
+	var neighbor: CellArea2D = null
 	
-	for candidate in candidates:
-		if _is_in_range(candidate):
-			neighbors.push_back(grid[candidate.x][candidate.y])
+	if _is_in_range(neighbor_position):
+		neighbor = grid[neighbor_position.x][neighbor_position.y]
 	
-	return neighbors
+	cell.set(direction + "_neighbor", neighbor)
+	
+	if neighbor != null:
+		cell.neighbors.push_back(neighbor)
 
 
 func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: CellArea2D) -> Array:
@@ -336,6 +396,8 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 	queue.push_back(start_cell)
 	
 	parent_dict[start_cell] = null
+	# Array of target cells
+	# and array/dict of excluded cells?
 	
 	# Breadth-first search (again)
 	while not queue.empty():
