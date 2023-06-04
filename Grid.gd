@@ -251,6 +251,8 @@ func _on_Enemy_action_done() -> void:
 func _check_pincers(active_unit: Unit, group: String) -> void:
 	# Check left to right, down to up
 	
+	var direction: int = CellArea2D.DIRECTION.RIGHT
+	
 	# from X - 1, step -1, while > -1
 	for y in range(grid_height - 1, -1, -1):
 		var x: int = 0
@@ -265,10 +267,10 @@ func _check_pincers(active_unit: Unit, group: String) -> void:
 				
 				units.push_back(unit)
 				
-				var right_neighbor: CellArea2D = cell.right_neighbor 
+				var neighbor: CellArea2D = cell.get_neighbor(direction)
 				
-				while right_neighbor != null:
-					var next_unit = right_neighbor.unit
+				while neighbor != null:
+					var next_unit = neighbor.unit
 					
 					if next_unit == null:
 						break
@@ -276,7 +278,7 @@ func _check_pincers(active_unit: Unit, group: String) -> void:
 						# Is an enemy
 						units.push_back(next_unit)
 						
-						right_neighbor = right_neighbor.right_neighbor
+						neighbor = neighbor.get_neighbor(direction)
 					else:
 						# Is an ally
 						
@@ -355,27 +357,19 @@ func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary
 func _set_neighbors(node: CellArea2D) -> void:
 	var cell_coordinates: Vector2 = node.coordinates
 	
-	var up := Vector2(cell_coordinates.x, cell_coordinates.y - 1)
-	var down := Vector2(cell_coordinates.x, cell_coordinates.y + 1)
-	var right := Vector2(cell_coordinates.x + 1, cell_coordinates.y)
-	var left := Vector2(cell_coordinates.x - 1, cell_coordinates.y)
-	
-	_set_neighbor(node, up, "up")
-	_set_neighbor(node, down, "down")
-	_set_neighbor(node, right, "right")
-	_set_neighbor(node, left, "left")
+	_set_neighbor(node, Vector2(cell_coordinates.x, cell_coordinates.y - 1), CellArea2D.DIRECTION.UP)
+	_set_neighbor(node, Vector2(cell_coordinates.x, cell_coordinates.y + 1), CellArea2D.DIRECTION.DOWN)
+	_set_neighbor(node, Vector2(cell_coordinates.x + 1, cell_coordinates.y), CellArea2D.DIRECTION.RIGHT)
+	_set_neighbor(node, Vector2(cell_coordinates.x - 1, cell_coordinates.y), CellArea2D.DIRECTION.LEFT)
 
 
-func _set_neighbor(cell: CellArea2D, neighbor_position: Vector2, direction: String) -> void:
+func _set_neighbor(cell: CellArea2D, neighbor_position: Vector2, direction: int) -> void:
 	var neighbor: CellArea2D = null
 	
 	if _is_in_range(neighbor_position):
 		neighbor = grid[neighbor_position.x][neighbor_position.y]
 	
-	cell.set(direction + "_neighbor", neighbor)
-	
-	if neighbor != null:
-		cell.neighbors.push_back(neighbor)
+	cell.add_neighbor(neighbor, direction)
 
 
 func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: CellArea2D) -> Array:

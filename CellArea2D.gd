@@ -19,11 +19,21 @@ var coordinates: Vector2 = Vector2.ZERO
 # Unit inside this cell.
 var unit: Unit = null
 
-# Array of CellArea2D
+# Array of CellArea2D. Only valid, non-null neighbors
 var neighbors: Array = []
 
-# Directional neighbors, for convenience
-var up_neighbor: CellArea2D = null
-var down_neighbor: CellArea2D = null
-var right_neighbor: CellArea2D = null
-var left_neighbor: CellArea2D = null
+# All neighbors, including invalid ones (those neighbors are set to null)
+# {String, nullable CellArea2D}
+var all_neighbors: Dictionary = {}
+
+
+func add_neighbor(neighbor: CellArea2D, direction: int) -> void:
+	all_neighbors[direction] = neighbor
+	
+	if neighbor != null:
+		neighbors.push_back(neighbor)
+
+
+# Gets directional neighbors, for convenience
+func get_neighbor(direction: int) -> CellArea2D:
+	return all_neighbors[direction]
