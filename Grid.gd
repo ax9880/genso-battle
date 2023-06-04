@@ -3,6 +3,14 @@ extends Node2D
 class_name Grid
 
 
+class Attack extends Reference:
+	var targeted_units: Array = []
+	var attacking_unit: Unit
+	
+	# When in a chain
+	var pincering_unit: Unit
+
+
 export var tilesize: float = 100.0
 export var tile_offset: float = 0.0
 
@@ -28,6 +36,11 @@ var enemy_queue := []
 # Array<Array<Unit>>
 # Where each list consists of start unit + ... pincered units ... + end unit
 var pincer_queue := []
+
+var attack_queue := []
+
+var skill_queue := []
+var heal_queue := []
 
 
 func _ready() -> void:
@@ -235,7 +248,10 @@ func _on_Unit_released(unit: Unit) -> void:
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if has_active_unit_exited_cell:
+		# Adds pincers to pincer queue
 		_find_pincers(unit, unit.faction)
+		
+		_attack()
 		
 		_start_enemy_turn()
 	else:
@@ -289,8 +305,6 @@ func _find_pincers(active_unit: Unit, faction: int) -> void:
 	
 	pincer_queue.append_array(leading_pincers)
 	pincer_queue.append_array(pincers)
-	
-	_attack()
 
 
 func _find_corner_pincers(active_unit: Unit, leading_pincers: Array, pincers: Array, faction: int) -> void:
@@ -518,39 +532,47 @@ func _attack() -> void:
 	var pincer = pincer_queue.pop_front()
 	
 	if pincer != null:
+		# play pincer animation
+		
 		#_evaluate_pincer()
-		_find_chains(pincer)
+		
+		var chain_families: Dictionary = _find_chains(pincer)
+		
+		_queue_attacks(pincer, chain_families)
 	else:
 		# finish turn
 		# but whose turn?
 		pass
 
 
-func _find_chains(pincer: Array) -> void:
+func _find_chains(pincer: Array) -> Dictionary:
 	var start_cell: CellArea2D = _get_cell_from_position(pincer.front().position)
 	var end_cell: CellArea2D = _get_cell_from_position(pincer.back().position)
 	
 	var faction: int = start_cell.unit.faction
 	
-	# Dict<int (chain level), Array<CellArea2D>>
 	# It could be a list instead of a dictionary
-	var chains: Dictionary = {}
+	# Dict<Unit, List<List<Unit>>
+	var chain_families: Dictionary = {}
 	
-	_find_chain(start_cell, CellArea2D.DIRECTION.RIGHT, chains, faction)
-	_find_chain(start_cell, CellArea2D.DIRECTION.LEFT, chains, faction)
-	_find_chain(start_cell, CellArea2D.DIRECTION.UP, chains, faction)
-	_find_chain(start_cell, CellArea2D.DIRECTION.DOWN, chains, faction)
+	chain_families[start_cell.unit] = []
+	chain_families[end_cell.unit] = []
 	
-	_find_chain(end_cell, CellArea2D.DIRECTION.RIGHT, chains, faction)
-	_find_chain(end_cell, CellArea2D.DIRECTION.LEFT, chains, faction)
-	_find_chain(end_cell, CellArea2D.DIRECTION.UP, chains, faction)
-	_find_chain(end_cell, CellArea2D.DIRECTION.DOWN, chains, faction)
+	_find_chain(start_cell, CellArea2D.DIRECTION.RIGHT, chain_families, faction)
+	_find_chain(start_cell, CellArea2D.DIRECTION.LEFT, chain_families, faction)
+	_find_chain(start_cell, CellArea2D.DIRECTION.UP, chain_families, faction)
+	_find_chain(start_cell, CellArea2D.DIRECTION.DOWN, chain_families, faction)
 	
-	print(chains)
+	_find_chain(end_cell, CellArea2D.DIRECTION.RIGHT, chain_families, faction)
+	_find_chain(end_cell, CellArea2D.DIRECTION.LEFT, chain_families, faction)
+	_find_chain(end_cell, CellArea2D.DIRECTION.UP, chain_families, faction)
+	_find_chain(end_cell, CellArea2D.DIRECTION.DOWN, chain_families, faction)
+	
+	return chain_families
 
 
-func _find_chain(start_cell: CellArea2D, direction: int, chains: Dictionary, faction: int) -> void:
-	var neighbor = start_cell.get_neighbor(direction)
+func _find_chain(cell: CellArea2D, direction: int, chain_families: Dictionary, faction: int) -> void:
+	var neighbor = cell.get_neighbor(direction)
 	
 	var chain_level: int = 0
 	
@@ -559,12 +581,21 @@ func _find_chain(start_cell: CellArea2D, direction: int, chains: Dictionary, fac
 		
 		if chained_unit != null:
 			if chained_unit.is_ally(faction):
-				if not chains.has(chain_level):
-					chains[chain_level] = []
+				var chains: Array = chain_families[cell.unit]
+				
+				if chains.size() < chain_level + 1:
+					chains.push_back([])
 				
 				var chain: Array = chains[chain_level]
 				
-				if chain.find(chained_unit) == -1:
+				var is_in_any_chain := false
+				
+				for cell_chains in chain_families.values():
+					for c in cell_chains:
+						if c.find(chained_unit) != -1:
+							is_in_any_chain = true
+				
+				if not is_in_any_chain:
 					chain_level += 1
 					
 					chain.push_back(chained_unit)
@@ -572,6 +603,43 @@ func _find_chain(start_cell: CellArea2D, direction: int, chains: Dictionary, fac
 				break
 		
 		neighbor = neighbor.get_neighbor(direction)
+
+
+func _queue_attacks(pincer: Array, chain_families: Dictionary) -> void:
+	var start_unit: Unit = pincer.front()
+	var end_unit: Unit = pincer.back()
+	
+	var targeted_units = pincer.slice(1, pincer.size() - 2)
+	
+	attack_queue.clear()
+	
+	_queue_attack(attack_queue, targeted_units, start_unit)
+	_queue_attack(attack_queue, targeted_units, end_unit)
+	
+	# Or front and back unit, might be clearer
+	var start_unit_chains = chain_families[pincer.front()]
+	var end_unit_chains = chain_families[pincer.back()]
+	
+	_queue_chain_attacks(attack_queue, start_unit_chains, targeted_units, start_unit)
+	_queue_chain_attacks(attack_queue, end_unit_chains, targeted_units, end_unit)
+	
+	print(attack_queue.size())
+
+
+func _queue_attack(queue: Array, targeted_units: Array, attacking_unit: Unit, pincering_unit: Unit = null) -> void:
+	var attack: Attack = Attack.new()
+	
+	attack.targeted_units = targeted_units
+	attack.attacking_unit = attacking_unit
+	attack.pincering_unit = null
+	
+	queue.push_back(attack)
+
+
+func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pincering_unit: Unit) -> void:
+	for chain in chains:
+		for unit in chain:
+			_queue_attack(attack_queue, targeted_units, unit, pincering_unit)
 
 
 ## Grid utils
