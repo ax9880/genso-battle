@@ -96,10 +96,10 @@ __meta__ = {
 }
 
 [node name="Enemy" parent="Grid/Enemies" instance=ExtResource( 3 )]
-position = Vector2( 56, 48 )
+position = Vector2( 152, 56 )
 
 [node name="Enemy2" parent="Grid/Enemies" instance=ExtResource( 3 )]
-position = Vector2( 144, 440 )
+position = Vector2( 256, 48 )
 
 [node name="Units" type="Node2D" parent="Grid"]
 __meta__ = {
@@ -107,13 +107,13 @@ __meta__ = {
 }
 
 [node name="Unit" parent="Grid/Units" instance=ExtResource( 2 )]
-position = Vector2( 64, 152 )
+position = Vector2( 64, 64 )
 
 [node name="Unit2" parent="Grid/Units" instance=ExtResource( 2 )]
-position = Vector2( 248, 152 )
+position = Vector2( 240, 248 )
 
 [node name="Unit3" parent="Grid/Units" instance=ExtResource( 2 )]
-position = Vector2( 56, 256 )
+position = Vector2( 152, 152 )
 
 [node name="Attacker" parent="Grid" instance=ExtResource( 7 )]
 __meta__ = {

@@ -76,8 +76,8 @@ func _build_cell(x_position: float, y_position: float) -> CellArea2D:
 	cell.position = _cell_coordinates_to_cell_origin(cell_coordinates)
 	cell.coordinates = cell_coordinates
 	
-	cell.connect("area_entered", self, "_on_CellArea2D_area_entered", [cell])
-	cell.connect("area_exited", self, "_on_CellArea2D_area_exited", [cell])
+	var _error = cell.connect("area_entered", self, "_on_CellArea2D_area_entered", [cell])
+	_error = cell.connect("area_exited", self, "_on_CellArea2D_area_exited", [cell])
 	
 	return cell
 
@@ -86,9 +86,9 @@ func _assign_units_to_cells() -> void:
 	for unit in $Units.get_children():
 		_assign_unit_to_cell(unit)
 		
-		unit.connect("picked_up", self, "_on_Unit_picked_up")
-		unit.connect("released", self, "_on_Unit_released")
-		unit.connect("snapped_to_grid", self, "_on_Unit_snapped_to_grid")
+		var _error = unit.connect("picked_up", self, "_on_Unit_picked_up")
+		_error = unit.connect("released", self, "_on_Unit_released")
+		_error = unit.connect("snapped_to_grid", self, "_on_Unit_snapped_to_grid")
 		
 		unit.faction = Unit.PLAYER_FACTION
 
@@ -187,9 +187,10 @@ func _on_CellArea2D_area_exited(area: Area2D, cell: CellArea2D) -> void:
 func _on_Unit_picked_up(unit: Unit) -> void:
 	_update_active_unit(unit)
 	
-	for other_unit in $Units.get_children():
-		if other_unit != unit:
-			other_unit.disable_selection_area()
+	if current_turn == Turn.PLAYER:
+		for other_unit in $Units.get_children():
+			if other_unit != unit:
+				other_unit.disable_selection_area()
 
 
 func _on_Enemy_started_moving(enemy: Unit) -> void:
@@ -253,10 +254,6 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 		
 		# TODO: execute enemy pincers
 		_execute_pincers()
-		
-		print(pincer_queue.size())
-		
-		#_start_enemy_turn()
 	else:
 		# Do nothing
 		_start_player_turn()

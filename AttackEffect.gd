@@ -17,17 +17,17 @@ func _ready() -> void:
 	$AnimatedSprite.play("default")
 	$AnimatedSprite.rotation_degrees = random.randf_range(0, 360)
 	
-	tween.interpolate_property(label_container, "position",
+	var _error = tween.interpolate_property(label_container, "position",
 				label_container.position, target_position.position,
 				float_duration_seconds,
 				Tween.TRANS_LINEAR)
 			
-	tween.interpolate_property(self, "modulate",
+	_error = tween.interpolate_property(self, "modulate",
 				label_container.modulate, Color.transparent,
 				float_duration_seconds * 0.75,
 				Tween.TRANS_LINEAR)
 			
-	tween.start()
+	_error = tween.start()
 
 
 func set_value(value: int) -> void:
