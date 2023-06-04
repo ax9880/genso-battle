@@ -42,6 +42,8 @@ func _exec_attack(attack: Attack) -> void:
 		attack_effect.position = targeted_unit.position
 		attack_effect.set_value(damage)
 		
+		$AudioStreamPlayer.play()
+		
 		# TODO: shake targeted unit
 
 
