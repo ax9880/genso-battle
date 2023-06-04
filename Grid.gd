@@ -2,6 +2,10 @@ extends Node2D
 
 class_name Grid
 
+enum Turn {
+	NONE, PLAYER, ENEMY
+}
+
 export var tilesize: float = 100.0
 export var tile_offset: float = 0.0
 
@@ -31,6 +35,8 @@ var pincer_queue := []
 
 var skill_queue := []
 var heal_queue := []
+
+var current_turn: int = Turn.NONE
 
 
 func _ready() -> void:
@@ -106,11 +112,15 @@ func _assign_unit_to_cell(unit: Unit) -> void:
 
 
 func _start_player_turn() -> void:
+	current_turn = Turn.PLAYER
+	
 	for unit in $Units.get_children():
 		unit.enable_selection_area()
 
 
 func _start_enemy_turn() -> void:
+	current_turn = Turn.ENEMY
+	
 	for unit in $Units.get_children():
 		unit.disable_selection_area()
 	
@@ -241,7 +251,10 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 		# Adds pincers to pincer queue
 		_find_pincers(unit, unit.faction)
 		
+		# TODO: execute enemy pincers
 		_execute_pincers()
+		
+		print(pincer_queue.size())
 		
 		#_start_enemy_turn()
 	else:
@@ -271,7 +284,7 @@ func _find_pincers(active_unit: Unit, faction: int) -> void:
 			if pincer.empty():
 				x += 1
 			else:
-				x += pincer.size()
+				x += pincer.size() - 1
 				
 				_add_pincer(active_unit, leading_pincers, pincers, pincer)
 	# Check vertical pincers
@@ -284,7 +297,7 @@ func _find_pincers(active_unit: Unit, faction: int) -> void:
 			if pincer.empty():
 				y -= 1
 			else:
-				y -= pincer.size()
+				y = y - pincer.size() + 1
 				
 				_add_pincer(active_unit, leading_pincers, pincers, pincer)
 	
@@ -402,7 +415,7 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, faction: int, dire
 				
 				# Last unit added to list was an enemy
 				if units.back().is_enemy(faction):
-					print("Pincer!")
+					print("Found pincer!")
 					is_pincer = true
 					
 					units.push_back(next_unit)
@@ -530,9 +543,12 @@ func _execute_pincers() -> void:
 		
 		$Attacker.start_attacks(attack_queue)
 	else:
-		# finish turn
-		# but whose turn?
 		print("all pincers done!")
+		
+		if current_turn == Turn.PLAYER:
+			_start_enemy_turn()
+		else:
+			_start_player_turn()
 
 
 func _find_chains(pincer: Array) -> Dictionary:
