@@ -19,7 +19,7 @@ func act(grid: Grid) -> void:
 		turn_counter = turn_counter_max_value
 		
 		# Build graph
-		var navigation_graph: Dictionary = grid.build_navigation_graph(self.position, Grid.ENEMY_GROUP)
+		var navigation_graph: Dictionary = grid.build_navigation_graph(self.position, faction)
 		
 		# Evaluate positions (requires having the whole graph)
 		var i = 0

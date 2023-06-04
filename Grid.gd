@@ -3,10 +3,6 @@ extends Node2D
 class_name Grid
 
 
-const PLAYER_GROUP := "player"
-const ENEMY_GROUP := "enemy"
-
-
 export var tilesize: float = 100.0
 export var tile_offset: float = 0.0
 
@@ -85,7 +81,7 @@ func _assign_units_to_cells() -> void:
 		unit.connect("released", self, "_on_Unit_released")
 		unit.connect("snapped_to_grid", self, "_on_Unit_snapped_to_grid")
 		
-		unit.add_to_group(PLAYER_GROUP)
+		unit.faction = Unit.PLAYER_FACTION
 
 
 func _assign_enemies_to_cells() -> void:
@@ -95,7 +91,7 @@ func _assign_enemies_to_cells() -> void:
 		enemy.connect("action_done", self, "_on_Enemy_action_done")
 		enemy.connect("started_moving", self, "_on_Enemy_started_moving")
 		
-		enemy.add_to_group(ENEMY_GROUP)
+		enemy.faction = Unit.ENEMY_FACTION
 
 
 func _assign_unit_to_cell(unit: Unit) -> void:
@@ -239,7 +235,7 @@ func _on_Unit_released(unit: Unit) -> void:
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if has_active_unit_exited_cell:
-		_find_pincers(unit, PLAYER_GROUP)
+		_find_pincers(unit, unit.faction)
 		
 		_start_enemy_turn()
 	else:
@@ -251,7 +247,7 @@ func _on_Enemy_action_done() -> void:
 	_update_enemy()
 
 
-func _find_pincers(active_unit: Unit, group: String) -> void:
+func _find_pincers(active_unit: Unit, faction: int) -> void:
 	# List of pincers with the active unit. Horizontal, vertical, and corners
 	var leading_pincers := []
 	
@@ -264,7 +260,7 @@ func _find_pincers(active_unit: Unit, group: String) -> void:
 		var x: int = 0
 		
 		while x < grid_width:
-			var pincer: Array = _check_neighbors_for_pincers(x, y, group, CellArea2D.DIRECTION.RIGHT)
+			var pincer: Array = _check_neighbors_for_pincers(x, y, faction, CellArea2D.DIRECTION.RIGHT)
 			
 			if pincer.empty():
 				x += 1
@@ -277,7 +273,7 @@ func _find_pincers(active_unit: Unit, group: String) -> void:
 		var y: int = grid_height - 1
 		
 		while y > -1:
-			var pincer: Array = _check_neighbors_for_pincers(x, y, group, CellArea2D.DIRECTION.UP)
+			var pincer: Array = _check_neighbors_for_pincers(x, y, faction, CellArea2D.DIRECTION.UP)
 			
 			if pincer.empty():
 				y -= 1
@@ -287,7 +283,7 @@ func _find_pincers(active_unit: Unit, group: String) -> void:
 				_add_pincer(active_unit, leading_pincers, pincers, pincer)
 	
 	# Check corners
-	_find_corner_pincers(active_unit, leading_pincers, pincers, group)
+	_find_corner_pincers(active_unit, leading_pincers, pincers, faction)
 	
 	pincer_queue.clear()
 	
@@ -297,7 +293,7 @@ func _find_pincers(active_unit: Unit, group: String) -> void:
 	_attack()
 
 
-func _find_corner_pincers(active_unit: Unit, leading_pincers: Array, pincers: Array, group: String) -> void:
+func _find_corner_pincers(active_unit: Unit, leading_pincers: Array, pincers: Array, faction: int) -> void:
 	var corner_pincers := []
 	
 	# FIXME: I can skip all this and let the method use the non-null neighbors of the corner
@@ -305,39 +301,39 @@ func _find_corner_pincers(active_unit: Unit, leading_pincers: Array, pincers: Ar
 	
 	corner_pincers.push_back(_find_corner_pincer(down_left_corner,
 		[down_left_corner.get_neighbor(CellArea2D.DIRECTION.RIGHT), down_left_corner.get_neighbor(CellArea2D.DIRECTION.UP)],
-		group))
+		faction))
 	
 	var down_right_corner: CellArea2D = _get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
 	
 	corner_pincers.push_back(_find_corner_pincer(down_right_corner,
 		[down_right_corner.get_neighbor(CellArea2D.DIRECTION.LEFT), down_right_corner.get_neighbor(CellArea2D.DIRECTION.UP)],
-		group))
+		faction))
 	
 	var up_left_corner: CellArea2D = _get_cell_from_coordinates(Vector2(0, 0))
 	
 	corner_pincers.push_back(_find_corner_pincer(up_left_corner,
 		[up_left_corner.get_neighbor(CellArea2D.DIRECTION.RIGHT), up_left_corner.get_neighbor(CellArea2D.DIRECTION.DOWN)],
-		group))
+		faction))
 
 	var up_right_corner: CellArea2D = _get_cell_from_coordinates(Vector2(grid_width - 1, 0))
 	
 	corner_pincers.push_back(_find_corner_pincer(up_right_corner,
 		[up_right_corner.get_neighbor(CellArea2D.DIRECTION.LEFT), up_right_corner.get_neighbor(CellArea2D.DIRECTION.DOWN)],
-		group))
+		faction))
 	
 	for pincer in corner_pincers:
 		if not pincer.empty():
 			_add_pincer(active_unit, leading_pincers, pincers, pincer)
 
 
-func _find_corner_pincer(corner: CellArea2D, neighbors: Array, group: String) -> Array:
+func _find_corner_pincer(corner: CellArea2D, neighbors: Array, faction: int) -> Array:
 	var pincer = []
 	
 	var is_pincer = false
 	
-	if corner.unit != null and not corner.unit.is_in_group(group):
+	if corner.unit != null and corner.unit.is_enemy(faction):
 		for neighbor in neighbors:
-			if neighbor.unit != null and neighbor.unit.is_in_group(group):
+			if neighbor.unit != null and neighbor.unit.is_ally(faction):
 				# This _will_ set the flag to true prematurely, before the other
 				# neighbor is evaluated, but that's why the flag is set to false
 				# in the other branch
@@ -369,7 +365,7 @@ func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pinc
 
 
 # Returns how much to advance ? Or return the list
-func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, direction: int) -> Array:
+func _check_neighbors_for_pincers(start_x: int, start_y: int, faction: int, direction: int) -> Array:
 	var cell: CellArea2D = _get_cell_from_coordinates(Vector2(start_x, start_y))
 	
 	var unit = cell.unit
@@ -381,7 +377,7 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 	# Flag enabled if a pincer is detected
 	var is_pincer := false
 	
-	if unit != null and unit.is_in_group(group):
+	if unit != null and unit.is_ally(faction):
 		units.push_back(unit)
 		
 		var neighbor: CellArea2D = cell.get_neighbor(direction)
@@ -392,7 +388,7 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 			if next_unit == null:
 				# No unit, so we can't make a pincer
 				break
-			elif not next_unit.is_in_group(group):
+			elif next_unit.is_enemy(faction):
 				# Is an enemy
 				units.push_back(next_unit)
 				
@@ -401,7 +397,7 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 				# Is an ally
 				
 				# Last unit added to list was an enemy
-				if not units.back().is_in_group(group):
+				if units.back().is_enemy(faction):
 					print("Pincer!")
 					is_pincer = true
 					
@@ -421,7 +417,7 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 # Builds an adjacency list with all the nodes that the given unit can visit
 # Enemies may block the unit from reaching certain tiles, besides the tiles they
 # already occupy
-func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary:
+func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
 	var start_cell: CellArea2D = _get_cell_from_position(unit_position)
 	
 	var queue := []
@@ -446,7 +442,7 @@ func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary
 		
 		for neighbor in node.neighbors:
 			if not discovered_dict.has(neighbor):
-				if neighbor.unit == null or neighbor.unit.is_in_group(group):
+				if neighbor.unit == null or neighbor.unit.is_ally(faction):
 					navigation_graph[node].push_back(neighbor)
 					
 					queue.push_back(neighbor)
@@ -523,35 +519,37 @@ func _attack() -> void:
 	
 	if pincer != null:
 		#_evaluate_pincer()
-		_find_chains(pincer, PLAYER_GROUP)
+		_find_chains(pincer)
 	else:
 		# finish turn
 		# but whose turn?
 		pass
 
 
-func _find_chains(pincer: Array, group: String) -> void:
+func _find_chains(pincer: Array) -> void:
 	var start_cell: CellArea2D = _get_cell_from_position(pincer.front().position)
 	var end_cell: CellArea2D = _get_cell_from_position(pincer.back().position)
+	
+	var faction: int = start_cell.unit.faction
 	
 	# Dict<int (chain level), Array<CellArea2D>>
 	# It could be a list instead of a dictionary
 	var chains: Dictionary = {}
 	
-	_find_chain(start_cell, CellArea2D.DIRECTION.RIGHT, chains, group)
-	_find_chain(start_cell, CellArea2D.DIRECTION.LEFT, chains, group)
-	_find_chain(start_cell, CellArea2D.DIRECTION.UP, chains, group)
-	_find_chain(start_cell, CellArea2D.DIRECTION.DOWN, chains, group)
+	_find_chain(start_cell, CellArea2D.DIRECTION.RIGHT, chains, faction)
+	_find_chain(start_cell, CellArea2D.DIRECTION.LEFT, chains, faction)
+	_find_chain(start_cell, CellArea2D.DIRECTION.UP, chains, faction)
+	_find_chain(start_cell, CellArea2D.DIRECTION.DOWN, chains, faction)
 	
-	_find_chain(end_cell, CellArea2D.DIRECTION.RIGHT, chains, group)
-	_find_chain(end_cell, CellArea2D.DIRECTION.LEFT, chains, group)
-	_find_chain(end_cell, CellArea2D.DIRECTION.UP, chains, group)
-	_find_chain(end_cell, CellArea2D.DIRECTION.DOWN, chains, group)
+	_find_chain(end_cell, CellArea2D.DIRECTION.RIGHT, chains, faction)
+	_find_chain(end_cell, CellArea2D.DIRECTION.LEFT, chains, faction)
+	_find_chain(end_cell, CellArea2D.DIRECTION.UP, chains, faction)
+	_find_chain(end_cell, CellArea2D.DIRECTION.DOWN, chains, faction)
 	
 	print(chains)
 
 
-func _find_chain(start_cell: CellArea2D, direction: int, chains: Dictionary, group: String) -> void:
+func _find_chain(start_cell: CellArea2D, direction: int, chains: Dictionary, faction: int) -> void:
 	var neighbor = start_cell.get_neighbor(direction)
 	
 	var chain_level: int = 0
@@ -560,7 +558,7 @@ func _find_chain(start_cell: CellArea2D, direction: int, chains: Dictionary, gro
 		var chained_unit: Unit = neighbor.unit
 		
 		if chained_unit != null:
-			if chained_unit.is_in_group(group):
+			if chained_unit.is_ally(faction):
 				if not chains.has(chain_level):
 					chains[chain_level] = []
 				

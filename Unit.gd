@@ -13,6 +13,10 @@ enum STATE {
 	SNAPPING_TO_GRID = 2
 }
 
+const INVALID_FACTION: int = -1
+const PLAYER_FACTION: int = 1
+const ENEMY_FACTION: int = 2
+
 ## Exports
 
 export var velocity_pixels_per_second: float = 10.0
@@ -29,6 +33,8 @@ export var kp: float = 1.4
 ## Vars
 
 var current_state = STATE.IDLE setget set_current_state
+
+var faction: int = INVALID_FACTION
 
 ## Onready
 
@@ -172,9 +178,13 @@ func _restore_sprite_size() -> void:
 	tween.start()
 
 
-func is_enemy(unit: Unit) -> bool:
-	# TODO
-	return false
+func is_ally(unit_faction: int) -> bool:
+	return (faction & unit_faction) != 0
+
+
+func is_enemy(unit_faction: int) -> bool:
+	return !is_ally(unit_faction)
+
 
 ## Signals
 
