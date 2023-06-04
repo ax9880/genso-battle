@@ -77,10 +77,6 @@ func _move() -> void:
 		_restore_sprite_size()
 
 
-func _find_path(navigation_graph: Dictionary) -> void:
-	return
-
-
 func _on_Tween_tween_completed(_object: Object, key: String):
 	if key == ":position":
 		_move()
