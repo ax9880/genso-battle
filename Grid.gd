@@ -251,55 +251,82 @@ func _on_Enemy_action_done() -> void:
 func _check_pincers(active_unit: Unit, group: String) -> void:
 	# Check left to right, down to up
 	
-	var direction: int = CellArea2D.DIRECTION.RIGHT
+	# List of pincers with the active unit. Horizontal, vertical, and corners
+	var leading_pincers := []
+	
+	# All remaining pincers
+	var pincers := []
 	
 	# from X - 1, step -1, while > -1
 	for y in range(grid_height - 1, -1, -1):
 		var x: int = 0
 		
 		while x < grid_width:
-			var cell: CellArea2D = grid[x][y]
+			var pincer: Array = _check_neighbors_for_pincers(x, y, group, CellArea2D.DIRECTION.RIGHT)
 			
-			var unit = cell.unit
-			
-			if unit != null and unit.is_in_group(group):
-				var units := []
-				
-				units.push_back(unit)
-				
-				var neighbor: CellArea2D = cell.get_neighbor(direction)
-				
-				while neighbor != null:
-					var next_unit = neighbor.unit
-					
-					if next_unit == null:
-						break
-					elif not next_unit.is_in_group(group):
-						# Is an enemy
-						units.push_back(next_unit)
-						
-						neighbor = neighbor.get_neighbor(direction)
-					else:
-						# Is an ally
-						
-						# Last unit added to list was an enemy
-						if not units.back().is_in_group(group):
-							print("Pincer!")
-							
-							units.push_back(next_unit)
-							
-							x += units.size() - 1
-							break
-						else:
-							break
-			
-			x += 1
+			if pincer.empty():
+				x += 1
+			else:
+				x += pincer.size()
 	
 	# Check vertical pincers
+	for x in range(grid_width):
+		var y: int = grid_height - 1
+		
+		while y > -1:
+			var pincer: Array = _check_neighbors_for_pincers(x, y, group, CellArea2D.DIRECTION.UP)
+			
+			if pincer.empty():
+				y -= 1
+			else:
+				y -= pincer.size()
 	
 	# Check corners
 	
 	pass
+
+
+# Returns how much to advance ? Or return the list
+func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, direction: int) -> Array:
+	var cell: CellArea2D = grid[start_x][start_y]
+	
+	var unit = cell.unit
+	
+	var units := []
+	var is_pincer := false
+	
+	if unit != null and unit.is_in_group(group):
+		units.push_back(unit)
+		
+		var neighbor: CellArea2D = cell.get_neighbor(direction)
+		
+		while neighbor != null:
+			var next_unit = neighbor.unit
+			
+			if next_unit == null:
+				break
+			elif not next_unit.is_in_group(group):
+				# Is an enemy
+				units.push_back(next_unit)
+				
+				neighbor = neighbor.get_neighbor(direction)
+			else:
+				# Is an ally
+				
+				# Last unit added to list was an enemy
+				if not units.back().is_in_group(group):
+					print("Pincer!")
+					is_pincer = true
+					
+					units.push_back(next_unit)
+					break
+				else:
+					break
+	
+	if is_pincer:
+		return units
+	else:
+		return []
 
 
 func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary:
