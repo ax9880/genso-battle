@@ -95,11 +95,11 @@ func _assign_enemies_to_cells() -> void:
 
 
 func _assign_unit_to_cell(unit: Unit) -> void:
-	var cell_coordinates: Vector2 = _get_cell(unit.position)
+	var cell_coordinates: Vector2 = _get_cell_coordinates(unit.position)
 	
 	unit.position = _cell_coordinates_to_cell_origin(cell_coordinates)
 	
-	grid[cell_coordinates.x][cell_coordinates.y].unit = unit
+	_get_cell_from_coordinates(cell_coordinates).unit = unit
 
 
 func _start_player_turn() -> void:
@@ -184,12 +184,11 @@ func _on_Enemy_started_moving(enemy: Unit) -> void:
 
 
 func _update_active_unit(unit: Unit) -> void:
-	var cell_coordinates: Vector2 = _get_cell(unit.position)
-	
 	# Store this in unit?
-	active_unit_current_cell = grid[cell_coordinates.x][cell_coordinates.y]
+	active_unit_current_cell = _get_cell_from_position(unit.position)
 	active_unit_last_valid_cell = active_unit_current_cell
 	has_active_unit_exited_cell = false
+	
 	active_unit_entered_cells.clear()
 
 
@@ -288,7 +287,7 @@ func _check_pincers(active_unit: Unit, group: String) -> void:
 
 # Returns how much to advance ? Or return the list
 func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, direction: int) -> Array:
-	var cell: CellArea2D = grid[start_x][start_y]
+	var cell: CellArea2D = _get_cell_from_coordinates(Vector2(start_x, start_y))
 	
 	var unit = cell.unit
 	
@@ -340,9 +339,7 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 # Enemies may block the unit from reaching certain tiles, besides the tiles they
 # already occupy
 func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary:
-	var cell_coordinates: Vector2 = _get_cell(unit_position)
-	
-	var start_cell: CellArea2D = grid[cell_coordinates.x][cell_coordinates.y]
+	var start_cell: CellArea2D = _get_cell_from_position(unit_position)
 	
 	var queue := []
 	
@@ -383,11 +380,11 @@ func _set_neighbors(node: CellArea2D) -> void:
 	_set_neighbor(node, Vector2(cell_coordinates.x - 1, cell_coordinates.y), CellArea2D.DIRECTION.LEFT)
 
 
-func _set_neighbor(cell: CellArea2D, neighbor_position: Vector2, direction: int) -> void:
+func _set_neighbor(cell: CellArea2D, neighbor_coordinates: Vector2, direction: int) -> void:
 	var neighbor: CellArea2D = null
 	
-	if _is_in_range(neighbor_position):
-		neighbor = grid[neighbor_position.x][neighbor_position.y]
+	if _is_in_range(neighbor_coordinates):
+		neighbor = _get_cell_from_coordinates(neighbor_coordinates)
 	
 	cell.add_neighbor(neighbor, direction)
 
@@ -395,8 +392,7 @@ func _set_neighbor(cell: CellArea2D, neighbor_position: Vector2, direction: int)
 func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: CellArea2D) -> Array:
 	# TODO: when planning for chaining, some tiles have to be avoided
 	# and the path has to be split
-	var cell_coordinates: Vector2 = _get_cell(unit_position)
-	var start_cell: CellArea2D = grid[cell_coordinates.x][cell_coordinates.y]
+	var start_cell: CellArea2D = _get_cell_from_position(unit_position)
 	
 	# build A Star graph?
 	
@@ -449,9 +445,18 @@ func _is_in_range(cell_coordinates: Vector2) -> bool:
 
 
 # Returns the x, y coordinates of a cell (whole numbers)
-# TODO: rename
-func _get_cell(unit_position: Vector2) -> Vector2:
+func _get_cell_coordinates(unit_position: Vector2) -> Vector2:
 	return Vector2(floor(unit_position.x / tilesize), floor(unit_position.y / tilesize))
+
+
+func _get_cell_from_position(unit_position: Vector2) -> CellArea2D:
+	var cell_coordinates := _get_cell_coordinates(unit_position)
+	
+	return _get_cell_from_coordinates(cell_coordinates)
+
+
+func _get_cell_from_coordinates(cell_coordinates: Vector2) -> CellArea2D:
+	return grid[cell_coordinates.x][cell_coordinates.y]
 
 
 func _cell_coordinates_to_cell_origin(cell_coordinates: Vector2) -> Vector2:
