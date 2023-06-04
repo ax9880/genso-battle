@@ -29,7 +29,7 @@ var has_active_unit_exited_cell: bool = false
 
 var enemy_queue := []
 
-# List<List<CellArea2D>>
+# Array<Array<Unit>>
 # Where each list consists of start unit + ... pincered units ... + end unit
 var pincer_queue := []
 
@@ -336,12 +336,8 @@ func _find_corner_pincer(corner: CellArea2D, neighbors: Array, group: String) ->
 	var is_pincer = false
 	
 	if corner.unit != null and not corner.unit.is_in_group(group):
-		pincer.push_back(corner.unit)
-		
 		for neighbor in neighbors:
 			if neighbor.unit != null and neighbor.unit.is_in_group(group):
-				pincer.push_back(neighbor.unit)
-				
 				# This _will_ set the flag to true prematurely, before the other
 				# neighbor is evaluated, but that's why the flag is set to false
 				# in the other branch
@@ -350,6 +346,11 @@ func _find_corner_pincer(corner: CellArea2D, neighbors: Array, group: String) ->
 				is_pincer = false
 				
 				break
+	
+	if is_pincer:
+		pincer.push_back(neighbors.front().unit)
+		pincer.push_back(corner.unit)
+		pincer.push_back(neighbors.back().unit)
 	
 	if is_pincer:
 		return pincer
@@ -518,15 +519,61 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 
 
 func _attack() -> void:
-	var pincer: Array = pincer_queue.pop_front()
+	var pincer = pincer_queue.pop_front()
 	
 	if pincer != null:
 		#_evaluate_pincer()
-		pass
+		_find_chains(pincer, PLAYER_GROUP)
 	else:
 		# finish turn
 		# but whose turn?
 		pass
+
+
+func _find_chains(pincer: Array, group: String) -> void:
+	var start_cell: CellArea2D = _get_cell_from_position(pincer.front().position)
+	var end_cell: CellArea2D = _get_cell_from_position(pincer.back().position)
+	
+	# Dict<int (chain level), Array<CellArea2D>>
+	# It could be a list instead of a dictionary
+	var chains: Dictionary = {}
+	
+	_find_chain(start_cell, CellArea2D.DIRECTION.RIGHT, chains, group)
+	_find_chain(start_cell, CellArea2D.DIRECTION.LEFT, chains, group)
+	_find_chain(start_cell, CellArea2D.DIRECTION.UP, chains, group)
+	_find_chain(start_cell, CellArea2D.DIRECTION.DOWN, chains, group)
+	
+	_find_chain(end_cell, CellArea2D.DIRECTION.RIGHT, chains, group)
+	_find_chain(end_cell, CellArea2D.DIRECTION.LEFT, chains, group)
+	_find_chain(end_cell, CellArea2D.DIRECTION.UP, chains, group)
+	_find_chain(end_cell, CellArea2D.DIRECTION.DOWN, chains, group)
+	
+	print(chains)
+
+
+func _find_chain(start_cell: CellArea2D, direction: int, chains: Dictionary, group: String) -> void:
+	var neighbor = start_cell.get_neighbor(direction)
+	
+	var chain_level: int = 0
+	
+	while(neighbor != null):
+		var chained_unit: Unit = neighbor.unit
+		
+		if chained_unit != null:
+			if chained_unit.is_in_group(group):
+				if not chains.has(chain_level):
+					chains[chain_level] = []
+				
+				var chain: Array = chains[chain_level]
+				
+				if chain.find(chained_unit) == -1:
+					chain_level += 1
+					
+					chain.push_back(chained_unit)
+			else:
+				break
+		
+		neighbor = neighbor.get_neighbor(direction)
 
 
 ## Grid utils

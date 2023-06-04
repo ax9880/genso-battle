@@ -105,3 +105,6 @@ position = Vector2( 64, 152 )
 
 [node name="Unit2" parent="Grid/Units" instance=ExtResource( 2 )]
 position = Vector2( 248, 152 )
+
+[node name="Unit3" parent="Grid/Units" instance=ExtResource( 2 )]
+position = Vector2( 56, 256 )
