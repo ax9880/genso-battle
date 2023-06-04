@@ -292,7 +292,11 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 	
 	var unit = cell.unit
 	
+	# List of units, where if it's a valid pincer, the first and last units
+	# are the attacking units
 	var units := []
+	
+	# Flag enabled if a pincer is detected
 	var is_pincer := false
 	
 	if unit != null and unit.is_in_group(group):
@@ -304,6 +308,7 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 			var next_unit = neighbor.unit
 			
 			if next_unit == null:
+				# No unit, so we can't make a pincer
 				break
 			elif not next_unit.is_in_group(group):
 				# Is an enemy
@@ -319,9 +324,11 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 					is_pincer = true
 					
 					units.push_back(next_unit)
-					break
-				else:
-					break
+				
+				# Else, it's an ally followed by another ally,
+				# we can't make a pincer. Either way you have to break
+				
+				break
 	
 	if is_pincer:
 		return units
@@ -329,50 +336,36 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, group: String, dir
 		return []
 
 
+# Builds an adjacency list with all the nodes that the given unit can visit
+# Enemies may block the unit from reaching certain tiles, besides the tiles they
+# already occupy
 func build_navigation_graph(unit_position: Vector2, group: String) -> Dictionary:
 	var cell_coordinates: Vector2 = _get_cell(unit_position)
 	
 	var start_cell: CellArea2D = grid[cell_coordinates.x][cell_coordinates.y]
 	
-	# processed
-	# discovered
-	# parent
-	
-	var max_vertices: int = grid_width * grid_height
-	
-	var processed := []
-	var discovered := []
-	var parent := []
-	
-	processed.resize(max_vertices)
-	discovered.resize(max_vertices)
-	parent.resize(max_vertices)
-	
-	for i in range(max_vertices):
-		discovered[i] = false
-		parent[i] = -1
-	
 	var queue := []
 	
 	queue.push_back(start_cell)
 	
-	# {String, bool}
+	# {CellArea2D, bool}
 	var discovered_dict := {}
 	
-	# {CellArea2D, [CellArea2D] (cells connected to this cell)}
+	# {CellArea2D, [CellArea2D] (array of cells connected to this cell)}
 	# Graph as adjacency list
 	var navigation_graph := {}
 	
 	while not queue.empty():
 		var node: CellArea2D = queue.pop_front()
 		
+		# Initialize adjacency list for the given node
 		navigation_graph[node] = []
 		
 		# Flag as discovered
-		discovered_dict[node.name] = true
+		discovered_dict[node] = true
 		
 		for neighbor in node.neighbors:
-			if not discovered_dict.has(neighbor.name):
+			if not discovered_dict.has(neighbor):
 				if neighbor.unit == null or neighbor.unit.is_in_group(group):
 					navigation_graph[node].push_back(neighbor)
 					
