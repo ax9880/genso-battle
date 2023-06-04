@@ -186,6 +186,10 @@ func is_enemy(unit_faction: int) -> bool:
 	return !is_ally(unit_faction)
 
 
+func get_stats() -> StartingStats:
+	return $Job.current_stats
+
+
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):

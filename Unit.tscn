@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Unit.gd" type="Script" id=1]
 [ext_resource path="res://unit_rect.png" type="Texture" id=2]
 [ext_resource path="res://SwapArea2D.gd" type="Script" id=3]
+[ext_resource path="res://Job.gd" type="Script" id=4]
+[ext_resource path="res://jobs/YachieStartingStats.tres" type="Resource" id=5]
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 32, 32 )
@@ -15,6 +17,12 @@ collision_layer = 2
 collision_mask = 9
 collision/safe_margin = 0.16
 script = ExtResource( 1 )
+
+[node name="Job" type="Node" parent="."]
+script = ExtResource( 4 )
+starting_stats = ExtResource( 5 )
+
+[node name="Skills" type="Node" parent="Job"]
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
@@ -34,6 +42,9 @@ collision_layer = 4
 collision_mask = 0
 monitoring = false
 script = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SwapArea2D"]
 shape = SubResource( 3 )
