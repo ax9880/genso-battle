@@ -48,11 +48,9 @@ func act(grid: Grid) -> void:
 func _start_moving() -> void:
 	emit_signal("started_moving", self)
 	
-	_increase_sprite_size()
+	self.current_state = STATE.PICKED_UP
 	
 	_move()
-	
-	enable_swap_area()
 
 
 func _move_towards_mouse() -> void:
@@ -72,14 +70,12 @@ func _move() -> void:
 			
 		tween.start()
 	else:
-		emit_signal("action_done")
-		
-		# Use state in Enemy?
 		self.current_state = STATE.IDLE
 		
-		_restore_sprite_size()
+		emit_signal("action_done")
 
 
-func _on_Tween_tween_completed(_object: Object, key: String):
-	if key == ":position":
-		_move()
+func _on_Tween_tween_completed(_object: Object, key: String) -> void:
+	if current_state == STATE.PICKED_UP:
+		if key == ":position":
+			_move()
