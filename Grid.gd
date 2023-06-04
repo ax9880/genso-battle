@@ -248,14 +248,13 @@ func _on_Enemy_action_done() -> void:
 
 
 func _check_pincers(active_unit: Unit, group: String) -> void:
-	# Check left to right, down to up
-	
 	# List of pincers with the active unit. Horizontal, vertical, and corners
 	var leading_pincers := []
 	
 	# All remaining pincers
 	var pincers := []
 	
+	# Check left to right, down to up
 	# from X - 1, step -1, while > -1
 	for y in range(grid_height - 1, -1, -1):
 		var x: int = 0
@@ -267,7 +266,8 @@ func _check_pincers(active_unit: Unit, group: String) -> void:
 				x += 1
 			else:
 				x += pincer.size()
-	
+				
+				_add_pincer(active_unit, leading_pincers, pincers, pincer)
 	# Check vertical pincers
 	for x in range(grid_width):
 		var y: int = grid_height - 1
@@ -279,10 +279,85 @@ func _check_pincers(active_unit: Unit, group: String) -> void:
 				y -= 1
 			else:
 				y -= pincer.size()
+				
+				_add_pincer(active_unit, leading_pincers, pincers, pincer)
 	
 	# Check corners
+	_find_corner_pincers(active_unit, leading_pincers, pincers, group)
+
+
+func _find_corner_pincers(active_unit: Unit, leading_pincers: Array, pincers: Array, group: String) -> void:
+	var corner_pincers := []
 	
-	pass
+	# FIXME: I can skip all this and let the method use the non-null neighbors of the corner
+	var down_left_corner: CellArea2D = _get_cell_from_coordinates(Vector2(0, grid_height - 1))
+	
+	corner_pincers.push_back(_find_corner_pincer(down_left_corner,
+		[down_left_corner.get_neighbor(CellArea2D.DIRECTION.RIGHT), down_left_corner.get_neighbor(CellArea2D.DIRECTION.UP)],
+		group))
+	
+	var down_right_corner: CellArea2D = _get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
+	
+	corner_pincers.push_back(_find_corner_pincer(down_right_corner,
+		[down_right_corner.get_neighbor(CellArea2D.DIRECTION.LEFT), down_right_corner.get_neighbor(CellArea2D.DIRECTION.UP)],
+		group))
+	
+	var up_left_corner: CellArea2D = _get_cell_from_coordinates(Vector2(0, 0))
+	
+	corner_pincers.push_back(_find_corner_pincer(up_left_corner,
+		[up_left_corner.get_neighbor(CellArea2D.DIRECTION.RIGHT), up_left_corner.get_neighbor(CellArea2D.DIRECTION.DOWN)],
+		group))
+
+	var up_right_corner: CellArea2D = _get_cell_from_coordinates(Vector2(grid_width - 1, 0))
+	
+	corner_pincers.push_back(_find_corner_pincer(up_right_corner,
+		[up_right_corner.get_neighbor(CellArea2D.DIRECTION.LEFT), up_right_corner.get_neighbor(CellArea2D.DIRECTION.DOWN)],
+		group))
+	
+	for pincer in corner_pincers:
+		if not pincer.empty():
+			_add_pincer(active_unit, leading_pincers, pincers, pincer)
+	
+
+
+
+func _find_corner_pincer(corner: CellArea2D, neighbors: Array, group: String) -> Array:
+	var pincer = []
+	
+	var is_pincer = false
+	
+	if corner.unit != null and not corner.unit.is_in_group(group):
+		pincer.push_back(corner.unit)
+		
+		for neighbor in neighbors:
+			if neighbor.unit != null and neighbor.unit.is_in_group(group):
+				pincer.push_back(neighbor.unit)
+				
+				# This _will_ set the flag to true prematurely, before the other
+				# neighbor is evaluated, but that's why the flag is set to false
+				# in the other branch
+				is_pincer = true
+			else:
+				is_pincer = false
+				
+				break
+	
+	if is_pincer:
+		return pincer
+	else:
+		return []
+
+
+
+func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pincer: Array) -> void:
+	if pincer.empty():
+		return
+	
+	if pincer.find(active_unit) != -1:
+		leading_pincers.push_back(pincer)
+	else:
+		pincers.push_back(pincer)
+
 
 
 # Returns how much to advance ? Or return the list
