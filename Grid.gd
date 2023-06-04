@@ -29,6 +29,10 @@ var has_active_unit_exited_cell: bool = false
 
 var enemy_queue := []
 
+# List<List<CellArea2D>>
+# Where each list consists of start unit + ... pincered units ... + end unit
+var pincer_queue := []
+
 
 func _ready() -> void:
 	_initialize_grid()
@@ -235,7 +239,7 @@ func _on_Unit_released(unit: Unit) -> void:
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if has_active_unit_exited_cell:
-		_check_pincers(unit, PLAYER_GROUP)
+		_find_pincers(unit, PLAYER_GROUP)
 		
 		_start_enemy_turn()
 	else:
@@ -247,7 +251,7 @@ func _on_Enemy_action_done() -> void:
 	_update_enemy()
 
 
-func _check_pincers(active_unit: Unit, group: String) -> void:
+func _find_pincers(active_unit: Unit, group: String) -> void:
 	# List of pincers with the active unit. Horizontal, vertical, and corners
 	var leading_pincers := []
 	
@@ -284,6 +288,13 @@ func _check_pincers(active_unit: Unit, group: String) -> void:
 	
 	# Check corners
 	_find_corner_pincers(active_unit, leading_pincers, pincers, group)
+	
+	pincer_queue.clear()
+	
+	pincer_queue.append_array(leading_pincers)
+	pincer_queue.append_array(pincers)
+	
+	_attack()
 
 
 func _find_corner_pincers(active_unit: Unit, leading_pincers: Array, pincers: Array, group: String) -> void:
@@ -317,8 +328,6 @@ func _find_corner_pincers(active_unit: Unit, leading_pincers: Array, pincers: Ar
 	for pincer in corner_pincers:
 		if not pincer.empty():
 			_add_pincer(active_unit, leading_pincers, pincers, pincer)
-	
-
 
 
 func _find_corner_pincer(corner: CellArea2D, neighbors: Array, group: String) -> Array:
@@ -348,7 +357,6 @@ func _find_corner_pincer(corner: CellArea2D, neighbors: Array, group: String) ->
 		return []
 
 
-
 func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pincer: Array) -> void:
 	if pincer.empty():
 		return
@@ -357,7 +365,6 @@ func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pinc
 		leading_pincers.push_back(pincer)
 	else:
 		pincers.push_back(pincer)
-
 
 
 # Returns how much to advance ? Or return the list
@@ -509,6 +516,20 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 	
 	return path
 
+
+func _attack() -> void:
+	var pincer: Array = pincer_queue.pop_front()
+	
+	if pincer != null:
+		#_evaluate_pincer()
+		pass
+	else:
+		# finish turn
+		# but whose turn?
+		pass
+
+
+## Grid utils
 
 func _is_in_range(cell_coordinates: Vector2) -> bool:
 	if cell_coordinates.x < 0 or cell_coordinates.x >= grid_width:
