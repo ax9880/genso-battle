@@ -53,8 +53,6 @@ func _exec_attack(attack: Attack) -> void:
 		targeted_unit.inflict_damage(damage)
 		
 		# TODO: shake targeted unit
-		# TODO: check when unit dies
-		# TODO: play death animation
 
 
 func _on_Timer_timeout() -> void:

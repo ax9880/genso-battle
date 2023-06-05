@@ -12,7 +12,7 @@ var path := []
 
 
 
-func act(grid: Grid) -> void:
+func act(board: Board) -> void:
 	if turn_counter > 0:
 		turn_counter -= 1
 	
@@ -20,7 +20,7 @@ func act(grid: Grid) -> void:
 		turn_counter = turn_counter_max_value
 		
 		# Build graph
-		var navigation_graph: Dictionary = grid.build_navigation_graph(position, faction)
+		var navigation_graph: Dictionary = board.build_navigation_graph(position, faction)
 		
 		# Evaluate positions (requires having the whole graph)
 		var i = 0
@@ -35,7 +35,7 @@ func act(grid: Grid) -> void:
 				target_cell = node
 				break
 		
-		path = grid.find_path(navigation_graph, position, target_cell)
+		path = board.find_path(navigation_graph, position, target_cell)
 		
 		if !path.empty():
 			# Move or perform skill (in any order)
