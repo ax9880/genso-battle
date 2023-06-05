@@ -33,6 +33,9 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="FullSprite" type="Sprite" parent="."]
+visible = false
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 3 )
 __meta__ = {
@@ -84,6 +87,14 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Border" type="TextureRect" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="HpBar" type="TextureProgress" parent="Control"]
 anchor_left = 0.05
 anchor_top = 0.8
@@ -91,12 +102,34 @@ anchor_right = 1.0
 anchor_bottom = 0.8
 margin_top = -9.0
 margin_right = -25.0
+mouse_filter = 2
 value = 100.0
 texture_under = ExtResource( 7 )
 texture_progress = ExtResource( 6 )
 script = ExtResource( 8 )
 
 [node name="Tween" type="Tween" parent="Control/HpBar"]
+
+[node name="Attribute" type="TextureRect" parent="Control"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -21.0
+margin_top = -33.0
+margin_right = -9.0
+margin_bottom = -17.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="WeaponType" type="TextureRect" parent="Control"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -41.0
+margin_bottom = 40.0
+mouse_filter = 2
 
 [connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]
 [connection signal="input_event" from="SelectionArea2D" to="." method="_on_SelectionArea2D_input_event"]
