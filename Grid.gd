@@ -17,13 +17,13 @@ export(PackedScene) var attack_effect_packed_scene: PackedScene = null
 
 onready var half_tilesize: float = tilesize / 2.0
 
+onready var grid := $Grid
+
 var active_unit_current_cell: CellArea2D = null
 var active_unit_last_valid_cell: CellArea2D = null
 
 # Dictionary<CellArea2D, bool>
 var active_unit_entered_cells := {}
-
-var grid := []
 
 var has_active_unit_exited_cell: bool = false
 
@@ -51,35 +51,14 @@ func _ready() -> void:
 # Create the grid matrix and populate it with cell objects.
 # Connect body enter and exit signals.
 func _initialize_grid() -> void:
-	for x in range(grid_width):
-		grid.append([])
-		grid[x].resize(grid_height)
-		
-		# For each column:
-		for y in range(grid_height):
-			grid[x][y] = _build_cell(x, y)
-	
-	# Populate cell neighbors
-	for x in range(grid_width):
-		for y in range(grid_height):
-			var cell: CellArea2D = grid[x][y]
-			
-			_set_neighbors(cell)
+	_connect_cell_signals()
 
 
-func _build_cell(x_position: float, y_position: float) -> CellArea2D:
-	var cell: CellArea2D = cell_packed_scene.instance()
-	
-	$Cells.add_child(cell)
-	
-	var cell_coordinates := Vector2(x_position, y_position)
-	cell.position = _cell_coordinates_to_cell_origin(cell_coordinates)
-	cell.coordinates = cell_coordinates
-	
-	var _error = cell.connect("area_entered", self, "_on_CellArea2D_area_entered", [cell])
-	_error = cell.connect("area_exited", self, "_on_CellArea2D_area_exited", [cell])
-	
-	return cell
+func _connect_cell_signals() -> void:
+	for row in grid.grid:
+		for cell in row:
+			var _error = cell.connect("area_entered", self, "_on_CellArea2D_area_entered", [cell])
+			_error = cell.connect("area_exited", self, "_on_CellArea2D_area_exited", [cell])
 
 
 func _assign_units_to_cells() -> void:
@@ -104,11 +83,11 @@ func _assign_enemies_to_cells() -> void:
 
 
 func _assign_unit_to_cell(unit: Unit) -> void:
-	var cell_coordinates: Vector2 = _get_cell_coordinates(unit.position)
+	var cell_coordinates: Vector2 = grid.get_cell_coordinates(unit.position)
 	
-	unit.position = _cell_coordinates_to_cell_origin(cell_coordinates)
+	unit.position = grid.cell_coordinates_to_cell_origin(cell_coordinates)
 	
-	_get_cell_from_coordinates(cell_coordinates).unit = unit
+	grid.get_cell_from_coordinates(cell_coordinates).unit = unit
 
 
 func _start_player_turn() -> void:
@@ -201,7 +180,7 @@ func _on_Enemy_started_moving(enemy: Unit) -> void:
 
 func _update_active_unit(unit: Unit) -> void:
 	# Store this in unit?
-	active_unit_current_cell = _get_cell_from_position(unit.position)
+	active_unit_current_cell = grid.get_cell_from_position(unit.position)
 	active_unit_last_valid_cell = active_unit_current_cell
 	has_active_unit_exited_cell = false
 	
@@ -279,8 +258,7 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 func _on_Enemy_action_done(unit: Unit) -> void:
 	_clear_active_cells()
 	
-	if _get_cell_from_position(unit.position).unit != unit:
-		print("ya done goofed")
+	assert(grid.get_cell_from_position(unit.position).unit == unit)
 	
 	_update_enemy()
 
@@ -333,25 +311,25 @@ func _find_corner_pincers(active_unit: Unit, leading_pincers: Array, pincers: Ar
 	var corner_pincers := []
 	
 	# FIXME: I can skip all this and let the method use the non-null neighbors of the corner
-	var down_left_corner: CellArea2D = _get_cell_from_coordinates(Vector2(0, grid_height - 1))
+	var down_left_corner: CellArea2D = grid.get_cell_from_coordinates(Vector2(0, grid_height - 1))
 	
 	corner_pincers.push_back(_find_corner_pincer(down_left_corner,
 		[down_left_corner.get_neighbor(CellArea2D.DIRECTION.RIGHT), down_left_corner.get_neighbor(CellArea2D.DIRECTION.UP)],
 		faction))
 	
-	var down_right_corner: CellArea2D = _get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
+	var down_right_corner: CellArea2D = grid.get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
 	
 	corner_pincers.push_back(_find_corner_pincer(down_right_corner,
 		[down_right_corner.get_neighbor(CellArea2D.DIRECTION.LEFT), down_right_corner.get_neighbor(CellArea2D.DIRECTION.UP)],
 		faction))
 	
-	var up_left_corner: CellArea2D = _get_cell_from_coordinates(Vector2(0, 0))
+	var up_left_corner: CellArea2D = grid.get_cell_from_coordinates(Vector2(0, 0))
 	
 	corner_pincers.push_back(_find_corner_pincer(up_left_corner,
 		[up_left_corner.get_neighbor(CellArea2D.DIRECTION.RIGHT), up_left_corner.get_neighbor(CellArea2D.DIRECTION.DOWN)],
 		faction))
 
-	var up_right_corner: CellArea2D = _get_cell_from_coordinates(Vector2(grid_width - 1, 0))
+	var up_right_corner: CellArea2D = grid.get_cell_from_coordinates(Vector2(grid_width - 1, 0))
 	
 	corner_pincers.push_back(_find_corner_pincer(up_right_corner,
 		[up_right_corner.get_neighbor(CellArea2D.DIRECTION.LEFT), up_right_corner.get_neighbor(CellArea2D.DIRECTION.DOWN)],
@@ -402,7 +380,7 @@ func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pinc
 
 # Returns how much to advance ? Or return the list
 func _check_neighbors_for_pincers(start_x: int, start_y: int, faction: int, direction: int) -> Array:
-	var cell: CellArea2D = _get_cell_from_coordinates(Vector2(start_x, start_y))
+	var cell: CellArea2D = grid.get_cell_from_coordinates(Vector2(start_x, start_y))
 	
 	var unit = cell.unit
 	
@@ -454,7 +432,7 @@ func _check_neighbors_for_pincers(start_x: int, start_y: int, faction: int, dire
 # Enemies may block the unit from reaching certain tiles, besides the tiles they
 # already occupy
 func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
-	var start_cell: CellArea2D = _get_cell_from_position(unit_position)
+	var start_cell: CellArea2D = grid.get_cell_from_position(unit_position)
 	
 	var queue := []
 	
@@ -486,28 +464,10 @@ func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
 	return navigation_graph
 
 
-func _set_neighbors(node: CellArea2D) -> void:
-	var cell_coordinates: Vector2 = node.coordinates
-	
-	_set_neighbor(node, Vector2(cell_coordinates.x, cell_coordinates.y - 1), CellArea2D.DIRECTION.UP)
-	_set_neighbor(node, Vector2(cell_coordinates.x, cell_coordinates.y + 1), CellArea2D.DIRECTION.DOWN)
-	_set_neighbor(node, Vector2(cell_coordinates.x + 1, cell_coordinates.y), CellArea2D.DIRECTION.RIGHT)
-	_set_neighbor(node, Vector2(cell_coordinates.x - 1, cell_coordinates.y), CellArea2D.DIRECTION.LEFT)
-
-
-func _set_neighbor(cell: CellArea2D, neighbor_coordinates: Vector2, direction: int) -> void:
-	var neighbor: CellArea2D = null
-	
-	if _is_in_range(neighbor_coordinates):
-		neighbor = _get_cell_from_coordinates(neighbor_coordinates)
-	
-	cell.add_neighbor(neighbor, direction)
-
-
 func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: CellArea2D) -> Array:
 	# TODO: when planning for chaining, some tiles have to be avoided
 	# and the path has to be split
-	var start_cell: CellArea2D = _get_cell_from_position(unit_position)
+	var start_cell: CellArea2D = grid.get_cell_from_position(unit_position)
 	
 	# build A Star graph?
 	
@@ -561,6 +521,8 @@ func _execute_pincers() -> void:
 		var attack_queue: Array = _queue_attacks(pincer, chain_families)
 		
 		$Attacker.start_attacks(attack_queue)
+		
+		# TODO: Check if any targeted unit has died
 	else:
 		print("All pincers done!")
 		
@@ -571,8 +533,8 @@ func _execute_pincers() -> void:
 
 
 func _find_chains(pincer: Array) -> Dictionary:
-	var start_cell: CellArea2D = _get_cell_from_position(pincer.front().position)
-	var end_cell: CellArea2D = _get_cell_from_position(pincer.back().position)
+	var start_cell: CellArea2D = grid.get_cell_from_position(pincer.front().position)
+	var end_cell: CellArea2D = grid.get_cell_from_position(pincer.back().position)
 	
 	var faction: int = start_cell.unit.faction
 	
@@ -671,34 +633,6 @@ func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pi
 
 
 ## Grid utils
-
-func _is_in_range(cell_coordinates: Vector2) -> bool:
-	if cell_coordinates.x < 0 or cell_coordinates.x >= grid_width:
-		return false
-	elif cell_coordinates.y < 0 or cell_coordinates.y >= grid_height:
-		return false
-	else:
-		return true
-
-
-# Returns the x, y coordinates of a cell (whole numbers)
-func _get_cell_coordinates(unit_position: Vector2) -> Vector2:
-	return Vector2(floor(unit_position.x / tilesize), floor(unit_position.y / tilesize))
-
-
-func _get_cell_from_position(unit_position: Vector2) -> CellArea2D:
-	var cell_coordinates := _get_cell_coordinates(unit_position)
-	
-	return _get_cell_from_coordinates(cell_coordinates)
-
-
-func _get_cell_from_coordinates(cell_coordinates: Vector2) -> CellArea2D:
-	return grid[cell_coordinates.x][cell_coordinates.y]
-
-
-func _cell_coordinates_to_cell_origin(cell_coordinates: Vector2) -> Vector2:
-	return Vector2(cell_coordinates.x * tilesize + half_tilesize + tile_offset, cell_coordinates.y * tilesize + + half_tilesize + tile_offset)
-
 
 func _on_Attacker_attacks_done() -> void:
 	_execute_pincers()
