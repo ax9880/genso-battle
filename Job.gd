@@ -27,7 +27,7 @@ func _ready() -> void:
 
 
 func decrease_health(value: int) -> void:
-	current_stats.health = clamp(current_stats.health - value, 0, base_stats.health)
+	current_stats.health = int(clamp(current_stats.health - value, 0, base_stats.health))
 	
 	emit_signal("health_changed", current_stats.health, base_stats.health)
 	
