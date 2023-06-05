@@ -222,6 +222,8 @@ func calculate_damage(attacking_unit_stats: StartingStats) -> int:
 
 func inflict_damage(damage: int) -> void:
 	# tween HP down
+	$Job.decrease_health(damage)
+	
 	pass
 
 

@@ -44,6 +44,8 @@ func _exec_attack(attack: Attack) -> void:
 		
 		$AudioStreamPlayer.play()
 		
+		targeted_unit.inflict_damage(damage)
+		
 		# TODO: shake targeted unit
 
 

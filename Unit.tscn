@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Unit.gd" type="Script" id=1]
 [ext_resource path="res://unit_rect.png" type="Texture" id=2]
 [ext_resource path="res://SwapArea2D.gd" type="Script" id=3]
 [ext_resource path="res://Job.gd" type="Script" id=4]
 [ext_resource path="res://jobs/YachieStartingStats.tres" type="Resource" id=5]
+[ext_resource path="res://assets/ui/hp_bar_progress.png" type="Texture" id=6]
+[ext_resource path="res://assets/ui/hp_bar_bg.png" type="Texture" id=7]
+[ext_resource path="res://HpBar.gd" type="Script" id=8]
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 32, 32 )
@@ -31,7 +34,6 @@ __meta__ = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource( 3 )
 __meta__ = {
 "_edit_lock_": true
@@ -70,5 +72,32 @@ __meta__ = {
 
 [node name="Tween" type="Tween" parent="."]
 
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -48.0
+margin_top = -48.0
+margin_right = 49.0
+margin_bottom = 49.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="HpBar" type="TextureProgress" parent="Control"]
+anchor_left = 0.05
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 0.8
+margin_top = -9.0
+margin_right = -25.0
+value = 100.0
+texture_under = ExtResource( 7 )
+texture_progress = ExtResource( 6 )
+script = ExtResource( 8 )
+
+[node name="Tween" type="Tween" parent="Control/HpBar"]
+
+[connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]
 [connection signal="input_event" from="SelectionArea2D" to="." method="_on_SelectionArea2D_input_event"]
 [connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
