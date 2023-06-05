@@ -52,6 +52,7 @@ _global_script_class_icons={
 
 config/name="TouhouPrideGameJam5"
 run/main_scene="res://Main.tscn"
+boot_splash/image="res://assets/ui/splash_screen.png"
 config/icon="res://icon.png"
 
 [autoload]
