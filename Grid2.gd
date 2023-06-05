@@ -5,8 +5,8 @@ class_name Grid2
 export var tilesize: float = 100.0
 export var tile_offset: float = 0.0
 
-export var grid_width: int = 6
-export var grid_height: int = 8
+export var width: int = 6
+export var height: int = 8
 
 export(PackedScene) var cell_packed_scene: PackedScene = null
 
@@ -24,17 +24,17 @@ func _ready() -> void:
 # Create the grid matrix and populate it with cell objects.
 # Connect body enter and exit signals.
 func _initialize_grid() -> void:
-	for x in range(grid_width):
+	for x in range(width):
 		grid.append([])
-		grid[x].resize(grid_height)
+		grid[x].resize(height)
 		
 		# For each column:
-		for y in range(grid_height):
+		for y in range(height):
 			grid[x][y] = _build_cell(x, y)
 	
 	# Populate cell neighbors
-	for x in range(grid_width):
-		for y in range(grid_height):
+	for x in range(width):
+		for y in range(height):
 			var cell: CellArea2D = grid[x][y]
 			
 			_set_neighbors(cell)
@@ -71,9 +71,9 @@ func _set_neighbor(cell: CellArea2D, neighbor_coordinates: Vector2, direction: i
 
 
 func _is_in_range(cell_coordinates: Vector2) -> bool:
-	if cell_coordinates.x < 0 or cell_coordinates.x >= grid_width:
+	if cell_coordinates.x < 0 or cell_coordinates.x >= width:
 		return false
-	elif cell_coordinates.y < 0 or cell_coordinates.y >= grid_height:
+	elif cell_coordinates.y < 0 or cell_coordinates.y >= height:
 		return false
 	else:
 		return true

@@ -6,18 +6,11 @@ enum Turn {
 	NONE, PLAYER, ENEMY
 }
 
-export var tilesize: float = 100.0
-export var tile_offset: float = 0.0
-
-export var grid_width: int = 6
-export var grid_height: int = 8
-
-export(PackedScene) var cell_packed_scene: PackedScene = null
 export(PackedScene) var attack_effect_packed_scene: PackedScene = null
 
-onready var half_tilesize: float = tilesize / 2.0
-
 onready var grid := $Grid
+onready var grid_width: int = grid.width
+onready var grid_height: int = grid.height
 
 var active_unit_current_cell: CellArea2D = null
 var active_unit_last_valid_cell: CellArea2D = null
