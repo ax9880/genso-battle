@@ -239,7 +239,7 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 		_clear_active_cells()
 		
 		# Adds pincers to pincer queue
-		_find_pincers(unit, unit.faction)
+		pincer_queue = $Pincerer.find_pincers(grid, unit)
 		
 		# TODO: execute enemy pincers
 		_execute_pincers()
@@ -504,14 +504,12 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 
 
 func _execute_pincers() -> void:
-	var pincer = pincer_queue.pop_front()
+	var pincer: Pincerer.Pincer = pincer_queue.pop_front()
 	
 	if pincer != null:
 		# play pincer animation
 		
-		var chain_families: Dictionary = _find_chains(pincer)
-		
-		var attack_queue: Array = _queue_attacks(pincer, chain_families)
+		var attack_queue: Array = _queue_attacks(pincer)
 		
 		$Attacker.start_attacks(attack_queue)
 		
@@ -585,22 +583,14 @@ func _find_chain(cell: CellArea2D, direction: int, chain_families: Dictionary, f
 		neighbor = neighbor.get_neighbor(direction)
 
 
-func _queue_attacks(pincer: Array, chain_families: Dictionary) -> Array:
-	var start_unit: Unit = pincer.front()
-	var end_unit: Unit = pincer.back()
-	
-	var targeted_units = pincer.slice(1, pincer.size() - 2)
+func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
 	var attack_queue := []
 	
-	_queue_attack(attack_queue, targeted_units, start_unit)
-	_queue_attack(attack_queue, targeted_units, end_unit)
+	for pincering_unit in pincer.pincering_units:
+		_queue_attack(attack_queue, pincer.pincered_units, pincering_unit)
 	
-	# Or front and back unit, might be clearer
-	var start_unit_chains = chain_families[pincer.front()]
-	var end_unit_chains = chain_families[pincer.back()]
-	
-	_queue_chain_attacks(attack_queue, start_unit_chains, targeted_units, start_unit)
-	_queue_chain_attacks(attack_queue, end_unit_chains, targeted_units, end_unit)
+	for unit in pincer.chain_families.keys():
+		_queue_chain_attacks(attack_queue, pincer.chain_families[unit], pincer.pincered_units, unit)
 	
 	return attack_queue
 
