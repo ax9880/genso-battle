@@ -361,11 +361,13 @@ func _execute_pincers() -> void:
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
 	var attack_queue := []
 	
+	# Leading units first
 	for pincering_unit in pincer.pincering_units:
 		_queue_attack(attack_queue, pincer.pincered_units, pincering_unit)
 	
-	for unit in pincer.chain_families.keys():
-		_queue_chain_attacks(attack_queue, pincer.chain_families[unit], pincer.pincered_units, unit)
+	# Chained units next
+	for pincering_unit in pincer.pincering_units:
+		_queue_chain_attacks(attack_queue, pincer.chain_families[pincering_unit], pincer.pincered_units, pincering_unit)
 	
 	return attack_queue
 
