@@ -10,11 +10,12 @@ class Pincer extends Reference:
 	var pincered_units: Array
 	
 	# Dictionary<Unit, List<List<Unit>>
-	# Where chain_families[unit] consists of all the chains for the given unit
-	# And where a chain consists of lists of chained units. The index of each chain
-	# is its chain level.
+	# Where chain_families[unit] consists of all the chains for the given unit (a chain family)
+	# And where a chain family consists of lists of chained units (chain). The index of each chain
+	# is its chain level. The chain does include the pincering units.
 	var chain_families: Dictionary
 	
+	# Size of the pincer (amount of units involved, including pincering and pincered units)
 	func size() -> int:
 		return pincering_units.size() + pincered_units.size()
 
