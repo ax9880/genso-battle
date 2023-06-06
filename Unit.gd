@@ -7,7 +7,7 @@ enum STATE {
 	# Idle
 	IDLE = 0,
 	
-	# Picked up, being dragged by the player
+	# Picked up, being dragged by the player or being moved by the AI
 	PICKED_UP = 1,
 	
 	SNAPPING_TO_GRID = 2,
@@ -208,7 +208,7 @@ func calculate_damage(attacking_unit_stats: StartingStats) -> int:
 	var damage: float = 0
 	var power = 1
 	
-	if attacking_unit_stats.weapon_type == StartingStats.WeaponType.STAFF:
+	if attacking_unit_stats.weapon_type == Enums.WeaponType.STAFF:
 		damage = 1.395 * power * pow(attacking_unit_stats.attack, 1.7) / pow(get_stats().defense, 0.7)
 	else:
 		damage = 1.5 * power * pow(attacking_unit_stats.spiritual_attack, 1.7) / pow(get_stats().spiritual_defense, 0.7)
@@ -221,10 +221,7 @@ func calculate_damage(attacking_unit_stats: StartingStats) -> int:
 
 
 func inflict_damage(damage: int) -> void:
-	# tween HP down
 	$Job.decrease_health(damage)
-	
-	pass
 
 
 ## Signals

@@ -40,9 +40,14 @@ _global_script_classes=[ {
 "path": "res://Pincerer.gd"
 }, {
 "base": "Resource",
+"class": "Skill",
+"language": "GDScript",
+"path": "res://skills/Skill.gd"
+}, {
+"base": "Resource",
 "class": "StartingStats",
 "language": "GDScript",
-"path": "res://StartingStats.gd"
+"path": "res://jobs/StartingStats.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "Unit",
@@ -56,6 +61,7 @@ _global_script_class_icons={
 "CellArea2D": "",
 "Grid": "",
 "Pincerer": "",
+"Skill": "",
 "StartingStats": "",
 "Unit": ""
 }
@@ -70,6 +76,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Utils="*res://Utils.gd"
+Enums="*res://Enums.gd"
 
 [display]
 
