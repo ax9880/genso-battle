@@ -41,7 +41,7 @@ enum StatusEffectType {
 
 # https://terrabattle.fandom.com/wiki/Skills
 enum AreaOfEffect {
-	# Affects pincered units but only activates when the unit initiates a pincer attack
+	# Affects pincered units but for weapon skills only activates when the unit initiates a pincer attack
 	NONE,
 	
 	# Passively equipped
@@ -79,16 +79,16 @@ enum SkillTier {
 }
 
 enum SkillType {
-	BUFF,
-	
-	DEBUFF,
-	
 	ATTACK,
 	
 	HEAL,
 	
-	COUNTER,
+	# Cures specific status effect(s)
+	CURE_AILMENT,
 	
-	# Cures a status ailment
-	CURE_AILMENT
+	BUFF,
+	
+	DEBUFF,
+	
+	COUNTER
 }
