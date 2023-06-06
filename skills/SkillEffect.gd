@@ -1,13 +1,14 @@
 extends Node2D
 
+class_name SkillEffect
+
 
 onready var skill_sound := $SkillSound
+onready var tween := $Tween
 
 
-signal animation_done
+signal effect_finished
 
 
-# Array<Cell>
-func play_animation(targets: Array) -> void:
-	
-	emit_signal("animation_done")
+func execute(_unit: Unit, _skill: Skill, _target_cells: Array) -> void:
+	emit_signal("effect_finished")
