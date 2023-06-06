@@ -32,6 +32,8 @@ export(Enums.StatusEffectType) var status_effect: int = Enums.StatusEffectType.N
 # If it's zero then does not inflict a status effect
 export(int, 0, 5, 1) var status_effect_duration_turns: int = 0
 
+export(PackedScene) var skill_effect_scene: PackedScene
+
 
 func get_description() -> String:
 	# TODO: Generate description based on attributes
@@ -41,8 +43,16 @@ func get_description() -> String:
 	
 	return ""
 
+func is_physical() -> bool:
+	return primary_weapon_type != Enums.WeaponType.STAFF
+
 
 func is_healing() -> bool:
 	return skill_type == Enums.SkillType.BUFF or \
 			skill_type == Enums.SkillType.HEAL or \
 			skill_type == Enums.SkillType.CURE_AILMENT
+
+
+func is_attack() -> bool:
+	return skill_type == Enums.SkillType.ATTACK
+
