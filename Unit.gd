@@ -245,9 +245,44 @@ func activate_skills(random: RandomNumberGenerator) -> Array:
 
 
 func play_skill_activation_animation(activated_skills: Array) -> void:
+	if activated_skills.empty():
+		$Control/ActivatedSkillMarginContainer.hide()
+	
 	for skill in activated_skills:
 		print("Activated skill  %s " % skill.skill_name)
-
+		
+		for child in $Control/ActivatedSkillMarginContainer/MarginContainer/VBoxContainer.get_children():
+			$Control/ActivatedSkillMarginContainer/MarginContainer/VBoxContainer.remove_child(child)
+			child.queue_free()
+		
+		var hbox := HBoxContainer.new()
+		
+		var label := Label.new()
+		
+		hbox.add_child(label)
+		
+		$Control/ActivatedSkillMarginContainer/MarginContainer/VBoxContainer.add_child(hbox)
+		
+		label.text = skill.skill_name
+		
+		var screen_center: Vector2 = get_viewport_rect().size / 2.0
+		
+		var position_in_viewport: Vector2 = get_global_transform_with_canvas().origin
+		
+		var position_relative_to_center: Vector2 = screen_center - position_in_viewport
+		
+		if position_relative_to_center.x < 0:
+			$Control/ActivatedSkillMarginContainer.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		else:
+			$Control/ActivatedSkillMarginContainer.grow_horizontal = Control.GROW_DIRECTION_END
+		
+		if position_relative_to_center.y < 0:
+			$Control/ActivatedSkillMarginContainer.grow_vertical = Control.GROW_DIRECTION_END
+		else:
+			$Control/ActivatedSkillMarginContainer.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		
+		$Control/ActivatedSkillMarginContainer.hide()
+		$Control/ActivatedSkillMarginContainer.show()
 
 ## Signals
 

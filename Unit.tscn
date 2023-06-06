@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Unit.gd" type="Script" id=1]
 [ext_resource path="res://unit_rect.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://assets/ui/hp_bar_bg.png" type="Texture" id=7]
 [ext_resource path="res://HpBar.gd" type="Script" id=8]
 [ext_resource path="res://skills/Chomp.tres" type="Resource" id=9]
+[ext_resource path="res://assets/ui/label_HP_bg.png" type="Texture" id=10]
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 32, 32 )
@@ -88,6 +89,7 @@ __meta__ = {
 }
 
 [node name="Border" type="TextureRect" parent="Control"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -96,6 +98,7 @@ __meta__ = {
 }
 
 [node name="HpBar" type="TextureProgress" parent="Control"]
+visible = false
 anchor_left = 0.05
 anchor_top = 0.8
 anchor_right = 1.0
@@ -111,6 +114,7 @@ script = ExtResource( 8 )
 [node name="Tween" type="Tween" parent="Control/HpBar"]
 
 [node name="Attribute" type="TextureRect" parent="Control"]
+visible = false
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -125,11 +129,48 @@ __meta__ = {
 }
 
 [node name="WeaponType" type="TextureRect" parent="Control"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -41.0
 margin_bottom = 40.0
 mouse_filter = 2
+
+[node name="ActivatedSkillMarginContainer" type="MarginContainer" parent="Control"]
+visible = false
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -37.0
+margin_top = -27.0
+margin_right = 37.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Control/ActivatedSkillMarginContainer"]
+show_behind_parent = true
+margin_right = 74.0
+margin_bottom = 27.0
+texture = ExtResource( 10 )
+patch_margin_left = 19
+patch_margin_top = 14
+patch_margin_right = 25
+patch_margin_bottom = 13
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/ActivatedSkillMarginContainer"]
+margin_right = 74.0
+margin_bottom = 27.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/ActivatedSkillMarginContainer/MarginContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 69.0
+margin_bottom = 22.0
 
 [connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]
 [connection signal="input_event" from="SelectionArea2D" to="." method="_on_SelectionArea2D_input_event"]
