@@ -17,6 +17,9 @@ func _ready() -> void:
 	$AnimatedSprite.play("default")
 	$AnimatedSprite.rotation_degrees = random.randf_range(0, 360)
 	
+	if random.randf() < 0.5:
+		$AnimatedSprite.flip_h = true
+	
 	var _error = tween.interpolate_property(label_container, "position",
 				label_container.position, target_position.position,
 				float_duration_seconds,
