@@ -79,7 +79,6 @@ align = 1
 valign = 1
 
 [node name="Position2D" type="Position2D" parent="."]
-visible = false
-position = Vector2( 0, -96 )
+position = Vector2( 0, -200 )
 
 [connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]
