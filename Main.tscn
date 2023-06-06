@@ -52,12 +52,6 @@ __meta__ = {
 [node name="Pincerer" type="Node" parent="Board"]
 script = ExtResource( 9 )
 
-[node name="PincerExecutor" type="Node" parent="Board"]
-script = ExtResource( 10 )
-
-[node name="SkillActivationTimer" type="Timer" parent="Board/PincerExecutor"]
-wait_time = 0.25
-
 [node name="DragTimer" type="Timer" parent="Board"]
 
 [node name="UpperBounds" type="StaticBody2D" parent="Board"]
@@ -118,7 +112,7 @@ __meta__ = {
 }
 
 [node name="Enemy" parent="Board/Enemies" instance=ExtResource( 3 )]
-position = Vector2( 56, 56 )
+position = Vector2( 152, 152 )
 
 [node name="Enemy2" parent="Board/Enemies" instance=ExtResource( 3 )]
 position = Vector2( 152, 336 )
@@ -141,5 +135,11 @@ position = Vector2( 152, 456 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="PincerExecutor" type="Node2D" parent="Board"]
+script = ExtResource( 10 )
+
+[node name="SkillActivationTimer" type="Timer" parent="Board/PincerExecutor"]
+wait_time = 0.25
 
 [connection signal="timeout" from="Board/PincerExecutor/SkillActivationTimer" to="Board/PincerExecutor" method="_on_SkillActivationTimer_timeout"]
