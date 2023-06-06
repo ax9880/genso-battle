@@ -21,8 +21,10 @@ export(float, 0, 3, 0.5) var secondary_power: float = 0.0
 export(Enums.WeaponType) var secondary_weapon_type: int
 export(Enums.Attribute) var secondary_attribute: int
 
-# True if can absorb damage from primary attack.
-export var can_absorb: bool
+# If >0, can absorb damage from primary attack, if attack deals damage >0
+export(float, 0, 1, 0.1) var absorb_rate: float = 0
+
+# Max HP healed. Also applies to absorbed HP
 export(int, 0, 9000, 100) var max_heal: int = 700
 
 export(Enums.StatusEffectType) var status_effect: int = Enums.StatusEffectType.NONE
