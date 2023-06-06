@@ -4,6 +4,7 @@ class_name Skill
 
 # Localizable string
 export var skill_name: String
+export(Enums.SkillType) var skill_type = Enums.SkillType.ATTACK
 
 export(Enums.AreaOfEffect) var area_of_effect = Enums.AreaOfEffect.NONE
 export(float, 0, 1, 0.1) var activation_rate: float = 0.3
