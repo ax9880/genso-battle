@@ -7,6 +7,7 @@ export var skill_name: String
 export(Enums.SkillType) var skill_type = Enums.SkillType.ATTACK
 
 export(Enums.AreaOfEffect) var area_of_effect = Enums.AreaOfEffect.NONE
+export var area_of_effect_size: int = 1
 export(float, 0, 1, 0.1) var activation_rate: float = 0.3
 
 # Primary effect
@@ -37,3 +38,9 @@ func get_description() -> String:
 	
 	
 	return ""
+
+
+func is_healing() -> bool:
+	return skill_type == Enums.SkillType.BUFF or \
+			skill_type == Enums.SkillType.HEAL or \
+			skill_type == Enums.SkillType.CURE_AILMENT
