@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/vfx/spotlight_4.png" type="Texture" id=1]
+
+[sub_resource type="CanvasItemMaterial" id=1]
+blend_mode = 1
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0.197348 ), 0.0, 5.70275, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=2]
+colors = PoolColorArray( 0.395594, 0.887542, 0.937703, 1, 0.177177, 0.965047, 0.317786, 1 )
+
+[node name="HealParticles" type="CPUParticles2D"]
+material = SubResource( 1 )
+emitting = false
+amount = 12
+one_shot = true
+explosiveness = 0.5
+lifetime_randomness = 0.15
+texture = ExtResource( 1 )
+emission_shape = 2
+emission_rect_extents = Vector2( 50, 50 )
+gravity = Vector2( 0, -98 )
+scale_amount_curve = SubResource( 3 )
+color_ramp = SubResource( 2 )
