@@ -1,7 +1,7 @@
 extends Node
 
 enum Attribute {
-	# Non-elemental
+	# Non-elemental (e.g. healing)
 	NONE,
 	
 	# Attribute 1, opposes attribute 2
@@ -9,6 +9,11 @@ enum Attribute {
 	
 	# Attribute 2, opposes attribute 1
 	ATTRIBUTE_2
+}
+
+const ATTRIBUTE_RELATIONSHIPS: Dictionary = {
+	Attribute.ATTRIBUTE_1: Attribute.ATTRIBUTE_2,
+	Attribute.ATTRIBUTE_2: Attribute.ATTRIBUTE_1
 }
 
 enum WeaponType {
@@ -23,6 +28,16 @@ enum WeaponType {
 	
 	# Elemental
 	STAFF
+}
+
+# {Weapon type: weapon type it has an advantage over}
+const WEAPON_RELATIONSHIPS: Dictionary = {
+	# Spear beats sword
+	# Sword beats gun
+	# Gun beats spear
+	WeaponType.SPEAR: WeaponType.SWORD,
+	WeaponType.SWORD: WeaponType.GUN,
+	WeaponType.GUN: WeaponType.SPEAR,
 }
 
 enum StatusEffectType {
@@ -65,7 +80,9 @@ enum AreaOfEffect {
 	COLUMNS_X,
 	
 	# Affects units in the chain
-	CHAIN
+	CHAIN,
+	
+	ALL
 	
 	# Border, outer columns/rows, corners, diamond
 }
