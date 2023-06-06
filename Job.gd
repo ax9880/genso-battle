@@ -5,6 +5,8 @@ class Stats extends Reference:
 
 export (Resource) var starting_stats: Resource
 
+export (Array, Resource) var skills: Array
+
 var base_stats: StartingStats
 
 # Stats after buffs and debuffs

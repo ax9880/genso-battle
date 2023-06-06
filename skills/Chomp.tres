@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://skills/Skill.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+skill_name = "CHOMP_SKILL"
+area_of_effect = 0
+activation_rate = 0.3
+primary_power = 1.0
+primary_weapon_type = 0
+primary_attribute = 0
+secondary_power = 0.0
+secondary_weapon_type = 0
+secondary_attribute = 0
+can_absorb = true
+max_heal = 700
+status_effect = 0
+status_effect_duration_turns = 0

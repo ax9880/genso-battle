@@ -11,7 +11,7 @@ turn_counter = 1
 [node name="Sprite" parent="." index="1"]
 modulate = Color( 1, 0.384314, 0.384314, 1 )
 
-[node name="SelectionArea2D" parent="." index="4"]
+[node name="SelectionArea2D" parent="." index="5"]
 visible = false
 monitorable = false
 
