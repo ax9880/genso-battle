@@ -224,6 +224,31 @@ func inflict_damage(damage: int) -> void:
 	$Job.decrease_health(damage)
 
 
+# Activates skills and 
+func activate_skills(random: RandomNumberGenerator) -> Array:
+	var activated_skills := []
+	
+	for s in $Job.skills:
+		var skill: Skill = s as Skill
+		
+		# TODO: Add more rules for activation?
+		# If unit is not leading pincer?
+		if skill.area_of_effect == Enums.AreaOfEffect.EQUIP:
+			continue
+		
+		var activation: float = random.randf()
+		
+		if skill.activation_rate > activation:
+			activated_skills.push_back(skill)
+	
+	return activated_skills
+
+
+func play_skill_activation_animation(activated_skills: Array) -> void:
+	for skill in activated_skills:
+		print("Activated skill  %s " % skill.skill_name)
+
+
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):

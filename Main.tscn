@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://grid.png" type="Texture" id=1]
 [ext_resource path="res://Unit.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Attacker.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Grid.gd" type="Script" id=8]
 [ext_resource path="res://Pincerer.gd" type="Script" id=9]
+[ext_resource path="res://PincerExecutor.gd" type="Script" id=10]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 324, 8 )
@@ -50,6 +51,12 @@ __meta__ = {
 
 [node name="Pincerer" type="Node" parent="Board"]
 script = ExtResource( 9 )
+
+[node name="PincerExecutor" type="Node" parent="Board"]
+script = ExtResource( 10 )
+
+[node name="SkillActivationTimer" type="Timer" parent="Board/PincerExecutor"]
+wait_time = 0.25
 
 [node name="DragTimer" type="Timer" parent="Board"]
 
@@ -111,10 +118,10 @@ __meta__ = {
 }
 
 [node name="Enemy" parent="Board/Enemies" instance=ExtResource( 3 )]
-position = Vector2( 152, 56 )
+position = Vector2( 56, 56 )
 
 [node name="Enemy2" parent="Board/Enemies" instance=ExtResource( 3 )]
-position = Vector2( 256, 48 )
+position = Vector2( 152, 336 )
 
 [node name="Units" type="Node2D" parent="Board"]
 __meta__ = {
@@ -122,17 +129,17 @@ __meta__ = {
 }
 
 [node name="Unit" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 64, 64 )
+position = Vector2( 144, 48 )
 
 [node name="Unit2" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 240, 248 )
+position = Vector2( 152, 248 )
 
 [node name="Unit3" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 152, 152 )
+position = Vector2( 152, 456 )
 
 [node name="Attacker" parent="Board" instance=ExtResource( 7 )]
 __meta__ = {
 "_edit_lock_": true
 }
 
-[connection signal="attacks_done" from="Board/Attacker" to="Board" method="_on_Attacker_attacks_done"]
+[connection signal="timeout" from="Board/PincerExecutor/SkillActivationTimer" to="Board/PincerExecutor" method="_on_SkillActivationTimer_timeout"]

@@ -242,7 +242,7 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 		pincer_queue = $Pincerer.find_pincers(grid, unit)
 		
 		# TODO: execute enemy pincers
-		_execute_pincers()
+		_execute_next_pincer()
 	else:
 		# Do nothing
 		_start_player_turn()
@@ -338,15 +338,13 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 	return path
 
 
-func _execute_pincers() -> void:
+func _execute_next_pincer() -> void:
 	var pincer: Pincerer.Pincer = pincer_queue.pop_front()
 	
 	if pincer != null:
-		# play pincer animation
+		# TODO: Play pincer animation
 		
-		var attack_queue: Array = _queue_attacks(pincer)
-		
-		$Attacker.start_attacks(attack_queue)
+		_start_attack_phase(pincer)
 		
 		# TODO: Check if any targeted unit has died
 	else:
@@ -356,6 +354,21 @@ func _execute_pincers() -> void:
 			_start_enemy_turn()
 		else:
 			_start_player_turn()
+
+
+func _start_attack_phase(pincer: Pincerer.Pincer) -> void:
+	var attack_queue: Array = _queue_attacks(pincer)
+	
+	$Attacker.connect("attacks_done", self, "_on_Attacker_attacks_done", [pincer], CONNECT_ONESHOT)
+	
+	$Attacker.start_attacks(attack_queue)
+
+
+func _start_skill_phase(pincer: Pincerer.Pincer) -> void:
+	# FIXME: Connect in editor
+	$PincerExecutor.connect("pincer_executed", self, "_on_PincerExecutor_pincer_executed", [], CONNECT_ONESHOT)
+	
+	$PincerExecutor.execute_pincer(pincer, grid)
 
 
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
@@ -394,5 +407,9 @@ func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pi
 
 ## Grid utils
 
-func _on_Attacker_attacks_done() -> void:
-	_execute_pincers()
+func _on_Attacker_attacks_done(pincer: Pincerer.Pincer) -> void:
+	_start_skill_phase(pincer)
+
+
+func _on_PincerExecutor_pincer_executed() -> void:
+	_execute_next_pincer()
