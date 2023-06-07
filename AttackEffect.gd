@@ -5,6 +5,7 @@ export(float) var float_duration_seconds: float = 0.65
 var random: RandomNumberGenerator = RandomNumberGenerator.new()
 
 
+# TODO: Unique animation per weapon type
 func _ready() -> void:
 	random.randomize()
 	

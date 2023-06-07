@@ -13,8 +13,6 @@ var buff_skills := []
 var attack_skills := []
 var heal_skills := []
 
-var random: RandomNumberGenerator = RandomNumberGenerator.new()
-
 var active_pincer: Pincerer.Pincer = null
 
 # Array<Array<Unit>> which include the pincering unit and the chained units
@@ -55,7 +53,7 @@ func _activate_next_skill() -> void:
 	var unit: Unit = unit_queue.pop_front()
 	
 	if unit != null:
-		var activated_skills: Array = unit.activate_skills(random)
+		var activated_skills: Array = unit.activate_skills()
 		
 		_queue_skills(unit, activated_skills)
 		
@@ -131,7 +129,6 @@ func _execute_next_skill() -> void:
 	if next_skill_attack != null:
 		var chain: Array = _find_chain(next_skill_attack.unit, complete_chains)
 		
-		# FIXME: Check. Can chain be empty?
 		assert(!chain.empty())
 		
 		# Array<Cell>

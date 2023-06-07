@@ -46,7 +46,6 @@ func start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 func _on_AnimatedSprite_frame_changed(animated_sprite: AnimatedSprite, unit: Unit, skill: Skill, target_unit: Unit) -> void:
 	if animated_sprite.frame == activation_frame and target_unit != null:
 		target_unit.apply_skill(unit, skill)
-	
 
 
 func _on_AnimatedSprite_animation_finished() -> void:

@@ -11,6 +11,7 @@ enum Attribute {
 	ATTRIBUTE_2
 }
 
+# dict[winning attribute] = losing attribute
 const ATTRIBUTE_RELATIONSHIPS: Dictionary = {
 	Attribute.ATTRIBUTE_1: Attribute.ATTRIBUTE_2,
 	Attribute.ATTRIBUTE_2: Attribute.ATTRIBUTE_1

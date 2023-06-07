@@ -38,7 +38,7 @@ func _execute_next_attack() -> void:
 
 func _execute_attack(attack: Attack) -> void:
 	for targeted_unit in attack.targeted_units:
-		var damage: int = targeted_unit.calculate_damage(attack.attacking_unit.get_stats()) * random.randf_range(0.9, 1.1)
+		var damage: int = targeted_unit.calculate_attack_damage(attack.attacking_unit.get_stats()) * random.randf_range(0.9, 1.1)
 		
 		var attack_effect: Node2D = attack_effect_packed_scene.instance()
 		add_child(attack_effect)

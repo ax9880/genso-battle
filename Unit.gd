@@ -46,6 +46,8 @@ var current_state = STATE.IDLE setget set_current_state
 
 var faction: int = INVALID_FACTION
 
+var random := RandomNumberGenerator.new()
+
 
 ## Signals
 
@@ -55,6 +57,8 @@ signal snapped_to_grid(unit)
 
 
 func _ready() -> void:
+	random.randomize()
+	
 	self.current_state = STATE.IDLE
 
 
@@ -208,20 +212,10 @@ func get_stats() -> StartingStats:
 	return $Job.current_stats
 
 
-func calculate_damage(attacking_unit_stats: StartingStats) -> int:
-	var damage: float = 0
-	var power = 1
+func calculate_attack_damage(attacker_stats: StartingStats) -> int:
+	var damage: int = calculate_damage(attacker_stats, get_stats(), 1.0, attacker_stats.weapon_type, attacker_stats.attribute)
 	
-	if attacking_unit_stats.weapon_type != Enums.WeaponType.STAFF:
-		damage = 1.395 * power * pow(attacking_unit_stats.attack, 1.7) / pow(get_stats().defense, 0.7)
-	else:
-		damage = 1.5 * power * pow(attacking_unit_stats.spiritual_attack, 1.7) / pow(get_stats().spiritual_defense, 0.7)
-	
-	# TODO: randomize
-	# TODO: circle of carnage
-	# TODO: elemental resistances
-	
-	return int(damage)
+	return damage
 
 
 func inflict_damage(damage: int) -> void:
@@ -234,7 +228,7 @@ func inflict_damage(damage: int) -> void:
 
 
 # Activates skills and 
-func activate_skills(random: RandomNumberGenerator) -> Array:
+func activate_skills() -> Array:
 	var activated_skills := []
 	
 	for s in $Job.skills:
@@ -258,6 +252,7 @@ func play_skill_activation_animation(activated_skills: Array) -> void:
 		$Control/ActivatedSkillMarginContainer.hide()
 	
 	for skill in activated_skills:
+		# TODO: Move to another scene
 		print("Activated skill %s " % skill.skill_name)
 		
 		for child in $Control/ActivatedSkillMarginContainer/MarginContainer/VBoxContainer.get_children():
@@ -297,66 +292,70 @@ func play_skill_activation_animation(activated_skills: Array) -> void:
 func apply_skill(unit: Unit, skill: Skill) -> void:
 	# If it's attack or heal, calculate the result
 	if skill.is_attack() or skill.is_healing():
-		var damage: int = 1
+		var damage := calculate_damage(unit.get_stats(), get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
+		
+		damage *= random.randf_range(0.9, 1.1)
+		
+		if skill.is_healing():
+			damage = -damage
 		
 		var absorbed_damage = int(skill.absorb_rate * damage)
 		
 		inflict_damage(damage)
 		
 		# TODO: absorbed_damage in output parameter?
+	else:
+		# If it's buff or debuff, try to apply it
+		# If it has status effect, try to apply it
+		printerr("Don't know how to apply skill %s" % skill.skill_name)
+
+
+func calculate_damage(attacker_stats: StartingStats,
+			defender_stats: StartingStats,
+			power: float,
+			weapon_type: int,
+			attribute: int) -> int:
 	
-	# If it's buff or debuff, try to apply it
-	# If it has status effect, try to apply it
-
-
-func calculate_skill_damage(skill: Skill, attacker_stats: StartingStats, defender_stats: StartingStats) -> int:
 	var damage: float = 0
-	var power = skill.primary_power
 	
-	if skill.is_physical():
+	if weapon_type != Enums.WeaponType.STAFF:
 		damage = 1.395 * power * pow(attacker_stats.attack, 1.7) / pow(defender_stats.defense, 0.7)
 		
-		damage = damage * get_weapon_type_advantage(attacker_stats.weapon_type, defender_stats)
+		damage = damage * get_weapon_type_advantage(attacker_stats.weapon_type, defender_stats.weapon_type)
 	else:
 		damage = 1.5 * power * pow(attacker_stats.spiritual_attack, 1.7) / pow(defender_stats.spiritual_defense, 0.7)
 		
-		if not skill.is_healing():
-			damage = damage * get_attribute_advantage(skill.primary_attribute, defender_stats.attribute)
-			
-			# TODO: apply same attribute resistance
-	
-	# TODO: randomize
-	if skill.is_healing():
-		damage = -damage
+		damage = damage * (1 - get_attribute_resistance(defender_stats, attribute, defender_stats.attribute))
 	
 	return int(damage)
 
 
+
 # power, weapon type, etc for the secondary damage
-#func skill_damage(power: int, )
-func get_weapon_type_advantage(attacker_weapon_type, defender_weapon_type) -> int:
-	var advantage = Enums.WEAPON_RELATIONSHIPS.get(attacker_weapon_type)
+func get_weapon_type_advantage(attacker_weapon_type, defender_weapon_type) -> float:
+	var disadvantaged_weapon_type = Enums.WEAPON_RELATIONSHIPS.get(attacker_weapon_type)
 	
-	if advantage != null and advantage == defender_weapon_type:
-		return 2
+	# TODO: Move numbers to constants
+	if disadvantaged_weapon_type != null and disadvantaged_weapon_type == defender_weapon_type:
+		return 2.0
 	else:
-		return 1
+		return 1.0
 
 
-func get_attribute_advantage(attacker_attribute, defender_attribute) -> int:
-	var advantage = Enums.ATTRIBUTE_RELATIONSHIPS.get(attacker_attribute)
-	
-	if advantage != null and advantage == defender_attribute:
-		return 2
+func get_attribute_resistance(defender_stats: StartingStats, attacker_attribute, defender_attribute) -> float:
+	if attacker_attribute == defender_attribute:
+		return defender_stats.same_attribute_resistance
 	else:
-		return 1
-
-
-func get_elemental_resistance(stats: StartingStats, attribute: int) -> float:
-	if stats.attribute == attribute:
-		return stats.same_attribute_resistance
-	else:
-		return 0.0
+		var disadvantaged_attribute = Enums.ATTRIBUTE_RELATIONSHIPS.get(attacker_attribute)
+		
+		if disadvantaged_attribute != null and disadvantaged_attribute == defender_attribute:
+			# Vulnerable
+			return -1.0
+		else:
+			# TODO: Use elemental resistance dictionary
+			
+			# No resistance
+			return 0.0
 
 
 ## Signals
