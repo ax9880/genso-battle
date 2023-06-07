@@ -3,6 +3,9 @@ extends Node2D
 class_name SkillEffect
 
 export(PackedScene) var heal_particles_packed_scene: PackedScene
+export(float) var delay_before_absorbing_damage_seconds: float = 0.5
+export(float) var delay_after_absorbing_damage_seconds: float = 0.5
+export(float) var delay_after_skill_without_absorb_seconds: float = 0.2
 
 onready var skill_sound := $SkillSound
 onready var tween := $Tween
@@ -40,6 +43,7 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 func _build_heal_particles(unit: Unit) -> void:
 	var particles: CPUParticles2D = heal_particles_packed_scene.instance()
 	
+	# Particles is freed automatically after its timer expires
 	unit.add_child(particles)
 	
 	particles.emitting = true
@@ -68,12 +72,16 @@ func _update_count(unit: Unit) -> void:
 	
 	if targets_affected >= target_count:
 		if absorbed_damage > 0:
+			yield(get_tree().create_timer(delay_before_absorbing_damage_seconds), "timeout")
+			
 			unit.inflict_damage(max(-max_absorbed_damage, -absorbed_damage))
 			
 			_build_heal_particles(unit)
 			
-			# TODO: add a delay
-		
+			yield(get_tree().create_timer(delay_after_absorbing_damage_seconds), "timeout")
+		else:
+			yield(get_tree().create_timer(delay_after_skill_without_absorb_seconds), "timeout")
+			
 		emit_signal("effect_finished")
 		hide()
 		queue_free()
