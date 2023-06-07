@@ -1,6 +1,5 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://assets/fonts/CinzelDecorativeBold.tres" type="DynamicFont" id=1]
 [ext_resource path="res://AttackEffect.gd" type="Script" id=2]
 [ext_resource path="res://assets/vfx/hit_cross.png" type="Texture" id=3]
 
@@ -50,35 +49,13 @@ animations = [ {
 "speed": 16.0
 } ]
 
-[node name="AttackEffect" type="Node2D"]
-script = ExtResource( 2 )
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+[node name="AttackEffect" type="AnimatedSprite"]
 modulate = Color( 0.0196078, 0.862745, 1, 1 )
 material = SubResource( 1 )
 scale = Vector2( 0.175, 0.175 )
 frames = SubResource( 8 )
 frame = 6
 playing = true
+script = ExtResource( 2 )
 
-[node name="Tween" type="Tween" parent="."]
-
-[node name="LabelContainer" type="Node2D" parent="."]
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="Label" type="Label" parent="LabelContainer"]
-margin_left = -120.0
-margin_top = -64.0
-margin_right = 120.0
-margin_bottom = 64.0
-custom_fonts/font = ExtResource( 1 )
-text = "9999"
-align = 1
-valign = 1
-
-[node name="Position2D" type="Position2D" parent="."]
-position = Vector2( 0, -200 )
-
-[connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]
+[connection signal="animation_finished" from="." to="." method="_on_AttackEffect_animation_finished"]

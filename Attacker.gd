@@ -44,7 +44,6 @@ func _execute_attack(attack: Attack) -> void:
 		add_child(attack_effect)
 		
 		attack_effect.position = targeted_unit.position
-		attack_effect.set_value(damage)
 		
 		$AudioStreamPlayer.play()
 		

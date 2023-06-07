@@ -132,7 +132,7 @@ func _execute_next_skill() -> void:
 		var chain: Array = _find_chain(next_skill_attack.unit, complete_chains)
 		
 		# FIXME: Check. Can chain be empty?
-		#assert(!chain.empty())
+		assert(!chain.empty())
 		
 		# Array<Cell>
 		var target_cells: Array = _find_area_of_effect_target_cells(next_skill_attack.unit,

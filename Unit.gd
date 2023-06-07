@@ -21,6 +21,8 @@ const ENEMY_FACTION: int = 2
 
 ## Exports
 
+export(PackedScene) var damage_numbers_packed_scene: PackedScene
+
 export var velocity_pixels_per_second: float = 10.0
 export var snap_velocity_pixels_per_second: float = 200.0
 export var swap_velocity_pixels_per_second: float = 500.0
@@ -224,6 +226,11 @@ func calculate_damage(attacking_unit_stats: StartingStats) -> int:
 
 func inflict_damage(damage: int) -> void:
 	$Job.decrease_health(damage)
+	
+	var damage_numbers: Node2D = damage_numbers_packed_scene.instance()
+	add_child(damage_numbers)
+	
+	damage_numbers.play(damage)
 
 
 # Activates skills and 
@@ -290,7 +297,7 @@ func play_skill_activation_animation(activated_skills: Array) -> void:
 func apply_skill(unit: Unit, skill: Skill) -> void:
 	# If it's attack or heal, calculate the result
 	if skill.is_attack() or skill.is_healing():
-		var damage: int = 0
+		var damage: int = 1
 		
 		var absorbed_damage = int(skill.absorb_rate * damage)
 		
