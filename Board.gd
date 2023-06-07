@@ -333,7 +333,10 @@ func _execute_next_pincer() -> void:
 	if pincer != null:
 		# TODO: Play pincer animation
 		
-		_start_attack_phase(pincer)
+		# TODO: Change allies and enemies when it's the enemy's turn
+		$PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
+		
+		$PincerExecutor.start_skill_activation_phase(pincer, grid, $Units.get_children(), $Enemies.get_children())
 		
 		# TODO: Check if any targeted unit has died
 	else:
@@ -353,8 +356,14 @@ func _start_attack_phase(pincer: Pincerer.Pincer) -> void:
 	$Attacker.start(attack_queue)
 
 
-func _start_skill_phase(pincer: Pincerer.Pincer) -> void:
-	$PincerExecutor.execute_pincer(pincer, grid)
+func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
+	$PincerExecutor.connect("attack_skill_phase_finished", self, "_on_PincerExecutor_attack_skill_phase_finished", [pincer], CONNECT_ONESHOT)
+	
+	$PincerExecutor.start_attack_skill_phase()
+
+
+func _start_heal_phase(pincer: Pincerer.Pincer) -> void:
+	$PincerExecutor.start_heal_phase()
 
 
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
@@ -392,8 +401,18 @@ func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pi
 
 
 func _on_Attacker_attack_phase_finished(pincer: Pincerer.Pincer) -> void:
-	_start_skill_phase(pincer)
+	_start_attack_skill_phase(pincer)
+
+
+func _on_PincerExecutor_skill_activation_phase_finished(pincer: Pincerer.Pincer) -> void:
+	_start_attack_phase(pincer)
+
+
+func _on_PincerExecutor_attack_skill_phase_finished(pincer: Pincerer.Pincer) -> void:
+	_start_heal_phase(pincer)
 
 
 func _on_PincerExecutor_pincer_executed() -> void:
 	_execute_next_pincer()
+
+

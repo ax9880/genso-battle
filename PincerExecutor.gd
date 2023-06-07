@@ -38,11 +38,6 @@ signal pincer_executed
 
 
 func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies: Array = [], _enemies: Array = []) -> void:
-	# TODO
-	pass
-
-
-func execute_pincer(pincer: Pincerer.Pincer, _grid: Grid, _allies: Array = [], _enemies: Array = []) -> void:
 	active_pincer = pincer
 	grid = _grid
 	allies = _allies
@@ -64,11 +59,12 @@ func _activate_next_skill() -> void:
 		
 		_queue_skills(unit, activated_skills)
 		
+		# TODO: if no skills are activated then to the next unit
 		unit.play_skill_activation_animation(activated_skills)
 	else:
 		$SkillActivationTimer.stop()
 		
-		_start_attack_skill_phase()
+		emit_signal("skill_activation_phase_finished")
 
 
 # Queue units to activate their skills one by one
@@ -124,7 +120,11 @@ func _queue_skills(unit: Unit, activated_skills: Array) -> void:
 				printerr("Unrecognized skill type: ", skill.skill_type)
 
 
-func _start_attack_skill_phase() -> void:
+func start_attack_skill_phase() -> void:
+	_execute_next_skill()
+
+
+func _execute_next_skill() -> void:
 	var next_skill_attack: SkillAttack = attack_skills.pop_front()
 	
 	if next_skill_attack != null:
@@ -147,9 +147,7 @@ func _start_attack_skill_phase() -> void:
 		
 		skill_effect.execute(next_skill_attack.unit, next_skill_attack.skill, target_cells)
 	else:
-		print("No skills activated")
-		
-		emit_signal("pincer_executed")
+		emit_signal("attack_skill_phase_finished")
 
 
 # Find the chain a unit belongs to.
@@ -164,9 +162,14 @@ func _find_chain(unit: Unit, chains: Array) -> Array:
 	return []
 
 
-func _on_SkillEffect_effect_finished() -> void:
-	_activate_next_skill()
+func start_heal_phase() -> void:
+	emit_signal("heal_phase_finished")
+	
+	emit_signal("pincer_executed")
 
+
+func _on_SkillEffect_effect_finished() -> void:
+	start_attack_skill_phase()
 
 
 func _on_SkillActivationTimer_timeout() -> void:
