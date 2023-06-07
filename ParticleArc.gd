@@ -1,20 +1,31 @@
 extends Node2D
 
+export(float) var trail_velocity_pixels_per_second := 1200.0
+export(float) var displacement_time_seconds := 0.2
+
+# If true, the tween time is fixed and the velocity of the trail will
+# be determined by the tween automatically.
+export(bool) var is_tween_fixed_time := true
+
+export(float) var arc_height := 100.0
+export(float) var delay_before_free_seconds: float = 1.0
+
 onready var particles: CPUParticles2D = $HealParticles
 onready var tween := $Tween
-
-export(float) var trail_velocity_pixels_per_second := 400.0
-export(float) var arc_height := 100.0
 
 var target: Vector2
 var total_tween_time_seconds: float
 
 signal target_reached
 
+
 func play(start_position: Vector2, target_position: Vector2) -> void:
 	var distance: float = start_position.distance_to(target_position)
 	
-	total_tween_time_seconds = distance / trail_velocity_pixels_per_second
+	if is_tween_fixed_time:
+		total_tween_time_seconds = displacement_time_seconds
+	else:
+		total_tween_time_seconds = distance / trail_velocity_pixels_per_second
 	
 	rotation = start_position.angle_to_point(target_position)
 	
@@ -41,6 +52,10 @@ func _on_Tween_tween_all_completed() -> void:
 	emit_signal("target_reached")
 	
 	particles.emitting = false
+	
+	yield(get_tree().create_timer(delay_before_free_seconds), "timeout")
+	
+	queue_free()
 
 
 func _on_Tween_tween_completed(_object: Object, key: String) -> void:

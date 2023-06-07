@@ -5,7 +5,6 @@
 
 [node name="ParticleArc" type="Node2D"]
 script = ExtResource( 2 )
-trail_velocity_pixels_per_second = 600.0
 
 [node name="HealParticles" parent="." instance=ExtResource( 1 )]
 emitting = true
