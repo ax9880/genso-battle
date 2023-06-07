@@ -348,9 +348,9 @@ func _execute_next_pincer() -> void:
 func _start_attack_phase(pincer: Pincerer.Pincer) -> void:
 	var attack_queue: Array = _queue_attacks(pincer)
 	
-	$Attacker.connect("attacks_done", self, "_on_Attacker_attacks_done", [pincer], CONNECT_ONESHOT)
+	$Attacker.connect("attack_phase_finished", self, "_on_Attacker_attack_phase_finished", [pincer], CONNECT_ONESHOT)
 	
-	$Attacker.start_attacks(attack_queue)
+	$Attacker.start(attack_queue)
 
 
 func _start_skill_phase(pincer: Pincerer.Pincer) -> void:
@@ -391,7 +391,7 @@ func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pi
 			_queue_attack(queue, targeted_units, unit, pincering_unit)
 
 
-func _on_Attacker_attacks_done(pincer: Pincerer.Pincer) -> void:
+func _on_Attacker_attack_phase_finished(pincer: Pincerer.Pincer) -> void:
 	_start_skill_phase(pincer)
 
 

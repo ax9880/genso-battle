@@ -1,14 +1,13 @@
 extends Node2D
 
-
 onready var tween: Tween = $Tween
 onready var label_container: Node2D = $LabelContainer
 onready var target_position: Position2D = $Position2D
 
 export(float) var float_duration_seconds: float = 0.65
 
-
 var random: RandomNumberGenerator = RandomNumberGenerator.new()
+
 
 func _ready() -> void:
 	random.randomize()
