@@ -66,6 +66,8 @@ func _assign_enemies_to_cells() -> void:
 		enemy.connect("started_moving", self, "_on_Enemy_started_moving")
 		
 		enemy.faction = Unit.ENEMY_FACTION
+		
+		enemy.set_process_input(false)
 
 
 func _assign_unit_to_cell(unit: Unit) -> void:
@@ -334,7 +336,7 @@ func _execute_next_pincer() -> void:
 		# TODO: Play pincer animation
 		
 		# TODO: Change allies and enemies when it's the enemy's turn
-		$PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
+		var _error = $PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
 		
 		$PincerExecutor.start_skill_activation_phase(pincer, grid, $Units.get_children(), $Enemies.get_children())
 		
@@ -351,13 +353,13 @@ func _execute_next_pincer() -> void:
 func _start_attack_phase(pincer: Pincerer.Pincer) -> void:
 	var attack_queue: Array = _queue_attacks(pincer)
 	
-	$Attacker.connect("attack_phase_finished", self, "_on_Attacker_attack_phase_finished", [pincer], CONNECT_ONESHOT)
+	var _error = $Attacker.connect("attack_phase_finished", self, "_on_Attacker_attack_phase_finished", [pincer], CONNECT_ONESHOT)
 	
 	$Attacker.start(attack_queue)
 
 
 func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
-	$PincerExecutor.connect("attack_skill_phase_finished", self, "_on_PincerExecutor_attack_skill_phase_finished", [pincer], CONNECT_ONESHOT)
+	var _error = $PincerExecutor.connect("attack_skill_phase_finished", self, "_on_PincerExecutor_attack_skill_phase_finished", [pincer], CONNECT_ONESHOT)
 	
 	$PincerExecutor.start_attack_skill_phase()
 
