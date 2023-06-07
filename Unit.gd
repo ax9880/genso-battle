@@ -148,6 +148,8 @@ func _release() -> void:
 	if current_state == STATE.PICKED_UP:
 		self.current_state = STATE.IDLE
 		
+		print("released %s" % name)
+		
 		emit_signal("released", self)
 
 
@@ -289,17 +291,18 @@ func play_skill_activation_animation(activated_skills: Array) -> void:
 		$Control/ActivatedSkillMarginContainer.show()
 
 
-func apply_skill(unit: Unit, skill: Skill) -> void:
-	# If it's attack or heal, calculate the result
+func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef) -> void:
 	if skill.is_attack() or skill.is_healing():
 		var damage := calculate_damage(unit.get_stats(), get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
 		
-		damage *= random.randf_range(0.9, 1.1)
+		damage = int(damage * random.randf_range(0.9, 1.1))
 		
 		if skill.is_healing():
 			damage = -damage
 		
 		var absorbed_damage = int(skill.absorb_rate * damage)
+		
+		on_damage_absorbed_callback.call_func(absorbed_damage)
 		
 		inflict_damage(damage)
 		

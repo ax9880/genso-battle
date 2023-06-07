@@ -141,7 +141,7 @@ func _execute_next_skill() -> void:
 		
 		add_child(skill_effect)
 		
-		skill_effect.connect("effect_finished", self, "_on_SkillEffect_effect_finished")
+		var _error = skill_effect.connect("effect_finished", self, "_on_SkillEffect_effect_finished")
 		
 		skill_effect.start(next_skill_attack.unit, next_skill_attack.skill, target_cells)
 	else:

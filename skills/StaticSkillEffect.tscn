@@ -48,7 +48,7 @@ animations = [ {
 
 [node name="StaticSkillEffect" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-activation_frame = 2
+activation_frame = 0
 animation_packed_scene = ExtResource( 4 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="." index="0"]

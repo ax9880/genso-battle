@@ -3,6 +3,8 @@ extends Node2D
 class_name SkillEffect
 
 
+export(PackedScene) var heal_particles_packed_scene: PackedScene
+
 onready var skill_sound := $SkillSound
 onready var tween := $Tween
 
