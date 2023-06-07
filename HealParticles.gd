@@ -1,5 +1,9 @@
 extends CPUParticles2D
 
 
+export(bool) var free_on_timeout: bool = true
+
+
 func _on_Timer_timeout() -> void:
-	queue_free()
+	if free_on_timeout:
+		queue_free()
