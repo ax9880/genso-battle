@@ -9,5 +9,5 @@ onready var tween := $Tween
 signal effect_finished
 
 
-func execute(unit: Unit, skill: Skill, target_cells: Array) -> void:
+func start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	emit_signal("effect_finished")

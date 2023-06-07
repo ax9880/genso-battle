@@ -15,7 +15,7 @@ func _ready() -> void:
 	$AnimatedSprite.stop()
 
 
-func execute(unit: Unit, skill: Skill, target_cells: Array) -> void:
+func start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	target_count = target_cells.size()
 	targets_affected = 0
 	absorbed_damage = 0

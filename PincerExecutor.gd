@@ -60,6 +60,7 @@ func _activate_next_skill() -> void:
 		_queue_skills(unit, activated_skills)
 		
 		# TODO: if no skills are activated then to the next unit
+		# use call deferred? recursion?
 		unit.play_skill_activation_animation(activated_skills)
 	else:
 		$SkillActivationTimer.stop()
@@ -145,7 +146,7 @@ func _execute_next_skill() -> void:
 		
 		skill_effect.connect("effect_finished", self, "_on_SkillEffect_effect_finished")
 		
-		skill_effect.execute(next_skill_attack.unit, next_skill_attack.skill, target_cells)
+		skill_effect.start(next_skill_attack.unit, next_skill_attack.skill, target_cells)
 	else:
 		emit_signal("attack_skill_phase_finished")
 
@@ -163,6 +164,10 @@ func _find_chain(unit: Unit, chains: Array) -> Array:
 
 
 func start_heal_phase() -> void:
+	if heal_skills.empty():
+		# emit signal and don't play any animation
+		pass
+	
 	emit_signal("heal_phase_finished")
 	
 	emit_signal("pincer_executed")
