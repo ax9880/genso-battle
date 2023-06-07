@@ -19,14 +19,27 @@ var active_pincer: Pincerer.Pincer = null
 
 # Array<Array<Unit>> which include the pincering unit and the chained units
 var complete_chains := []
+
+# Array<Unit>
 var allies := []
+
+# Array<Unit>
 var enemies := []
 
-# To calculate areas
+# To calculate areas of effect
 var grid: Grid
 
 # Finished executing a pincer
+signal skill_activation_phase_finished
+signal attack_skill_phase_finished
+signal heal_phase_finished
+
 signal pincer_executed
+
+
+func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies: Array = [], _enemies: Array = []) -> void:
+	# TODO
+	pass
 
 
 func execute_pincer(pincer: Pincerer.Pincer, _grid: Grid, _allies: Array = [], _enemies: Array = []) -> void:
@@ -49,12 +62,10 @@ func _activate_next_skill() -> void:
 	if unit != null:
 		var activated_skills: Array = unit.activate_skills(random)
 		
-		# Add skill to each queue according to its skill type
 		_queue_skills(unit, activated_skills)
 		
 		unit.play_skill_activation_animation(activated_skills)
 	else:
-		# activation done
 		$SkillActivationTimer.stop()
 		
 		_start_attack_skill_phase()
@@ -96,6 +107,7 @@ func _build_chains_including_pincering_unit(pincer: Pincerer.Pincer) -> Array:
 	return chains
 
 
+# Add skill to each queue according to its skill type
 func _queue_skills(unit: Unit, activated_skills: Array) -> void:
 	for skill in activated_skills:
 		var skill_attack: SkillAttack = SkillAttack.new()
@@ -127,10 +139,7 @@ func _start_attack_skill_phase() -> void:
 			active_pincer.pincered_units,
 			chain)
 		
-		# Instance its effect scene
-		# Connect to a signal that tells you when the animation is finished
-		# And in that signal call this method again
-		var skill_effect: Node2D = next_skill_attack.skill.skill_effect_scene.instance()
+		var skill_effect: Node2D = next_skill_attack.skill.effect_scene.instance()
 		
 		add_child(skill_effect)
 		

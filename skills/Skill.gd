@@ -3,11 +3,11 @@ extends Resource
 class_name Skill
 
 # Localizable string
-export var skill_name: String
+export(String) var skill_name: String
 export(Enums.SkillType) var skill_type = Enums.SkillType.ATTACK
 
 export(Enums.AreaOfEffect) var area_of_effect = Enums.AreaOfEffect.NONE
-export var area_of_effect_size: int = 1
+export(int, 0, 10, 1) var area_of_effect_size: int = 1
 export(float, 0, 1, 0.1) var activation_rate: float = 0.3
 
 # Primary effect
@@ -29,30 +29,31 @@ export(int, 0, 9000, 100) var max_heal: int = 700
 
 export(Enums.StatusEffectType) var status_effect: int = Enums.StatusEffectType.NONE
 
-# If it's zero then does not inflict a status effect
+# If it's zero then it does not inflict a status effect
 export(int, 0, 5, 1) var status_effect_duration_turns: int = 0
 
-export(PackedScene) var skill_effect_scene: PackedScene
+export(PackedScene) var effect_scene: PackedScene
 
 
 func get_description() -> String:
 	# TODO: Generate description based on attributes
 	# Skill name, activation rate, area
 	# ...
-	
-	
 	return ""
+
 
 func is_physical() -> bool:
 	return primary_weapon_type != Enums.WeaponType.STAFF
 
 
-func is_healing() -> bool:
-	return skill_type == Enums.SkillType.BUFF or \
-			skill_type == Enums.SkillType.HEAL or \
-			skill_type == Enums.SkillType.CURE_AILMENT
-
-
 func is_attack() -> bool:
 	return skill_type == Enums.SkillType.ATTACK
 
+
+func is_healing() -> bool:
+	return skill_type == Enums.SkillType.HEAL or \
+			skill_type == Enums.SkillType.CURE_AILMENT
+
+
+func is_buff() -> bool:
+	return skill_type == Enums.SkillType.BUFF

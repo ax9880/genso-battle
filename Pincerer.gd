@@ -112,7 +112,7 @@ func _find_corner_pincers(grid: Grid, active_unit: Unit, leading_pincers: Array,
 func _find_corner_pincer(corner: CellArea2D, faction: int) -> Pincer:
 	var neighbors: Array = corner.neighbors
 	
-	assert(neighbors.size() == 2)
+	assert(neighbors.size() == 2, "Corner should have 2 neighbors")
 	
 	var pincer: Pincer = Pincer.new()
 	
@@ -196,7 +196,7 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 				break
 	
 	if is_pincer:
-		assert(pincer.pincering_units.size() == 2)
+		assert(pincer.pincering_units.size() == 2, "Pincer should have 2 pincering/leading units")
 		
 		return pincer
 	else:

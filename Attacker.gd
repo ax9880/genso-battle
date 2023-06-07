@@ -7,10 +7,9 @@ export(PackedScene) var attack_effect_packed_scene: PackedScene = null
 onready var timer: Timer = $Timer
 
 var attack_queue: Array = []
+var random := RandomNumberGenerator.new()
 
 signal attacks_done
-
-var random := RandomNumberGenerator.new()
 
 
 func _ready() -> void:

@@ -6,8 +6,6 @@ enum Turn {
 	NONE, PLAYER, ENEMY
 }
 
-export(PackedScene) var attack_effect_packed_scene: PackedScene = null
-
 onready var grid := $Grid
 onready var grid_width: int = grid.width
 onready var grid_height: int = grid.height
@@ -17,17 +15,12 @@ var active_unit_last_valid_cell: CellArea2D = null
 
 # Dictionary<CellArea2D, bool>
 var active_unit_entered_cells := {}
-
 var has_active_unit_exited_cell: bool = false
 
 var enemy_queue := []
 
-# Array<Array<Unit>>
-# Where each list consists of start unit + ... pincered units ... + end unit
+# Array<Pincer>
 var pincer_queue := []
-
-var skill_queue := []
-var heal_queue := []
 
 var current_turn: int = Turn.NONE
 
@@ -149,10 +142,9 @@ func _on_CellArea2D_area_exited(area: Area2D, cell: CellArea2D) -> void:
 		
 		active_unit_current_cell = selected_cell
 		
-		print("Left %s and entered %s" % [active_unit_last_valid_cell.coordinates, selected_cell.coordinates])
-		
-		if selected_cell.coordinates.distance_to(active_unit_last_valid_cell.coordinates) > 1.9:
+		if selected_cell.coordinates.distance_to(active_unit_last_valid_cell.coordinates) > 1.5:
 			active_unit_last_valid_cell.modulate = Color.red
+			
 			printerr("Warning! Jumped more than 1 tile")
 		
 		_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
@@ -172,7 +164,6 @@ func _on_Enemy_started_moving(enemy: Unit) -> void:
 
 
 func _update_active_unit(unit: Unit) -> void:
-	# Store this in unit?
 	active_unit_current_cell = grid.get_cell_from_position(unit.position)
 	active_unit_last_valid_cell = active_unit_current_cell
 	has_active_unit_exited_cell = false
@@ -210,10 +201,8 @@ func _swap_units(active_unit: Unit, unit_to_swap: Unit, next_active_cell: CellAr
 		last_valid_cell.unit = unit_to_swap
 	
 	if unit_to_swap != null and active_unit != unit_to_swap:
-		print("Swapped from %s to %s" % [next_active_cell.coordinates, last_valid_cell.coordinates])
-		
 		if active_unit.is_enemy(unit_to_swap.faction):
-			printerr("swapped with an enemy")
+			printerr("Swapped with an enemy")
 		
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
@@ -221,8 +210,7 @@ func _swap_units(active_unit: Unit, unit_to_swap: Unit, next_active_cell: CellAr
 func _on_Unit_released(unit: Unit) -> void:
 	var selected_cell: CellArea2D = _find_closest_cell(unit.position)
 	
-	# TODO: If ally, then swap
-	# Else, pick the last valid cell
+	# TODO: If ally, then swap, else, pick the last valid cell
 	# FIXME: May not work always
 	if active_unit_last_valid_cell != selected_cell:
 		has_active_unit_exited_cell = true
@@ -230,13 +218,14 @@ func _on_Unit_released(unit: Unit) -> void:
 	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
 	
 	unit.snap_to_grid(selected_cell.position)
-	
-	# TODO: add drag timer
 
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if has_active_unit_exited_cell:
 		_clear_active_cells()
+		
+		for unit in $Units.get_children():
+			unit.disable_selection_area()
 		
 		# Adds pincers to pincer queue
 		pincer_queue = $Pincerer.find_pincers(grid, unit)
@@ -266,10 +255,10 @@ func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
 	
 	queue.push_back(start_cell)
 	
-	# {CellArea2D, bool}
+	# Dictionary<CellArea2D, bool>
 	var discovered_dict := {}
 	
-	# {CellArea2D, [CellArea2D] (array of cells connected to this cell)}
+	# Dictionary<CellArea2D, Array<CellArea2D> (array of cells connected to this cell)>
 	# Graph as adjacency list
 	var navigation_graph := {}
 	
@@ -295,22 +284,20 @@ func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
 func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: CellArea2D) -> Array:
 	# TODO: when planning for chaining, some tiles have to be avoided
 	# and the path has to be split
+	# Array of target cells
+	# and array/dict of excluded cells?
 	var start_cell: CellArea2D = grid.get_cell_from_position(unit_position)
 	
-	# build A Star graph?
-	
-	# {CellArea2D, bool}
+	# Dictionary<CellArea2D, bool>
 	var discovered_dict := {}
 	
-	# {CellArea2D, CellArea2D}
+	# Dictionary<CellArea2D, CellArea2D>
 	var parent_dict := {}
 	
 	var queue := []
 	queue.push_back(start_cell)
 	
 	parent_dict[start_cell] = null
-	# Array of target cells
-	# and array/dict of excluded cells?
 	
 	# Breadth-first search (again)
 	while not queue.empty():
@@ -318,6 +305,8 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 		
 		# Flag as discovered
 		discovered_dict[node] = true
+		
+		# TODO: if target node found, exit early
 		
 		for neighbor in navigation_graph[node]:
 			if not discovered_dict.has(neighbor):
@@ -365,16 +354,13 @@ func _start_attack_phase(pincer: Pincerer.Pincer) -> void:
 
 
 func _start_skill_phase(pincer: Pincerer.Pincer) -> void:
-	# FIXME: Connect in editor
-	$PincerExecutor.connect("pincer_executed", self, "_on_PincerExecutor_pincer_executed", [], CONNECT_ONESHOT)
-	
 	$PincerExecutor.execute_pincer(pincer, grid)
 
 
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
 	var attack_queue := []
 	
-	# Leading units first
+	# Pincering units first
 	for pincering_unit in pincer.pincering_units:
 		_queue_attack(attack_queue, pincer.pincered_units, pincering_unit)
 	
@@ -404,8 +390,6 @@ func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pi
 		for unit in chain:
 			_queue_attack(queue, targeted_units, unit, pincering_unit)
 
-
-## Grid utils
 
 func _on_Attacker_attacks_done(pincer: Pincerer.Pincer) -> void:
 	_start_skill_phase(pincer)

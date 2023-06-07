@@ -32,16 +32,18 @@ export var max_velocity_pixels_per_second: float = 2048.0 # 2048
 # Proportional control constant
 export var kp: float = 1.4
 
+## Onready
+
+onready var tween := $Tween
+onready var sprite := $Sprite
+
+
 ## Vars
 
 var current_state = STATE.IDLE setget set_current_state
 
 var faction: int = INVALID_FACTION
 
-## Onready
-
-onready var tween := $Tween
-onready var sprite := $Sprite
 
 ## Signals
 

@@ -1,7 +1,7 @@
 extends SkillEffect
 
 
-#export(PackedScene) var 
+# Frame at which the skill is activated
 export(int) var activation_frame: int = 0
 export(PackedScene) var animation_packed_scene: PackedScene
 

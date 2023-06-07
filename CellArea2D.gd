@@ -3,13 +3,10 @@ extends Area2D
 class_name CellArea2D
 
 enum DIRECTION {
-	UP = 0,
-	
-	DOWN = 1,
-	
-	LEFT = 2,
-	
-	RIGHT = 3
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
 }
 
 

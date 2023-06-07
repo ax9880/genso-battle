@@ -20,4 +20,4 @@ absorb_rate = 0.7
 max_heal = 700
 status_effect = 0
 status_effect_duration_turns = 0
-skill_effect_scene = ExtResource( 2 )
+effect_scene = ExtResource( 2 )
