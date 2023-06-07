@@ -133,7 +133,7 @@ func _start_attack_skill_phase() -> void:
 		# FIXME: Check. Can chain be empty?
 		#assert(!chain.empty())
 		
-		# Array<CellArea2D>
+		# Array<Cell>
 		var target_cells: Array = _find_area_of_effect_target_cells(next_skill_attack.unit,
 			next_skill_attack.skill,
 			active_pincer.pincered_units,
@@ -147,7 +147,7 @@ func _start_attack_skill_phase() -> void:
 		
 		skill_effect.execute(next_skill_attack.unit, next_skill_attack.skill, target_cells)
 	else:
-		print("no skills activated")
+		print("No skills activated")
 		
 		emit_signal("pincer_executed")
 
@@ -175,10 +175,10 @@ func _on_SkillActivationTimer_timeout() -> void:
 
 # Filter cells to leave only the ones with null units or with targeted units that are
 # either allies or enemies depending on the skill type
-func _filter_cells(unit: Unit, skill: Skill, targeted_cells: CellArea2D) -> Array:
+func _filter_cells(unit: Unit, skill: Skill, targeted_cells: Cell) -> Array:
 	# If the unit is 2x2 it will be in more than one cell, so don't add it twice
 	
-	# Array<CellArea2D>
+	# Array<Cell>
 	var filtered_cells := []
 	
 	if skill.is_healing():
@@ -195,7 +195,7 @@ func _filter_cells(unit: Unit, skill: Skill, targeted_cells: CellArea2D) -> Arra
 	return filtered_cells
 
 
-# Returns Array<CellArea2D>
+# Returns Array<Cell>
 func _find_area_of_effect_target_cells(var unit: Unit,
 		var skill: Skill,
 		var pincered_units: Array = [],
@@ -203,7 +203,7 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 	) -> Array:
 	
 	var area_of_effect: int = skill.area_of_effect
-	var cell: CellArea2D = grid.get_cell_from_position(unit.position)
+	var cell: Cell = grid.get_cell_from_position(unit.position)
 	
 	match(area_of_effect):
 		Enums.AreaOfEffect.NONE, Enums.AreaOfEffect.PINCER:

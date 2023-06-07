@@ -10,10 +10,10 @@ onready var grid := $Grid
 onready var grid_width: int = grid.width
 onready var grid_height: int = grid.height
 
-var active_unit_current_cell: CellArea2D = null
-var active_unit_last_valid_cell: CellArea2D = null
+var active_unit_current_cell: Cell = null
+var active_unit_last_valid_cell: Cell = null
 
-# Dictionary<CellArea2D, bool>
+# Dictionary<Cell, bool>
 var active_unit_entered_cells := {}
 var has_active_unit_exited_cell: bool = false
 
@@ -43,8 +43,8 @@ func _initialize_grid() -> void:
 func _connect_cell_signals() -> void:
 	for row in grid.grid:
 		for cell in row:
-			var _error = cell.connect("area_entered", self, "_on_CellArea2D_area_entered", [cell])
-			_error = cell.connect("area_exited", self, "_on_CellArea2D_area_exited", [cell])
+			var _error = cell.connect("area_entered", self, "_on_Cell_area_entered", [cell])
+			_error = cell.connect("area_exited", self, "_on_Cell_area_exited", [cell])
 
 
 func _assign_units_to_cells() -> void:
@@ -111,7 +111,7 @@ func _update_enemy() -> void:
 		_start_player_turn()
 
 
-func _on_CellArea2D_area_entered(_area: Area2D, cell: CellArea2D) -> void:
+func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 	active_unit_entered_cells[cell] = cell
 	
 	cell.modulate = Color.red
@@ -121,7 +121,7 @@ func _on_CellArea2D_area_entered(_area: Area2D, cell: CellArea2D) -> void:
 # [x] Tunneling
 # [x] Dropping in same tile as unit
 # [-] Unit sometimes dropped but then it can't be swapped
-func _on_CellArea2D_area_exited(area: Area2D, cell: CellArea2D) -> void:
+func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 	cell.modulate = Color.white
 	
 	var active_unit: Unit = area.get_unit()
@@ -131,7 +131,7 @@ func _on_CellArea2D_area_exited(area: Area2D, cell: CellArea2D) -> void:
 	
 	var _is_present: bool = active_unit_entered_cells.erase(cell)
 	
-	var selected_cell: CellArea2D = _find_closest_cell(active_unit.position)
+	var selected_cell: Cell = _find_closest_cell(active_unit.position)
 	
 	if selected_cell != null:
 		# TODO: If there's an enemy in the selected cell then don't do this assignment
@@ -181,9 +181,9 @@ func _clear_active_cells() -> void:
 	active_unit_entered_cells.clear()
 
 
-func _find_closest_cell(unit_position: Vector2) -> CellArea2D:
+func _find_closest_cell(unit_position: Vector2) -> Cell:
 	var minimum_distance: float = 1000000.0
-	var selected_cell: CellArea2D = null
+	var selected_cell: Cell = null
 	
 	for entered_cell in active_unit_entered_cells.values():
 		var distance_squared: float = unit_position.distance_squared_to(entered_cell.position)
@@ -195,7 +195,7 @@ func _find_closest_cell(unit_position: Vector2) -> CellArea2D:
 	return selected_cell
 
 
-func _swap_units(active_unit: Unit, unit_to_swap: Unit, next_active_cell: CellArea2D, last_valid_cell: CellArea2D) -> void:
+func _swap_units(active_unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_valid_cell: Cell) -> void:
 	if active_unit != unit_to_swap:
 		next_active_cell.unit = active_unit
 		last_valid_cell.unit = unit_to_swap
@@ -208,7 +208,7 @@ func _swap_units(active_unit: Unit, unit_to_swap: Unit, next_active_cell: CellAr
 
 
 func _on_Unit_released(unit: Unit) -> void:
-	var selected_cell: CellArea2D = _find_closest_cell(unit.position)
+	var selected_cell: Cell = _find_closest_cell(unit.position)
 	
 	# TODO: If ally, then swap, else, pick the last valid cell
 	# FIXME: May not work always
@@ -249,21 +249,21 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 # Enemies may block the unit from reaching certain tiles, besides the tiles they
 # already occupy
 func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
-	var start_cell: CellArea2D = grid.get_cell_from_position(unit_position)
+	var start_cell: Cell = grid.get_cell_from_position(unit_position)
 	
 	var queue := []
 	
 	queue.push_back(start_cell)
 	
-	# Dictionary<CellArea2D, bool>
+	# Dictionary<Cell, bool>
 	var discovered_dict := {}
 	
-	# Dictionary<CellArea2D, Array<CellArea2D> (array of cells connected to this cell)>
+	# Dictionary<Cell, Array<Cell> (array of cells connected to this cell)>
 	# Graph as adjacency list
 	var navigation_graph := {}
 	
 	while not queue.empty():
-		var node: CellArea2D = queue.pop_front()
+		var node: Cell = queue.pop_front()
 		
 		# Initialize adjacency list for the given node
 		navigation_graph[node] = []
@@ -281,17 +281,17 @@ func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
 	return navigation_graph
 
 
-func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: CellArea2D) -> Array:
+func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: Cell) -> Array:
 	# TODO: when planning for chaining, some tiles have to be avoided
 	# and the path has to be split
 	# Array of target cells
 	# and array/dict of excluded cells?
-	var start_cell: CellArea2D = grid.get_cell_from_position(unit_position)
+	var start_cell: Cell = grid.get_cell_from_position(unit_position)
 	
-	# Dictionary<CellArea2D, bool>
+	# Dictionary<Cell, bool>
 	var discovered_dict := {}
 	
-	# Dictionary<CellArea2D, CellArea2D>
+	# Dictionary<Cell, Cell>
 	var parent_dict := {}
 	
 	var queue := []
@@ -301,7 +301,7 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 	
 	# Breadth-first search (again)
 	while not queue.empty():
-		var node: CellArea2D = queue.pop_front()
+		var node: Cell = queue.pop_front()
 		
 		# Flag as discovered
 		discovered_dict[node] = true
@@ -314,7 +314,7 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 				
 				parent_dict[neighbor] = node
 	
-	# Array of CellArea2D
+	# Array of Cell
 	var path := []
 	
 	if parent_dict.has(target_cell):

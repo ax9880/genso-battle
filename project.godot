@@ -25,9 +25,9 @@ _global_script_classes=[ {
 "path": "res://Board.gd"
 }, {
 "base": "Area2D",
-"class": "CellArea2D",
+"class": "Cell",
 "language": "GDScript",
-"path": "res://CellArea2D.gd"
+"path": "res://Cell.gd"
 }, {
 "base": "Node2D",
 "class": "Grid",
@@ -63,7 +63,7 @@ _global_script_class_icons={
 "Attack": "",
 "Attacker": "",
 "Board": "",
-"CellArea2D": "",
+"Cell": "",
 "Grid": "",
 "Pincerer": "",
 "Skill": "",

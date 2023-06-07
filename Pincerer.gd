@@ -2,6 +2,7 @@ extends Node
 
 class_name Pincerer
 
+
 class Pincer extends Reference: 
 	# Array<Unit>
 	var pincering_units: Array
@@ -53,7 +54,7 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 		var x: int = 0
 		
 		while x < grid_width:
-			var pincer: Pincer = _check_neighbors_for_pincers(grid, x, y, faction, CellArea2D.DIRECTION.RIGHT)
+			var pincer: Pincer = _check_neighbors_for_pincers(grid, x, y, faction, Cell.DIRECTION.RIGHT)
 			
 			if pincer == null:
 				x += 1
@@ -66,7 +67,7 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 		var y: int = grid_height - 1
 		
 		while y > -1:
-			var pincer: Pincer = _check_neighbors_for_pincers(grid, x, y, faction, CellArea2D.DIRECTION.UP)
+			var pincer: Pincer = _check_neighbors_for_pincers(grid, x, y, faction, Cell.DIRECTION.UP)
 			
 			if pincer == null:
 				y -= 1
@@ -94,10 +95,10 @@ func _find_corner_pincers(grid: Grid, active_unit: Unit, leading_pincers: Array,
 	
 	var faction: int = active_unit.faction
 	
-	var down_left_corner: CellArea2D = grid.get_cell_from_coordinates(Vector2(0, grid_height - 1))
-	var down_right_corner: CellArea2D = grid.get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
-	var up_left_corner: CellArea2D = grid.get_cell_from_coordinates(Vector2(0, 0))
-	var up_right_corner: CellArea2D = grid.get_cell_from_coordinates(Vector2(grid_width - 1, 0))
+	var down_left_corner: Cell = grid.get_cell_from_coordinates(Vector2(0, grid_height - 1))
+	var down_right_corner: Cell = grid.get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
+	var up_left_corner: Cell = grid.get_cell_from_coordinates(Vector2(0, 0))
+	var up_right_corner: Cell = grid.get_cell_from_coordinates(Vector2(grid_width - 1, 0))
 	
 	corner_pincers.push_back(_find_corner_pincer(down_left_corner, faction))
 	corner_pincers.push_back(_find_corner_pincer(down_right_corner, faction))
@@ -109,7 +110,7 @@ func _find_corner_pincers(grid: Grid, active_unit: Unit, leading_pincers: Array,
 			_add_pincer(active_unit, leading_pincers, pincers, pincer)
 
 
-func _find_corner_pincer(corner: CellArea2D, faction: int) -> Pincer:
+func _find_corner_pincer(corner: Cell, faction: int) -> Pincer:
 	var neighbors: Array = corner.neighbors
 	
 	assert(neighbors.size() == 2, "Corner should have 2 neighbors")
@@ -153,7 +154,7 @@ func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pinc
 
 
 func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, faction: int, direction: int) -> Pincer:
-	var cell: CellArea2D = grid.get_cell_from_coordinates(Vector2(start_x, start_y))
+	var cell: Cell = grid.get_cell_from_coordinates(Vector2(start_x, start_y))
 	
 	var unit = cell.unit
 	
@@ -166,7 +167,7 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 		# Start unit
 		pincer.pincering_units.push_back(unit)
 		
-		var neighbor: CellArea2D = cell.get_neighbor(direction)
+		var neighbor: Cell = cell.get_neighbor(direction)
 		
 		while neighbor != null:
 			var next_unit = neighbor.unit
@@ -212,18 +213,18 @@ func _find_chains(grid: Grid, pincering_units: Array) -> Dictionary:
 		chain_families[pincering_unit] = []
 	
 	for pincering_unit in pincering_units:
-		var cell: CellArea2D = grid.get_cell_from_position(pincering_unit.position)
+		var cell: Cell = grid.get_cell_from_position(pincering_unit.position)
 		
-		_find_chain(cell, CellArea2D.DIRECTION.RIGHT, chain_families, faction)
-		_find_chain(cell, CellArea2D.DIRECTION.LEFT, chain_families, faction)
-		_find_chain(cell, CellArea2D.DIRECTION.UP, chain_families, faction)
-		_find_chain(cell, CellArea2D.DIRECTION.DOWN, chain_families, faction)
+		_find_chain(cell, Cell.DIRECTION.RIGHT, chain_families, faction)
+		_find_chain(cell, Cell.DIRECTION.LEFT, chain_families, faction)
+		_find_chain(cell, Cell.DIRECTION.UP, chain_families, faction)
+		_find_chain(cell, Cell.DIRECTION.DOWN, chain_families, faction)
 	
 	return chain_families
 
 
 # Finds a chain from a given cell
-func _find_chain(cell: CellArea2D, direction: int, chain_families: Dictionary, faction: int) -> void:
+func _find_chain(cell: Cell, direction: int, chain_families: Dictionary, faction: int) -> void:
 	var neighbor = cell.get_neighbor(direction)
 	
 	var chain_level: int = 0

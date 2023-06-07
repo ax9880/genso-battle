@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://CellArea2D.gd" type="Script" id=1]
+[ext_resource path="res://Cell.gd" type="Script" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 36, 36 )
 
-[node name="CellArea2D" type="Area2D"]
+[node name="Cell" type="Area2D"]
 collision_layer = 0
 collision_mask = 4
 monitorable = false

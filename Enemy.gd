@@ -25,7 +25,7 @@ func act(board: Board) -> void:
 		# Evaluate positions (requires having the whole graph)
 		var i = 0
 		
-		var target_cell: CellArea2D = null
+		var target_cell: Cell = null
 		
 		# Pick one
 		for node in navigation_graph.keys():

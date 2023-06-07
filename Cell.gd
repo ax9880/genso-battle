@@ -1,6 +1,6 @@
 extends Area2D
 
-class_name CellArea2D
+class_name Cell
 
 enum DIRECTION {
 	UP,
@@ -16,15 +16,15 @@ var coordinates: Vector2 = Vector2.ZERO
 # Unit inside this cell.
 var unit: Unit = null
 
-# Array of CellArea2D. Only valid, non-null neighbors
+# Array of Cell. Only valid, non-null neighbors
 var neighbors: Array = []
 
 # All neighbors, including invalid ones (those neighbors are set to null)
-# {String, nullable CellArea2D}
+# {String, nullable Cell}
 var all_neighbors: Dictionary = {}
 
 
-func add_neighbor(neighbor: CellArea2D, direction: int) -> void:
+func add_neighbor(neighbor: Cell, direction: int) -> void:
 	all_neighbors[direction] = neighbor
 	
 	if neighbor != null:
@@ -32,5 +32,5 @@ func add_neighbor(neighbor: CellArea2D, direction: int) -> void:
 
 
 # Gets directional neighbors, for convenience
-func get_neighbor(direction: int) -> CellArea2D:
+func get_neighbor(direction: int) -> Cell:
 	return all_neighbors[direction]
