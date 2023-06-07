@@ -223,7 +223,7 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 			# TODO: If unit is 2x2 then you have to do this for each cell it occupies
 			# and then the cells that it occupies are filtered out
 			
-			for x in range(cell.coordinates.x - skill.area_of_effect_size, cell.coordinates.x + skill.area_of_effect_size):
+			for x in range(cell.coordinates.x - skill.area_of_effect_size, cell.coordinates.x + skill.area_of_effect_size + 1):
 				var candidate_cell_coordinates := Vector2(x, cell.coordinates.y)
 				
 				if grid._is_in_range(candidate_cell_coordinates):
@@ -233,7 +233,7 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 		Enums.AreaOfEffect.VERTICAL_X:
 			var targets := []
 			
-			for y in range(cell.coordinates.y - skill.area_of_effect_size, cell.coordinates.y + skill.area_of_effect_size):
+			for y in range(cell.coordinates.y - skill.area_of_effect_size, cell.coordinates.y + skill.area_of_effect_size + 1):
 				var candidate_cell_coordinates := Vector2(cell.coordinates.x, y)
 				
 				if grid._is_in_range(candidate_cell_coordinates):
@@ -252,11 +252,12 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 		Enums.AreaOfEffect.ALL:
 			var all_units := []
 			
-			all_units.append(allies)
-			all_units.append(enemies)
+			all_units.append_array(allies)
+			all_units.append_array(enemies)
 			
 			return _units_to_cells(all_units)
 		_:
+			printerr("Area of effect is not implemented, can't find area: ", area_of_effect)
 			return []
 
 
