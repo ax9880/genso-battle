@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Unit.gd" type="Script" id=1]
 [ext_resource path="res://unit_rect.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://skills/Chomp.tres" type="Resource" id=9]
 [ext_resource path="res://assets/ui/label_HP_bg.png" type="Texture" id=10]
 [ext_resource path="res://DamageNumbers.tscn" type="PackedScene" id=11]
+[ext_resource path="res://skills/Heal.tres" type="Resource" id=12]
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 32, 32 )
@@ -28,7 +29,7 @@ damage_numbers_packed_scene = ExtResource( 11 )
 [node name="Job" type="Node" parent="."]
 script = ExtResource( 4 )
 starting_stats = ExtResource( 5 )
-skills = [ ExtResource( 9 ) ]
+skills = [ ExtResource( 9 ), ExtResource( 12 ) ]
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
