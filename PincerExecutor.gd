@@ -120,34 +120,34 @@ func _queue_skills(unit: Unit, activated_skills: Array) -> void:
 
 
 func start_attack_skill_phase() -> void:
-	_execute_next_skill()
+	_execute_next_skill(attack_skills, "attack_skill_phase_finished")
 
 
-func _execute_next_skill() -> void:
-	var next_skill_attack: SkillAttack = attack_skills.pop_front()
+func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
+	var next_skill: SkillAttack = skill_queue.pop_front()
 	
-	if next_skill_attack != null:
-		var chain: Array = _find_chain(next_skill_attack.unit, complete_chains)
+	if next_skill != null:
+		var chain: Array = _find_chain(next_skill.unit, complete_chains)
 		
 		assert(!chain.empty())
 		
 		# Array<Cell>
-		var target_cells: Array = _find_area_of_effect_target_cells(next_skill_attack.unit,
-			next_skill_attack.skill,
+		var target_cells: Array = _find_area_of_effect_target_cells(next_skill.unit,
+			next_skill.skill,
 			active_pincer.pincered_units,
 			chain)
 		
-		var filtered_cells: Array = _filter_cells(next_skill_attack.unit, next_skill_attack.skill, target_cells)
+		var filtered_cells: Array = _filter_cells(next_skill.unit, next_skill.skill, target_cells)
 		
-		var skill_effect: Node2D = next_skill_attack.skill.effect_scene.instance()
+		var skill_effect: Node2D = next_skill.skill.effect_scene.instance()
 		
 		add_child(skill_effect)
 		
-		var _error = skill_effect.connect("effect_finished", self, "_on_SkillEffect_effect_finished")
+		var _error = skill_effect.connect("effect_finished", self, "_on_SkillEffect_effect_finished", [skill_queue, finish_signal])
 		
-		skill_effect.start(next_skill_attack.unit, next_skill_attack.skill, filtered_cells)
+		skill_effect.start(next_skill.unit, next_skill.skill, filtered_cells)
 	else:
-		emit_signal("attack_skill_phase_finished")
+		emit_signal(finish_signal)
 
 
 # Find the chain a unit belongs to.
@@ -164,16 +164,13 @@ func _find_chain(unit: Unit, chains: Array) -> Array:
 
 func start_heal_phase() -> void:
 	if heal_skills.empty():
-		# emit signal and don't play any animation
-		pass
-	
-	emit_signal("heal_phase_finished")
-	
-	emit_signal("pincer_executed")
+		emit_signal("pincer_executed")
+	else:
+		_execute_next_skill(heal_skills, "heal_phase_finished")
 
 
-func _on_SkillEffect_effect_finished() -> void:
-	start_attack_skill_phase()
+func _on_SkillEffect_effect_finished(skill_queue: Array, finish_signal: String) -> void:
+	_execute_next_skill(skill_queue, finish_signal)
 
 
 func _on_SkillActivationTimer_timeout() -> void:
@@ -249,6 +246,7 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 			
 			return []
 		Enums.AreaOfEffect.AREA_X:
+			
 			
 			return []
 		Enums.AreaOfEffect.ALL:

@@ -365,6 +365,8 @@ func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
 
 
 func _start_heal_phase(pincer: Pincerer.Pincer) -> void:
+	var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [pincer], CONNECT_ONESHOT)
+	
 	$PincerExecutor.start_heal_phase()
 
 
@@ -414,7 +416,9 @@ func _on_PincerExecutor_attack_skill_phase_finished(pincer: Pincerer.Pincer) -> 
 	_start_heal_phase(pincer)
 
 
-func _on_PincerExecutor_pincer_executed() -> void:
+func _on_PincerExecutor_heal_phase_finished(pincer: Pincerer.Pincer) -> void:
 	_execute_next_pincer()
 
 
+func _on_PincerExecutor_pincer_executed() -> void:
+	_execute_next_pincer()
