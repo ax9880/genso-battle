@@ -11,9 +11,7 @@ enum STATE {
 	
 	SNAPPING_TO_GRID = 2,
 	
-	SWAPPING = 3,
-	
-	APPEARING = 4
+	SWAPPING = 3
 }
 
 const INVALID_FACTION: int = -1
@@ -23,6 +21,7 @@ const ENEMY_FACTION: int = 2
 ## Exports
 
 export(PackedScene) var damage_numbers_packed_scene: PackedScene
+export(PackedScene) var death_effect_packed_scene: PackedScene
 
 export var velocity_pixels_per_second: float = 10.0
 export var snap_velocity_pixels_per_second: float = 200.0
@@ -31,9 +30,6 @@ export var swap_velocity_pixels_per_second: float = 500.0
 # Max velocity when dragging the unit. It can't be too fast or the unit
 # will tunnel through cells and other units.
 export var max_velocity_pixels_per_second: float = 2048.0 # 2048
-
-export var appear_time_seconds: float = 1.0
-
 
 # Proportional control constant
 export var kp: float = 1.4
@@ -58,6 +54,7 @@ var random := RandomNumberGenerator.new()
 signal picked_up(unit)
 signal released(unit)
 signal snapped_to_grid(unit)
+signal death_animation_finished(unit)
 
 
 func _ready() -> void:
@@ -75,22 +72,20 @@ func _physics_process(_delta: float) -> void:
 
 
 func appear() -> void: 
-	self.current_state = STATE.APPEARING
+	disable_selection_area()
+	
+	disable_swap_area()
+	
+	$AnimationPlayer.play("appear")
 
 
-func _play_appear_animation() -> void:
-	show()
+func play_death_animation() -> void:
+	var death_effect: Node2D = death_effect_packed_scene.instance()
 	
-	modulate = Color.transparent
+	add_child(death_effect)
+	death_effect.play()
 	
-	$Sound/AppearAudio.play()
-	
-	tween.interpolate_property(self, "modulate",
-		Color.transparent, Color.white,
-		appear_time_seconds,
-		Tween.TRANS_SINE, Tween.EASE_IN_OUT)
-	
-	tween.start()
+	$AnimationPlayer.play("death")
 
 
 func move_to_new_cell(target_position: Vector2) -> void:
@@ -201,12 +196,6 @@ func set_current_state(new_state) -> void:
 			disable_swap_area()
 		STATE.SWAPPING:
 			disable_swap_area()
-		STATE.APPEARING:
-			disable_selection_area()
-			
-			disable_swap_area()
-			
-			_play_appear_animation()
 
 
 func _increase_sprite_size() -> void:
@@ -386,6 +375,29 @@ func get_attribute_resistance(defender_stats: StartingStats, attacker_attribute,
 			return 0.0
 
 
+func is_dead() -> bool:
+	return get_stats().health <= 0
+
+
+func is_alive() -> bool:
+	return not is_dead()
+
+
+## Animation playback
+
+func _appear_animation_advanced() -> void:
+	
+	pass
+
+
+func _appear_animation_finished() -> void:
+	self.current_state = STATE.IDLE
+
+
+func _death_animation_finished() -> void:
+	emit_signal("death_animation_finished", self)
+
+
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
@@ -403,7 +415,4 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 				emit_signal("snapped_to_grid", self)
 		STATE.SWAPPING:
 			if key == ":position":
-				self.current_state = STATE.IDLE
-		STATE.APPEARING:
-			if key == ":modulate":
 				self.current_state = STATE.IDLE

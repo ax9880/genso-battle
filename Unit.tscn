@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Unit.gd" type="Script" id=1]
 [ext_resource path="res://unit_rect.png" type="Texture" id=2]
@@ -12,6 +12,169 @@
 [ext_resource path="res://assets/ui/label_HP_bg.png" type="Texture" id=10]
 [ext_resource path="res://DamageNumbers.tscn" type="PackedScene" id=11]
 [ext_resource path="res://skills/Heal.tres" type="Resource" id=12]
+[ext_resource path="res://DeathParticles.tscn" type="PackedScene" id=13]
+
+[sub_resource type="Animation" id=7]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Control:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "appear"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "audio"
+tracks/1/path = NodePath("Sound/AppearAudio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": null
+} ],
+"times": PoolRealArray( 0 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 2 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_appear_animation_finished"
+} ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Control/UnitName:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.5, 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Control/UnitName:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "death"
+tracks/0/type = "audio"
+tracks/0/path = NodePath("Sound/DeathAudio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": null
+} ],
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_death_animation_finished"
+} ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.8, 0.34902, 0.34902, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Control:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 32, 32 )
@@ -25,11 +188,25 @@ collision_mask = 9
 collision/safe_margin = 0.16
 script = ExtResource( 1 )
 damage_numbers_packed_scene = ExtResource( 11 )
+death_effect_packed_scene = ExtResource( 13 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 7 )
+anims/appear = SubResource( 5 )
+anims/death = SubResource( 6 )
+
+[node name="Tween" type="Tween" parent="."]
 
 [node name="Job" type="Node" parent="."]
 script = ExtResource( 4 )
 starting_stats = ExtResource( 5 )
 skills = [ ExtResource( 9 ), ExtResource( 12 ) ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
@@ -39,12 +216,6 @@ __meta__ = {
 
 [node name="FullSprite" type="Sprite" parent="."]
 visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 3 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="SwapArea2D" type="Area2D" parent="."]
 collision_layer = 4
@@ -77,8 +248,6 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Tween" type="Tween" parent="."]
-
 [node name="Control" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -90,6 +259,25 @@ mouse_filter = 2
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="UnitName" type="Label" parent="Control"]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -48.5
+margin_top = -48.5
+margin_right = 48.5
+margin_bottom = 48.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 1
+text = "Haniwa Warrior"
+align = 1
+valign = 1
+autowrap = true
 
 [node name="Border" type="TextureRect" parent="Control"]
 anchor_right = 1.0
@@ -183,6 +371,6 @@ margin_bottom = 22.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Sound"]
 
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
 [connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]
 [connection signal="input_event" from="SelectionArea2D" to="." method="_on_SelectionArea2D_input_event"]
-[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
