@@ -57,3 +57,11 @@ func is_healing() -> bool:
 
 func is_buff() -> bool:
 	return skill_type == Enums.SkillType.BUFF
+
+
+func is_enemy_targeted() -> bool:
+	return is_attack() or skill_type == Enums.SkillType.DEBUFF or skill_type == Enums.SkillType.COUNTER
+
+
+func is_targeted_individually() -> bool:
+	return area_of_effect in Enums.AREAS_OF_EFFECT_WITH_INDIVIDUAL_TARGETING

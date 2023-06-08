@@ -137,13 +137,15 @@ func _execute_next_skill() -> void:
 			active_pincer.pincered_units,
 			chain)
 		
+		var filtered_cells: Array = _filter_cells(next_skill_attack.unit, next_skill_attack.skill, target_cells)
+		
 		var skill_effect: Node2D = next_skill_attack.skill.effect_scene.instance()
 		
 		add_child(skill_effect)
 		
 		var _error = skill_effect.connect("effect_finished", self, "_on_SkillEffect_effect_finished")
 		
-		skill_effect.start(next_skill_attack.unit, next_skill_attack.skill, target_cells)
+		skill_effect.start(next_skill_attack.unit, next_skill_attack.skill, filtered_cells)
 	else:
 		emit_signal("attack_skill_phase_finished")
 
@@ -180,20 +182,20 @@ func _on_SkillActivationTimer_timeout() -> void:
 
 # Filter cells to leave only the ones with null units or with targeted units that are
 # either allies or enemies depending on the skill type
-func _filter_cells(unit: Unit, skill: Skill, targeted_cells: Cell) -> Array:
+func _filter_cells(unit: Unit, skill: Skill, targeted_cells: Array) -> Array:
 	# If the unit is 2x2 it will be in more than one cell, so don't add it twice
 	
 	# Array<Cell>
 	var filtered_cells := []
 	
-	if skill.is_healing():
+	if skill.is_enemy_targeted():
 		for cell in targeted_cells:
-			if cell.unit == null or cell.unit.is_ally(unit.faction):
+			if cell.unit == null or cell.unit.is_enemy(unit.faction):
 				if filtered_cells.find(cell) == -1:
 					filtered_cells.push_back(cell)
 	else:
 		for cell in targeted_cells:
-			if cell.unit == null or cell.unit.is_enemy(unit.faction):
+			if cell.unit == null or cell.unit.is_ally(unit.faction):
 				if filtered_cells.find(cell) == -1:
 					filtered_cells.push_back(cell)
 	

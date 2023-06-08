@@ -88,6 +88,15 @@ enum AreaOfEffect {
 	# Border, outer columns/rows, corners, diamond
 }
 
+const AREAS_OF_EFFECT_WITH_INDIVIDUAL_TARGETING := [
+	AreaOfEffect.NONE,
+	AreaOfEffect.EQUIP,
+	AreaOfEffect.PINCER,
+	AreaOfEffect.SELF,
+	AreaOfEffect.CHAIN,
+	AreaOfEffect.ALL
+]
+
 enum SkillTier {
 	FIRST = 0,
 	
