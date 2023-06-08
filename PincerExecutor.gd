@@ -198,10 +198,11 @@ func _add_dead_units_to_queue(units: Array, queue: Array) -> void:
 
 
 func start_heal_phase() -> void:
-	if heal_skills.empty():
-		emit_signal("pincer_executed")
-	else:
-		_execute_next_skill(heal_skills, "heal_phase_finished")
+	_execute_next_skill(heal_skills, "heal_phase_finished")
+
+
+func start_status_effect_phase() -> void:
+	emit_signal("pincer_executed")
 
 
 # Filter cells to leave only the ones with null units or with targeted units that are

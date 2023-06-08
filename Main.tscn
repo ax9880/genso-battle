@@ -109,11 +109,11 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Enemy2" parent="Board/Enemies" instance=ExtResource( 3 )]
-position = Vector2( 152, 336 )
-
 [node name="Enemy" parent="Board/Enemies" instance=ExtResource( 3 )]
 position = Vector2( 152, 152 )
+
+[node name="Enemy2" parent="Board/Enemies" instance=ExtResource( 3 )]
+position = Vector2( 152, 336 )
 
 [node name="Units" type="Node2D" parent="Board"]
 __meta__ = {

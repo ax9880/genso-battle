@@ -116,6 +116,8 @@ func _make_player_units_appear() -> void:
 func _start_player_turn() -> void:
 	current_turn = Turn.PLAYER
 	
+	print("Starting player turn")
+	
 	for unit in $Units.get_children():
 		unit.enable_selection_area()
 
@@ -153,7 +155,7 @@ func _update_enemy() -> void:
 		var enemy: Unit = enemy_queue.pop_front()
 		
 		if enemy.is_alive():
-			enemy_queue.pop_front().act(self)
+			enemy.act(self)
 	else:
 		_start_player_turn()
 
@@ -416,6 +418,10 @@ func _start_heal_phase(pincer: Pincerer.Pincer) -> void:
 	$PincerExecutor.check_dead_units()
 
 
+func _start_status_effect_phase(pincer: Pincerer.Pincer) -> void:
+	$PincerExecutor.start_status_effect_phase()
+
+
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
 	var attack_queue := []
 	
@@ -462,8 +468,8 @@ func _on_PincerExecutor_attack_skill_phase_finished(pincer: Pincerer.Pincer) -> 
 	_start_heal_phase(pincer)
 
 
-func _on_PincerExecutor_heal_phase_finished(_pincer: Pincerer.Pincer) -> void:
-	_execute_next_pincer()
+func _on_PincerExecutor_heal_phase_finished(pincer: Pincerer.Pincer) -> void:
+	_start_status_effect_phase(pincer)
 
 
 func _on_PincerExecutor_pincer_executed() -> void:
