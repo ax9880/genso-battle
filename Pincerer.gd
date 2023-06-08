@@ -16,9 +16,19 @@ class Pincer extends Reference:
 	# is its chain level. The chain does include the pincering units.
 	var chain_families: Dictionary
 	
+	
 	# Size of the pincer (amount of units involved, including pincering and pincered units)
 	func size() -> int:
 		return pincering_units.size() + pincered_units.size()
+	
+	
+	func is_valid() -> bool:
+		var is_valid: bool = false
+		
+		for unit in pincered_units:
+			is_valid = is_valid or unit.is_alive()
+		
+		return is_valid
 
 
 var pincer_queue := []

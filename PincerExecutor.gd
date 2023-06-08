@@ -8,6 +8,7 @@ class SkillAttack extends Reference:
 
 
 var unit_queue := []
+var dead_units := []
 
 var buff_skills := []
 var attack_skills := []
@@ -23,6 +24,8 @@ var allies := []
 
 # Array<Unit>
 var enemies := []
+
+var units_removed_from_play := []
 
 # To calculate areas of effect
 var grid: Grid
@@ -162,19 +165,43 @@ func _find_chain(unit: Unit, chains: Array) -> Array:
 	return []
 
 
+func check_dead_units() -> void:
+	_add_dead_units_to_queue(allies, dead_units)
+	_add_dead_units_to_queue(enemies, dead_units)
+	
+	_check_next_dead_unit()
+	
+	$DeathAnimationTimer.start()
+
+
+func _check_next_dead_unit() -> void:
+	var unit: Unit = dead_units.pop_front()
+	
+	if unit != null:
+			var _error = unit.connect("death_animation_finished", self, "_on_Unit_death_animation_finished")
+			
+			unit.play_death_animation()
+			
+			# If 2x2, check neighbor cells
+			var cell: Cell = grid.get_cell_from_position(unit.position)
+			cell.unit = null
+	else:
+		$DeathAnimationTimer.stop()
+		
+		start_heal_phase()
+
+
+func _add_dead_units_to_queue(units: Array, queue: Array) -> void:
+	for unit in units:
+		if unit.is_dead():
+			queue.push_back(unit)
+
+
 func start_heal_phase() -> void:
 	if heal_skills.empty():
 		emit_signal("pincer_executed")
 	else:
 		_execute_next_skill(heal_skills, "heal_phase_finished")
-
-
-func _on_SkillEffect_effect_finished(skill_queue: Array, finish_signal: String) -> void:
-	_execute_next_skill(skill_queue, finish_signal)
-
-
-func _on_SkillActivationTimer_timeout() -> void:
-	_activate_next_skill()
 
 
 # Filter cells to leave only the ones with null units or with targeted units that are
@@ -269,4 +296,26 @@ func _units_to_cells(units: Array) -> Array:
 		cells.push_back(grid.get_cell_from_position(unit.position))
 	
 	return cells
+
+
+func _on_SkillEffect_effect_finished(skill_queue: Array, finish_signal: String) -> void:
+	_execute_next_skill(skill_queue, finish_signal)
+
+
+func _on_SkillActivationTimer_timeout() -> void:
+	_activate_next_skill()
+
+
+func _on_DeathAnimationTimer_timeout() -> void:
+	_check_next_dead_unit()
+
+
+func _on_Unit_death_animation_finished(unit: Unit) -> void:
+	unit.get_parent().remove_child(unit)
 	
+	units_removed_from_play.push_back(unit)
+
+
+func _on_PincerExecutor_tree_exiting() -> void:
+	for unit in units_removed_from_play:
+		unit.free()
