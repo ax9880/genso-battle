@@ -7,7 +7,7 @@ export(PackedScene) var hit_effect_packed_scene: PackedScene
 func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	for cell in target_cells:
 		if cell.unit == unit:
-			_on_ParticleArc_target_reached(unit, skill, cell.unit)
+			_on_ParticleArc_target_reached(unit, skill, cell)
 		else:
 			var particle_arc: Node2D = particle_arc_scene.instance()
 			
