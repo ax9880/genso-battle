@@ -140,7 +140,12 @@ script = ExtResource( 10 )
 [node name="SkillActivationTimer" type="Timer" parent="Board/PincerExecutor"]
 wait_time = 0.25
 
+[node name="DeathAnimationTimer" type="Timer" parent="Board/PincerExecutor"]
+wait_time = 0.5
+
 [node name="Tween" type="Tween" parent="Board"]
 
 [connection signal="pincer_executed" from="Board/PincerExecutor" to="Board" method="_on_PincerExecutor_pincer_executed"]
+[connection signal="tree_exiting" from="Board/PincerExecutor" to="Board/PincerExecutor" method="_on_PincerExecutor_tree_exiting"]
 [connection signal="timeout" from="Board/PincerExecutor/SkillActivationTimer" to="Board/PincerExecutor" method="_on_SkillActivationTimer_timeout"]
+[connection signal="timeout" from="Board/PincerExecutor/DeathAnimationTimer" to="Board/PincerExecutor" method="_on_DeathAnimationTimer_timeout"]

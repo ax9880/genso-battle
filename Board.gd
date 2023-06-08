@@ -132,22 +132,28 @@ func _start_enemy_turn() -> void:
 	
 	enemy_queue.clear()
 	
-	# enemy turn starts right away, there's no animation
-	# enqueue enemies
-	# decrease turn counter
-	# if counter is zero, then move
-	# after AI made its move, check for attacks
-	# after that, decrease the counter of the next enemy
-	# when the queue is empty, start player turn
-	for enemy in $Enemies.get_children():
-		enemy_queue.push_back(enemy)
+	if $Enemies.get_children().empty():
+		print("Victory!")
+	else:
+		# enemy turn starts right away, there's no animation
+		# enqueue enemies
+		# decrease turn counter
+		# if counter is zero, then move
+		# after AI made its move, check for attacks
+		# after that, decrease the counter of the next enemy
+		# when the queue is empty, start player turn
+		for enemy in $Enemies.get_children():
+			enemy_queue.push_back(enemy)
 	
 	_update_enemy()
 
 
 func _update_enemy() -> void:
 	if not enemy_queue.empty():
-		enemy_queue.pop_front().act(self)
+		var enemy: Unit = enemy_queue.pop_front()
+		
+		if enemy.is_alive():
+			enemy_queue.pop_front().act(self)
 	else:
 		_start_player_turn()
 
@@ -370,6 +376,9 @@ func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell
 func _execute_next_pincer() -> void:
 	var pincer: Pincerer.Pincer = pincer_queue.pop_front()
 	
+	while(pincer != null and not pincer.is_valid()):
+		pincer = pincer_queue.pop_front()
+	
 	if pincer != null:
 		# TODO: Play pincer animation
 		
@@ -377,8 +386,6 @@ func _execute_next_pincer() -> void:
 		var _error = $PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
 		
 		$PincerExecutor.start_skill_activation_phase(pincer, grid, $Units.get_children(), $Enemies.get_children())
-		
-		# TODO: Check if any targeted unit has died
 	else:
 		print("All pincers done!")
 		
@@ -405,7 +412,8 @@ func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
 func _start_heal_phase(pincer: Pincerer.Pincer) -> void:
 	var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [pincer], CONNECT_ONESHOT)
 	
-	$PincerExecutor.start_heal_phase()
+	# This methods starts the heal phase internally
+	$PincerExecutor.check_dead_units()
 
 
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
@@ -454,7 +462,7 @@ func _on_PincerExecutor_attack_skill_phase_finished(pincer: Pincerer.Pincer) -> 
 	_start_heal_phase(pincer)
 
 
-func _on_PincerExecutor_heal_phase_finished(pincer: Pincerer.Pincer) -> void:
+func _on_PincerExecutor_heal_phase_finished(_pincer: Pincerer.Pincer) -> void:
 	_execute_next_pincer()
 
 

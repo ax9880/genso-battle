@@ -22,6 +22,8 @@ class Pincer extends Reference:
 		return pincering_units.size() + pincered_units.size()
 	
 	
+	# A pincer is valid if all the pincered units are alive.
+	# Pincered units can be killed by skills before the pincer is executed.
 	func is_valid() -> bool:
 		var is_valid: bool = false
 		
