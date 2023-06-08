@@ -74,7 +74,7 @@ func _update_count(unit: Unit) -> void:
 		if absorbed_damage > 0:
 			yield(get_tree().create_timer(delay_before_absorbing_damage_seconds), "timeout")
 			
-			unit.inflict_damage(max(-max_absorbed_damage, -absorbed_damage))
+			unit.inflict_damage(int(max(-max_absorbed_damage, -absorbed_damage)))
 			
 			_build_heal_particles(unit)
 			
