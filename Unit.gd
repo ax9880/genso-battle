@@ -2,7 +2,6 @@ extends KinematicBody2D
 
 class_name Unit
 
-
 enum STATE {
 	# Idle
 	IDLE = 0,
@@ -12,7 +11,9 @@ enum STATE {
 	
 	SNAPPING_TO_GRID = 2,
 	
-	SWAPPING = 3
+	SWAPPING = 3,
+	
+	APPEARING = 4
 }
 
 const INVALID_FACTION: int = -1
@@ -30,6 +31,9 @@ export var swap_velocity_pixels_per_second: float = 500.0
 # Max velocity when dragging the unit. It can't be too fast or the unit
 # will tunnel through cells and other units.
 export var max_velocity_pixels_per_second: float = 2048.0 # 2048
+
+export var appear_time_seconds: float = 1.0
+
 
 # Proportional control constant
 export var kp: float = 1.4
@@ -68,6 +72,25 @@ func _physics_process(_delta: float) -> void:
 			pass
 		STATE.PICKED_UP:
 			_move_towards_mouse()
+
+
+func appear() -> void: 
+	self.current_state = STATE.APPEARING
+
+
+func _play_appear_animation() -> void:
+	show()
+	
+	modulate = Color.transparent
+	
+	$Sound/AppearAudio.play()
+	
+	tween.interpolate_property(self, "modulate",
+		Color.transparent, Color.white,
+		appear_time_seconds,
+		Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+	
+	tween.start()
 
 
 func move_to_new_cell(target_position: Vector2) -> void:
@@ -178,6 +201,12 @@ func set_current_state(new_state) -> void:
 			disable_swap_area()
 		STATE.SWAPPING:
 			disable_swap_area()
+		STATE.APPEARING:
+			disable_selection_area()
+			
+			disable_swap_area()
+			
+			_play_appear_animation()
 
 
 func _increase_sprite_size() -> void:
@@ -229,12 +258,10 @@ func inflict_damage(damage: int) -> void:
 	damage_numbers.play(damage)
 
 
-# Activates skills and 
 func activate_skills() -> Array:
 	var activated_skills := []
 	
-	for s in $Job.skills:
-		var skill: Skill = s as Skill
+	for skill in $Job.skills:
 		
 		# TODO: Add more rules for activation?
 		# If unit is not leading pincer?
@@ -288,7 +315,7 @@ func play_skill_activation_animation(activated_skills: Array) -> void:
 			$Control/ActivatedSkillMarginContainer.grow_vertical = Control.GROW_DIRECTION_BEGIN
 		
 		$Control/ActivatedSkillMarginContainer.hide()
-		$Control/ActivatedSkillMarginContainer.show()
+		#$Control/ActivatedSkillMarginContainer.show()
 
 
 func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef) -> void:
@@ -305,8 +332,6 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 		on_damage_absorbed_callback.call_func(absorbed_damage)
 		
 		inflict_damage(damage)
-		
-		# TODO: absorbed_damage in output parameter?
 	else:
 		# If it's buff or debuff, try to apply it
 		# If it has status effect, try to apply it
@@ -378,4 +403,7 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 				emit_signal("snapped_to_grid", self)
 		STATE.SWAPPING:
 			if key == ":position":
+				self.current_state = STATE.IDLE
+		STATE.APPEARING:
+			if key == ":modulate":
 				self.current_state = STATE.IDLE

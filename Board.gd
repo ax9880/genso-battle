@@ -6,6 +6,9 @@ enum Turn {
 	NONE, PLAYER, ENEMY
 }
 
+export(float) var time_between_enemy_appearance_seconds: float = 0.5
+export(float) var time_before_player_units_appearance_seconds: float = 0.5
+
 onready var grid := $Grid
 onready var grid_width: int = grid.width
 onready var grid_height: int = grid.height
@@ -26,20 +29,19 @@ var current_turn: int = Turn.NONE
 
 
 func _ready() -> void:
-	_initialize_grid()
+	_connect_cell_signals()
 	
 	_assign_units_to_cells()
 	_assign_enemies_to_cells()
 	
-	_start_player_turn()
+	_disable_player_units()
+	
+	_make_enemies_appear($Enemies.get_children())
+	
+	$Units.hide()
 
 
-# Create the grid matrix and populate it with cell objects.
 # Connect body enter and exit signals.
-func _initialize_grid() -> void:
-	_connect_cell_signals()
-
-
 func _connect_cell_signals() -> void:
 	for row in grid.grid:
 		for cell in row:
@@ -78,6 +80,39 @@ func _assign_unit_to_cell(unit: Unit) -> void:
 	grid.get_cell_from_coordinates(cell_coordinates).unit = unit
 
 
+func _make_enemies_appear(units: Array) -> void:
+	for unit in units:
+		unit.hide()
+	
+	for unit in units:
+		unit.appear()
+		
+		yield(get_tree().create_timer(time_between_enemy_appearance_seconds), "timeout")
+	
+	yield(get_tree().create_timer(time_before_player_units_appearance_seconds), "timeout")
+	
+	_make_player_units_appear()
+
+
+func _make_player_units_appear() -> void:
+	if $Units.visible:
+		return
+	else:
+		$Units.show()
+		
+		$Units.modulate = Color.transparent
+		
+		$Tween.interpolate_property($Units, "modulate",
+			$Units.modulate, Color.white,
+			0.5)
+		
+		$Tween.start()
+		
+		yield($Tween, "tween_all_completed")
+		
+		_start_player_turn()
+
+
 func _start_player_turn() -> void:
 	current_turn = Turn.PLAYER
 	
@@ -85,11 +120,15 @@ func _start_player_turn() -> void:
 		unit.enable_selection_area()
 
 
+func _disable_player_units() -> void:
+	for unit in $Units.get_children():
+		unit.disable_selection_area()
+
+
 func _start_enemy_turn() -> void:
 	current_turn = Turn.ENEMY
 	
-	for unit in $Units.get_children():
-		unit.disable_selection_area()
+	_disable_player_units()
 	
 	enemy_queue.clear()
 	
@@ -226,8 +265,7 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if has_active_unit_exited_cell:
 		_clear_active_cells()
 		
-		for unit in $Units.get_children():
-			unit.disable_selection_area()
+		_disable_player_units()
 		
 		# Adds pincers to pincer queue
 		pincer_queue = $Pincerer.find_pincers(grid, unit)
