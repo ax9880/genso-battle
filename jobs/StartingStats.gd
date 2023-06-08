@@ -29,6 +29,12 @@ export(Enums.Attribute) var attribute: int = Enums.Attribute.NONE
 # Weapon type of unit
 export(Enums.WeaponType) var weapon_type: int
 
+# Max turn counter (only applies to AI-controlled characters)
+export(int, 0, 10, 1) var max_turn_counter: int = 3
+
+# How many cells this unit can move (only applies to AI-controlled characters)
+export(int, 0, 15, 1) var movement_range: int = 5
+
 
 func is_physical() -> bool:
 	return weapon_type != Enums.WeaponType.STAFF

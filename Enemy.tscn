@@ -4,16 +4,20 @@
 [ext_resource path="res://Enemy.gd" type="Script" id=2]
 
 [node name="Enemy" instance=ExtResource( 1 )]
+modulate = Color( 1, 1, 1, 0 )
 collision_layer = 8
 script = ExtResource( 2 )
 turn_counter = 1
 
-[node name="Sprite" parent="." index="1"]
-modulate = Color( 1, 0.384314, 0.384314, 1 )
-
-[node name="SelectionArea2D" parent="." index="5"]
+[node name="SelectionArea2D" parent="." index="7"]
 visible = false
 monitorable = false
 
 [node name="CollisionShape2D" parent="SelectionArea2D" index="0"]
 disabled = true
+
+[node name="TurnCount" parent="CanvasLayer/Container" index="0"]
+visible = true
+
+[node name="UnitName" parent="Control" index="0"]
+visible = true

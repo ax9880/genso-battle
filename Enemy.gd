@@ -1,8 +1,8 @@
 extends Unit
 
-export var turn_counter: int = 1
+export var turn_counter: int = 1 setget set_turn_counter
 
-onready var turn_counter_max_value: int = turn_counter
+var turn_counter_max_value: int
 
 signal action_done
 signal started_moving(unit)
@@ -11,14 +11,15 @@ signal started_moving(unit)
 var path := []
 
 
+func _ready() -> void:
+	turn_counter_max_value = get_stats().max_turn_counter
+
 
 func act(board: Board) -> void:
 	if turn_counter > 0:
-		turn_counter -= 1
+		self.turn_counter = turn_counter - 1
 	
 	if turn_counter == 0:
-		turn_counter = turn_counter_max_value
-		
 		# Build graph
 		var navigation_graph: Dictionary = board.build_navigation_graph(position, faction)
 		
@@ -80,7 +81,16 @@ func _move() -> void:
 	else:
 		self.current_state = STATE.IDLE
 		
+		# TODO: Reset the turn counter after the pincers are done
+		self.turn_counter = turn_counter_max_value
+		
 		emit_signal("action_done", self)
+
+
+func set_turn_counter(value: int) -> void:
+	turn_counter = value
+	
+	$CanvasLayer/Container/TurnCount.text = str(turn_counter)
 
 
 func _on_Tween_tween_completed(_object: Object, key: String) -> void:
