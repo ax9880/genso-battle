@@ -20,9 +20,22 @@ func _ready() -> void:
 func start(attacks: Array) -> void:
 	attack_queue = attacks
 	
+	_filter_attacks(attacks)
+	
 	_execute_next_attack()
 	
 	timer.start()
+
+
+func _filter_attacks(attacks: Array) -> void:
+	for attack in attacks:
+		var filtered_targeted_units: Array = []
+		
+		for targeted_unit in attack.targeted_units:
+			if not targeted_unit.is_dead():
+				filtered_targeted_units.push_back(targeted_unit)
+		
+		attack.targeted_units = filtered_targeted_units
 
 
 func _execute_next_attack() -> void:
