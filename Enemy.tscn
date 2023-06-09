@@ -14,3 +14,6 @@ monitorable = false
 
 [node name="CollisionShape2D" parent="SelectionArea2D" index="0"]
 disabled = true
+
+[node name="Container" parent="CanvasLayer" index="0"]
+visible = true
