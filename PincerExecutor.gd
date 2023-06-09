@@ -271,7 +271,7 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 			var targets := []
 			
 			var start: int
-			var area_of_effect_size_halved := int(skill.area_of_effect_size / 2)
+			var area_of_effect_size_halved := int(float(skill.area_of_effect_size) / 2.0)
 			
 			if skill.area_of_effect_size % 2 == 0:
 				start = int(cell.coordinates.y) - area_of_effect_size_halved + 1
@@ -294,7 +294,7 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 			var targets := []
 			
 			var start: int
-			var area_of_effect_size_halved := int(skill.area_of_effect_size / 2)
+			var area_of_effect_size_halved := int(float(skill.area_of_effect_size) / 2.0)
 			
 			if skill.area_of_effect_size % 2 == 0:
 				start = int(cell.coordinates.x) - area_of_effect_size_halved + 1

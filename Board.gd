@@ -13,6 +13,7 @@ onready var grid := $Grid
 onready var grid_width: int = grid.width
 onready var grid_height: int = grid.height
 
+var active_unit: Unit = null
 var active_unit_current_cell: Cell = null
 var active_unit_last_valid_cell: Cell = null
 
@@ -26,6 +27,11 @@ var enemy_queue := []
 var pincer_queue := []
 
 var current_turn: int = Turn.NONE
+
+
+signal drag_timer_started(timer)
+signal drag_timer_stopped
+signal drag_timer_reset
 
 
 func _ready() -> void:
@@ -116,7 +122,7 @@ func _make_player_units_appear() -> void:
 func _start_player_turn() -> void:
 	current_turn = Turn.PLAYER
 	
-	print("Starting player turn")
+	emit_signal("drag_timer_reset")
 	
 	for unit in $Units.get_children():
 		unit.enable_selection_area()
@@ -154,8 +160,7 @@ func _update_enemy() -> void:
 	if not enemy_queue.empty():
 		var enemy: Unit = enemy_queue.pop_front()
 		
-		if enemy.is_alive():
-			enemy.act(self)
+		enemy.act(self)
 	else:
 		_start_player_turn()
 
@@ -173,10 +178,10 @@ func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 	cell.modulate = Color.white
 	
-	var active_unit: Unit = area.get_unit()
-	
-	if not active_unit.is_picked_up():
+	if not area.get_unit().is_picked_up():
 		return
+	
+	assert(active_unit == area.get_unit(), "Unit exiting cells should be the same as the active unit")
 	
 	var _is_present: bool = active_unit_entered_cells.erase(cell)
 	
@@ -188,6 +193,9 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 			active_unit_last_valid_cell = active_unit_current_cell
 			
 			has_active_unit_exited_cell = true
+			
+			if current_turn == Turn.PLAYER:
+				_start_drag_timer()
 		
 		active_unit_current_cell = selected_cell
 		
@@ -213,6 +221,8 @@ func _on_Enemy_started_moving(enemy: Unit) -> void:
 
 
 func _update_active_unit(unit: Unit) -> void:
+	active_unit = unit
+	
 	active_unit_current_cell = grid.get_cell_from_position(unit.position)
 	active_unit_last_valid_cell = active_unit_current_cell
 	has_active_unit_exited_cell = false
@@ -244,53 +254,17 @@ func _find_closest_cell(unit_position: Vector2) -> Cell:
 	return selected_cell
 
 
-func _swap_units(active_unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_valid_cell: Cell) -> void:
-	if active_unit != unit_to_swap:
-		next_active_cell.unit = active_unit
+func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_valid_cell: Cell) -> void:
+	if unit != unit_to_swap:
+		next_active_cell.unit = unit
 		last_valid_cell.unit = unit_to_swap
 	
-	if unit_to_swap != null and active_unit != unit_to_swap:
-		if active_unit.is_enemy(unit_to_swap.faction):
+	if unit_to_swap != null and unit != unit_to_swap:
+		if unit.is_enemy(unit_to_swap.faction):
 			printerr("Swapped with an enemy")
 		
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
-
-func _on_Unit_released(unit: Unit) -> void:
-	var selected_cell: Cell = _find_closest_cell(unit.position)
-	
-	# TODO: If ally, then swap, else, pick the last valid cell
-	# FIXME: May not work always
-	if active_unit_last_valid_cell != selected_cell:
-		has_active_unit_exited_cell = true
-	
-	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
-	
-	unit.snap_to_grid(selected_cell.position)
-
-
-func _on_Unit_snapped_to_grid(unit: Unit) -> void:
-	if has_active_unit_exited_cell:
-		_clear_active_cells()
-		
-		_disable_player_units()
-		
-		# Adds pincers to pincer queue
-		pincer_queue = $Pincerer.find_pincers(grid, unit)
-		
-		# TODO: execute enemy pincers
-		_execute_next_pincer()
-	else:
-		# Do nothing
-		_start_player_turn()
-
-
-func _on_Enemy_action_done(unit: Unit) -> void:
-	_clear_active_cells()
-	
-	assert(grid.get_cell_from_position(unit.position).unit == unit)
-	
-	_update_enemy()
 
 
 # Builds an adjacency list with all the nodes that the given unit can visit
@@ -412,13 +386,13 @@ func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
 
 
 func _start_heal_phase(pincer: Pincerer.Pincer) -> void:
-	var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [pincer], CONNECT_ONESHOT)
+	var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [], CONNECT_ONESHOT)
 	
 	# This methods starts the heal phase internally
 	$PincerExecutor.check_dead_units()
 
 
-func _start_status_effect_phase(pincer: Pincerer.Pincer) -> void:
+func _start_status_effect_phase() -> void:
 	$PincerExecutor.start_status_effect_phase()
 
 
@@ -456,6 +430,67 @@ func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pi
 			_queue_attack(queue, targeted_units, unit, pincering_unit)
 
 
+func _start_drag_timer() -> void:
+	if $DragTimer.is_stopped():
+		$DragTimer.start()
+		
+		emit_signal("drag_timer_started", $DragTimer)
+
+
+func _stop_drag_timer() -> void:
+	if not $DragTimer.is_stopped():
+		$DragTimer.stop()
+	
+	emit_signal("drag_timer_stopped")
+
+
+## Signals
+
+
+func _on_Unit_released(unit: Unit) -> void:
+	$DragTimer.stop()
+	
+	_stop_drag_timer()
+	
+	var selected_cell: Cell = _find_closest_cell(unit.position)
+	
+	# TODO: If ally, then swap, else, pick the last valid cell
+	# FIXME: May not work always
+	if active_unit_last_valid_cell != selected_cell:
+		has_active_unit_exited_cell = true
+	
+	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
+	
+	unit.snap_to_grid(selected_cell.position)
+
+
+func _on_Unit_snapped_to_grid(unit: Unit) -> void:
+	if has_active_unit_exited_cell:
+		_clear_active_cells()
+		
+		_disable_player_units()
+		
+		# Adds pincers to pincer queue
+		pincer_queue = $Pincerer.find_pincers(grid, unit)
+		
+		# TODO: execute enemy pincers
+		_execute_next_pincer()
+	else:
+		# Do nothing
+		_start_player_turn()
+
+
+func _on_Enemy_action_done(unit: Unit) -> void:
+	_clear_active_cells()
+	
+	if unit.is_alive():
+		assert(grid.get_cell_from_position(unit.position).unit == unit)
+	else:
+		assert(grid.get_cell_from_position(unit.position).unit == null)
+	
+	_update_enemy()
+
+
 func _on_Attacker_attack_phase_finished(pincer: Pincerer.Pincer) -> void:
 	_start_attack_skill_phase(pincer)
 
@@ -468,9 +503,15 @@ func _on_PincerExecutor_attack_skill_phase_finished(pincer: Pincerer.Pincer) -> 
 	_start_heal_phase(pincer)
 
 
-func _on_PincerExecutor_heal_phase_finished(pincer: Pincerer.Pincer) -> void:
-	_start_status_effect_phase(pincer)
+func _on_PincerExecutor_heal_phase_finished() -> void:
+	_start_status_effect_phase()
 
 
 func _on_PincerExecutor_pincer_executed() -> void:
 	_execute_next_pincer()
+
+
+func _on_DragTimer_timeout() -> void:
+	active_unit.release()
+	
+	_stop_drag_timer()

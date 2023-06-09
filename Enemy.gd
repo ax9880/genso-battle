@@ -16,35 +16,38 @@ func _ready() -> void:
 
 
 func act(board: Board) -> void:
-	if turn_counter > 0:
-		self.turn_counter = turn_counter - 1
-	
-	if turn_counter == 0:
-		# Build graph
-		var navigation_graph: Dictionary = board.build_navigation_graph(position, faction)
+	if is_dead():
+		emit_signal("action_done", self)
+	else:
+		if turn_counter > 0:
+			self.turn_counter = turn_counter - 1
 		
-		# Evaluate positions (requires having the whole graph)
-		var i = 0
-		
-		var target_cell: Cell = null
-		
-		# Pick one
-		for node in navigation_graph.keys():
-			i += 1
+		if turn_counter == 0:
+			# Build graph
+			var navigation_graph: Dictionary = board.build_navigation_graph(position, faction)
 			
-			if i > 6:
-				target_cell = node
-				break
-		
-		path = board.find_path(navigation_graph, position, target_cell)
-		
-		if !path.empty():
-			# Move or perform skill (in any order)
-			_start_moving()
+			# Evaluate positions (requires having the whole graph)
+			var i = 0
+			
+			var target_cell: Cell = null
+			
+			# Pick one
+			for node in navigation_graph.keys():
+				i += 1
+				
+				if i > 6:
+					target_cell = node
+					break
+			
+			path = board.find_path(navigation_graph, position, target_cell)
+			
+			if !path.empty():
+				# Move or perform skill (in any order)
+				_start_moving()
+			else:
+				emit_signal("action_done", self)
 		else:
 			emit_signal("action_done", self)
-	else:
-		emit_signal("action_done", self)
 
 
 func _start_moving() -> void:

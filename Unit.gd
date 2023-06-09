@@ -129,7 +129,7 @@ func _move_towards_mouse() -> void:
 
 func _input(event: InputEvent):
 	if event.is_action_released("ui_select"):
-		_release()
+		release()
 
 
 func snap_to_grid(cell_origin: Vector2) -> void:
@@ -162,7 +162,7 @@ func _pick_up() -> void:
 		self.current_state = STATE.PICKED_UP
 
 
-func _release() -> void:
+func release() -> void:
 	if current_state == STATE.PICKED_UP:
 		self.current_state = STATE.IDLE
 		
