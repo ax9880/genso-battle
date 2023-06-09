@@ -13,7 +13,7 @@
 [ext_resource path="res://DamageNumbers.tscn" type="PackedScene" id=11]
 [ext_resource path="res://skills/Heal.tres" type="Resource" id=12]
 [ext_resource path="res://DeathParticles.tscn" type="PackedScene" id=13]
-[ext_resource path="res://assets/fonts/CinzelDecorativeBold.tres" type="DynamicFont" id=14]
+[ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=14]
 [ext_resource path="res://assets/fonts/Exo2-Regular.ttf" type="DynamicFontData" id=15]
 
 [sub_resource type="Animation" id=7]
@@ -376,7 +376,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 1
 custom_fonts/font = SubResource( 8 )
-text = "Haniwa warrior"
+text = "HANIWA_WARRIOR"
 align = 1
 valign = 1
 autowrap = true

@@ -115,6 +115,10 @@ ui_select={
 2d_physics/layer_3="cell"
 2d_physics/layer_4="enemy"
 
+[locale]
+
+translations=PoolStringArray( "res://text/text.en.translation", "res://text/text.es.translation" )
+
 [physics]
 
 common/enable_pause_aware_picking=true
