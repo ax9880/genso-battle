@@ -239,6 +239,9 @@ func calculate_attack_damage(attacker_stats: StartingStats) -> int:
 func inflict_damage(damage: int) -> void:
 	$Job.decrease_health(damage)
 	
+	if damage > 0:
+		$AnimationPlayer.play("Shake")
+	
 	var damage_numbers: Node2D = damage_numbers_packed_scene.instance()
 	add_child(damage_numbers)
 	
