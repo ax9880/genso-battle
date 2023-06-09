@@ -41,6 +41,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
 
 [sub_resource type="Animation" id=5]
 resource_name = "appear"
@@ -250,6 +262,7 @@ __meta__ = {
 }
 
 [node name="CanvasLayer" type="Node2D" parent="."]
+visible = false
 z_index = 2
 
 [node name="Container" type="MarginContainer" parent="CanvasLayer"]
@@ -263,12 +276,14 @@ margin_right = 57.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 100, 100 )
 mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="TurnCount" type="Label" parent="CanvasLayer/Container"]
-visible = false
-margin_top = 22.0
+margin_top = 6.0
 margin_right = 100.0
-margin_bottom = 77.0
+margin_bottom = 93.0
 grow_horizontal = 2
 grow_vertical = 2
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
