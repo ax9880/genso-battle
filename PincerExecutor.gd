@@ -234,49 +234,87 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 		var chain: Array = [] # Including the pincering unit that started the chain
 	) -> Array:
 	
-	var area_of_effect: int = skill.area_of_effect
 	var cell: Cell = grid.get_cell_from_position(unit.position)
 	
-	match(area_of_effect):
+	match(skill.area_of_effect):
 		Enums.AreaOfEffect.NONE, Enums.AreaOfEffect.PINCER:
 			return _units_to_cells(pincered_units)
-		Enums.AreaOfEffect.SELF:
-			return _units_to_cells([unit])
-		Enums.AreaOfEffect.CHAIN:
-			return _units_to_cells(chain)
-		Enums.AreaOfEffect.HORIZONTAL_X:
+		Enums.AreaOfEffect.AREA_X:
 			var targets := []
-			
-			# TODO: If unit is 2x2 then you have to do this for each cell it occupies
-			# and then the cells that it occupies are filtered out
 			
 			for x in range(cell.coordinates.x - skill.area_of_effect_size, cell.coordinates.x + skill.area_of_effect_size + 1):
-				var candidate_cell_coordinates := Vector2(x, cell.coordinates.y)
-				
-				if grid._is_in_range(candidate_cell_coordinates):
-					targets.push_back(grid.get_cell_from_coordinates(candidate_cell_coordinates))
-			
-			return targets
-		Enums.AreaOfEffect.VERTICAL_X:
-			var targets := []
-			
-			for y in range(cell.coordinates.y - skill.area_of_effect_size, cell.coordinates.y + skill.area_of_effect_size + 1):
-				var candidate_cell_coordinates := Vector2(cell.coordinates.x, y)
-				
-				if grid._is_in_range(candidate_cell_coordinates):
-					targets.push_back(grid.get_cell_from_coordinates(candidate_cell_coordinates))
+				for y in range(cell.coordinates.y - skill.area_of_effect_size, cell.coordinates.y + skill.area_of_effect_size + 1):
+					var candidate_cell_coordinates := Vector2(x, y)
+					
+					if grid._is_in_range(candidate_cell_coordinates):
+						targets.push_back(grid.get_cell_from_coordinates(candidate_cell_coordinates))
 			
 			return targets
 		Enums.AreaOfEffect.CROSS_X:
-			#var horizontal_targets: Array = find_area_of_effect_target_cells()
-			#var vertical_targets =
-			# join them without duplicates
+			var targets := []
 			
-			return []
-		Enums.AreaOfEffect.AREA_X:
+			targets.append_array(_find_horizontal_x_cells(cell, skill.area_of_effect_size))
+			targets.append_array(_find_vertical_x_cells(cell, skill.area_of_effect_size))
 			
+			return targets
+		Enums.AreaOfEffect.SELF:
+			return _units_to_cells([unit])
+		Enums.AreaOfEffect.HORIZONTAL_X:
+			# TODO: If unit is 2x2 then you have to do this for each cell it occupies
+			# and then the cells that it occupies are filtered out
 			
-			return []
+			return _find_horizontal_x_cells(cell, skill.area_of_effect_size)
+		Enums.AreaOfEffect.VERTICAL_X:
+
+			return _find_vertical_x_cells(cell, skill.area_of_effect_size)
+		Enums.AreaOfEffect.ROWS_X:
+			var targets := []
+			
+			var start: int
+			var area_of_effect_size_halved := int(skill.area_of_effect_size / 2)
+			
+			if skill.area_of_effect_size % 2 == 0:
+				start = int(cell.coordinates.y) - area_of_effect_size_halved + 1
+			else:
+				start = int(cell.coordinates.y) - area_of_effect_size_halved
+			
+			var end: int = int(cell.coordinates.y) + area_of_effect_size_halved
+			
+			assert(start <= end)
+			
+			for x in range(grid.width):
+				for y in range(start, end + 1):
+					var candidate_cell_coordinates := Vector2(x, y)
+					
+					if grid._is_in_range(candidate_cell_coordinates):
+						targets.push_back(grid.get_cell_from_coordinates(candidate_cell_coordinates))
+			
+			return targets
+		Enums.AreaOfEffect.COLUMNS_X:
+			var targets := []
+			
+			var start: int
+			var area_of_effect_size_halved := int(skill.area_of_effect_size / 2)
+			
+			if skill.area_of_effect_size % 2 == 0:
+				start = int(cell.coordinates.x) - area_of_effect_size_halved + 1
+			else:
+				start = int(cell.coordinates.x) - area_of_effect_size_halved
+			
+			var end: int = int(cell.coordinates.x) + area_of_effect_size_halved
+			
+			assert(start <= end)
+			
+			for x in range(start, end + 1):
+				for y in range(grid.height):
+					var candidate_cell_coordinates := Vector2(x, y)
+					
+					if grid._is_in_range(candidate_cell_coordinates):
+						targets.push_back(grid.get_cell_from_coordinates(candidate_cell_coordinates))
+			
+			return targets
+		Enums.AreaOfEffect.CHAIN:
+			return _units_to_cells(chain)
 		Enums.AreaOfEffect.ALL:
 			var all_units := []
 			
@@ -285,8 +323,32 @@ func _find_area_of_effect_target_cells(var unit: Unit,
 			
 			return _units_to_cells(all_units)
 		_:
-			printerr("Area of effect is not implemented, can't find area: ", area_of_effect)
+			printerr("Area of effect is not implemented, can't find area: ", skill.area_of_effect)
 			return []
+
+
+func _find_horizontal_x_cells(start_cell: Cell, area_of_effect_size: int) -> Array:
+	var targets := []
+	
+	for x in range(start_cell.coordinates.x - area_of_effect_size, start_cell.coordinates.x + area_of_effect_size + 1):
+		var candidate_cell_coordinates := Vector2(x, start_cell.coordinates.y)
+		
+		if grid._is_in_range(candidate_cell_coordinates):
+			targets.push_back(grid.get_cell_from_coordinates(candidate_cell_coordinates))
+	
+	return targets
+
+
+func _find_vertical_x_cells(start_cell: Cell, area_of_effect_size: int) -> Array:
+	var targets := []
+	
+	for y in range(start_cell.coordinates.y - area_of_effect_size, start_cell.coordinates.y + area_of_effect_size + 1):
+		var candidate_cell_coordinates := Vector2(start_cell.coordinates.x, y)
+		
+		if grid._is_in_range(candidate_cell_coordinates):
+			targets.push_back(grid.get_cell_from_coordinates(candidate_cell_coordinates))
+	
+	return targets
 
 
 func _units_to_cells(units: Array) -> Array:
