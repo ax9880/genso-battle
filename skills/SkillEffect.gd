@@ -34,7 +34,7 @@ func start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 		_start(unit, skill, target_cells)
 
 
-func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
+func _start(_unit: Unit, _skill: Skill, _target_cells: Array) -> void:
 	printerr("Override SkillEffect._start()")
 	
 	emit_signal("effect_finished")
