@@ -61,8 +61,6 @@ func _ready() -> void:
 	random.randomize()
 	
 	self.current_state = STATE.IDLE
-	
-	$CanvasLayer/ActivatedSkillMarginContainer.hide()
 
 
 func _physics_process(_delta: float) -> void:
@@ -346,10 +344,6 @@ func is_alive() -> bool:
 
 
 ## Animation playback
-
-func _appear_animation_advanced() -> void:
-	
-	pass
 
 
 func _appear_animation_finished() -> void:
