@@ -88,3 +88,4 @@ margin_right = 14.0
 margin_bottom = 29.0
 
 [node name="ActivationAudio" type="AudioStreamPlayer" parent="."]
+bus = "Sound effects"

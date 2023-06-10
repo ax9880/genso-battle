@@ -11,3 +11,4 @@ particle_arc_scene = ExtResource( 3 )
 hit_effect_packed_scene = ExtResource( 4 )
 
 [node name="HitSound" type="AudioStreamPlayer" parent="." index="3"]
+bus = "Sound effects"

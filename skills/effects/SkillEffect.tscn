@@ -10,5 +10,6 @@ heal_particles_packed_scene = ExtResource( 2 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="SkillSound" type="AudioStreamPlayer" parent="."]
+bus = "Sound effects"
 
 [node name="Tween" type="Tween" parent="."]
