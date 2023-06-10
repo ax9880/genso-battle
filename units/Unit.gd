@@ -95,6 +95,10 @@ func play_death_animation() -> void:
 	death_effect.play()
 	
 	$AnimationPlayer.play("death")
+	
+	disable_selection_area()
+	disable_swap_area()
+	Utils.disable_object($CollisionShape2D)
 
 
 func move_to_new_cell(target_position: Vector2) -> void:
