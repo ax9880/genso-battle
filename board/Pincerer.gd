@@ -155,6 +155,7 @@ func _find_corner_pincer(corner: Cell, faction: int) -> Pincer:
 		return null
 
 
+# Side effect: Adds a Pincer object to the leading_pincers or pincers arrays
 func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pincer: Pincer) -> void:
 	if pincer == null:
 		return
