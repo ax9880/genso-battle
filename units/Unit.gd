@@ -34,6 +34,8 @@ export var max_velocity_pixels_per_second: float = 2048.0 # 2048
 # Proportional control constant
 export var kp: float = 1.4
 
+export(bool) var is_controlled_by_player: bool = true
+
 ## Onready
 
 onready var tween := $Tween
@@ -68,7 +70,11 @@ func _physics_process(_delta: float) -> void:
 		STATE.IDLE:
 			pass
 		STATE.PICKED_UP:
-			_move_towards_mouse()
+			if is_controlled_by_player:
+				_move_towards_mouse()
+			
+			if Input.is_action_just_released("ui_accept"):
+				release()
 
 
 func appear() -> void: 
@@ -129,7 +135,8 @@ func _move_towards_mouse() -> void:
 
 func _input(event: InputEvent):
 	if event.is_action_released("ui_select"):
-		release()
+		#release()
+		pass
 
 
 func snap_to_grid(cell_origin: Vector2) -> void:
@@ -364,9 +371,12 @@ func _death_animation_finished() -> void:
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
-	if event is InputEventMouseButton:
-		if event.pressed:
-			_pick_up()
+	if event is InputEventMouseButton and event.pressed:
+		match(current_state):
+			STATE.IDLE:
+				_pick_up()
+			STATE.PICKED_UP:
+				release()
 
 
 func _on_Tween_tween_completed(_object: Object, key: String):

@@ -65,10 +65,6 @@ func _start_moving() -> void:
 	_move()
 
 
-func _move_towards_mouse() -> void:
-	pass
-
-
 func _move() -> void:
 	var target_position = path.pop_front()
 	
@@ -88,6 +84,7 @@ func _move() -> void:
 		self.turn_counter = turn_counter_max_value
 		
 		emit_signal("action_done", self)
+		#emit_signal("movement_done", self)
 
 
 func set_turn_counter(value: int) -> void:
