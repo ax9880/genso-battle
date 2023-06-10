@@ -63,6 +63,9 @@ func _ready() -> void:
 	random.randomize()
 	
 	self.current_state = STATE.IDLE
+	
+	if not is_controlled_by_player:
+		set_process_input(false)
 
 
 func _physics_process(_delta: float) -> void:
@@ -72,9 +75,9 @@ func _physics_process(_delta: float) -> void:
 		STATE.PICKED_UP:
 			if is_controlled_by_player:
 				_move_towards_mouse()
-			
-			if Input.is_action_just_released("ui_accept"):
-				release()
+				
+				if Input.is_action_just_released("ui_accept"):
+					release()
 
 
 func appear() -> void: 
@@ -119,10 +122,14 @@ func disable_swap_area() -> void:
 
 func enable_selection_area() -> void:
 	Utils.enable_object($SelectionArea2D/CollisionShape2D)
+	
+	$SelectionArea2D.monitorable = true
 
 
 func disable_selection_area() -> void:
 	Utils.disable_object($SelectionArea2D/CollisionShape2D)
+	
+	$SelectionArea2D.monitorable = false
 
 
 func _move_towards_mouse() -> void:
@@ -321,8 +328,6 @@ func calculate_damage(attacker_stats: StartingStats,
 	return int(damage)
 
 
-
-# power, weapon type, etc for the secondary damage
 func get_weapon_type_advantage(attacker_weapon_type, defender_weapon_type) -> float:
 	var disadvantaged_weapon_type = Enums.WEAPON_RELATIONSHIPS.get(attacker_weapon_type)
 	
@@ -368,6 +373,13 @@ func _death_animation_finished() -> void:
 	emit_signal("death_animation_finished", self)
 
 
+func _on_snap_to_grid() -> void:
+	self.current_state = STATE.IDLE
+	
+	emit_signal("snapped_to_grid", self)
+	
+	$Sound/SnapAudio.play()
+
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
@@ -383,11 +395,7 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 	match(current_state):
 		STATE.SNAPPING_TO_GRID:
 			if key == ":position":
-				self.current_state = STATE.IDLE
-				
-				emit_signal("snapped_to_grid", self)
-				
-				$Sound/SnapAudio.play()
+				_on_snap_to_grid()
 		STATE.SWAPPING:
 			if key == ":position":
 				self.current_state = STATE.IDLE

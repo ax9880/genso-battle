@@ -268,6 +268,7 @@ __meta__ = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SwapArea2D"]
+visible = false
 shape = SubResource( 3 )
 disabled = true
 __meta__ = {
@@ -385,6 +386,7 @@ visible = false
 margin_left = -22.0
 margin_right = 22.0
 margin_bottom = 59.0
+mouse_filter = 2
 
 [node name="UnitName" type="Label" parent="CanvasLayer"]
 visible = false

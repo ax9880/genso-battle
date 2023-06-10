@@ -73,9 +73,12 @@ func _assign_enemies_to_cells() -> void:
 		enemy.connect("action_done", self, "_on_Enemy_action_done")
 		enemy.connect("started_moving", self, "_on_Enemy_started_moving")
 		
-		enemy.faction = Unit.ENEMY_FACTION
+		if enemy.is_controlled_by_player:
+			enemy.connect("picked_up", self, "_on_Unit_picked_up")
+			enemy.connect("released", self, "_on_Unit_released")
+			#enemy.connect("snapped_to_grid", self, "_on_Unit_snapped_to_grid")
 		
-		enemy.set_process_input(false)
+		enemy.faction = Unit.ENEMY_FACTION
 
 
 func _assign_unit_to_cell(unit: Unit) -> void:
@@ -157,6 +160,8 @@ func _start_enemy_turn() -> void:
 
 
 func _update_enemy() -> void:
+	_clear_active_cells()
+	
 	if not enemy_queue.empty():
 		var enemy: Unit = enemy_queue.pop_front()
 		
@@ -208,19 +213,6 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 		_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
 
 
-func _on_Unit_picked_up(unit: Unit) -> void:
-	_update_active_unit(unit)
-	
-	if current_turn == Turn.PLAYER:
-		for other_unit in $Units.get_children():
-			if other_unit != unit:
-				other_unit.disable_selection_area()
-
-
-func _on_Enemy_started_moving(enemy: Unit) -> void:
-	_update_active_unit(enemy)
-
-
 func _update_active_unit(unit: Unit) -> void:
 	active_unit = unit
 	
@@ -267,7 +259,6 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
 
-
 # Builds an adjacency list with all the nodes that the given unit can visit
 # Enemies may block the unit from reaching certain tiles, besides the tiles they
 # already occupy
@@ -307,7 +298,6 @@ func build_navigation_graph(unit_position: Vector2, faction: int, movement_range
 
 func get_distance_to_cell(start_cell: Cell, end_cell: Cell) -> float:
 	return abs(end_cell.coordinates.x - start_cell.coordinates.x) + abs(end_cell.coordinates.y - start_cell.coordinates.y)
-
 
 
 func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: Cell) -> Array:
@@ -365,9 +355,9 @@ func _execute_next_pincer() -> void:
 	if pincer != null:
 		# TODO: Play pincer animation
 		
-		# TODO: Change allies and enemies when it's the enemy's turn
 		var _error = $PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
 		
+		# TODO: Change allies and enemies when it's the enemy's turn
 		$PincerExecutor.start_skill_activation_phase(pincer, grid, $Units.get_children(), $Enemies.get_children())
 	else:
 		print("All pincers done!")
@@ -386,6 +376,7 @@ func _execute_next_enemy_pincer() -> void:
 	
 	if pincer != null:
 		# TODO: Play pincer animation
+		print("Start enemy pincers")
 		
 		_start_attack_phase(pincer)
 	else:
@@ -471,10 +462,20 @@ func _stop_drag_timer() -> void:
 
 ## Signals
 
+func _on_Unit_picked_up(unit: Unit) -> void:
+	_update_active_unit(unit)
+	
+	if current_turn == Turn.PLAYER:
+		for other_unit in $Units.get_children():
+			if other_unit != unit:
+				other_unit.disable_selection_area()
+
+
+func _on_Enemy_started_moving(enemy: Unit) -> void:
+	_update_active_unit(enemy)
+
 
 func _on_Unit_released(unit: Unit) -> void:
-	$DragTimer.stop()
-	
 	_stop_drag_timer()
 	
 	var selected_cell: Cell = _find_closest_cell(unit.position)
@@ -483,6 +484,8 @@ func _on_Unit_released(unit: Unit) -> void:
 	# FIXME: May not work always
 	if active_unit_last_valid_cell != null:
 		has_active_unit_exited_cell = true
+		
+		print("Unit %s exited a cell" % unit.name)
 	
 	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
 	
@@ -490,39 +493,36 @@ func _on_Unit_released(unit: Unit) -> void:
 
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
-	if has_active_unit_exited_cell:
-		_clear_active_cells()
-		
-		_disable_player_units()
-		
-		# Adds pincers to pincer queue
-		pincer_queue = $Pincerer.find_pincers(grid, unit)
-		
-		# TODO: execute enemy pincers
-		_execute_next_pincer()
-	else:
-		# Do nothing
-		_start_player_turn()
+	if current_turn == Turn.PLAYER:
+		if has_active_unit_exited_cell:
+			_clear_active_cells()
+			
+			_disable_player_units()
+			
+			# Adds pincers to pincer queue
+			pincer_queue = $Pincerer.find_pincers(grid, unit)
+			
+			# TODO: execute enemy pincers
+			_execute_next_pincer()
+		else:
+			# Do nothing
+			_start_player_turn()
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:
-	_clear_active_cells()
-	
 	if unit.is_alive():
 		assert(grid.get_cell_from_position(unit.position).unit == unit)
 	else:
 		assert(grid.get_cell_from_position(unit.position).unit == null)
 	
-	# enemy moved
-	if false:
+	if has_active_unit_exited_cell:
 		var pincers: Array = $Pincerer.find_pincers(grid, unit)
 		
 		pincer_queue = _filter_pincers_with_active_unit(pincers, unit)
 		
-		
+		_execute_next_enemy_pincer()
 	else:
 		_update_enemy()
-
 
 
 func _filter_pincers_with_active_unit(pincers: Array, unit: Unit) -> Array:
@@ -533,6 +533,7 @@ func _filter_pincers_with_active_unit(pincers: Array, unit: Unit) -> Array:
 			filtered_pincers.push_back(pincer)
 	
 	return filtered_pincers
+
 
 func _on_Attacker_attack_phase_finished(pincer: Pincerer.Pincer) -> void:
 	if current_turn == Turn.PLAYER:

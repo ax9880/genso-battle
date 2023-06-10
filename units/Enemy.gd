@@ -19,35 +19,41 @@ func act(board: Board) -> void:
 	if is_dead():
 		emit_signal("action_done", self)
 	else:
-		if turn_counter > 0:
-			self.turn_counter = turn_counter - 1
-		
-		if turn_counter == 0:
-			# Build graph
-			var navigation_graph: Dictionary = board.build_navigation_graph(position, faction, get_stats().movement_range)
+		if is_controlled_by_player:
+			enable_selection_area()
 			
-			# Evaluate positions (requires having the whole graph)
-			var i = 0
+			$CanvasLayer/UnitName.show()
+			$CanvasLayer/UnitName.modulate = Color.white
+		else:
+			if turn_counter > 0:
+				self.turn_counter = turn_counter - 1
 			
-			var target_cell: Cell = null
-			
-			# Pick one
-			for node in navigation_graph.keys():
-				i += 1
+			if turn_counter == 0:
+				# Build graph
+				var navigation_graph: Dictionary = board.build_navigation_graph(position, faction, get_stats().movement_range)
 				
-				if i > 4:
-					target_cell = node
-					break
-			
-			path = board.find_path(navigation_graph, position, target_cell)
-			
-			if !path.empty():
-				# Move or perform skill (in any order)
-				_start_moving()
+				# Evaluate positions (requires having the whole graph)
+				var i = 0
+				
+				var target_cell: Cell = null
+				
+				# Pick one
+				for node in navigation_graph.keys():
+					i += 1
+					
+					if i > 4:
+						target_cell = node
+						break
+				
+				path = board.find_path(navigation_graph, position, target_cell)
+				
+				if !path.empty():
+					# Move or perform skill (in any order)
+					_start_moving()
+				else:
+					emit_signal("action_done", self)
 			else:
 				emit_signal("action_done", self)
-		else:
-			emit_signal("action_done", self)
 
 
 func _start_moving() -> void:
@@ -82,15 +88,32 @@ func _move() -> void:
 		
 		# TODO: Reset the turn counter after the pincers are done
 		self.turn_counter = turn_counter_max_value
+		path = []
 		
 		emit_signal("action_done", self)
 		#emit_signal("movement_done", self)
+
+
+func release() -> void:
+	.release()
+	
+	if is_controlled_by_player:
+		emit_signal("action_done", self)
+		
+		disable_selection_area()
+		$CanvasLayer/UnitName.hide()
 
 
 func set_turn_counter(value: int) -> void:
 	turn_counter = value
 	
 	$CanvasLayer/Container/TurnCount.text = str(turn_counter)
+
+
+func _on_snap_to_grid() -> void:
+	._on_snap_to_grid()
+	
+	emit_signal("action_done", self)
 
 
 func _on_Tween_tween_completed(_object: Object, key: String) -> void:
