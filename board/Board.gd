@@ -225,7 +225,7 @@ func _update_active_unit(unit: Unit) -> void:
 	active_unit = unit
 	
 	active_unit_current_cell = grid.get_cell_from_position(unit.position)
-	active_unit_last_valid_cell = active_unit_current_cell
+	active_unit_last_valid_cell = null
 	has_active_unit_exited_cell = false
 	
 	assert(active_unit_current_cell.unit == unit, "Unit %s is not in cell %s" % [unit.name, active_unit_current_cell.coordinates])
@@ -372,6 +372,24 @@ func _execute_next_pincer() -> void:
 			_start_player_turn()
 
 
+func _execute_next_enemy_pincer() -> void:
+	var pincer: Pincerer.Pincer = pincer_queue.pop_front()
+	
+	while(pincer != null and not pincer.is_valid()):
+		pincer = pincer_queue.pop_front()
+	
+	if pincer != null:
+		# TODO: Play pincer animation
+		
+		_start_attack_phase(pincer)
+	else:
+		print("All enemy pincers done!")
+		
+		# TODO: Check for dead units
+		
+		_update_enemy()
+
+
 func _start_attack_phase(pincer: Pincerer.Pincer) -> void:
 	var attack_queue: Array = _queue_attacks(pincer)
 	
@@ -457,7 +475,7 @@ func _on_Unit_released(unit: Unit) -> void:
 	
 	# TODO: If ally, then swap, else, pick the last valid cell
 	# FIXME: May not work always
-	if active_unit_last_valid_cell != selected_cell:
+	if active_unit_last_valid_cell != null:
 		has_active_unit_exited_cell = true
 	
 	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
@@ -489,11 +507,32 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	else:
 		assert(grid.get_cell_from_position(unit.position).unit == null)
 	
-	_update_enemy()
+	# enemy moved
+	if false:
+		var pincers: Array = $Pincerer.find_pincers(grid, unit)
+		
+		pincer_queue = _filter_pincers_with_active_unit(pincers, unit)
+		
+		
+	else:
+		_update_enemy()
 
+
+
+func _filter_pincers_with_active_unit(pincers: Array, unit: Unit) -> Array:
+	var filtered_pincers := []
+	
+	for pincer in pincers:
+		if pincer.pincering_units.find(unit) != -1:
+			filtered_pincers.push_back(pincer)
+	
+	return filtered_pincers
 
 func _on_Attacker_attack_phase_finished(pincer: Pincerer.Pincer) -> void:
-	_start_attack_skill_phase(pincer)
+	if current_turn == Turn.PLAYER:
+		_start_attack_skill_phase(pincer)
+	else:
+		_execute_next_enemy_pincer()
 
 
 func _on_PincerExecutor_skill_activation_phase_finished(pincer: Pincerer.Pincer) -> void:
