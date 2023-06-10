@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://AttackEffect.gd" type="Script" id=2]
+[ext_resource path="res://skills/AttackEffect.gd" type="Script" id=2]
 [ext_resource path="res://assets/vfx/hit_cross.png" type="Texture" id=3]
 
 [sub_resource type="CanvasItemMaterial" id=1]

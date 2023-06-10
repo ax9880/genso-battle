@@ -189,6 +189,7 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 	
 	if selected_cell != null:
 		# TODO: If there's an enemy in the selected cell then don't do this assignment
+		# FIXME: drag timer doesn't start when exiting first cell
 		if active_unit_last_valid_cell != active_unit_current_cell:
 			active_unit_last_valid_cell = active_unit_current_cell
 			
@@ -385,7 +386,7 @@ func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
 	$PincerExecutor.start_attack_skill_phase()
 
 
-func _start_heal_phase(pincer: Pincerer.Pincer) -> void:
+func _start_heal_phase(_pincer: Pincerer.Pincer) -> void:
 	var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [], CONNECT_ONESHOT)
 	
 	# This methods starts the heal phase internally

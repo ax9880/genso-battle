@@ -5,7 +5,6 @@ onready var progress_bar: TextureProgress = $MarginContainer/VBoxContainer/Textu
 onready var tween: Tween = $MarginContainer/VBoxContainer/TextureProgress/Tween
 
 var timer: Timer
-var initial_value: float = 0
 
 
 func _ready() -> void:
@@ -13,15 +12,13 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	var percentage_left = progress_bar.max_value * timer.time_left / initial_value
+	var percentage_left = progress_bar.max_value * timer.time_left / timer.wait_time
 	
 	progress_bar.value = percentage_left
 
 
 func _on_Board_drag_timer_started(_timer: Timer) -> void:
 	timer = _timer
-	
-	initial_value = timer.wait_time
 	
 	progress_bar.value = progress_bar.max_value
 	

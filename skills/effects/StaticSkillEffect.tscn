@@ -1,9 +1,9 @@
 [gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://skills/SkillEffect.tscn" type="PackedScene" id=1]
-[ext_resource path="res://skills/StaticSkillEffect.gd" type="Script" id=2]
+[ext_resource path="res://skills/effects/SkillEffect.tscn" type="PackedScene" id=1]
+[ext_resource path="res://skills/effects/StaticSkillEffect.gd" type="Script" id=2]
 [ext_resource path="res://assets/vfx/hit_simple.png" type="Texture" id=3]
-[ext_resource path="res://skills/ChompAnimation.tscn" type="PackedScene" id=4]
+[ext_resource path="res://skills/effects/ChompAnimation.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CanvasItemMaterial" id=2]
 blend_mode = 1

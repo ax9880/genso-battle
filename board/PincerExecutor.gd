@@ -58,11 +58,14 @@ func _activate_next_skill() -> void:
 	if unit != null:
 		var activated_skills: Array = unit.activate_skills()
 		
-		_queue_skills(unit, activated_skills)
-		
-		# TODO: if no skills are activated then to the next unit
-		# use call deferred? recursion?
-		unit.play_skill_activation_animation(activated_skills)
+		if activated_skills.empty():
+			# If no skills are activated then go to the next unit right away
+			# I don't like the recursion but it makes it simpler
+			_activate_next_skill()
+		else:
+			_queue_skills(unit, activated_skills)
+			
+			unit.play_skill_activation_animation(activated_skills)
 	else:
 		$SkillActivationTimer.stop()
 		

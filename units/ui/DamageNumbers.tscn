@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://assets/fonts/CinzelDecorativeBold.tres" type="DynamicFont" id=1]
-[ext_resource path="res://DamageNumbers.gd" type="Script" id=2]
+[ext_resource path="res://units/ui/DamageNumbers.gd" type="Script" id=2]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Appear and then disappear"

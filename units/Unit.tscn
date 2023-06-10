@@ -1,20 +1,24 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=28 format=2]
 
-[ext_resource path="res://Unit.gd" type="Script" id=1]
-[ext_resource path="res://unit_rect.png" type="Texture" id=2]
-[ext_resource path="res://SwapArea2D.gd" type="Script" id=3]
-[ext_resource path="res://Job.gd" type="Script" id=4]
+[ext_resource path="res://units/Unit.gd" type="Script" id=1]
+[ext_resource path="res://assets/unit_rect.png" type="Texture" id=2]
+[ext_resource path="res://units/SwapArea2D.gd" type="Script" id=3]
+[ext_resource path="res://units/Job.gd" type="Script" id=4]
 [ext_resource path="res://jobs/YachieStartingStats.tres" type="Resource" id=5]
 [ext_resource path="res://assets/ui/hp_bar_progress.png" type="Texture" id=6]
 [ext_resource path="res://assets/ui/hp_bar_bg.png" type="Texture" id=7]
-[ext_resource path="res://HpBar.gd" type="Script" id=8]
-[ext_resource path="res://skills/Chomp.tres" type="Resource" id=9]
-[ext_resource path="res://ActivatedSkillMarginContainer.tscn" type="PackedScene" id=10]
-[ext_resource path="res://DamageNumbers.tscn" type="PackedScene" id=11]
-[ext_resource path="res://skills/Heal.tres" type="Resource" id=12]
-[ext_resource path="res://DeathParticles.tscn" type="PackedScene" id=13]
+[ext_resource path="res://units/HpBar.gd" type="Script" id=8]
+[ext_resource path="res://skills/resources/Chomp.tres" type="Resource" id=9]
+[ext_resource path="res://units/ui/ActivatedSkillMarginContainer.tscn" type="PackedScene" id=10]
+[ext_resource path="res://units/ui/DamageNumbers.tscn" type="PackedScene" id=11]
+[ext_resource path="res://skills/resources/Heal.tres" type="Resource" id=12]
+[ext_resource path="res://units/ui/DeathParticles.tscn" type="PackedScene" id=13]
 [ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=14]
 [ext_resource path="res://assets/fonts/Exo2-Regular.ttf" type="DynamicFontData" id=15]
+[ext_resource path="res://assets/sfx/casino/shove2.wav" type="AudioStream" id=16]
+[ext_resource path="res://assets/sfx/casino/place10.wav" type="AudioStream" id=17]
+[ext_resource path="res://assets/sfx/casino/shove1.wav" type="AudioStream" id=18]
+[ext_resource path="res://assets/sfx/pot_break_2.wav" type="AudioStream" id=19]
 
 [sub_resource type="Animation" id=7]
 length = 0.001
@@ -93,12 +97,8 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"clips": [ {
-"end_offset": 0.0,
-"start_offset": 0.0,
-"stream": null
-} ],
-"times": PoolRealArray( 0 )
+"clips": [  ],
+"times": PoolRealArray(  )
 }
 tracks/2/type = "method"
 tracks/2/path = NodePath(".")
@@ -153,27 +153,13 @@ tracks/5/keys = {
 
 [sub_resource type="Animation" id=6]
 resource_name = "death"
-tracks/0/type = "audio"
-tracks/0/path = NodePath("Sound/DeathAudio")
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"clips": [ {
-"end_offset": 0.0,
-"start_offset": 0.0,
-"stream": null
-} ],
-"times": PoolRealArray( 0 )
-}
-tracks/1/type = "method"
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
 "times": PoolRealArray( 1 ),
 "transitions": PoolRealArray( 1 ),
 "values": [ {
@@ -181,29 +167,43 @@ tracks/1/keys = {
 "method": "_death_animation_finished"
 } ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("Sprite:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
 "times": PoolRealArray( 0, 0.2, 1 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 0.8, 0.34902, 0.34902, 1 ), Color( 1, 1, 1, 0 ) ]
 }
-tracks/3/type = "value"
-tracks/3/path = NodePath("Control:modulate")
+tracks/2/type = "value"
+tracks/2/path = NodePath("Control:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/3/type = "audio"
+tracks/3/path = NodePath("Sound/DeathAudio")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 19 )
+} ],
+"times": PoolRealArray( 0 )
 }
 
 [sub_resource type="RectangleShape2D" id=3]
@@ -214,6 +214,9 @@ extents = Vector2( 49, 49 )
 
 [sub_resource type="DynamicFont" id=8]
 font_data = ExtResource( 15 )
+
+[sub_resource type="AudioStreamRandomPitch" id=10]
+audio_stream = ExtResource( 17 )
 
 [node name="Unit" type="KinematicBody2D"]
 collision_layer = 2
@@ -381,6 +384,7 @@ margin_bottom = 59.0
 
 [node name="UnitName" type="Label" parent="CanvasLayer"]
 visible = false
+modulate = Color( 1, 1, 1, 0 )
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -401,14 +405,20 @@ autowrap = true
 [node name="Sound" type="Node" parent="."]
 
 [node name="AppearAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 16 )
 
 [node name="DeathAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 19 )
 
 [node name="PickUpAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 18 )
 
 [node name="SwapAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 16 )
+volume_db = -3.0
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Sound"]
+[node name="SnapAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = SubResource( 10 )
 
 [connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
 [connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]

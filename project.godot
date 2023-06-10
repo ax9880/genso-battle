@@ -12,32 +12,32 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Attack",
 "language": "GDScript",
-"path": "res://Attack.gd"
+"path": "res://board/Attack.gd"
 }, {
 "base": "Node2D",
 "class": "Attacker",
 "language": "GDScript",
-"path": "res://Attacker.gd"
+"path": "res://board/Attacker.gd"
 }, {
 "base": "Node2D",
 "class": "Board",
 "language": "GDScript",
-"path": "res://Board.gd"
+"path": "res://board/Board.gd"
 }, {
 "base": "Area2D",
 "class": "Cell",
 "language": "GDScript",
-"path": "res://Cell.gd"
+"path": "res://board/Cell.gd"
 }, {
 "base": "Node2D",
 "class": "Grid",
 "language": "GDScript",
-"path": "res://Grid.gd"
+"path": "res://board/Grid.gd"
 }, {
 "base": "Node",
 "class": "Pincerer",
 "language": "GDScript",
-"path": "res://Pincerer.gd"
+"path": "res://board/Pincerer.gd"
 }, {
 "base": "Resource",
 "class": "Skill",
@@ -47,7 +47,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "SkillEffect",
 "language": "GDScript",
-"path": "res://skills/SkillEffect.gd"
+"path": "res://skills/effects/SkillEffect.gd"
 }, {
 "base": "Resource",
 "class": "StartingStats",
@@ -57,7 +57,7 @@ _global_script_classes=[ {
 "base": "KinematicBody2D",
 "class": "Unit",
 "language": "GDScript",
-"path": "res://Unit.gd"
+"path": "res://units/Unit.gd"
 } ]
 _global_script_class_icons={
 "Attack": "",
@@ -77,7 +77,7 @@ _global_script_class_icons={
 config/name="TouhouPrideGameJam5"
 run/main_scene="res://Main.tscn"
 boot_splash/image="res://assets/ui/splash_screen.png"
-config/icon="res://icon.png"
+config/icon="res://assets/icon.png"
 
 [autoload]
 
@@ -87,9 +87,7 @@ Enums="*res://Enums.gd"
 [display]
 
 window/size/width=720
-window/size/height=1080
-window/size/test_width=540
-window/size/test_height=810
+window/size/height=960
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
 window/stretch/aspect="expand"

@@ -190,10 +190,14 @@ func set_current_state(new_state) -> void:
 			emit_signal("picked_up", self)
 			
 			_increase_sprite_size()
+			
+			$Sound/PickUpAudio.play()
 		STATE.SNAPPING_TO_GRID:
 			disable_swap_area()
 		STATE.SWAPPING:
 			disable_swap_area()
+			
+			$Sound/SwapAudio.play()
 
 
 func _increase_sprite_size() -> void:
@@ -372,6 +376,8 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 				self.current_state = STATE.IDLE
 				
 				emit_signal("snapped_to_grid", self)
+				
+				$Sound/SnapAudio.play()
 		STATE.SWAPPING:
 			if key == ":position":
 				self.current_state = STATE.IDLE
