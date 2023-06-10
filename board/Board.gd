@@ -271,7 +271,7 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 # Builds an adjacency list with all the nodes that the given unit can visit
 # Enemies may block the unit from reaching certain tiles, besides the tiles they
 # already occupy
-func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
+func build_navigation_graph(unit_position: Vector2, faction: int, movement_range: int) -> Dictionary:
 	var start_cell: Cell = grid.get_cell_from_position(unit_position)
 	
 	var queue := []
@@ -297,11 +297,17 @@ func build_navigation_graph(unit_position: Vector2, faction: int) -> Dictionary:
 		for neighbor in node.neighbors:
 			if not discovered_dict.has(neighbor):
 				if neighbor.unit == null or neighbor.unit.is_ally(faction):
-					navigation_graph[node].push_back(neighbor)
-					
-					queue.push_back(neighbor)
+					if get_distance_to_cell(start_cell, neighbor) <= movement_range:
+						navigation_graph[node].push_back(neighbor)
+						
+						queue.push_back(neighbor)
 	
 	return navigation_graph
+
+
+func get_distance_to_cell(start_cell: Cell, end_cell: Cell) -> float:
+	return abs(end_cell.coordinates.x - start_cell.coordinates.x) + abs(end_cell.coordinates.y - start_cell.coordinates.y)
+
 
 
 func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: Cell) -> Array:

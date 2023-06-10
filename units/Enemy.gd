@@ -24,7 +24,7 @@ func act(board: Board) -> void:
 		
 		if turn_counter == 0:
 			# Build graph
-			var navigation_graph: Dictionary = board.build_navigation_graph(position, faction)
+			var navigation_graph: Dictionary = board.build_navigation_graph(position, faction, get_stats().movement_range)
 			
 			# Evaluate positions (requires having the whole graph)
 			var i = 0
@@ -35,7 +35,7 @@ func act(board: Board) -> void:
 			for node in navigation_graph.keys():
 				i += 1
 				
-				if i > 6:
+				if i > 4:
 					target_cell = node
 					break
 			
