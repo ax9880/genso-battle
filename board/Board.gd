@@ -72,6 +72,7 @@ func _assign_enemies_to_cells() -> void:
 		
 		enemy.connect("action_done", self, "_on_Enemy_action_done")
 		enemy.connect("started_moving", self, "_on_Enemy_started_moving")
+		enemy.connect("use_skill", self, "_on_Enemy_use_skill")
 		
 		if enemy.is_controlled_by_player:
 			enemy.connect("picked_up", self, "_on_Unit_picked_up")
@@ -123,7 +124,12 @@ func _make_player_units_appear() -> void:
 
 
 func _start_player_turn() -> void:
+	print("Starting player turn")
+	
 	current_turn = Turn.PLAYER
+	
+	for enemy in $Enemies.get_children():
+		enemy.reset_turn_counter()
 	
 	emit_signal("drag_timer_reset")
 	
@@ -137,6 +143,8 @@ func _disable_player_units() -> void:
 
 
 func _start_enemy_turn() -> void:
+	print("Starting enemy turn")
+	
 	current_turn = Turn.ENEMY
 	
 	_disable_player_units()
@@ -146,6 +154,17 @@ func _start_enemy_turn() -> void:
 	if $Enemies.get_children().empty():
 		print("Victory!")
 	else:
+		# Initialize these parameters. Allies and enemies are used when
+		# checking for dead units. The grid is used when checking for
+		# affected cells when using a skill
+		
+		# TODO: Pass these parameters to the functions that need them
+		# Or call an initialize function
+		$PincerExecutor.grid = grid
+		$PincerExecutor.allies = $Enemies.get_children()
+		$PincerExecutor.enemies = $Units.get_children()
+		pincer_queue = []
+		
 		# enemy turn starts right away, there's no animation
 		# enqueue enemies
 		# decrease turn counter
@@ -399,13 +418,13 @@ func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
 	$PincerExecutor.start_attack_skill_phase()
 
 
-func _check_for_dead_units(pincer: Pincerer.Pincer) -> void:
-	var _error = $PincerExecutor.connect("finished_checking_for_dead_units", self, "_on_PincerExecutor_finished_checking_for_dead_units", [pincer], CONNECT_ONESHOT)
+func _check_for_dead_units() -> void:
+	var _error = $PincerExecutor.connect("finished_checking_for_dead_units", self, "_on_PincerExecutor_finished_checking_for_dead_units", [], CONNECT_ONESHOT)
 	
 	$PincerExecutor.check_dead_units()
 
 
-func _start_heal_phase(_pincer: Pincerer.Pincer) -> void:
+func _start_heal_phase() -> void:
 	if current_turn == Turn.PLAYER:
 		var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [], CONNECT_ONESHOT)
 		
@@ -481,6 +500,28 @@ func _on_Enemy_started_moving(enemy: Unit) -> void:
 	_update_active_unit(enemy)
 
 
+func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
+	unit.play_skill_activation_animation([skill])
+	
+	# Wait for it to finish
+	yield(get_tree().create_timer(1.0), "timeout")
+	
+	var target_cells: Array = $PincerExecutor._find_area_of_effect_target_cells(unit, skill)
+	
+	var filtered_cells: Array = $PincerExecutor._filter_cells(unit, skill, target_cells)
+	
+	var skill_effect: Node2D = skill.effect_scene.instance()
+	
+	add_child(skill_effect)
+	skill_effect.start(unit, skill, filtered_cells)
+	
+	yield(skill_effect, "effect_finished")
+	
+	_check_for_dead_units()
+	
+	#_update_enemy()
+
+
 func _on_Unit_released(unit: Unit) -> void:
 	_stop_drag_timer()
 	
@@ -550,11 +591,7 @@ func _on_Attacker_attack_phase_finished(pincer: Pincerer.Pincer) -> void:
 	else:
 		print("Checking for dead units killed by enemies")
 		
-		$PincerExecutor.grid = grid
-		$PincerExecutor.allies = $Enemies.get_children()
-		$PincerExecutor.enemies = $Units.get_children()
-		
-		_check_for_dead_units(pincer)
+		_check_for_dead_units()
 
 
 func _on_PincerExecutor_skill_activation_phase_finished(pincer: Pincerer.Pincer) -> void:
@@ -562,11 +599,11 @@ func _on_PincerExecutor_skill_activation_phase_finished(pincer: Pincerer.Pincer)
 
 
 func _on_PincerExecutor_attack_skill_phase_finished(pincer: Pincerer.Pincer) -> void:
-	_check_for_dead_units(pincer)
+	_check_for_dead_units()
 
 
-func _on_PincerExecutor_finished_checking_for_dead_units(pincer: Pincerer.Pincer) -> void:
-	_start_heal_phase(pincer)
+func _on_PincerExecutor_finished_checking_for_dead_units() -> void:
+	_start_heal_phase()
 
 
 func _on_PincerExecutor_heal_phase_finished() -> void:

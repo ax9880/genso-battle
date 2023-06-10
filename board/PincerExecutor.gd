@@ -188,13 +188,13 @@ func _check_next_dead_unit() -> void:
 	var unit: Unit = dead_units.pop_front()
 	
 	if unit != null:
-			var _error = unit.connect("death_animation_finished", self, "_on_Unit_death_animation_finished")
-			
-			unit.play_death_animation()
-			
-			# If 2x2, check neighbor cells
-			var cell: Cell = grid.get_cell_from_position(unit.position)
-			cell.unit = null
+		var _error = unit.connect("death_animation_finished", self, "_on_Unit_death_animation_finished")
+		
+		unit.play_death_animation()
+		
+		# If 2x2, check neighbor cells
+		var cell: Cell = grid.get_cell_from_position(unit.position)
+		cell.unit = null
 	else:
 		$DeathAnimationTimer.stop()
 		

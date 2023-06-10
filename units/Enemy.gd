@@ -6,6 +6,7 @@ var turn_counter_max_value: int
 
 signal action_done
 signal started_moving(unit)
+signal use_skill(unit, skill)
 
 # Array of Vector2
 var path := []
@@ -29,31 +30,45 @@ func act(board: Board) -> void:
 				self.turn_counter = turn_counter - 1
 			
 			if turn_counter == 0:
-				# Build graph
-				var navigation_graph: Dictionary = board.build_navigation_graph(position, faction, get_stats().movement_range)
-				
-				# Evaluate positions (requires having the whole graph)
-				var i = 0
-				
-				var target_cell: Cell = null
-				
-				# Pick one
-				for node in navigation_graph.keys():
-					i += 1
-					
-					if i > 4:
-						target_cell = node
-						break
-				
-				path = board.find_path(navigation_graph, position, target_cell)
-				
-				if !path.empty():
-					# Move or perform skill (in any order)
-					_start_moving()
-				else:
-					emit_signal("action_done", self)
+				_find_next_move(board)
 			else:
 				emit_signal("action_done", self)
+
+
+func _find_next_move(board: Board) -> void:
+	var navigation_graph: Dictionary = board.build_navigation_graph(position, faction, get_stats().movement_range)
+	
+	# Evaluate positions (requires having the whole graph)
+	var i = 0
+	
+	var target_cell: Cell = null
+	
+	# Pick one
+	for node in navigation_graph.keys():
+		i += 1
+		
+		if i > 4:
+			target_cell = node
+			break
+	
+	path = board.find_path(navigation_graph, position, target_cell)
+	
+	if !path.empty():
+		# Move or perform skill (in any order)
+		_use_skill()
+		
+		#_start_moving()
+	else:
+		emit_signal("action_done", self)
+
+
+func _use_skill() -> void:
+	var skill: Skill = $Job.skills.front()
+	
+	if skill != null:
+		emit_signal("use_skill", self, skill)
+	else:
+		emit_signal("action_done", self)
 
 
 func _start_moving() -> void:
@@ -87,10 +102,14 @@ func _move() -> void:
 		self.current_state = STATE.IDLE
 		
 		# TODO: Reset the turn counter after the pincers are done
-		self.turn_counter = turn_counter_max_value
 		path = []
 		
 		emit_signal("action_done", self)
+
+
+func reset_turn_counter() -> void:
+	if turn_counter <= 0:
+		self.turn_counter = turn_counter_max_value
 
 
 func release() -> void:

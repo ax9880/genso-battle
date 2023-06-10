@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://units/Enemy.gd" type="Script" id=2]
 [ext_resource path="res://assets/sfx/ceramic_drag_3.wav" type="AudioStream" id=3]
+[ext_resource path="res://skills/resources/Punch.tres" type="Resource" id=4]
 
 [node name="Enemy" instance=ExtResource( 1 )]
 collision_layer = 8
@@ -10,6 +11,9 @@ collision_mask = 1
 script = ExtResource( 2 )
 is_controlled_by_player = false
 turn_counter = 1
+
+[node name="Job" parent="." index="2"]
+skills = [ ExtResource( 4 ) ]
 
 [node name="CollisionShape2D" parent="." index="3"]
 visible = false
