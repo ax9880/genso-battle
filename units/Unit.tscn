@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/unit_rect.png" type="Texture" id=2]
@@ -16,9 +16,10 @@
 [ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=14]
 [ext_resource path="res://assets/fonts/Exo2-Regular.ttf" type="DynamicFontData" id=15]
 [ext_resource path="res://assets/sfx/casino/shove2.wav" type="AudioStream" id=16]
-[ext_resource path="res://assets/sfx/casino/place10.wav" type="AudioStream" id=17]
-[ext_resource path="res://assets/sfx/casino/shove1.wav" type="AudioStream" id=18]
+[ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=17]
+[ext_resource path="res://assets/sfx/ceramic_drag_2.wav" type="AudioStream" id=18]
 [ext_resource path="res://assets/sfx/pot_break_2.wav" type="AudioStream" id=19]
+[ext_resource path="res://assets/sfx/ceramic_drag_1.wav" type="AudioStream" id=20]
 
 [sub_resource type="Animation" id=7]
 length = 0.001
@@ -214,6 +215,9 @@ extents = Vector2( 49, 49 )
 
 [sub_resource type="DynamicFont" id=8]
 font_data = ExtResource( 15 )
+
+[sub_resource type="AudioStreamRandomPitch" id=11]
+audio_stream = ExtResource( 20 )
 
 [sub_resource type="AudioStreamRandomPitch" id=10]
 audio_stream = ExtResource( 17 )
@@ -412,13 +416,15 @@ stream = ExtResource( 19 )
 
 [node name="PickUpAudio" type="AudioStreamPlayer" parent="Sound"]
 stream = ExtResource( 18 )
+volume_db = 16.0
 
 [node name="SwapAudio" type="AudioStreamPlayer" parent="Sound"]
-stream = ExtResource( 16 )
-volume_db = -3.0
+stream = SubResource( 11 )
+volume_db = 16.0
 
 [node name="SnapAudio" type="AudioStreamPlayer" parent="Sound"]
 stream = SubResource( 10 )
+volume_db = 6.0
 
 [connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
 [connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]
