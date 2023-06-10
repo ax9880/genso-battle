@@ -486,6 +486,9 @@ func _on_Unit_released(unit: Unit) -> void:
 	
 	var selected_cell: Cell = _find_closest_cell(unit.position)
 	
+	if active_unit_last_valid_cell == null and selected_cell != active_unit_current_cell:
+		has_active_unit_exited_cell = true
+	
 	# TODO: If ally, then swap, else, pick the last valid cell
 	# FIXME: May not work always
 	if active_unit_last_valid_cell != null:

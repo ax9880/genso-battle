@@ -91,7 +91,6 @@ func _move() -> void:
 		path = []
 		
 		emit_signal("action_done", self)
-		#emit_signal("movement_done", self)
 
 
 func release() -> void:
@@ -122,6 +121,9 @@ func _on_Tween_tween_completed(_object: Object, key: String) -> void:
 		STATE.PICKED_UP:
 			if key == ":position":
 				_move()
+		STATE.SNAPPING_TO_GRID:
+			if key == ":position":
+				_on_snap_to_grid()
 		STATE.SWAPPING:
 			if key == ":position":
 				self.current_state = STATE.IDLE
