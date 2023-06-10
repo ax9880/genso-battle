@@ -34,6 +34,7 @@ var grid: Grid
 signal skill_activation_phase_finished
 signal attack_skill_phase_finished
 signal heal_phase_finished
+signal finished_checking_for_dead_units
 
 signal pincer_executed
 
@@ -55,12 +56,18 @@ func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies:
 func _activate_next_skill() -> void:
 	var unit: Unit = unit_queue.pop_front()
 	
+	# TODO
+	#var activated_skills: Array = unit.activate_skills()
+	#while(unit != null and not activated_skills.empty()):
+		#unit = unit_queue.pop_front()
+		#activated_skills = unit.activate_skills()
+	
 	if unit != null:
 		var activated_skills: Array = unit.activate_skills()
 		
 		if activated_skills.empty():
 			# If no skills are activated then go to the next unit right away
-			# I don't like the recursion but it makes it simpler
+			# I don't like the recursion but it makes it easier
 			_activate_next_skill()
 		else:
 			_queue_skills(unit, activated_skills)
@@ -191,7 +198,7 @@ func _check_next_dead_unit() -> void:
 	else:
 		$DeathAnimationTimer.stop()
 		
-		start_heal_phase()
+		emit_signal("finished_checking_for_dead_units")
 
 
 func _add_dead_units_to_queue(units: Array, queue: Array) -> void:

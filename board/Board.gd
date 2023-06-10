@@ -382,8 +382,6 @@ func _execute_next_enemy_pincer() -> void:
 	else:
 		print("All enemy pincers done!")
 		
-		# TODO: Check for dead units
-		
 		_update_enemy()
 
 
@@ -401,11 +399,19 @@ func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
 	$PincerExecutor.start_attack_skill_phase()
 
 
-func _start_heal_phase(_pincer: Pincerer.Pincer) -> void:
-	var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [], CONNECT_ONESHOT)
+func _check_for_dead_units(pincer: Pincerer.Pincer) -> void:
+	var _error = $PincerExecutor.connect("finished_checking_for_dead_units", self, "_on_PincerExecutor_finished_checking_for_dead_units", [pincer], CONNECT_ONESHOT)
 	
-	# This methods starts the heal phase internally
 	$PincerExecutor.check_dead_units()
+
+
+func _start_heal_phase(_pincer: Pincerer.Pincer) -> void:
+	if current_turn == Turn.PLAYER:
+		var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [], CONNECT_ONESHOT)
+		
+		$PincerExecutor.start_heal_phase()
+	else:
+		_execute_next_enemy_pincer()
 
 
 func _start_status_effect_phase() -> void:
@@ -539,7 +545,13 @@ func _on_Attacker_attack_phase_finished(pincer: Pincerer.Pincer) -> void:
 	if current_turn == Turn.PLAYER:
 		_start_attack_skill_phase(pincer)
 	else:
-		_execute_next_enemy_pincer()
+		print("Checking for dead units killed by enemies")
+		
+		$PincerExecutor.grid = grid
+		$PincerExecutor.allies = $Enemies.get_children()
+		$PincerExecutor.enemies = $Units.get_children()
+		
+		_check_for_dead_units(pincer)
 
 
 func _on_PincerExecutor_skill_activation_phase_finished(pincer: Pincerer.Pincer) -> void:
@@ -547,6 +559,10 @@ func _on_PincerExecutor_skill_activation_phase_finished(pincer: Pincerer.Pincer)
 
 
 func _on_PincerExecutor_attack_skill_phase_finished(pincer: Pincerer.Pincer) -> void:
+	_check_for_dead_units(pincer)
+
+
+func _on_PincerExecutor_finished_checking_for_dead_units(pincer: Pincerer.Pincer) -> void:
 	_start_heal_phase(pincer)
 
 
