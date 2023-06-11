@@ -1,13 +1,32 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
-[ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=2]
-[ext_resource path="res://assets/ui/red_panel.png" type="Texture" id=3]
+[ext_resource path="res://ui/DialogueMessageContainer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ui/DialogueCutscene.gd" type="Script" id=3]
 
-[node name="Control" type="Control"]
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="Theme" id=1]
+VScrollBar/styles/grabber = SubResource( 2 )
+VScrollBar/styles/grabber_highlight = SubResource( 3 )
+VScrollBar/styles/grabber_pressed = SubResource( 4 )
+VScrollBar/styles/scroll = SubResource( 5 )
+VScrollBar/styles/scroll_focus = SubResource( 6 )
+
+[node name="DialogueCutscene" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
+script = ExtResource( 3 )
+dialogue_message_container_packed_scene = ExtResource( 2 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -22,77 +41,40 @@ custom_constants/margin_top = 50
 custom_constants/margin_left = 50
 custom_constants/margin_bottom = 50
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 50.0
 margin_top = 50.0
 margin_right = 670.0
 margin_bottom = 910.0
-rect_clip_content = false
-scroll_horizontal_enabled = false
-scroll_vertical_enabled = false
+custom_constants/separation = 32
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 margin_right = 620.0
-margin_bottom = 860.0
+margin_bottom = 751.0
+size_flags_vertical = 3
+theme = SubResource( 1 )
+scroll_horizontal_enabled = false
+
+[node name="MessagesVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+margin_right = 620.0
+margin_bottom = 751.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_constants/separation = 16
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
 margin_right = 620.0
-margin_bottom = 162.0
+margin_bottom = 245.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_right = 150.0
-margin_bottom = 162.0
-rect_min_size = Vector2( 150, 0 )
-alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-margin_left = 26.0
-margin_right = 123.0
-margin_bottom = 97.0
-size_flags_horizontal = 4
-texture = ExtResource( 2 )
-
-[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-margin_top = 101.0
-margin_right = 150.0
-margin_bottom = 162.0
-text = "Mononobe no Futo"
-align = 1
-autowrap = true
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_left = 154.0
+[node name="SkipButton" type="Button" parent="MarginContainer/VBoxContainer"]
+margin_left = 380.0
+margin_top = 783.0
 margin_right = 620.0
-margin_bottom = 162.0
-size_flags_horizontal = 3
+margin_bottom = 860.0
+grow_horizontal = 0
+rect_min_size = Vector2( 240, 0 )
+size_flags_horizontal = 8
+text = "SKIP"
 
-[node name="NinePatchRect" type="NinePatchRect" parent="MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/MarginContainer"]
-margin_right = 466.0
-margin_bottom = 162.0
-texture = ExtResource( 3 )
-patch_margin_left = 25
-patch_margin_top = 25
-patch_margin_right = 25
-patch_margin_bottom = 22
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/MarginContainer"]
-margin_right = 466.0
-margin_bottom = 162.0
-custom_constants/margin_right = 12
-custom_constants/margin_top = 12
-custom_constants/margin_left = 12
-custom_constants/margin_bottom = 12
-
-[node name="Label2" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/MarginContainer/MarginContainer"]
-margin_left = 12.0
-margin_top = 12.0
-margin_right = 454.0
-margin_bottom = 150.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "We are going in too deep.
-
-This works."
-autowrap = true
+[node name="Tween" type="Tween" parent="."]
