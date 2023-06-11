@@ -1,21 +1,27 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
-[ext_resource path="res://assets/fonts/EBGaramond24.tres" type="DynamicFont" id=2]
+[ext_resource path="res://assets/ui/circle_gradient.png" type="Texture" id=3]
+[ext_resource path="res://ui/ScriptCutscene.gd" type="Script" id=4]
+[ext_resource path="res://ui/ScriptLabel.tscn" type="PackedScene" id=5]
 
-[node name="Control" type="Control"]
+[node name="ScriptCutscene" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
+script = ExtResource( 4 )
+pages = [ [ "PAGE_1_LINE_1", "PAGE_1_LINE_2" ], [ "PAGE_2_LINE_1" ] ]
+text_label_packed_scene = ExtResource( 5 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0.207843, 0.0313726, 0.164706, 1 )
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+texture = ExtResource( 3 )
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -36,20 +42,8 @@ margin_right = 620.0
 margin_bottom = 779.0
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TextVBoxContainer"]
+[node name="Label" parent="MarginContainer/VBoxContainer/TextVBoxContainer" instance=ExtResource( 5 )]
 margin_right = 620.0
-margin_bottom = 105.0
-custom_fonts/font = ExtResource( 2 )
-text = "The animal realm...
-
-A place where only the strong survive."
-
-[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TextVBoxContainer"]
-margin_top = 109.0
-margin_right = 620.0
-margin_bottom = 142.0
-custom_fonts/font = ExtResource( 2 )
-text = "The natural order was under threat."
 
 [node name="SkipButton" type="Button" parent="MarginContainer/VBoxContainer"]
 margin_left = 380.0
@@ -60,3 +54,5 @@ grow_horizontal = 0
 rect_min_size = Vector2( 240, 0 )
 size_flags_horizontal = 8
 text = "SKIP"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_SkipButton_pressed"]

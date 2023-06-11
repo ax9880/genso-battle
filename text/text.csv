@@ -1,4 +1,24 @@
 keys,en,es
+START,Start,Comenzar
+CONTINUE,Continue,Continuar
+SETTINGS,Settings,Configuraciones
+CREDITS,Credits,Créditos
+QUIT,Quit,Salir
+MUSIC_VOLUME,Music,Música
+SOUND_EFFECTS,Sound effects,Efectos de sonido
+LANGUAGE,Language,Idioma
+RETURN,Return,Regresar
+CREDITS_TEXT,"TODO: Write credits","TODO: Escribir créditos"
+YACHIE,Yachie,Yachie
+SAKI,Saki,Saki
+YUUMA,Yuuma,Yuuma
 CHOMP_SKILL,Chomp,Engullir
 HEAL,Heal,Curar
 HANIWA_WARRIOR,Haniwa Warrior,Guerrero Haniwa
+PAGE_1_LINE_1,This is the animal realm.,Este es el reino animal.
+PAGE_1_LINE_2,A place where the only the strong survive.,Un lugar donde solo los más fuertes sobreviven.
+PAGE_2_LINE_1,"And this is a longer sentence—
+
+With a line break.","Y esta es una frase más larga—
+
+Con un salto de línea."
