@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://ui/TitleScreen.gd" type="Script" id=2]
 
-[node name="Control" type="Control"]
+[node name="TitleScreen" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
+script = ExtResource( 2 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -78,3 +80,9 @@ margin_top = 356.0
 margin_right = 240.0
 margin_bottom = 433.0
 text = "QUIT"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/ContinueButton" to="." method="_on_ContinueButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/SettingsButton" to="." method="_on_SettingsButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/CreditsButton" to="." method="_on_CreditsButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
