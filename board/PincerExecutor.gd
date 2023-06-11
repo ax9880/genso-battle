@@ -203,7 +203,7 @@ func _check_next_dead_unit() -> void:
 
 func _add_dead_units_to_queue(units: Array, queue: Array) -> void:
 	for unit in units:
-		if unit.is_dead():
+		if unit.is_dead() and not (unit in units_removed_from_play):
 			queue.push_back(unit)
 
 
