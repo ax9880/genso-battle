@@ -1,7 +1,7 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
-[ext_resource path="res://assets/unit_rect.png" type="Texture" id=2]
+[ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
 [ext_resource path="res://units/SwapArea2D.gd" type="Script" id=3]
 [ext_resource path="res://units/Job.gd" type="Script" id=4]
 [ext_resource path="res://jobs/YachieStartingStats.tres" type="Resource" id=5]
@@ -20,6 +20,8 @@
 [ext_resource path="res://assets/sfx/ceramic_drag_2.wav" type="AudioStream" id=18]
 [ext_resource path="res://assets/sfx/pot_break_2.wav" type="AudioStream" id=19]
 [ext_resource path="res://assets/sfx/ceramic_drag_1.wav" type="AudioStream" id=20]
+[ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=21]
+[ext_resource path="res://assets/ui/sword.png" type="Texture" id=22]
 
 [sub_resource type="Animation" id=7]
 length = 0.001
@@ -250,10 +252,14 @@ __meta__ = {
 }
 
 [node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 2 )
+texture = ExtResource( 21 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Border" type="Sprite" parent="Sprite"]
+scale = Vector2( 0.99, 0.99 )
+texture = ExtResource( 2 )
 
 [node name="FullSprite" type="Sprite" parent="."]
 visible = false
@@ -315,12 +321,16 @@ anchor_top = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
 margin_top = -22.0
-margin_right = 79.0
-margin_bottom = -13.0
+margin_right = 62.0
+margin_bottom = -15.0
 mouse_filter = 2
 value = 100.0
 texture_under = ExtResource( 7 )
 texture_progress = ExtResource( 6 )
+stretch_margin_left = 3
+stretch_margin_top = 2
+stretch_margin_right = 3
+stretch_margin_bottom = 2
 script = ExtResource( 8 )
 
 [node name="Tween" type="Tween" parent="Control/HpBar"]
@@ -342,9 +352,12 @@ __meta__ = {
 [node name="WeaponType" type="TextureRect" parent="Control"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -41.0
-margin_bottom = 40.0
+margin_left = -42.0
+margin_top = -16.0
+margin_right = 23.0
+margin_bottom = 49.0
 mouse_filter = 2
+texture = ExtResource( 22 )
 
 [node name="CanvasLayer" type="Node2D" parent="."]
 z_index = 2
