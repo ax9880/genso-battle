@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://skills/Skill.gd" type="Script" id=1]
+[ext_resource path="res://skills/effects/HealSkillEffect.tscn" type="PackedScene" id=2]
+
+[resource]
+script = ExtResource( 1 )
+skill_name = "HEALING_AURA"
+skill_type = 1
+area_of_effect = 3
+area_of_effect_size = 1
+activation_rate = 0.3
+primary_power = 1.0
+primary_weapon_type = 3
+primary_attribute = 0
+secondary_power = 0.0
+secondary_weapon_type = 0
+secondary_attribute = 0
+absorb_rate = 0.0
+max_heal = 700
+status_effect = 0
+status_effect_duration_turns = 0
+effect_scene = ExtResource( 2 )
