@@ -14,7 +14,7 @@ func _ready():
 
 
 func _on_StartButton_pressed() -> void:
-	get_tree().change_scene("res://ui/ScriptCutscene.tscn")
+	var _error = get_tree().change_scene("res://ui/ScriptCutscene.tscn")
 
 
 func _on_ContinueButton_pressed() -> void:
@@ -31,4 +31,4 @@ func _on_CreditsButton_pressed() -> void:
 
 
 func _on_QuitButton_pressed() -> void:
-	var _error = get_tree().quit()
+	get_tree().quit()
