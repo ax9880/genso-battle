@@ -97,6 +97,7 @@ text = "SKIP"
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.5
+one_shot = true
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_SkipButton_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

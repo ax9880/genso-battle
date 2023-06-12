@@ -5,15 +5,15 @@ export(Array, Array, String) var pages := []
 
 export(PackedScene) var text_label_packed_scene: PackedScene
 
+export(float) var new_character_every_x_seconds: float = 0.0
+
 onready var text_container: VBoxContainer = $MarginContainer/VBoxContainer/TextVBoxContainer
 
 var current_page: int = 0
 var current_paragraph: int = 0
 var current_label: Label
 
-var is_text_fully_visible := false
-
-var ratio: float = 2.0
+var accumulated_time_seconds: float = 0
 
 
 func _ready():
@@ -35,22 +35,19 @@ func _show_next_paragraph() -> void:
 	
 	text_container.add_child(current_label)
 	
-	is_text_fully_visible = false
-	
 	set_process(true)
 
 
 # Increases percent visible of the given label. When it is >= 1 it is set to 1.0
 func _slowly_make_text_visible(delta: float, label: Label) -> void:
-	if is_text_fully_visible:
-		return
+	accumulated_time_seconds += delta
 	
-	label.percent_visible += delta * ratio
+	if accumulated_time_seconds > new_character_every_x_seconds:
+		label.visible_characters += 1
+		accumulated_time_seconds = 0
 	
 	if label.percent_visible >= 1:
 		_set_text_fully_visible()
-		
-		set_process(false)
 
 
 func _input(event: InputEvent) -> void:
@@ -64,7 +61,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _on_press_ui_select() -> void:
-	if is_text_fully_visible:
+	if current_label.percent_visible >= 1:
 		_advance_to_next_paragraph()
 	else:
 		_set_text_fully_visible()
@@ -72,7 +69,8 @@ func _on_press_ui_select() -> void:
 
 func _set_text_fully_visible() -> void:
 	current_label.percent_visible = 1
-	is_text_fully_visible = true
+	
+	set_process(false)
 
 
 func _advance_to_next_paragraph() -> void:
