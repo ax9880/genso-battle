@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://units/Enemy.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://assets/ui/orange_panel.png" type="Texture" id=8]
 [ext_resource path="res://units/AIController.gd" type="Script" id=9]
 [ext_resource path="res://theme.tres" type="Theme" id=10]
+[ext_resource path="res://assets/ui/unit_circle_gradient.png" type="Texture" id=11]
 
 [node name="Enemy" instance=ExtResource( 1 )]
 collision_layer = 8
@@ -51,6 +52,12 @@ texture = ExtResource( 8 )
 [node name="UnitName" parent="CanvasLayer" index="1"]
 modulate = Color( 1, 1, 1, 1 )
 theme = ExtResource( 10 )
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/UnitName" index="0"]
+modulate = Color( 1, 1, 1, 0.752941 )
+show_behind_parent = true
+position = Vector2( 49, 21.5 )
+texture = ExtResource( 11 )
 
 [node name="AppearAudio" parent="Sound" index="0"]
 stream = ExtResource( 3 )
