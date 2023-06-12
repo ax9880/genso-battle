@@ -23,8 +23,6 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 							[animated_sprite, unit, skill, cell.unit])
 		else:
 			_apply_skill(unit, skill, cell.unit)
-			
-			_update_count(unit)
 		
 		var _error = animated_sprite.connect("animation_finished", self,
 						"_on_AnimatedSprite_animation_finished",
