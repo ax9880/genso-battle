@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://units/ui/ActivatedSkillHBoxContainer.tscn" type="PackedScene" id=1]
-[ext_resource path="res://assets/ui/label_HP_bg.png" type="Texture" id=2]
+[ext_resource path="res://assets/ui/red_panel.png" type="Texture" id=2]
 [ext_resource path="res://units/ui/ActivatedSkillMarginContainer.gd" type="Script" id=3]
+[ext_resource path="res://ui/SkillLabelContainer.tscn" type="PackedScene" id=4]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Fade in and then out"
@@ -54,24 +54,24 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource( 3 )
-activated_skill_hbox_container_packed_scene = ExtResource( 1 )
+activated_skill_hbox_container_packed_scene = ExtResource( 4 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 "anims/Fade in and then out" = SubResource( 1 )
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
 show_behind_parent = true
-margin_right = 44.0
-margin_bottom = 59.0
+margin_right = 331.0
+margin_bottom = 62.0
 texture = ExtResource( 2 )
-patch_margin_left = 19
-patch_margin_top = 14
-patch_margin_right = 25
-patch_margin_bottom = 13
+patch_margin_left = 26
+patch_margin_top = 28
+patch_margin_right = 31
+patch_margin_bottom = 28
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_right = 44.0
-margin_bottom = 59.0
+margin_right = 331.0
+margin_bottom = 62.0
 custom_constants/margin_right = 15
 custom_constants/margin_top = 15
 custom_constants/margin_left = 15
@@ -80,12 +80,12 @@ custom_constants/margin_bottom = 15
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 15.0
 margin_top = 15.0
-margin_right = 29.0
-margin_bottom = 44.0
+margin_right = 316.0
+margin_bottom = 47.0
 
-[node name="HBoxContainer" parent="MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
-margin_right = 14.0
-margin_bottom = 29.0
+[node name="SkillLabelContainer" parent="MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
+margin_right = 301.0
+margin_bottom = 32.0
 
 [node name="ActivationAudio" type="AudioStreamPlayer" parent="."]
 bus = "Sound effects"

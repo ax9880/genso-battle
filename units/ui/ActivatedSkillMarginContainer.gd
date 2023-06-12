@@ -7,8 +7,6 @@ export(PackedScene) var activated_skill_hbox_container_packed_scene: PackedScene
 
 func play(activated_skills: Array) -> void:
 	for child in vbox_container.get_children():
-		vbox_container.remove_child(child)
-		
 		child.queue_free()
 	
 	if not activated_skills.empty():
