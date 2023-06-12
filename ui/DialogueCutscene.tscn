@@ -82,6 +82,7 @@ custom_constants/separation = 16
 [node name="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 margin_right = 620.0
+margin_bottom = 163.0
 
 [node name="SkipButton" type="Button" parent="MarginContainer/VBoxContainer"]
 margin_left = 380.0

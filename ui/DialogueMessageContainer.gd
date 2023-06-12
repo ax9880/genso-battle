@@ -8,9 +8,9 @@ const ICONS: Dictionary = {
 }
 
 const NINE_PATCH_TEXTURES: Dictionary = {
-	"YACHIE": "res://assets/ui/orange_panel.png",
-	"SAKI": "res://assets/ui/red_panel.png",
-	"YUUMA": "res://assets/ui/blue_panel.png"
+	"YACHIE": "res://assets/ui/green_panel.png",
+	"SAKI": "res://assets/ui/bright_red_panel.png",
+	"YUUMA": "res://assets/ui/purple_panel.png"
 }
 
 export(float) var new_character_every_x_seconds: float = 0
