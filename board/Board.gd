@@ -32,6 +32,7 @@ var pincer_queue := []
 var current_turn: int = Turn.NONE
 
 var player_units_node: Node2D
+var enemy_units_node: Node2D
 
 signal drag_timer_started(timer)
 signal drag_timer_stopped
@@ -50,9 +51,15 @@ signal defeat
 func _ready() -> void:
 	if can_use_debug_units:
 		player_units_node = $DebugUnits
+		
+		$Units.queue_free()
 	else:
 		player_units_node = $Units
+		
+		$DebugUnits.queue_free()
 	
+	enemy_units_node = $Enemies
+
 	_connect_cell_signals()
 	
 	_assign_units_to_cells()
@@ -60,7 +67,7 @@ func _ready() -> void:
 	
 	_disable_player_units()
 	
-	_make_enemies_appear($Enemies.get_children())
+	_make_enemies_appear(enemy_units_node.get_children())
 	
 	player_units_node.hide()
 
@@ -85,7 +92,7 @@ func _assign_units_to_cells() -> void:
 
 
 func _assign_enemies_to_cells() -> void:
-	for enemy in $Enemies.get_children():
+	for enemy in enemy_units_node.get_children():
 		_assign_unit_to_cell(enemy)
 		
 		enemy.connect("action_done", self, "_on_Enemy_action_done")
@@ -150,7 +157,7 @@ func _start_player_turn() -> void:
 	else:
 		current_turn = Turn.PLAYER
 		
-		for enemy in $Enemies.get_children():
+		for enemy in enemy_units_node.get_children():
 			enemy.reset_turn_counter()
 		
 		emit_signal("drag_timer_reset")
@@ -174,7 +181,7 @@ func _start_enemy_turn() -> void:
 	
 	enemy_queue.clear()
 	
-	if $Enemies.get_children().empty():
+	if enemy_units_node.get_children().empty():
 		emit_signal("victory")
 	else:
 		# Initialize these parameters. Allies and enemies are used when
@@ -184,7 +191,7 @@ func _start_enemy_turn() -> void:
 		# TODO: Pass these parameters to the functions that need them
 		# Or call an initialize function
 		$PincerExecutor.grid = grid
-		$PincerExecutor.allies = $Enemies.get_children()
+		$PincerExecutor.allies = enemy_units_node.get_children()
 		$PincerExecutor.enemies = player_units_node.get_children()
 		pincer_queue = []
 		
@@ -195,7 +202,7 @@ func _start_enemy_turn() -> void:
 		# after AI made its move, check for attacks
 		# after that, decrease the counter of the next enemy
 		# when the queue is empty, start player turn
-		for enemy in $Enemies.get_children():
+		for enemy in enemy_units_node.get_children():
 			enemy_queue.push_back(enemy)
 	
 	_update_enemy()
@@ -399,7 +406,7 @@ func _execute_next_pincer() -> void:
 		
 		var _error = $PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
 		
-		$PincerExecutor.start_skill_activation_phase(pincer, grid, player_units_node.get_children(), $Enemies.get_children())
+		$PincerExecutor.start_skill_activation_phase(pincer, grid, player_units_node.get_children(), enemy_units_node.get_children())
 	else:
 		print("All pincers done!")
 		
