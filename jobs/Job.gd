@@ -21,7 +21,7 @@ export(int) var level: int = 10
 func to_dictionary() -> Dictionary:
 	var dictionary := {}
 	
-	dictionary["stats"] = stats.to_dictionary()
+	dictionary["stats"] = stats.resource_path
 	
 	var skills_paths := []
 	
@@ -39,7 +39,8 @@ func to_dictionary() -> Dictionary:
 
 func from_dictionary(dictionary: Dictionary) -> void:
 	stats = StartingStats.new()
-	stats.from_dictionary(dictionary.stats)
+	
+	stats = load(dictionary.stats)
 	
 	skills = []
 	
