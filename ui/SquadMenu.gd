@@ -1,6 +1,5 @@
 extends Control
 
-
 export(PackedScene) var unit_item_packed_scene: PackedScene
 export(PackedScene) var change_unit_menu_packed_scene: PackedScene
 
@@ -20,7 +19,7 @@ func _show_active_units() -> void:
 	for child in list_container.get_children():
 		child.queue_free()
 	
-	if save_data.active_units.size() < 6:
+	if save_data.active_units.size() < SaveData.MAX_SQUAD_SIZE:
 		$MarginContainer/VBoxContainer/AddUnitButton.show()
 	else:
 		$MarginContainer/VBoxContainer/AddUnitButton.hide()
@@ -37,7 +36,8 @@ func _show_active_units() -> void:
 		unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job])
 		unit_item.connect("view_button_clicked", self, "_on_UnitItem_view_button_clicked", [job])
 	
-	$MarginContainer/VBoxContainer/ReturnButton.disabled = save_data.active_units.size() < 2
+	# TODO: Show empty spaces to show that player can have up to six units
+	$MarginContainer/VBoxContainer/ReturnButton.disabled = save_data.active_units.size() < SaveData.MIN_SQUAD_SIZE
 
 
 func _on_UnitItem_change_button_clicked(job: Job) -> void:
@@ -93,7 +93,7 @@ func _on_ChangeUnitMenu_job_changed(new_job: Job, old_job: Job) -> void:
 		
 		save_data.active_units.push_back(index_of_new_job)
 		
-		assert(save_data.active_units.size() <= 6)
+		assert(save_data.active_units.size() <= SaveData.MAX_SQUAD_SIZE)
 	
 	_pop_change_unit_menu()
 
