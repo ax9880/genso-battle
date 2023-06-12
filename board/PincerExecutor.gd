@@ -29,6 +29,7 @@ var units_removed_from_play := []
 
 # To calculate areas of effect
 var grid: Grid
+var current_z_index: int = 1
 
 # Finished executing a pincer
 signal skill_activation_phase_finished
@@ -49,6 +50,8 @@ func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies:
 	complete_chains = _build_chains_including_pincering_unit(pincer)
 	
 	$SkillActivationTimer.start()
+	
+	current_z_index = 2
 	
 	_activate_next_skill()
 
@@ -72,7 +75,9 @@ func _activate_next_skill() -> void:
 		else:
 			_queue_skills(unit, activated_skills)
 			
-			unit.play_skill_activation_animation(activated_skills)
+			unit.play_skill_activation_animation(activated_skills, current_z_index)
+		
+		current_z_index += 1
 	else:
 		$SkillActivationTimer.stop()
 		

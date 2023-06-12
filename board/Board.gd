@@ -32,6 +32,9 @@ var current_turn: int = Turn.NONE
 signal drag_timer_started(timer)
 signal drag_timer_stopped
 signal drag_timer_reset
+signal player_turn_started
+signal victory
+signal defeat
 
 
 func _ready() -> void:
@@ -126,15 +129,21 @@ func _make_player_units_appear() -> void:
 func _start_player_turn() -> void:
 	print("Starting player turn")
 	
-	current_turn = Turn.PLAYER
-	
-	for enemy in $Enemies.get_children():
-		enemy.reset_turn_counter()
-	
-	emit_signal("drag_timer_reset")
-	
-	for unit in $Units.get_children():
-		unit.enable_selection_area()
+	if $Units.get_children().size() < SaveData.MIN_SQUAD_SIZE:
+		print("Defeat!")
+		
+		emit_signal("defeat")
+	else:
+		current_turn = Turn.PLAYER
+		
+		for enemy in $Enemies.get_children():
+			enemy.reset_turn_counter()
+		
+		emit_signal("drag_timer_reset")
+		emit_signal("player_turn_started")
+		
+		for unit in $Units.get_children():
+			unit.enable_selection_area()
 
 
 func _disable_player_units() -> void:
@@ -152,7 +161,7 @@ func _start_enemy_turn() -> void:
 	enemy_queue.clear()
 	
 	if $Enemies.get_children().empty():
-		print("Victory!")
+		emit_signal("victory")
 	else:
 		# Initialize these parameters. Allies and enemies are used when
 		# checking for dead units. The grid is used when checking for
@@ -376,7 +385,6 @@ func _execute_next_pincer() -> void:
 		
 		var _error = $PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
 		
-		# TODO: Change allies and enemies when it's the enemy's turn
 		$PincerExecutor.start_skill_activation_phase(pincer, grid, $Units.get_children(), $Enemies.get_children())
 	else:
 		print("All pincers done!")
@@ -479,16 +487,20 @@ func _start_drag_timer() -> void:
 
 
 func _stop_drag_timer() -> void:
+	var time_left_seconds = $DragTimer.time_left
+	
 	if not $DragTimer.is_stopped():
 		$DragTimer.stop()
 	
-	emit_signal("drag_timer_stopped")
+	emit_signal("drag_timer_stopped", time_left_seconds)
 
 
 ## Signals
 
 func _on_Unit_picked_up(unit: Unit) -> void:
 	_update_active_unit(unit)
+	
+	unit.z_index += 1
 	
 	if current_turn == Turn.PLAYER:
 		for other_unit in $Units.get_children():
@@ -503,7 +515,7 @@ func _on_Enemy_started_moving(enemy: Unit) -> void:
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
 	
-	unit.play_skill_activation_animation([skill])
+	unit.play_skill_activation_animation([skill], 1)
 	
 	# Wait for it to finish
 	yield(get_tree().create_timer(1.0), "timeout")
@@ -524,6 +536,8 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 
 func _on_Unit_released(unit: Unit) -> void:
 	_stop_drag_timer()
+	
+	unit.z_index -= 1
 	
 	var selected_cell: Cell = _find_closest_cell(unit.position)
 	
