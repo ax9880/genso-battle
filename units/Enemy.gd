@@ -46,8 +46,10 @@ func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
 	match(next_behavior):
 		AIController.Behavior.USE_SKILL:
 			_find_skill_move(grid, allies, enemies)
-		_:
+		AIController.Behavior.MOVE:
 			_find_cell_to_move_to(grid, allies, enemies)
+		_:
+			_find_pincer(grid, allies, enemies)
 
 
 func _find_skill_move(grid: Grid, allies: Array, enemies: Array) -> void:
@@ -94,6 +96,49 @@ func _find_cell_to_move_to(grid: Grid, allies: Array, enemies: Array) -> void:
 	path = BoardUtils.find_path(grid, navigation_graph, position, next_cell)
 	
 	_start_moving()
+
+
+func _find_pincer(grid: Grid, allies: Array, enemies: Array) -> void:
+	var possible_pincers: Array = $AIController.find_possible_pincers(self, grid, faction, allies)
+	
+	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
+	
+	var next_cell: Cell = null
+	
+	for possible_pincer in possible_pincers:
+		if navigation_graph.has(possible_pincer.cell):
+			next_cell = possible_pincer.cell
+			
+			break
+	
+	if next_cell == null:
+		if random.randf() < 0.4:
+			_find_skill_move(grid, allies, enemies)
+		else:
+			_find_cell_close_to_enemy(grid, allies, enemies, navigation_graph)
+	else:
+		path = BoardUtils.find_path(grid, navigation_graph, position, next_cell)
+		
+		_start_moving()
+
+
+func _find_cell_close_to_enemy(grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary) -> void:
+	var candidate_cells: Array = $AIController.find_cells_close_to_enemies(self, grid, faction, enemies)
+	
+	var next_cell: Cell = null
+	
+	for cell in candidate_cells:
+		if navigation_graph.has(cell):
+			next_cell = cell
+			
+			break
+	
+	if next_cell == null:
+		_find_cell_to_move_to(grid, allies, enemies)
+	else:
+		path = BoardUtils.find_path(grid, navigation_graph, position, next_cell)
+		
+		_start_moving()
 
 
 func _start_moving() -> void:

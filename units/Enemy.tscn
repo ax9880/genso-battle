@@ -67,6 +67,6 @@ stream = ExtResource( 3 )
 
 [node name="AIController" type="Node" parent="." index="11"]
 script = ExtResource( 9 )
-behaviors = [ 0, 1, 0 ]
+behaviors = [ 2, 2, 2 ]
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
