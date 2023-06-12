@@ -501,6 +501,8 @@ func _on_Enemy_started_moving(enemy: Unit) -> void:
 
 
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
+	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
+	
 	unit.play_skill_activation_animation([skill])
 	
 	# Wait for it to finish
@@ -518,8 +520,6 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	yield(skill_effect, "effect_finished")
 	
 	_check_for_dead_units()
-	
-	#_update_enemy()
 
 
 func _on_Unit_released(unit: Unit) -> void:

@@ -23,7 +23,8 @@ func start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	target_count = target_cells.size()
 	
 	if target_count == 0:
-		emit_signal("effect_finished")
+		#emit_signal("effect_finished")
+		call_deferred("emit_signal", "effect_finished")
 	else:
 		$SkillSound.play()
 		
