@@ -110,6 +110,10 @@ func play_death_animation() -> void:
 	Utils.disable_object($CollisionShape2D)
 
 
+func is_death_animation_playing() -> bool:
+	return $AnimationPlayer.current_animation == "death"
+
+
 func move_to_new_cell(target_position: Vector2) -> void:
 	tween.remove(self, ":position")
 	
@@ -354,7 +358,6 @@ func calculate_damage(attacker_stats: StartingStats,
 			power: float,
 			weapon_type: int,
 			attribute: int) -> int:
-	
 	var damage: float = 0
 	
 	if weapon_type != Enums.WeaponType.STAFF:

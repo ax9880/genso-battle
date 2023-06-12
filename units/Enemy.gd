@@ -8,6 +8,9 @@ signal action_done
 signal started_moving(unit)
 signal use_skill(unit, skill)
 
+var can_use_skill_after_moving := false
+var selected_skill: Skill
+
 # Array of Vector2
 var path := []
 
@@ -16,7 +19,7 @@ func _ready() -> void:
 	turn_counter_max_value = get_stats().max_turn_counter
 
 
-func act(board: Board) -> void:
+func act(grid: Grid, allies: Array, enemies: Array) -> void:
 	if is_dead():
 		emit_signal("action_done", self)
 	else:
@@ -30,41 +33,36 @@ func act(board: Board) -> void:
 				self.turn_counter = turn_counter - 1
 			
 			if turn_counter == 0:
-				_find_next_move(board)
+				_find_next_move(grid, allies, enemies)
 			else:
 				emit_signal("action_done", self)
 
 
-func _find_next_move(board: Board) -> void:
-	var navigation_graph: Dictionary = board.build_navigation_graph(position, faction, get_stats().movement_range)
+func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
+	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
+	
+	selected_skill = $Job.skills.front()
 	
 	# Evaluate positions (requires having the whole graph)
-	var i = 0
+	var results = $AIController.evaluate_skill(self, selected_skill, grid, navigation_graph)
 	
-	var target_cell: Cell = null
+	var top_result = results.front()
 	
-	# Pick one
-	for node in navigation_graph.keys():
-		i += 1
-		
-		if i > 4:
-			target_cell = node
-			break
+	print("Estimated damage dealt: %d" % top_result.damage_dealt)
+	top_result.cell.modulate = Color.red
 	
-	path = board.find_path(navigation_graph, position, target_cell)
+	path = BoardUtils.find_path(grid, navigation_graph, position, top_result.cell)
 	
 	if !path.empty():
 		# Move or perform skill (in any order)
-		_use_skill()
+		can_use_skill_after_moving = true
 		
-		#_start_moving()
+		_start_moving()
 	else:
-		emit_signal("action_done", self)
+		_use_skill(selected_skill)
 
 
-func _use_skill() -> void:
-	var skill: Skill = $Job.skills.front()
-	
+func _use_skill(skill: Skill) -> void:
 	if skill != null:
 		emit_signal("use_skill", self, skill)
 	else:
@@ -101,10 +99,12 @@ func _move() -> void:
 	else:
 		self.current_state = STATE.IDLE
 		
-		# TODO: Reset the turn counter after the pincers are done
 		path = []
 		
-		emit_signal("action_done", self)
+		if can_use_skill_after_moving:
+			_use_skill(selected_skill)
+		else:
+			emit_signal("action_done", self)
 
 
 func reset_turn_counter() -> void:

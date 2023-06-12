@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://units/Enemy.gd" type="Script" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://assets/enemies/unit_square_bg.png" type="Texture" id=6]
 [ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=7]
 [ext_resource path="res://assets/ui/orange_panel.png" type="Texture" id=8]
+[ext_resource path="res://units/AIController.gd" type="Script" id=9]
+[ext_resource path="res://theme.tres" type="Theme" id=10]
 
 [node name="Enemy" instance=ExtResource( 1 )]
 collision_layer = 8
@@ -34,6 +36,9 @@ monitorable = false
 [node name="CollisionShape2D" parent="SelectionArea2D" index="0"]
 disabled = true
 
+[node name="Control" parent="." index="8"]
+theme = ExtResource( 10 )
+
 [node name="HpBar" parent="Control" index="1"]
 texture_progress = ExtResource( 4 )
 
@@ -45,11 +50,16 @@ texture = ExtResource( 8 )
 
 [node name="UnitName" parent="CanvasLayer" index="1"]
 modulate = Color( 1, 1, 1, 1 )
+theme = ExtResource( 10 )
 
 [node name="AppearAudio" parent="Sound" index="0"]
 stream = ExtResource( 3 )
 
 [node name="PickUpAudio" parent="Sound" index="2"]
 stream = ExtResource( 3 )
+
+[node name="AIController" type="Node" parent="." index="11"]
+script = ExtResource( 9 )
+behaviors = [ 0, 1, 0 ]
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]

@@ -60,9 +60,9 @@ func _ready() -> void:
 	else:
 		player_units_node = $Units
 		
-		_load_player_units()
-		
 		$DebugUnits.queue_free()
+	
+	_load_player_units()
 	
 	enemy_units_node = $Enemies
 	
@@ -89,7 +89,10 @@ func _load_player_units() -> void:
 			player_units_node.get_child(i).set_job(job)
 		else:
 			# If there are more units than active units then we free the rest
-			player_units_node.get_child(i).queue_free()
+			var discarded_unit: Unit = player_units_node.get_child(i)
+			
+			player_units_node.remove_child(discarded_unit)
+			discarded_unit.queue_free()
 
 
 # Connect body enter and exit signals.
@@ -174,10 +177,12 @@ func _make_player_units_appear() -> void:
 func _start_player_turn() -> void:
 	print("Starting player turn")
 	
-	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE:
+	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or is_all_units_dead(player_units_node.get_children()):
 		print("Defeat!")
 		
 		emit_signal("defeat")
+	elif is_all_units_dead(enemy_units_node.get_children()):
+		emit_signal("victory")
 	else:
 		current_turn = Turn.PLAYER
 		
@@ -189,6 +194,15 @@ func _start_player_turn() -> void:
 		
 		for unit in player_units_node.get_children():
 			unit.enable_selection_area()
+
+
+func is_all_units_dead(units: Array) -> bool:
+	var is_all_dead := true
+	
+	for unit in units:
+		is_all_dead = is_all_dead and unit.is_dead()
+	
+	return is_all_dead
 
 
 func _disable_player_units() -> void:
@@ -238,7 +252,7 @@ func _update_enemy() -> void:
 	if not enemy_queue.empty():
 		var enemy: Unit = enemy_queue.pop_front()
 		
-		enemy.act(self)
+		enemy.act(grid, enemy_units_node.get_children(), player_units_node.get_children())
 	else:
 		_start_player_turn()
 
@@ -330,93 +344,6 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 			printerr("Swapped with an enemy")
 		
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
-
-
-# Builds an adjacency list with all the nodes that the given unit can visit
-# Enemies may block the unit from reaching certain tiles, besides the tiles they
-# already occupy
-func build_navigation_graph(unit_position: Vector2, faction: int, movement_range: int) -> Dictionary:
-	var start_cell: Cell = grid.get_cell_from_position(unit_position)
-	
-	var queue := []
-	
-	queue.push_back(start_cell)
-	
-	# Dictionary<Cell, bool>
-	var discovered_dict := {}
-	
-	# Dictionary<Cell, Array<Cell> (array of cells connected to this cell)>
-	# Graph as adjacency list
-	var navigation_graph := {}
-	
-	while not queue.empty():
-		var node: Cell = queue.pop_front()
-		
-		# Initialize adjacency list for the given node
-		navigation_graph[node] = []
-		
-		# Flag as discovered
-		discovered_dict[node] = true
-		
-		for neighbor in node.neighbors:
-			if not discovered_dict.has(neighbor):
-				if neighbor.unit == null or neighbor.unit.is_ally(faction):
-					if get_distance_to_cell(start_cell, neighbor) <= movement_range:
-						navigation_graph[node].push_back(neighbor)
-						
-						queue.push_back(neighbor)
-	
-	return navigation_graph
-
-
-func get_distance_to_cell(start_cell: Cell, end_cell: Cell) -> float:
-	return abs(end_cell.coordinates.x - start_cell.coordinates.x) + abs(end_cell.coordinates.y - start_cell.coordinates.y)
-
-
-func find_path(navigation_graph: Dictionary, unit_position: Vector2, target_cell: Cell) -> Array:
-	# TODO: when planning for chaining, some tiles have to be avoided
-	# and the path has to be split
-	# Array of target cells
-	# and array/dict of excluded cells?
-	var start_cell: Cell = grid.get_cell_from_position(unit_position)
-	
-	# Dictionary<Cell, bool>
-	var discovered_dict := {}
-	
-	# Dictionary<Cell, Cell>
-	var parent_dict := {}
-	
-	var queue := []
-	queue.push_back(start_cell)
-	
-	parent_dict[start_cell] = null
-	
-	# Breadth-first search (again)
-	while not queue.empty():
-		var node: Cell = queue.pop_front()
-		
-		# Flag as discovered
-		discovered_dict[node] = true
-		
-		# TODO: if target node found, exit early
-		
-		for neighbor in navigation_graph[node]:
-			if not discovered_dict.has(neighbor):
-				queue.push_back(neighbor)
-				
-				parent_dict[neighbor] = node
-	
-	# Array of Cell
-	var path := []
-	
-	if parent_dict.has(target_cell):
-		var node_parent = parent_dict[target_cell]
-		
-		while node_parent != null:
-			path.push_front(node_parent.position)
-			node_parent = parent_dict[node_parent]
-	
-	return path
 
 
 func _execute_next_pincer() -> void:
@@ -566,9 +493,9 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	# Wait for it to finish
 	yield(get_tree().create_timer(1.0), "timeout")
 	
-	var target_cells: Array = $PincerExecutor._find_area_of_effect_target_cells(unit, skill)
+	var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit.position, skill, grid)
 	
-	var filtered_cells: Array = $PincerExecutor._filter_cells(unit, skill, target_cells)
+	var filtered_cells: Array = BoardUtils.filter_cells(unit, skill, target_cells)
 	
 	var skill_effect: Node2D = skill.effect_scene.instance()
 	
