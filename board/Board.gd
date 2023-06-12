@@ -460,7 +460,8 @@ func _execute_next_enemy_pincer() -> void:
 func _start_attack_phase(pincer: Pincerer.Pincer) -> void:
 	var attack_queue: Array = _queue_attacks(pincer)
 	
-	var _error = $Attacker.connect("attack_phase_finished", self, "_on_Attacker_attack_phase_finished", [pincer], CONNECT_ONESHOT)
+	if $Attacker.connect("attack_phase_finished", self, "_on_Attacker_attack_phase_finished", [pincer], CONNECT_ONESHOT) != OK:
+		push_warning("Signal is already connected")
 	
 	$Attacker.start(attack_queue)
 
@@ -611,7 +612,6 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 			# Adds pincers to pincer queue
 			pincer_queue = $Pincerer.find_pincers(grid, unit)
 			
-			# TODO: execute enemy pincers
 			_execute_next_pincer()
 		else:
 			# Do nothing
@@ -628,6 +628,8 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 		var pincers: Array = $Pincerer.find_pincers(grid, unit)
 		
 		pincer_queue = _filter_pincers_with_active_unit(pincers, unit)
+		
+		print("Found %d enemy pincers" % pincer_queue.size())
 		
 		_execute_next_enemy_pincer()
 	else:

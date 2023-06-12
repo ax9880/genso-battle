@@ -116,8 +116,6 @@ func release() -> void:
 	.release()
 	
 	if is_controlled_by_player:
-		emit_signal("action_done", self)
-		
 		disable_selection_area()
 		
 		$CanvasLayer/UnitName.hide()
