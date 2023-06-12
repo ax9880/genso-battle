@@ -88,6 +88,8 @@ func appear() -> void:
 	
 	disable_swap_area()
 	
+	$Sound/AppearAudio.play()
+	
 	$AnimationPlayer.play("appear")
 
 
@@ -98,6 +100,7 @@ func play_death_animation() -> void:
 	death_effect.play()
 	
 	$AnimationPlayer.play("death")
+	$Sound/DeathAudio.play()
 	
 	disable_selection_area()
 	disable_swap_area()
@@ -265,7 +268,7 @@ func inflict_damage(damage: int) -> void:
 	$Job.decrease_health(damage)
 	
 	if damage > 0:
-		$AnimationPlayer.play("Shake")
+		$AnimationPlayer.play("shake")
 	
 	var damage_numbers: Node2D = damage_numbers_packed_scene.instance()
 	add_child(damage_numbers)
