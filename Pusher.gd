@@ -33,7 +33,7 @@ func push_unit(grid: Grid, incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 		if cell_to_move_to == null:
 			print("Failed to find a free neighboring cell. Searching for a free cell using BFS")
 			
-			cell_to_move_to = _find_first_free_cell(grid, pushed_unit_cell)
+			cell_to_move_to = _find_first_free_cell(pushed_unit_cell)
 		
 		if cell_to_move_to == null:
 			printerr("Failed to a free cell in the entire grid")
@@ -46,7 +46,7 @@ func push_unit(grid: Grid, incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 			unit.push_to_cell(cell_to_move_to.position)
 
 
-func _find_first_free_cell(grid: Grid, start_cell: Cell) -> Cell:
+func _find_first_free_cell(start_cell: Cell) -> Cell:
 	var queue := []
 	
 	queue.push_back(start_cell)
