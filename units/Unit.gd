@@ -64,6 +64,9 @@ func _ready() -> void:
 	
 	self.current_state = STATE.IDLE
 	
+	$Control/WeaponType.texture = load(Enums.WEAPON_TYPE_TEXTURES[$Job.job.stats.weapon_type])
+	$Sprite/Icon.texture = $Job.job.portrait
+	
 	if not is_controlled_by_player:
 		set_process_input(false)
 

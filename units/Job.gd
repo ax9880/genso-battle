@@ -1,35 +1,38 @@
 extends Node
 
-class Stats extends Reference:
-	var health = 0
-
-export (Resource) var starting_stats: Resource
-
-export (Array, Resource) var skills: Array
+# Job
+export(Resource) var job: Resource
 
 var base_stats: StartingStats
 
 # Stats after buffs and debuffs
 var current_stats: StartingStats
 
-var level: int = 0
-var experience: int = 0
+# Array<Skill>
+var skills: Array
 
-# current_hp: int
 signal health_changed(current_health, max_health)
 
 
 func _ready() -> void:
-	var stats := starting_stats as StartingStats
+	_update_stats()
+
+
+func set_job(new_job: Job) -> void:
+	job = new_job
 	
-	# TODO: Modify according to level
-	base_stats = stats.duplicate()
+	_update_stats()
+
+
+func _update_stats() -> void:
+	base_stats = job.stats.duplicate()
 	
 	current_stats = base_stats.duplicate()
+	
+	skills = job.skills
 
 
 func decrease_health(value: int) -> void:
 	current_stats.health = int(clamp(current_stats.health - value, 0, base_stats.health))
 	
 	emit_signal("health_changed", current_stats.health, base_stats.health)
-	

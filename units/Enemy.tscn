@@ -3,7 +3,7 @@
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://units/Enemy.gd" type="Script" id=2]
 [ext_resource path="res://assets/sfx/ceramic_drag_3.wav" type="AudioStream" id=3]
-[ext_resource path="res://skills/resources/HealingAura.tres" type="Resource" id=4]
+[ext_resource path="res://assets/ui/red_bar_progress.png" type="Texture" id=4]
 [ext_resource path="res://assets/ui/enemy_border.png" type="Texture" id=5]
 [ext_resource path="res://assets/enemies/unit_square_bg.png" type="Texture" id=6]
 [ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=7]
@@ -14,9 +14,6 @@ collision_mask = 1
 script = ExtResource( 2 )
 is_controlled_by_player = false
 turn_counter = 1
-
-[node name="Job" parent="." index="2"]
-skills = [ ExtResource( 4 ) ]
 
 [node name="CollisionShape2D" parent="." index="3"]
 visible = false
@@ -35,6 +32,9 @@ monitorable = false
 
 [node name="CollisionShape2D" parent="SelectionArea2D" index="0"]
 disabled = true
+
+[node name="HpBar" parent="Control" index="1"]
+texture_progress = ExtResource( 4 )
 
 [node name="Container" parent="CanvasLayer" index="0"]
 visible = true

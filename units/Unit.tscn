@@ -1,17 +1,15 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
 [ext_resource path="res://units/SwapArea2D.gd" type="Script" id=3]
 [ext_resource path="res://units/Job.gd" type="Script" id=4]
-[ext_resource path="res://stats/YachieStartingStats.tres" type="Resource" id=5]
+[ext_resource path="res://jobs/YachieJob.tres" type="Resource" id=5]
 [ext_resource path="res://assets/ui/hp_bar_progress.png" type="Texture" id=6]
 [ext_resource path="res://assets/ui/hp_bar_bg.png" type="Texture" id=7]
 [ext_resource path="res://units/HpBar.gd" type="Script" id=8]
-[ext_resource path="res://skills/resources/Chomp.tres" type="Resource" id=9]
 [ext_resource path="res://units/ui/ActivatedSkillMarginContainer.tscn" type="PackedScene" id=10]
 [ext_resource path="res://units/ui/DamageNumbers.tscn" type="PackedScene" id=11]
-[ext_resource path="res://skills/resources/Heal.tres" type="Resource" id=12]
 [ext_resource path="res://units/ui/DeathParticles.tscn" type="PackedScene" id=13]
 [ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=14]
 [ext_resource path="res://assets/fonts/Exo2-Regular.ttf" type="DynamicFontData" id=15]
@@ -243,8 +241,7 @@ anims/death = SubResource( 6 )
 
 [node name="Job" type="Node" parent="."]
 script = ExtResource( 4 )
-starting_stats = ExtResource( 5 )
-skills = [ ExtResource( 9 ), ExtResource( 12 ) ]
+job = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 3 )
