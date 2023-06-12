@@ -14,9 +14,9 @@ func initialize(job: Job) -> void:
 	texture_rect.texture = job.portrait
 
 
-func _on_ChangeButton_pressed() -> void:
-	emit_signal("change_button_clicked")
-
-
 func _on_ViewButton_pressed() -> void:
 	emit_signal("view_button_clicked")
+
+
+func _on_ChangeButton_pressed() -> void:
+	emit_signal("change_button_clicked")

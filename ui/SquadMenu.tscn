@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/UnitItem.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui/SquadMenu.gd" type="Script" id=3]
+[ext_resource path="res://ui/ChangeUnitMenu.tscn" type="PackedScene" id=4]
 
 [node name="SquadMenu" type="Control"]
 anchor_right = 1.0
@@ -11,6 +12,7 @@ rect_pivot_offset = Vector2( -800, -88 )
 theme = ExtResource( 1 )
 script = ExtResource( 3 )
 unit_item_packed_scene = ExtResource( 2 )
+change_unit_menu_packed_scene = ExtResource( 4 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -30,6 +32,14 @@ margin_left = 50.0
 margin_top = 50.0
 margin_right = 670.0
 margin_bottom = 910.0
+custom_constants/separation = 16
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+margin_right = 620.0
+margin_bottom = 29.0
+text = "SQUAD"
+align = 1
+valign = 1
 
 [node name="ShowSkillsButton" type="CheckButton" parent="MarginContainer/VBoxContainer"]
 visible = false
@@ -42,8 +52,9 @@ text = "SHOW_SKILLS"
 align = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 45.0
 margin_right = 620.0
-margin_bottom = 779.0
+margin_bottom = 674.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
@@ -56,6 +67,15 @@ size_flags_horizontal = 3
 [node name="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
 margin_bottom = 100.0
 
+[node name="AddUnitButton" type="Button" parent="MarginContainer/VBoxContainer"]
+margin_left = 190.0
+margin_top = 690.0
+margin_right = 430.0
+margin_bottom = 767.0
+rect_min_size = Vector2( 240, 0 )
+size_flags_horizontal = 4
+text = "ADD_UNIT"
+
 [node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer"]
 margin_left = 190.0
 margin_top = 783.0
@@ -65,4 +85,5 @@ rect_min_size = Vector2( 240, 0 )
 size_flags_horizontal = 4
 text = "RETURN"
 
+[connection signal="pressed" from="MarginContainer/VBoxContainer/AddUnitButton" to="." method="_on_AddUnitButton_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton" to="." method="_on_ReturnButton_pressed"]
