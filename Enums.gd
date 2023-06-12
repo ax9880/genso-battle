@@ -21,11 +21,11 @@ enum WeaponType {
 	# Sword
 	SWORD,
 	
-	# Spears, polearms
-	SPEAR,
-	
 	# Guns
 	GUN,
+	
+	# Spears, polearms
+	SPEAR,
 	
 	# Elemental
 	STAFF
