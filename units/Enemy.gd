@@ -105,6 +105,8 @@ func _find_pincer(grid: Grid, allies: Array, enemies: Array) -> void:
 	
 	var next_cell: Cell = null
 	
+	# Finds the best and first cell that it can navigate to (i.e. it is in
+	# the navigation graph)
 	for possible_pincer in possible_pincers:
 		if navigation_graph.has(possible_pincer.cell):
 			next_cell = possible_pincer.cell
@@ -112,6 +114,7 @@ func _find_pincer(grid: Grid, allies: Array, enemies: Array) -> void:
 			break
 	
 	if next_cell == null:
+		# Random chance to use a skill if a pincer is not found
 		if random.randf() < 0.4:
 			_find_skill_move(grid, allies, enemies)
 		else:
