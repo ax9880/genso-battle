@@ -4,10 +4,6 @@ extends Control
 signal continue_button_pressed
 
 
-func _ready() -> void:
-	var form: String = tr("TOTAL_DRAG_TIME")
-
-
 func initialize(total_drag_time_seconds: float, player_turn_count: int) -> void:
 	var formatted_drag_time_string: String = tr("TOTAL_DRAG_TIME").format({"time": "%0.1f" % total_drag_time_seconds})
 	
