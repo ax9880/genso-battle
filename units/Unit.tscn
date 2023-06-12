@@ -1,10 +1,10 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
 [ext_resource path="res://units/SwapArea2D.gd" type="Script" id=3]
 [ext_resource path="res://units/Job.gd" type="Script" id=4]
-[ext_resource path="res://jobs/YachieStartingStats.tres" type="Resource" id=5]
+[ext_resource path="res://stats/YachieStartingStats.tres" type="Resource" id=5]
 [ext_resource path="res://assets/ui/hp_bar_progress.png" type="Texture" id=6]
 [ext_resource path="res://assets/ui/hp_bar_bg.png" type="Texture" id=7]
 [ext_resource path="res://units/HpBar.gd" type="Script" id=8]
@@ -22,6 +22,7 @@
 [ext_resource path="res://assets/sfx/ceramic_drag_1.wav" type="AudioStream" id=20]
 [ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=21]
 [ext_resource path="res://assets/ui/sword.png" type="Texture" id=22]
+[ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=23]
 
 [sub_resource type="Animation" id=7]
 length = 0.001
@@ -257,8 +258,10 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Icon" type="Sprite" parent="Sprite"]
+texture = ExtResource( 23 )
+
 [node name="Border" type="Sprite" parent="Sprite"]
-scale = Vector2( 0.99, 0.99 )
 texture = ExtResource( 2 )
 
 [node name="FullSprite" type="Sprite" parent="."]

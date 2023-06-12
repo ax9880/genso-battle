@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://stats/StartingStats.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+health = 800
+attack = 60
+spiritual_attack = 20
+defense = 30
+spiritual_defense = 20
+status_ailment_vulnerability = 0.3
+status_ailment_vulnerabilities = {
+}
+same_attribute_resistance = 0.0
+attribute = 0
+weapon_type = 1
+max_turn_counter = 3
+movement_range = 5

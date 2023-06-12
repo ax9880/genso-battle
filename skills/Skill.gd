@@ -3,7 +3,7 @@ extends Resource
 class_name Skill
 
 # Localizable string
-export(String) var skill_name: String
+export(String) var skill_name: String = ""
 export(Enums.SkillType) var skill_type = Enums.SkillType.ATTACK
 
 export(Enums.AreaOfEffect) var area_of_effect = Enums.AreaOfEffect.NONE
@@ -12,14 +12,14 @@ export(float, 0, 1, 0.1) var activation_rate: float = 0.3
 
 # Primary effect
 export(float, 0, 3, 0.5) var primary_power: float = 1
-export(Enums.WeaponType) var primary_weapon_type: int
+export(Enums.WeaponType) var primary_weapon_type: int = Enums.WeaponType.SWORD
 
 # Primary attribute, only used if weapon type is staff (elemental / magic)
-export(Enums.Attribute) var primary_attribute: int
+export(Enums.Attribute) var primary_attribute: int = Enums.Attribute.NONE
 
 export(float, 0, 3, 0.5) var secondary_power: float = 0.0
-export(Enums.WeaponType) var secondary_weapon_type: int
-export(Enums.Attribute) var secondary_attribute: int
+export(Enums.WeaponType) var secondary_weapon_type: int = Enums.WeaponType.GUN
+export(Enums.Attribute) var secondary_attribute: int = Enums.Attribute.NONE
 
 # If >0, can absorb damage from primary attack, if attack deals damage >0
 export(float, 0, 1, 0.1) var absorb_rate: float = 0
@@ -32,7 +32,7 @@ export(Enums.StatusEffectType) var status_effect: int = Enums.StatusEffectType.N
 # If it's zero then it does not inflict a status effect
 export(int, 0, 5, 1) var status_effect_duration_turns: int = 0
 
-export(PackedScene) var effect_scene: PackedScene
+export(PackedScene) var effect_scene: PackedScene = null
 
 
 func get_description() -> String:
