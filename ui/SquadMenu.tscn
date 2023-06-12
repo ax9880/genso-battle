@@ -59,13 +59,22 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
 margin_right = 620.0
-margin_bottom = 100.0
+margin_bottom = 629.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_top = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+margin_top = 16.0
+margin_right = 620.0
+margin_bottom = 629.0
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
-margin_bottom = 100.0
+[node name="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+margin_right = 620.0
 
 [node name="AddUnitButton" type="Button" parent="MarginContainer/VBoxContainer"]
 margin_left = 190.0

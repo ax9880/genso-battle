@@ -4,7 +4,7 @@ extends Control
 export(PackedScene) var unit_item_packed_scene: PackedScene
 
 
-onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer
+onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer
 
 
 signal job_changed(new_job)

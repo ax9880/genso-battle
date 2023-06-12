@@ -1,13 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=1]
 [ext_resource path="res://ui/UnitItemContainer.gd" type="Script" id=2]
 [ext_resource path="res://theme.tres" type="Theme" id=3]
 [ext_resource path="res://assets/ui/red_panel.png" type="Texture" id=4]
+[ext_resource path="res://assets/ui/sword.png" type="Texture" id=5]
 
 [node name="UnitItemContainer" type="HBoxContainer"]
-margin_right = 620.0
-margin_bottom = 97.0
+anchor_right = 1.0
+margin_bottom = 100.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 custom_constants/separation = 16
@@ -24,35 +25,47 @@ patch_margin_right = 27
 patch_margin_bottom = 26
 
 [node name="TextureRect" type="TextureRect" parent="NinePatchRect"]
-margin_right = 97.0
-margin_bottom = 100.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 texture = ExtResource( 1 )
 stretch_mode = 4
 
+[node name="WeaponTypeTexture" type="TextureRect" parent="NinePatchRect"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 6.0
+margin_top = -66.0
+margin_right = 71.0
+margin_bottom = -1.0
+texture = ExtResource( 5 )
+stretch_mode = 3
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 116.0
-margin_right = 348.0
+margin_right = 448.0
 margin_bottom = 100.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 margin_top = 35.0
-margin_right = 232.0
+margin_right = 332.0
 margin_bottom = 64.0
 text = "UNIT_NAME"
 
 [node name="ViewButton" type="Button" parent="."]
-margin_left = 364.0
-margin_right = 484.0
+margin_left = 464.0
+margin_right = 584.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 120, 0 )
 size_flags_vertical = 3
 text = "VIEW"
 
 [node name="ChangeButton" type="Button" parent="."]
-margin_left = 500.0
-margin_right = 620.0
+margin_left = 600.0
+margin_right = 720.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 120, 0 )
 size_flags_vertical = 3

@@ -4,7 +4,7 @@ extends Control
 export(PackedScene) var unit_item_packed_scene: PackedScene
 export(PackedScene) var change_unit_menu_packed_scene: PackedScene
 
-onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer
+onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer
 onready var scene_container: MarginContainer = $MarginContainer
 
 var change_unit_menu: Control

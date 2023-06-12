@@ -36,9 +36,16 @@ const WEAPON_RELATIONSHIPS: Dictionary = {
 	# Spear beats sword
 	# Sword beats gun
 	# Gun beats spear
-	WeaponType.SPEAR: WeaponType.SWORD,
 	WeaponType.SWORD: WeaponType.GUN,
 	WeaponType.GUN: WeaponType.SPEAR,
+	WeaponType.SPEAR: WeaponType.SWORD,
+}
+
+const WEAPON_TYPE_TEXTURES: Dictionary = {
+	WeaponType.SWORD: "res://assets/ui/sword.png",
+	WeaponType.SPEAR: "res://assets/ui/spear.png",
+	WeaponType.GUN: "res://assets/ui/gun.png",
+	WeaponType.STAFF: "res://assets/ui/staff.png"
 }
 
 enum StatusEffectType {
