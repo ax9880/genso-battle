@@ -92,6 +92,10 @@ func appear() -> void:
 	$AnimationPlayer.play("appear")
 
 
+func hide_name() -> void:
+	$AnimationPlayer.play("hide name")
+
+
 func play_death_animation() -> void:
 	var death_effect: Node2D = death_effect_packed_scene.instance()
 	

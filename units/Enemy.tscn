@@ -43,6 +43,9 @@ visible = true
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
 texture = ExtResource( 8 )
 
+[node name="UnitName" parent="CanvasLayer" index="1"]
+modulate = Color( 1, 1, 1, 1 )
+
 [node name="AppearAudio" parent="Sound" index="0"]
 stream = ExtResource( 3 )
 

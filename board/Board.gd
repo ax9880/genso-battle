@@ -145,6 +145,10 @@ func _make_enemies_appear(units: Array) -> void:
 	
 	yield(get_tree().create_timer(time_before_player_units_appearance_seconds), "timeout")
 	
+	
+	for unit in units:
+		unit.hide_name()
+	
 	_make_player_units_appear()
 
 
