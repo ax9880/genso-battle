@@ -23,7 +23,6 @@ func start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	target_count = target_cells.size()
 	
 	if target_count == 0:
-		#emit_signal("effect_finished")
 		call_deferred("emit_signal", "effect_finished")
 	else:
 		$SkillSound.play()
@@ -82,7 +81,7 @@ func _update_count(unit: Unit) -> void:
 			yield(get_tree().create_timer(delay_after_absorbing_damage_seconds), "timeout")
 		else:
 			yield(get_tree().create_timer(delay_after_skill_without_absorb_seconds), "timeout")
-			
+		
 		emit_signal("effect_finished")
 		hide()
 		queue_free()
