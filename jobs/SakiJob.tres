@@ -11,3 +11,5 @@ stats = ExtResource( 2 )
 skills = [ ExtResource( 4 ) ]
 job_name = "SAKI"
 portrait = ExtResource( 3 )
+unit_scene_path = ""
+level = 10

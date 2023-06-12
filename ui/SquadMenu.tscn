@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
-[ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=2]
+[ext_resource path="res://ui/UnitItem.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui/SquadMenu.gd" type="Script" id=3]
 
 [node name="SquadMenu" type="Control"]
@@ -10,6 +10,7 @@ anchor_bottom = 1.0
 rect_pivot_offset = Vector2( -800, -88 )
 theme = ExtResource( 1 )
 script = ExtResource( 3 )
+unit_item_packed_scene = ExtResource( 2 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -30,6 +31,16 @@ margin_top = 50.0
 margin_right = 670.0
 margin_bottom = 910.0
 
+[node name="ShowSkillsButton" type="CheckButton" parent="MarginContainer/VBoxContainer"]
+visible = false
+margin_left = 190.0
+margin_right = 430.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 240, 0 )
+size_flags_horizontal = 4
+text = "SHOW_SKILLS"
+align = 1
+
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 margin_right = 620.0
 margin_bottom = 779.0
@@ -39,48 +50,11 @@ scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
 margin_right = 620.0
-margin_bottom = 97.0
+margin_bottom = 100.0
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
-margin_right = 620.0
-margin_bottom = 97.0
-size_flags_horizontal = 3
-custom_constants/separation = 16
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_right = 97.0
-margin_bottom = 97.0
-texture = ExtResource( 2 )
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_left = 113.0
-margin_right = 348.0
-margin_bottom = 97.0
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-margin_top = 34.0
-margin_right = 235.0
-margin_bottom = 63.0
-text = "UNIT_NAME"
-
-[node name="ViewButton" type="Button" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_left = 364.0
-margin_right = 484.0
-margin_bottom = 97.0
-rect_min_size = Vector2( 120, 0 )
-size_flags_vertical = 3
-text = "VIEW"
-
-[node name="ChangeButton" type="Button" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_left = 500.0
-margin_right = 620.0
-margin_bottom = 97.0
-rect_min_size = Vector2( 120, 0 )
-size_flags_vertical = 3
-text = "CHANGE"
+[node name="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
+margin_bottom = 100.0
 
 [node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer"]
 margin_left = 190.0
