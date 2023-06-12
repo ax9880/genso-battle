@@ -121,6 +121,21 @@ func move_to_new_cell(target_position: Vector2) -> void:
 	self.current_state = STATE.SWAPPING
 
 
+func push_to_cell(target_position: Vector2) -> void:
+	move_to_new_cell(target_position)
+	
+	var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
+	
+	tween.interpolate_property(self, "rotation",
+				0.0, 2 * PI,
+				tween_time_seconds,
+				Tween.TRANS_SINE)
+			
+	tween.start()
+	
+	Utils.disable_object($CollisionShape2D)
+
+
 func enable_swap_area() -> void:
 	Utils.enable_object($SwapArea2D/CollisionShape2D)
 
@@ -216,6 +231,8 @@ func set_current_state(new_state) -> void:
 			set_physics_process(false)
 			
 			_restore_sprite_size()
+			
+			Utils.enable_object($CollisionShape2D)
 		STATE.PICKED_UP:
 			enable_swap_area()
 			
