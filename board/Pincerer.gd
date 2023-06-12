@@ -10,7 +10,7 @@ class Pincer extends Reference:
 	# Array<Unit>
 	var pincered_units: Array
 	
-	# Dictionary<Unit, List<List<Unit>>
+	# Dictionary<Unit, Array<Array<Unit>>>
 	# Where chain_families[unit] consists of all the chains for the given unit (a chain family)
 	# And where a chain family consists of lists of chained units (chain). The index of each chain
 	# is its chain level. The chain does include the pincering units.
@@ -217,6 +217,7 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 		return null
 
 
+# Returns Dictionary<Unit, Array<Array<Unit>>>
 func _find_chains(grid: Grid, pincering_units: Array) -> Dictionary:
 	var faction: int = pincering_units.front().faction
 	
