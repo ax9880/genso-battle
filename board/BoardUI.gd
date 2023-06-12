@@ -1,8 +1,8 @@
 extends MarginContainer
 
 
-onready var progress_bar: TextureProgress = $MarginContainer/VBoxContainer/TextureProgress
-onready var tween: Tween = $MarginContainer/VBoxContainer/TextureProgress/Tween
+onready var progress_bar: TextureProgress = $MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
+onready var tween: Tween = $MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
 
 var timer: Timer
 var player_turn_count: int = 0
@@ -52,13 +52,13 @@ func _on_Board_player_turn_started() -> void:
 
 
 func _on_Board_victory() -> void:
-	$VictoryScreen.initialize(total_drag_time_seconds, player_turn_count)
+	$CanvasLayer/VictoryScreen.initialize(total_drag_time_seconds, player_turn_count)
 	
-	$VictoryScreen.show()
+	$CanvasLayer/VictoryScreen.show()
 
 
 func _on_Board_defeat():
-	$DefeatScreen.show()
+	$CanvasLayer/DefeatScreen.show()
 
 
 func _on_DefeatScreen_quit_button_pressed() -> void:
@@ -71,3 +71,7 @@ func _on_DefeatScreen_try_again_button_pressed() -> void:
 
 func _on_VictoryScreen_continue_button_pressed() -> void:
 	pass # Replace with function body.
+
+
+func _on_GiveUpButton_pressed() -> void:
+	_on_Board_defeat()
