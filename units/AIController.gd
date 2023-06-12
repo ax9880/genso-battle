@@ -105,14 +105,13 @@ func evaluate_skill(unit: Unit, skill: Skill, grid: Grid, navigation_graph: Dict
 
 # TODO: Find nav graph while marking ally cells as unpassable?
 # Returns Array<PossiblePincer> with possible cells were the unit can navigate
-# to to perform a pincer, ordered by how many units are affected
+# to to perform a pincer, ordered by how many units are affected.
 func find_possible_pincers(unit: Unit, grid: Grid, faction: int, allies: Array) -> Array:
 	var possible_pincers: Array = []
 	var directions := [Cell.DIRECTION.RIGHT, Cell.DIRECTION.LEFT, Cell.DIRECTION.UP, Cell.DIRECTION.DOWN]
 	
 	for ally in allies:
 		if ally != unit:
-			# for direction in directions ...
 			var cell: Cell = grid.get_cell_from_position(ally.position)
 			
 			for direction in directions:
@@ -126,6 +125,7 @@ func find_possible_pincers(unit: Unit, grid: Grid, faction: int, allies: Array) 
 	return possible_pincers
 
 
+# Returns null if a possible pincer is not found
 func _find_possible_pincer(cell: Cell, faction: int, direction: int) -> PossiblePincer:
 	# Flag enabled if a possible pincer is found
 	var candidate_cell: Cell = null
@@ -140,6 +140,7 @@ func _find_possible_pincer(cell: Cell, faction: int, direction: int) -> Possible
 		
 		# There is an available cell
 		if next_unit == null:
+			# This unit can move to this cell and perform a pincer
 			if last_unit != null and last_unit.is_enemy(faction):
 				candidate_cell = neighbor
 			
@@ -165,6 +166,7 @@ func _find_possible_pincer(cell: Cell, faction: int, direction: int) -> Possible
 
 
 # Returns Array<Cell>
+# Finds free cells that neighbor enemies.
 func find_cells_close_to_enemies(unit: Unit, grid: Grid, faction: int, enemies: Array) -> Array:
 	var directions := [Cell.DIRECTION.RIGHT, Cell.DIRECTION.LEFT, Cell.DIRECTION.UP, Cell.DIRECTION.DOWN]
 	var candidate_cells := []
