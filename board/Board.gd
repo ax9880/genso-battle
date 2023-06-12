@@ -176,7 +176,7 @@ func _make_player_units_appear() -> void:
 func _start_player_turn() -> void:
 	print("Starting player turn")
 	
-	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or is_all_units_dead(player_units_node.get_children()):
+	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or has_less_than_min_squad_size_alive(player_units_node.get_children()):
 		print("Defeat!")
 		
 		emit_signal("defeat")
@@ -193,6 +193,16 @@ func _start_player_turn() -> void:
 		
 		for unit in player_units_node.get_children():
 			unit.enable_selection_area()
+
+
+func has_less_than_min_squad_size_alive(units: Array) -> bool:
+	var alive_counter := 0
+	
+	for unit in units:
+		if unit.is_alive():
+			alive_counter += 1
+	
+	return alive_counter < SaveData.MIN_SQUAD_SIZE
 
 
 func is_all_units_dead(units: Array) -> bool:
