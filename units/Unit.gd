@@ -97,13 +97,13 @@ func hide_name() -> void:
 
 
 func play_death_animation() -> void:
+	$AnimationPlayer.play("death")
+	$Sound/DeathAudio.play()
+	
 	var death_effect: Node2D = death_effect_packed_scene.instance()
 	
 	add_child(death_effect)
 	death_effect.play()
-	
-	$AnimationPlayer.play("death")
-	$Sound/DeathAudio.play()
 	
 	disable_selection_area()
 	disable_swap_area()
