@@ -18,6 +18,9 @@ RETURN_TO_MAIN_MENU,Main menu,Menú principal
 ADD_UNIT,Add unit,Agregar unidad
 REMOVE,Remove,Quitar
 VIEW,View,Ver
+TRY_AGAIN,Try again,Intentar de nuevo
+TOTAL_DRAG_TIME,Total drag time: {time} s,Tiempo de arrastre: {time} s
+TURN_COUNT,Turns: {count}, Turnos: {count}
 CHANGE,Change,Cambiar
 CHOMP_SKILL,Chomp,Engullir
 HEAL,Heal,Curar
