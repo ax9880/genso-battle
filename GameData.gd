@@ -13,7 +13,7 @@ func load_data():
 	var file: File = File.new()
 	
 	if file.file_exists(_get_config_file_path()):
-		if _load_configs_file() != OK:
+		if _load_config_file() != OK:
 			push_error("Failed to load save data")
 			
 			_load_data_from_default_resource()
@@ -24,7 +24,7 @@ func load_data():
 
 
 # Returns Error
-func _load_configs_file():
+func _load_config_file():
 	if OS.is_debug_build():
 		return config_file.load(_get_config_file_path())
 	else:
@@ -65,7 +65,7 @@ func _load_data_from_default_resource() -> void:
 		save_data.jobs.push_back(job)
 
 
-func save_data() -> void:
+func save() -> void:
 	var jobs := []
 	
 	# Save jobs an array of dictionaries
@@ -79,10 +79,10 @@ func save_data() -> void:
 	config_file.set_value("settings", "sound_effects_volume", save_data.sound_effects_volume)
 	config_file.set_value("settings", "locale", save_data.locale)
 	
-	_save()
+	_save_config_file()
 
 
-func _save() -> void:
+func _save_config_file() -> void:
 	if OS.is_debug_build():
 		if config_file.save(_get_config_file_path()) != OK:
 			push_error("Failed to save data")
