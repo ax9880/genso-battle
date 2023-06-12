@@ -7,8 +7,8 @@
 
 [resource]
 script = ExtResource( 1 )
-jobs = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ]
-active_units = [  ]
+jobs = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 2 ) ]
+active_units = [ 0, 1, 2 ]
 music_volume = 1.0
 sound_effects_volume = 1.0
 locale = ""
