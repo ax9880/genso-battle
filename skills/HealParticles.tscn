@@ -10,7 +10,7 @@ blend_mode = 1
 _data = [ Vector2( 0, 0.197348 ), 0.0, 5.70275, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="Gradient" id=2]
-colors = PoolColorArray( 0.395594, 0.887542, 0.937703, 1, 0.177177, 0.965047, 0.317786, 1 )
+colors = PoolColorArray( 0.498039, 0.827451, 0.901961, 1, 0.607843, 0.835294, 0.278431, 1 )
 
 [node name="HealParticles" type="CPUParticles2D"]
 material = SubResource( 1 )
