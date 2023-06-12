@@ -10,6 +10,9 @@ export(Enums.AreaOfEffect) var area_of_effect = Enums.AreaOfEffect.NONE
 export(int, 0, 10, 1) var area_of_effect_size: int = 1
 export(float, 0, 1, 0.1) var activation_rate: float = 0.3
 
+# True if the skill pushes away affected enemies
+export(bool) var is_pusher: bool = false
+
 # Primary effect
 export(float, 0, 3, 0.5) var primary_power: float = 1
 export(Enums.WeaponType) var primary_weapon_type: int = Enums.WeaponType.SWORD
