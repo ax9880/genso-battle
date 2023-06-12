@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=5 format=2]
+
+[ext_resource path="res://SaveData.gd" type="Script" id=1]
+[ext_resource path="res://jobs/SakiJob.tres" type="Resource" id=2]
+[ext_resource path="res://jobs/YachieJob.tres" type="Resource" id=3]
+[ext_resource path="res://jobs/YuumaJob.tres" type="Resource" id=4]
+
+[resource]
+script = ExtResource( 1 )
+jobs = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ]
+active_units = [  ]
+music_volume = 1.0
+sound_effects_volume = 1.0
+locale = ""
