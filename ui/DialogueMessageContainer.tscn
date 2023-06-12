@@ -64,4 +64,3 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "We are going in too deep."
 autowrap = true
-percent_visible = -0.05

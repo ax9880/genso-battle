@@ -1,6 +1,18 @@
 extends HBoxContainer
 
 
+const ICONS: Dictionary = {
+	"YACHIE": "res://assets/enemies/orbling_haniwa.png",
+	"SAKI": "res://assets/enemies/orbling_dracorin.png",
+	"YUUMA": "res://assets/enemies/orbling_haniwa.png",
+}
+
+const NINE_PATCH_TEXTURES: Dictionary = {
+	"YACHIE": "res://assets/ui/orange_panel.png",
+	"SAKI": "res://assets/ui/red_panel.png",
+	"YUUMA": "res://assets/ui/blue_panel.png"
+}
+
 export(float) var new_character_every_x_seconds: float = 0
 
 onready var name_label := $VBoxContainer/NameLabel
@@ -27,10 +39,17 @@ func _process(delta: float) -> void:
 # Make a generic one and make character specific ones
 # Dialogue: who says it, expression ?, and what they are saying
 func initialize(dialogue_message) -> void:
-	name_label.text = tr(dialogue_message.speaker)
+	var speaker: String = dialogue_message.speaker
+	
+	name_label.text = tr(speaker)
 	message_label.text = tr(dialogue_message.line)
 	
-	# TODO: Set icon and nine patch rect texture depending on speaker
+	if ICONS.has(speaker):
+		$VBoxContainer/TextureRect.texture = load(ICONS[speaker])
+	
+	if NINE_PATCH_TEXTURES.has(speaker):
+		$MarginContainer/NinePatchRect.texture  = load(NINE_PATCH_TEXTURES[speaker])
+	
 	
 	message_label.percent_visible = 0
 	accumulated_time_seconds = 0
