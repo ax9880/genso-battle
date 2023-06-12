@@ -41,15 +41,17 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
 	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
 	
-	selected_skill = $Job.skills.front()
+	selected_skill = $Job.skills[random.randi_range(0, $Job.skills.size() - 1)]
 	
 	# Evaluate positions (requires having the whole graph)
-	var results = $AIController.evaluate_skill(self, selected_skill, grid, navigation_graph)
+	var results: Array = $AIController.evaluate_skill(self, selected_skill, grid, navigation_graph)
 	
 	var top_result = results.front()
 	
-	print("Estimated damage dealt: %d" % top_result.damage_dealt)
-	top_result.cell.modulate = Color.red
+	# Pick a random result to make it less predictable
+	# TODO: Add constants / export vars
+	if results.size() > 5 and random.randf() < 0.4:
+		top_result = results[random.randi_range(0, 3)]
 	
 	path = BoardUtils.find_path(grid, navigation_graph, position, top_result.cell)
 	
