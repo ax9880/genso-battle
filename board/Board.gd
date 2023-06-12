@@ -9,6 +9,9 @@ enum Turn {
 export(float) var time_between_enemy_appearance_seconds: float = 0.5
 export(float) var time_before_player_units_appearance_seconds: float = 0.5
 
+# Set to true to use debug units instead of the player's squad
+export(bool) var can_use_debug_units: bool = false
+
 onready var grid := $Grid
 onready var grid_width: int = grid.width
 onready var grid_height: int = grid.height
@@ -28,16 +31,28 @@ var pincer_queue := []
 
 var current_turn: int = Turn.NONE
 
+var player_units_node: Node2D
 
 signal drag_timer_started(timer)
 signal drag_timer_stopped
 signal drag_timer_reset
+
+# Emitted when the player's turn starts.
 signal player_turn_started
+
+# Emitted when all enemies are defeated.
 signal victory
+
+# Emitted when the player has less than 2 units on the board.
 signal defeat
 
 
 func _ready() -> void:
+	if can_use_debug_units:
+		player_units_node = $DebugUnits
+	else:
+		player_units_node = $Units
+	
 	_connect_cell_signals()
 	
 	_assign_units_to_cells()
@@ -47,7 +62,7 @@ func _ready() -> void:
 	
 	_make_enemies_appear($Enemies.get_children())
 	
-	$Units.hide()
+	player_units_node.hide()
 
 
 # Connect body enter and exit signals.
@@ -59,7 +74,7 @@ func _connect_cell_signals() -> void:
 
 
 func _assign_units_to_cells() -> void:
-	for unit in $Units.get_children():
+	for unit in player_units_node.get_children():
 		_assign_unit_to_cell(unit)
 		
 		var _error = unit.connect("picked_up", self, "_on_Unit_picked_up")
@@ -80,7 +95,6 @@ func _assign_enemies_to_cells() -> void:
 		if enemy.is_controlled_by_player:
 			enemy.connect("picked_up", self, "_on_Unit_picked_up")
 			enemy.connect("released", self, "_on_Unit_released")
-			#enemy.connect("snapped_to_grid", self, "_on_Unit_snapped_to_grid")
 		
 		enemy.faction = Unit.ENEMY_FACTION
 
@@ -108,15 +122,15 @@ func _make_enemies_appear(units: Array) -> void:
 
 
 func _make_player_units_appear() -> void:
-	if $Units.visible:
+	if player_units_node.visible:
 		return
 	else:
-		$Units.show()
+		player_units_node.show()
 		
-		$Units.modulate = Color.transparent
+		player_units_node.modulate = Color.transparent
 		
-		$Tween.interpolate_property($Units, "modulate",
-			$Units.modulate, Color.white,
+		$Tween.interpolate_property(player_units_node, "modulate",
+			player_units_node.modulate, Color.white,
 			0.5)
 		
 		$Tween.start()
@@ -129,7 +143,7 @@ func _make_player_units_appear() -> void:
 func _start_player_turn() -> void:
 	print("Starting player turn")
 	
-	if $Units.get_children().size() < SaveData.MIN_SQUAD_SIZE:
+	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE:
 		print("Defeat!")
 		
 		emit_signal("defeat")
@@ -142,12 +156,12 @@ func _start_player_turn() -> void:
 		emit_signal("drag_timer_reset")
 		emit_signal("player_turn_started")
 		
-		for unit in $Units.get_children():
+		for unit in player_units_node.get_children():
 			unit.enable_selection_area()
 
 
 func _disable_player_units() -> void:
-	for unit in $Units.get_children():
+	for unit in player_units_node.get_children():
 		unit.disable_selection_area()
 
 
@@ -171,7 +185,7 @@ func _start_enemy_turn() -> void:
 		# Or call an initialize function
 		$PincerExecutor.grid = grid
 		$PincerExecutor.allies = $Enemies.get_children()
-		$PincerExecutor.enemies = $Units.get_children()
+		$PincerExecutor.enemies = player_units_node.get_children()
 		pincer_queue = []
 		
 		# enemy turn starts right away, there's no animation
@@ -385,7 +399,7 @@ func _execute_next_pincer() -> void:
 		
 		var _error = $PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
 		
-		$PincerExecutor.start_skill_activation_phase(pincer, grid, $Units.get_children(), $Enemies.get_children())
+		$PincerExecutor.start_skill_activation_phase(pincer, grid, player_units_node.get_children(), $Enemies.get_children())
 	else:
 		print("All pincers done!")
 		
@@ -503,7 +517,7 @@ func _on_Unit_picked_up(unit: Unit) -> void:
 	unit.z_index += 1
 	
 	if current_turn == Turn.PLAYER:
-		for other_unit in $Units.get_children():
+		for other_unit in player_units_node.get_children():
 			if other_unit != unit:
 				other_unit.disable_selection_area()
 

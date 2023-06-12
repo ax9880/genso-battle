@@ -130,6 +130,7 @@ __meta__ = {
 
 [node name="Enemy" parent="Board/Enemies" instance=ExtResource( 3 )]
 position = Vector2( 248, 347 )
+is_controlled_by_player = true
 
 [node name="Units" type="Node2D" parent="Board"]
 __meta__ = {
@@ -140,19 +141,7 @@ __meta__ = {
 position = Vector2( 149, 348 )
 
 [node name="Unit2" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 248, 451 )
-
-[node name="Unit3" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 344, 547 )
-
-[node name="Unit4" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 448, 451 )
-
-[node name="Unit5" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 151, 650 )
-
-[node name="Unit6" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 445, 647 )
+position = Vector2( 248, 456 )
 
 [node name="DebugUnits" type="Node2D" parent="Board"]
 visible = false
