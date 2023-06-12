@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "AIController",
+"language": "GDScript",
+"path": "res://units/AIController.gd"
+}, {
 "base": "Reference",
 "class": "Attack",
 "language": "GDScript",
@@ -75,6 +80,7 @@ _global_script_classes=[ {
 "path": "res://units/Unit.gd"
 } ]
 _global_script_class_icons={
+"AIController": "",
 "Attack": "",
 "Attacker": "",
 "Board": "",

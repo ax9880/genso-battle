@@ -32,6 +32,8 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 			if turn_counter > 0:
 				self.turn_counter = turn_counter - 1
 			
+			can_use_skill_after_moving = false
+			
 			if turn_counter == 0:
 				_find_next_move(grid, allies, enemies)
 			else:
@@ -39,6 +41,16 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 
 
 func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
+	var next_behavior: int = $AIController.get_next_behavior()
+	
+	match(next_behavior):
+		AIController.Behavior.USE_SKILL:
+			_find_skill_move(grid, allies, enemies)
+		_:
+			_find_cell_to_move_to(grid, allies, enemies)
+
+
+func _find_skill_move(grid: Grid, allies: Array, enemies: Array) -> void:
 	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
 	
 	selected_skill = $Job.skills[random.randi_range(0, $Job.skills.size() - 1)]
@@ -53,15 +65,18 @@ func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
 	if results.size() > 5 and random.randf() < 0.4:
 		top_result = results[random.randi_range(0, 3)]
 	
-	path = BoardUtils.find_path(grid, navigation_graph, position, top_result.cell)
-	
-	if !path.empty():
-		# Move or perform skill (in any order)
-		can_use_skill_after_moving = true
-		
-		_start_moving()
+	if top_result.damage_dealt == 0:
+		_find_cell_to_move_to(grid, allies, enemies)
 	else:
-		_use_skill(selected_skill)
+		path = BoardUtils.find_path(grid, navigation_graph, position, top_result.cell)
+		
+		if !path.empty():
+			# Move or perform skill (in any order)
+			can_use_skill_after_moving = true
+			
+			_start_moving()
+		else:
+			_use_skill(selected_skill)
 
 
 func _use_skill(skill: Skill) -> void:
@@ -69,6 +84,16 @@ func _use_skill(skill: Skill) -> void:
 		emit_signal("use_skill", self, skill)
 	else:
 		emit_signal("action_done", self)
+
+
+func _find_cell_to_move_to(grid: Grid, allies: Array, enemies: Array) -> void:
+	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
+	
+	var next_cell: Cell = navigation_graph.keys()[random.randi_range(0, navigation_graph.size() - 1)]
+	
+	path = BoardUtils.find_path(grid, navigation_graph, position, next_cell)
+	
+	_start_moving()
 
 
 func _start_moving() -> void:

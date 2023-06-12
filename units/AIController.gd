@@ -1,5 +1,8 @@
 extends Node
 
+class_name AIController
+
+
 enum Behavior {
 	MOVE,
 	USE_SKILL
@@ -38,6 +41,20 @@ class UnitsKilledSorter:
 
 export(Array, Behavior) var behaviors: Array
 export(Preference) var preference: int
+
+var current_behavior_index: int = 0
+
+
+# Returns Behavior enu,
+func get_next_behavior() -> int:
+	var behavior = behaviors[current_behavior_index]
+	
+	current_behavior_index += 1
+	
+	if current_behavior_index >= behaviors.size():
+		current_behavior_index = 0
+	
+	return behavior
 
 
 func evaluate_skill(unit: Unit, skill: Skill, grid: Grid, navigation_graph: Dictionary, var can_yield := false) -> Array:
