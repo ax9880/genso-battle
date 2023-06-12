@@ -9,7 +9,7 @@ const OPPOSITE_DIRECTION := {
 }
 
 
-func push_unit(grid: Grid, incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
+func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 	if pushed_unit_cell.unit != null:
 		var direction: int = _get_direction(incoming_cell.coordinates, pushed_unit_cell.coordinates)
 		
