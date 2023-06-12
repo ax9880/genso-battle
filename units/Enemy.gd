@@ -126,7 +126,7 @@ func release() -> void:
 func set_turn_counter(value: int) -> void:
 	turn_counter = value
 	
-	$CanvasLayer/Container/TurnCount.text = str(turn_counter)
+	$Control/Container/TurnCount.text = str(turn_counter)
 
 
 func _on_snap_to_grid() -> void:

@@ -37,7 +37,7 @@ disabled = true
 [node name="HpBar" parent="Control" index="1"]
 texture_progress = ExtResource( 4 )
 
-[node name="Container" parent="CanvasLayer" index="0"]
+[node name="Container" parent="Control" index="4"]
 visible = true
 
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
