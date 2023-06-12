@@ -64,8 +64,7 @@ func _ready() -> void:
 	
 	self.current_state = STATE.IDLE
 	
-	$Control/WeaponType.texture = load(Enums.WEAPON_TYPE_TEXTURES[$Job.job.stats.weapon_type])
-	$Sprite/Icon.texture = $Job.job.portrait
+	_load_job_textures()
 	
 	if not is_controlled_by_player:
 		set_process_input(false)
@@ -193,7 +192,18 @@ func release() -> void:
 		emit_signal("released", self)
 
 
+func _load_job_textures() -> void:
+	$Control/WeaponType.texture = load(Enums.WEAPON_TYPE_TEXTURES[$Job.job.stats.weapon_type])
+	$Sprite/Icon.texture = $Job.job.portrait
+
+
 ## Setters
+
+func set_job(new_job: Job) -> void:
+	$Job.set_job(new_job)
+	
+	_load_job_textures()
+
 
 # Setter function for current_state.
 func set_current_state(new_state) -> void:

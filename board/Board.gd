@@ -34,6 +34,8 @@ var current_turn: int = Turn.NONE
 var player_units_node: Node2D
 var enemy_units_node: Node2D
 
+var save_data: SaveData
+
 signal drag_timer_started(timer)
 signal drag_timer_stopped
 signal drag_timer_reset
@@ -49,12 +51,16 @@ signal defeat
 
 
 func _ready() -> void:
+	save_data = GameData.save_data
+	
 	if can_use_debug_units:
 		player_units_node = $DebugUnits
 		
 		$Units.queue_free()
 	else:
 		player_units_node = $Units
+		
+		_load_player_units()
 		
 		$DebugUnits.queue_free()
 	
@@ -70,6 +76,20 @@ func _ready() -> void:
 	_make_enemies_appear(enemy_units_node.get_children())
 	
 	player_units_node.hide()
+
+
+func _load_player_units() -> void:
+	for i in range(player_units_node.get_child_count()):
+		# Load the first X active units
+		if i < save_data.active_units.size():
+			var index: int = save_data.active_units[i]
+		
+			var job: Job = save_data.jobs[index]
+			
+			player_units_node.get_child(i).set_job(job)
+		else:
+			# If there are more units than active units then we free the rest
+			player_units_node.get_child(i).queue_free()
 
 
 # Connect body enter and exit signals.
