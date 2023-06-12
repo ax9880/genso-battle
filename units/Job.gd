@@ -18,6 +18,11 @@ func _ready() -> void:
 	_update_stats()
 
 
+func get_unlocked_skills() -> Array:
+	# TODO: Convert job level to "max skills" count
+	return skills.slice(0, job.level - 1)
+
+
 func set_job(new_job: Job) -> void:
 	job = new_job
 	

@@ -289,8 +289,7 @@ func inflict_damage(damage: int) -> void:
 func activate_skills() -> Array:
 	var activated_skills := []
 	
-	for skill in $Job.skills:
-		
+	for skill in $Job.get_unlocked_skills():
 		# TODO: Add more rules for activation?
 		# If unit is not leading pincer?
 		if skill.area_of_effect == Enums.AreaOfEffect.EQUIP:

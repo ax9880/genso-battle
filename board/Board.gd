@@ -65,7 +65,7 @@ func _ready() -> void:
 		$DebugUnits.queue_free()
 	
 	enemy_units_node = $Enemies
-
+	
 	_connect_cell_signals()
 	
 	_assign_units_to_cells()

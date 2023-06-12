@@ -1,15 +1,16 @@
-[gd_resource type="Resource" load_steps=5 format=2]
+[gd_resource type="Resource" load_steps=6 format=2]
 
 [ext_resource path="res://jobs/Job.gd" type="Script" id=1]
 [ext_resource path="res://stats/SakiStats.tres" type="Resource" id=2]
 [ext_resource path="res://assets/icon.png" type="Texture" id=3]
 [ext_resource path="res://skills/resources/Punch.tres" type="Resource" id=4]
+[ext_resource path="res://skills/resources/Chomp.tres" type="Resource" id=5]
 
 [resource]
 script = ExtResource( 1 )
 stats = ExtResource( 2 )
-skills = [ ExtResource( 4 ) ]
+skills = [ ExtResource( 4 ), ExtResource( 5 ) ]
 job_name = "SAKI"
 portrait = ExtResource( 3 )
 unit_scene_path = ""
-level = 10
+level = 1

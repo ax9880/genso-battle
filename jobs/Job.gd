@@ -15,7 +15,8 @@ export(Texture) var portrait: Texture = null
 
 export(String, FILE, "*.tscn") var unit_scene_path: String = ""
 
-export(int) var level: int = 10
+# Between 1 and 3. Level determines how many skills are unlocked.
+export(int) var level: int = 1
 
 
 func to_dictionary() -> Dictionary:
