@@ -31,8 +31,9 @@ func _ready() -> void:
 			
 			unit_item.initialize(job)
 			
-			# TODO: Hide other button
-			unit_item.connect("change_button_clicked", self, "_on_UnitItemContainer_change_button_clicked", [job])
+			unit_item.hide_view_button()
+			
+			var _error = unit_item.connect("change_button_clicked", self, "_on_UnitItemContainer_change_button_clicked", [job])
 
 
 func _on_UnitItemContainer_change_button_clicked(job: Job) -> void:

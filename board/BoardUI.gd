@@ -9,6 +9,8 @@ var timer: Timer
 
 func _ready() -> void:
 	set_process(false)
+	
+	GameData.load_data()
 
 
 func _process(_delta: float) -> void:

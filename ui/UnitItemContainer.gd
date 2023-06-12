@@ -14,6 +14,10 @@ func initialize(job: Job) -> void:
 	texture_rect.texture = job.portrait
 
 
+func hide_view_button() -> void:
+	$ViewButton.hide()
+
+
 func _on_ViewButton_pressed() -> void:
 	emit_signal("view_button_clicked")
 

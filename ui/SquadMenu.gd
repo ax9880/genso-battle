@@ -34,13 +34,13 @@ func _show_active_units() -> void:
 		
 		unit_item.initialize(job)
 		
-		unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job, index])
-		unit_item.connect("view_button_clicked", self, "_on_UnitItem_view_button_clicked", [job, index])
+		unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job])
+		unit_item.connect("view_button_clicked", self, "_on_UnitItem_view_button_clicked", [job])
 	
 	$MarginContainer/VBoxContainer/ReturnButton.disabled = save_data.active_units.size() < 2
 
 
-func _on_UnitItem_change_button_clicked(job: Job, index: int) -> void:
+func _on_UnitItem_change_button_clicked(job: Job) -> void:
 	change_unit_menu = change_unit_menu_packed_scene.instance()
 	
 	scene_container.hide()
@@ -52,7 +52,7 @@ func _on_UnitItem_change_button_clicked(job: Job, index: int) -> void:
 	change_unit_menu.connect("return_pressed", self, "_on_ChangeUnitMenu_return_pressed")
 
 
-func _on_UnitItem_view_button_clicked(job: Job, index: int) -> void:	
+func _on_UnitItem_view_button_clicked(job: Job) -> void:
 	# TODO: Show unit view
 	# And reuse this screen for viewing enemy stats during battle
 	print("view")
@@ -72,32 +72,41 @@ func _on_ReturnButton_pressed() -> void:
 func _on_ChangeUnitMenu_job_changed(new_job: Job, old_job: Job) -> void:
 	var save_data: SaveData = GameData.save_data
 	
-	var index_of_old_job: int = save_data.jobs.find(old_job)
-	
-	assert(index_of_old_job != -1)
-	
-	#var index_of_new_job
-	var index: int = save_data.active_units.find(index_of_old_job)
-	
-	assert(index != -1)
-	
-	var index_of_new_job: int = save_data.jobs.find(new_job)
-	
-	assert(index_of_new_job != -1)
-	
-	save_data.active_units[index] = index_of_new_job
+	if old_job != null:
+		var index_of_old_job: int = save_data.jobs.find(old_job)
+		
+		assert(index_of_old_job != -1)
+		
+		#var index_of_new_job
+		var index: int = save_data.active_units.find(index_of_old_job)
+		
+		assert(index != -1)
+		
+		var index_of_new_job: int = save_data.jobs.find(new_job)
+		
+		assert(index_of_new_job != -1)
+		
+		save_data.active_units[index] = index_of_new_job
+	else:
+		var index_of_new_job: int = save_data.jobs.find(new_job)
+		assert(index_of_new_job != -1)
+		
+		save_data.active_units.push_back(index_of_new_job)
+		
+		assert(save_data.active_units.size() <= 6)
 	
 	_pop_change_unit_menu()
 
 
 func _on_ChangeUnitMenu_job_removed(job: Job) -> void:
-	var save_data: SaveData = GameData.save_data
-	
-	var index: int = save_data.jobs.find(job)
-	
-	assert(index != -1)
-	
-	save_data.active_units.erase(index)
+	if job != null:
+		var save_data: SaveData = GameData.save_data
+		
+		var index: int = save_data.jobs.find(job)
+		
+		assert(index != -1)
+		
+		save_data.active_units.erase(index)
 	
 	_pop_change_unit_menu()
 
@@ -107,4 +116,4 @@ func _on_ChangeUnitMenu_return_pressed() -> void:
 
 
 func _on_AddUnitButton_pressed() -> void:
-	pass # Replace with function body.
+	_on_UnitItem_change_button_clicked(null)
