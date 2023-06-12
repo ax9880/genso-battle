@@ -4,6 +4,7 @@
 [ext_resource path="res://skills/HealParticles.tscn" type="PackedScene" id=2]
 
 [node name="SkillEffect" type="Node2D"]
+z_index = 1
 script = ExtResource( 1 )
 heal_particles_packed_scene = ExtResource( 2 )
 
