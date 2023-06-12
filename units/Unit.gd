@@ -294,8 +294,9 @@ func activate_skills() -> Array:
 	return activated_skills
 
 
-func play_skill_activation_animation(activated_skills: Array) -> void:
+func play_skill_activation_animation(activated_skills: Array, layer_z_index: int) -> void:
 	$CanvasLayer/ActivatedSkillMarginContainer.play(activated_skills)
+	$CanvasLayer.z_index = layer_z_index
 
 
 func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef) -> void:

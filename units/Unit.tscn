@@ -5,7 +5,7 @@
 [ext_resource path="res://units/SwapArea2D.gd" type="Script" id=3]
 [ext_resource path="res://units/Job.gd" type="Script" id=4]
 [ext_resource path="res://jobs/YachieJob.tres" type="Resource" id=5]
-[ext_resource path="res://assets/ui/hp_bar_progress.png" type="Texture" id=6]
+[ext_resource path="res://assets/ui/red_bar_progress.png" type="Texture" id=6]
 [ext_resource path="res://assets/ui/hp_bar_bg.png" type="Texture" id=7]
 [ext_resource path="res://units/HpBar.gd" type="Script" id=8]
 [ext_resource path="res://units/ui/ActivatedSkillMarginContainer.tscn" type="PackedScene" id=10]
@@ -336,7 +336,6 @@ mouse_filter = 2
 texture = ExtResource( 22 )
 
 [node name="CanvasLayer" type="Node2D" parent="."]
-z_index = 2
 
 [node name="Container" type="MarginContainer" parent="CanvasLayer"]
 visible = false
@@ -404,6 +403,7 @@ bus = "Sound effects"
 
 [node name="DeathAudio" type="AudioStreamPlayer" parent="Sound"]
 stream = ExtResource( 19 )
+volume_db = 3.0
 bus = "Sound effects"
 
 [node name="PickUpAudio" type="AudioStreamPlayer" parent="Sound"]
