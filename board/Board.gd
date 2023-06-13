@@ -331,6 +331,8 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 		_activate_trap(selected_cell, active_unit)
 		
 		_highlight_possible_chains(active_unit)
+		
+		_update_trail(selected_cell)
 
 
 func _update_active_unit(unit: Unit) -> void:
@@ -514,6 +516,8 @@ func _stop_drag_timer() -> void:
 func _on_Unit_picked_up(unit: Unit) -> void:
 	_update_active_unit(unit)
 	
+	_update_trail(grid.get_cell_from_position(unit.position))
+	
 	unit.z_index += 1
 	
 	_highlight_possible_chains(unit)
@@ -553,6 +557,10 @@ func _stop_possible_chained_units_animations() -> void:
 	possible_chained_units.clear()
 
 
+func _update_trail(cell: Cell) -> void:
+	$Trail2D.add(cell.position)
+
+
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
 	
@@ -562,7 +570,6 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	yield(get_tree().create_timer(1.0), "timeout")
 	
 	var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit.position, skill, grid)
-	
 	var filtered_cells: Array = BoardUtils.filter_cells(unit, skill, target_cells)
 	
 	var skill_effect: Node2D = skill.effect_scene.instance()
@@ -577,6 +584,8 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	
 	yield(skill_effect, "effect_finished")
 	
+	unit.z_index = 0
+	
 	_check_for_dead_units()
 
 
@@ -584,6 +593,8 @@ func _on_Unit_released(unit: Unit) -> void:
 	_stop_drag_timer()
 	
 	_stop_possible_chained_units_animations()
+	
+	$Trail2D.clear()
 	
 	# TODO: Store original Z index ?
 	unit.z_index -= 1
@@ -636,6 +647,8 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 		var cell = grid.get_cell_from_position(unit.position)
 	
 	unit.z_index = 0
+	
+	_stop_possible_chained_units_animations()
 	
 	if has_active_unit_exited_cell:
 		_clear_active_cells()

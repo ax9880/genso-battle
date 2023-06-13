@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://board/Board.gd" type="Script" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
@@ -21,6 +21,7 @@
 [ext_resource path="res://board/Attacker.tscn" type="PackedScene" id=19]
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=20]
 [ext_resource path="res://ui/VictoryScreen.tscn" type="PackedScene" id=21]
+[ext_resource path="res://Trail2D.gd" type="Script" id=22]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 324, 8 )
@@ -50,11 +51,10 @@ __meta__ = {
 }
 
 [node name="Board" type="Node2D" parent="."]
-position = Vector2( 59, 125 )
+position = Vector2( 59, 128 )
 script = ExtResource( 1 )
 
 [node name="Grid" type="Node2D" parent="Board"]
-position = Vector2( -56, -240 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_lock_": true
@@ -62,7 +62,6 @@ __meta__ = {
 cell_packed_scene = ExtResource( 18 )
 
 [node name="Sprite" type="Sprite" parent="Board/Grid"]
-position = Vector2( 55, 239 )
 texture = ExtResource( 15 )
 centered = false
 __meta__ = {
@@ -70,7 +69,6 @@ __meta__ = {
 }
 
 [node name="Cells" type="Node2D" parent="Board/Grid"]
-position = Vector2( 56, 240 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -142,13 +140,33 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Trail2D" type="Line2D" parent="Board"]
+width = 50.0
+default_color = Color( 0.4, 0.501961, 1, 1 )
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+script = ExtResource( 22 )
+max_point_count = 40
+
+[node name="RemovalStartTimer" type="Timer" parent="Board/Trail2D"]
+wait_time = 0.75
+one_shot = true
+
 [node name="Enemies" type="Node2D" parent="Board"]
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="HaniwaOrbling" parent="Board/Enemies" instance=ExtResource( 16 )]
-position = Vector2( 242, 235 )
+position = Vector2( 257, 240 )
+
+[node name="HaniwaOrbling2" parent="Board/Enemies" instance=ExtResource( 16 )]
+position = Vector2( 354, 255 )
+
+[node name="HaniwaOrbling3" parent="Board/Enemies" instance=ExtResource( 16 )]
+position = Vector2( 131, 355 )
 
 [node name="Units" type="Node2D" parent="Board"]
 __meta__ = {
@@ -216,13 +234,13 @@ margin_bottom = 97.0
 custom_constants/separation = 16
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-margin_right = 564.0
+margin_right = 378.0
 margin_bottom = 77.0
 mouse_filter = 2
 size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
-margin_right = 564.0
+margin_right = 378.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 
@@ -234,9 +252,9 @@ texture = ExtResource( 6 )
 expand = true
 
 [node name="TextureProgress" type="TextureProgress" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 36.0
+margin_left = 40.0
 margin_top = 8.0
-margin_right = 236.0
+margin_right = 240.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 200, 0 )
 mouse_filter = 2
@@ -254,9 +272,9 @@ stretch_margin_bottom = 8
 [node name="Tween" type="Tween" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress"]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
-margin_top = 36.0
-margin_right = 564.0
-margin_bottom = 68.0
+margin_top = 40.0
+margin_right = 378.0
+margin_bottom = 72.0
 custom_constants/separation = -4
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -322,6 +340,15 @@ rect_min_size = Vector2( 32, 32 )
 texture = ExtResource( 7 )
 expand = true
 
+[node name="OptionButton" type="OptionButton" parent="MarginContainer/HBoxContainer"]
+margin_left = 394.0
+margin_right = 564.0
+margin_bottom = 77.0
+rect_min_size = Vector2( 170, 0 )
+text = "MANTENER"
+items = [ "Item 0", null, false, 0, null, "Item 1", null, false, 1, null ]
+selected = 0
+
 [node name="GiveUpButton" type="Button" parent="MarginContainer/HBoxContainer"]
 margin_left = 580.0
 margin_right = 680.0
@@ -351,6 +378,7 @@ margin_bottom = 960.0
 [connection signal="player_turn_started" from="Board" to="." method="_on_Board_player_turn_started"]
 [connection signal="victory" from="Board" to="." method="_on_Board_victory"]
 [connection signal="timeout" from="Board/DragTimer" to="Board" method="_on_DragTimer_timeout"]
+[connection signal="timeout" from="Board/Trail2D/RemovalStartTimer" to="Board/Trail2D" method="_on_RemovalStartTimer_timeout"]
 [connection signal="pincer_executed" from="Board/PincerExecutor" to="Board" method="_on_PincerExecutor_pincer_executed"]
 [connection signal="tree_exiting" from="Board/PincerExecutor" to="Board/PincerExecutor" method="_on_PincerExecutor_tree_exiting"]
 [connection signal="timeout" from="Board/PincerExecutor/SkillActivationTimer" to="Board/PincerExecutor" method="_on_SkillActivationTimer_timeout"]
