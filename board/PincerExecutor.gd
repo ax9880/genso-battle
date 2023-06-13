@@ -193,6 +193,8 @@ func _find_chain(unit: Unit, chains: Array) -> Array:
 
 
 func check_dead_units() -> void:
+	dead_units.clear()
+	
 	_add_dead_units_to_queue(allies, dead_units)
 	_add_dead_units_to_queue(enemies, dead_units)
 	
@@ -212,6 +214,8 @@ func _check_next_dead_unit() -> void:
 		# If 2x2, check neighbor cells
 		var cell: Cell = grid.get_cell_from_position(unit.position)
 		cell.unit = null
+		
+		print("Setting cell of unit %s to null" % unit.name)
 	else:
 		$DeathAnimationTimer.stop()
 		
