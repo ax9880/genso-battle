@@ -24,6 +24,8 @@ TURN_COUNT,Turns: {count}, Turnos: {count}
 CHANGE,Change,Cambiar
 CHOOSE,Choose,Elegir
 GIVE_UP,Give up,Rendirse
+VICTORY,VICTORY,VICTORIA
+DEFEAT,DEFEAT,DERROTA
 NONE,None,Ninguno
 EQUIP,Equip,Equipado
 PINCER,Pincer,Cerco
@@ -46,7 +48,7 @@ HANIWA_WARRIOR,Haniwa Warrior,Guerrero Haniwa
 HANIWA_ORBLING,Haniwa Orbling,Orbe Haniwa
 DRACORIN,Dracorin,Dracorín
 PAGE_1_LINE_1,This is the animal realm.,Este es el reino animal.
-PAGE_1_LINE_2,A place where the only the strong survive.,Un lugar donde solo los más fuertes sobreviven.
+PAGE_1_LINE_2,A place where only the strong survive.,Un lugar donde solo los más fuertes sobreviven.
 PAGE_2_LINE_1,"And this is a longer sentence—
 
 With a line break.","Y esta es una frase más larga—
