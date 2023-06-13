@@ -43,18 +43,18 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
 	var next_behavior: int = $AIController.get_next_behavior()
 	
-	match(next_behavior):
-		AIController.Behavior.USE_SKILL:
-			_find_skill_move(grid, allies, enemies)
-		AIController.Behavior.MOVE:
-			_find_cell_to_move_to(grid, allies, enemies)
-		_:
-			_find_pincer(grid, allies, enemies)
-
-
-func _find_skill_move(grid: Grid, allies: Array, enemies: Array) -> void:
 	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
 	
+	match(next_behavior):
+		AIController.Behavior.USE_SKILL:
+			_find_skill_move(grid, navigation_graph, allies, enemies)
+		AIController.Behavior.MOVE:
+			_move_to_cell_or_enemy(grid, navigation_graph, allies, enemies)
+		_:
+			_find_pincer(grid, navigation_graph, allies, enemies)
+
+
+func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
 	selected_skill = $Job.skills[random.randi_range(0, $Job.skills.size() - 1)]
 	
 	# Evaluate positions (requires having the whole graph)
@@ -64,11 +64,11 @@ func _find_skill_move(grid: Grid, allies: Array, enemies: Array) -> void:
 	
 	# Pick a random result to make it less predictable
 	# TODO: Add constants / export vars
-	if results.size() > 5 and random.randf() < 0.4:
+	if results.size() > 3 and random.randf() < 0.4:
 		top_result = results[random.randi_range(0, 3)]
 	
 	if top_result.damage_dealt == 0:
-		_find_cell_to_move_to(grid, allies, enemies)
+		_find_cell_close_to_enemy(grid, navigation_graph, allies, enemies)
 	else:
 		path = BoardUtils.find_path(grid, navigation_graph, position, top_result.cell)
 		
@@ -87,10 +87,14 @@ func _use_skill(skill: Skill) -> void:
 	else:
 		emit_signal("action_done", self)
 
+func _move_to_cell_or_enemy(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
+	if random.randf() < 0.8:
+		_find_cell_close_to_enemy(grid, navigation_graph, allies, enemies)
+	else:
+		_find_cell_to_move_to(grid, navigation_graph, allies, enemies)
 
-func _find_cell_to_move_to(grid: Grid, allies: Array, enemies: Array) -> void:
-	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
-	
+
+func _find_cell_to_move_to(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
 	var next_cell: Cell = navigation_graph.keys()[random.randi_range(0, navigation_graph.size() - 1)]
 	
 	path = BoardUtils.find_path(grid, navigation_graph, position, next_cell)
@@ -98,10 +102,8 @@ func _find_cell_to_move_to(grid: Grid, allies: Array, enemies: Array) -> void:
 	_start_moving()
 
 
-func _find_pincer(grid: Grid, allies: Array, enemies: Array) -> void:
+func _find_pincer(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
 	var possible_pincers: Array = $AIController.find_possible_pincers(self, grid, faction, allies)
-	
-	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
 	
 	var next_cell: Cell = null
 	
@@ -116,16 +118,16 @@ func _find_pincer(grid: Grid, allies: Array, enemies: Array) -> void:
 	if next_cell == null:
 		# Random chance to use a skill if a pincer is not found
 		if random.randf() < 0.4:
-			_find_skill_move(grid, allies, enemies)
+			_find_skill_move(grid, navigation_graph, allies, enemies)
 		else:
-			_find_cell_close_to_enemy(grid, allies, enemies, navigation_graph)
+			_find_cell_close_to_enemy(grid, navigation_graph, allies, enemies)
 	else:
 		path = BoardUtils.find_path(grid, navigation_graph, position, next_cell)
 		
 		_start_moving()
 
 
-func _find_cell_close_to_enemy(grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary) -> void:
+func _find_cell_close_to_enemy(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
 	var candidate_cells: Array = $AIController.find_cells_close_to_enemies(self, grid, faction, enemies)
 	
 	var next_cell: Cell = null
@@ -137,7 +139,7 @@ func _find_cell_close_to_enemy(grid: Grid, allies: Array, enemies: Array, naviga
 			break
 	
 	if next_cell == null:
-		_find_cell_to_move_to(grid, allies, enemies)
+		_find_cell_to_move_to(grid, navigation_graph, allies, enemies)
 	else:
 		path = BoardUtils.find_path(grid, navigation_graph, position, next_cell)
 		
@@ -151,7 +153,7 @@ func _start_moving() -> void:
 		# cell is determined from the position of the unit (this is a problem of
 		# the unit not having a reference to its cell)
 		return
-
+	
 	emit_signal("started_moving", self)
 	
 	self.current_state = STATE.PICKED_UP
