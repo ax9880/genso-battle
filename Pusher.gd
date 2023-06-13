@@ -47,6 +47,10 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 			cell_to_move_to.unit = unit
 			
 			unit.push_to_cell(cell_to_move_to.position)
+			
+			# TODO: Use setter in cell to activate trap when unit is set?
+			if cell_to_move_to.trap != null:
+				cell_to_move_to.trap.activate(unit)
 
 
 func _find_first_free_cell(start_cell: Cell) -> Cell:

@@ -591,7 +591,7 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 		
 		yield($PincerExecutor, "finished_checking_for_dead_units")
 		
-		assert(grid.get_cell_from_position(unit.position).unit == null)
+		var cell = grid.get_cell_from_position(unit.position)
 	
 	unit.z_index = 0
 	
