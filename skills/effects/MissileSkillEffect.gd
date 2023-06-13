@@ -5,9 +5,9 @@ export(PackedScene) var hit_effect_packed_scene: PackedScene
 
 
 func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
-	for cell in target_cells:
-		if cell.unit == unit:
-			_on_ParticleArc_target_reached(unit, skill, cell)
+	for target_cell in target_cells:
+		if target_cell.unit == unit:
+			_on_ParticleArc_target_reached(unit, skill, target_cell)
 		else:
 			var particle_arc: Node2D = particle_arc_scene.instance()
 			
@@ -15,20 +15,20 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 			
 			var _error = particle_arc.connect("target_reached", self,
 							"_on_ParticleArc_target_reached",
-							[unit, skill, cell])
+							[unit, skill, target_cell])
 			
-			particle_arc.play(cell.position, unit.position)
+			particle_arc.play(target_cell.position, unit.position)
 
 
-func _on_ParticleArc_target_reached(unit: Unit, skill: Skill, cell: Cell) -> void:
+func _on_ParticleArc_target_reached(unit: Unit, skill: Skill, target_cell: Cell) -> void:
 	var hit_effect: Node2D = hit_effect_packed_scene.instance()
 	
 	# Hit effect has to free automatically
-	cell.add_child(hit_effect)
+	target_cell.add_child(hit_effect)
 	
 	hit_effect.play()
 	
-	_apply_skill(unit, skill, cell.unit)
+	_apply_skill(unit, skill, target_cell)
 	
 	_update_count(unit)
 

@@ -16,11 +16,26 @@ var targets_affected: int = 0
 var absorbed_damage: int = 0
 var max_absorbed_damage: int = 0
 
+var pusher: Pusher
+
+# Cell of the unit that is using the current skill
+var start_cell: Cell
+
+# Array<Unit> of units so that units are not affected by the skill or pushed several times
+# by the same skill (e.g. as a skill is applied over a row and the unit is pushed
+# to each cell, but only in the direction in which the cells are evaluated).
+var affected_units: Array
+
 signal effect_finished
 
 
-func start(unit: Unit, skill: Skill, target_cells: Array) -> void:
+func start(unit: Unit, skill: Skill, target_cells: Array, _start_cell: Cell, _pusher: Pusher) -> void:
 	target_count = target_cells.size()
+	
+	pusher = _pusher
+	start_cell = _start_cell
+	
+	affected_units = []
 	
 	if target_count == 0:
 		call_deferred("emit_signal", "effect_finished")
@@ -49,8 +64,12 @@ func _build_heal_particles(unit: Unit) -> void:
 	particles.emitting = true
 
 
-func _apply_skill(unit: Unit, skill: Skill, target_unit: Unit) -> void:
-	if target_unit != null:
+func _apply_skill(unit: Unit, skill: Skill, target_cell: Cell) -> void:
+	var target_unit: Unit = target_cell.unit
+	
+	if target_unit != null and not target_unit in affected_units:
+		affected_units.push_back(target_unit)
+		
 		var callback = funcref(self, "on_damage_absorbed")
 		
 		target_unit.apply_skill(unit, skill, callback)
@@ -60,6 +79,9 @@ func _apply_skill(unit: Unit, skill: Skill, target_unit: Unit) -> void:
 		else:
 			# TODO: For missile skill, show the other effect
 			pass
+		
+		if skill.is_pusher:
+			pusher.push_unit(start_cell, target_cell)
 
 
 func on_damage_absorbed(damage: int) -> void:

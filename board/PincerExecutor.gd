@@ -31,6 +31,8 @@ var units_removed_from_play := []
 var grid: Grid
 var current_z_index: int = 1
 
+var pusher: Pusher = null
+
 # Finished executing a pincer
 signal skill_activation_phase_finished
 signal attack_skill_phase_finished
@@ -171,7 +173,9 @@ func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 		
 		var _error = skill_effect.connect("effect_finished", self, "_on_SkillEffect_effect_finished", [skill_queue, finish_signal])
 		
-		skill_effect.start(next_skill.unit, next_skill.skill, filtered_cells)
+		var start_cell: Cell = grid.get_cell_from_position(next_skill.unit.position)
+		
+		skill_effect.start(next_skill.unit, next_skill.skill, filtered_cells, start_cell, pusher)
 	else:
 		emit_signal(finish_signal)
 

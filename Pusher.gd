@@ -1,5 +1,8 @@
 extends Node
 
+class_name Pusher
+
+
 # Dictionary<Direction, Direction>
 const OPPOSITE_DIRECTION := {
 	Cell.DIRECTION.UP: Cell.DIRECTION.DOWN,

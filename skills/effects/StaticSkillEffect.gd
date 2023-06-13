@@ -20,9 +20,9 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 		if activation_frame > 0:
 			var _error = animated_sprite.connect("frame_changed", self,
 							"_on_AnimatedSprite_frame_changed",
-							[animated_sprite, unit, skill, cell.unit])
+							[animated_sprite, unit, skill, cell])
 		else:
-			_apply_skill(unit, skill, cell.unit)
+			_apply_skill(unit, skill, cell)
 		
 		var _error = animated_sprite.connect("animation_finished", self,
 						"_on_AnimatedSprite_animation_finished",
@@ -32,9 +32,9 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 		animated_sprite.play()
 
 
-func _on_AnimatedSprite_frame_changed(animated_sprite: AnimatedSprite, unit: Unit, skill: Skill, target_unit: Unit) -> void:
+func _on_AnimatedSprite_frame_changed(animated_sprite: AnimatedSprite, unit: Unit, skill: Skill, target_cell: Cell) -> void:
 	if animated_sprite.frame == activation_frame:
-		_apply_skill(unit, skill, target_unit)
+		_apply_skill(unit, skill, target_cell)
 
 
 func _on_AnimatedSprite_animation_finished(unit: Unit) -> void:

@@ -53,6 +53,8 @@ signal defeat
 func _ready() -> void:
 	save_data = GameData.save_data
 	
+	$PincerExecutor.pusher = $Pusher
+	
 	if can_use_debug_units:
 		player_units_node = $DebugUnits
 		
@@ -526,7 +528,12 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	var skill_effect: Node2D = skill.effect_scene.instance()
 	
 	add_child(skill_effect)
-	skill_effect.start(unit, skill, filtered_cells)
+	
+	var start_cell: Cell = grid.get_cell_from_position(unit.position)
+	
+	assert(start_cell != null)
+	
+	skill_effect.start(unit, skill, filtered_cells, start_cell, $Pusher)
 	
 	yield(skill_effect, "effect_finished")
 	
@@ -536,6 +543,7 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 func _on_Unit_released(unit: Unit) -> void:
 	_stop_drag_timer()
 	
+	# TODO: Store original Z index ?
 	unit.z_index -= 1
 	
 	var selected_cell: Cell = _find_closest_cell(unit.position)
@@ -584,6 +592,8 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 		yield($PincerExecutor, "finished_checking_for_dead_units")
 		
 		assert(grid.get_cell_from_position(unit.position).unit == null)
+	
+	unit.z_index = 0
 	
 	if has_active_unit_exited_cell:
 		_clear_active_cells()
