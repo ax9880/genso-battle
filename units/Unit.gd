@@ -18,6 +18,9 @@ const INVALID_FACTION: int = -1
 const PLAYER_FACTION: int = 1
 const ENEMY_FACTION: int = 2
 
+const WEAPON_ADVANTAGE: float = 2.0
+const WEAPON_DISADVANTAGE: float = 1.0
+
 ## Exports
 
 export(PackedScene) var damage_numbers_packed_scene: PackedScene
@@ -218,6 +221,8 @@ func release() -> void:
 func _load_job_textures() -> void:
 	$Control/WeaponType.texture = load(Enums.WEAPON_TYPE_TEXTURES[$Job.job.stats.weapon_type])
 	$Sprite/Icon.texture = $Job.job.portrait
+	
+	$CanvasLayer/UnitName.text = tr($Job.job.job_name)
 
 
 ## Setters
@@ -365,11 +370,11 @@ func calculate_damage(attacker_stats: StartingStats,
 	var damage: float = 0
 	
 	if weapon_type != Enums.WeaponType.STAFF:
-		damage = 1.395 * power * pow(attacker_stats.attack, 1.7) / pow(defender_stats.defense, 0.7)
+		damage = 1.57 * power * attacker_stats.attack * attacker_stats.attack / defender_stats.defense
 		
 		damage = damage * get_weapon_type_advantage(attacker_stats.weapon_type, defender_stats.weapon_type)
 	else:
-		damage = 1.5 * power * pow(attacker_stats.spiritual_attack, 1.7) / pow(defender_stats.spiritual_defense, 0.7)
+		damage = 1.8 * power * attacker_stats.attack * attacker_stats.attack / defender_stats.defense
 		
 		damage = damage * (1 - get_attribute_resistance(defender_stats, attribute, defender_stats.attribute))
 	
@@ -379,11 +384,10 @@ func calculate_damage(attacker_stats: StartingStats,
 func get_weapon_type_advantage(attacker_weapon_type, defender_weapon_type) -> float:
 	var disadvantaged_weapon_type = Enums.WEAPON_RELATIONSHIPS.get(attacker_weapon_type)
 	
-	# TODO: Move numbers to constants
 	if disadvantaged_weapon_type != null and disadvantaged_weapon_type == defender_weapon_type:
-		return 2.0
+		return WEAPON_ADVANTAGE
 	else:
-		return 1.0
+		return WEAPON_DISADVANTAGE
 
 
 func get_attribute_resistance(defender_stats: StartingStats, attacker_attribute, defender_attribute) -> float:
