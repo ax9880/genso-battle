@@ -16,6 +16,7 @@
 collision_layer = 8
 collision_mask = 1
 script = ExtResource( 2 )
+swap_velocity_pixels_per_second = 700.0
 is_controlled_by_player = false
 turn_counter = 1
 
@@ -67,6 +68,6 @@ stream = ExtResource( 3 )
 
 [node name="AIController" type="Node" parent="." index="11"]
 script = ExtResource( 9 )
-behaviors = [ 2, 2, 2 ]
+behaviors = [ 1, 1, 1 ]
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
