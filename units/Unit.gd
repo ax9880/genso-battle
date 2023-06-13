@@ -14,6 +14,11 @@ enum STATE {
 	SWAPPING = 3
 }
 
+enum Size {
+	SINGLE_1X1,
+	DOUBLE_2X2
+}
+
 const INVALID_FACTION: int = -1
 const PLAYER_FACTION: int = 1
 const ENEMY_FACTION: int = 2
@@ -26,6 +31,8 @@ const WEAPON_DISADVANTAGE: float = 1.0
 export(PackedScene) var damage_numbers_packed_scene: PackedScene
 export(PackedScene) var death_effect_packed_scene: PackedScene
 
+export(Size) var size: int = Size.SINGLE_1X1
+
 export var velocity_pixels_per_second: float = 10.0
 export var snap_velocity_pixels_per_second: float = 200.0
 export var swap_velocity_pixels_per_second: float = 500.0
@@ -37,6 +44,7 @@ export var max_velocity_pixels_per_second: float = 2048.0 # 2048
 # Proportional control constant
 export var kp: float = 1.4
 
+export(bool) var is_click_to_drag: bool = true
 export(bool) var is_controlled_by_player: bool = true
 
 ## Onready
@@ -69,7 +77,7 @@ func _ready() -> void:
 	
 	_load_job_textures()
 	
-	if not is_controlled_by_player:
+	if not is_controlled_by_player or not is_click_to_drag:
 		set_process_input(false)
 
 
@@ -81,8 +89,9 @@ func _physics_process(_delta: float) -> void:
 			if is_controlled_by_player:
 				_move_towards_mouse()
 				
-				if Input.is_action_just_released("ui_accept"):
-					release()
+				if is_click_to_drag:
+					if Input.is_action_just_released("ui_accept"):
+						release()
 
 
 func appear() -> void: 
@@ -199,9 +208,8 @@ func _move_towards_mouse() -> void:
 
 
 func _input(event: InputEvent):
-	if event.is_action_released("ui_select"):
-		#release()
-		pass
+	if not is_click_to_drag and event.is_action_released("ui_select"):
+		release()
 
 
 func snap_to_grid(cell_origin: Vector2) -> void:
@@ -435,6 +443,10 @@ func is_dead() -> bool:
 
 func is_alive() -> bool:
 	return not is_dead()
+
+
+func is2x2() -> bool:
+	return size == Size.DOUBLE_2X2
 
 
 ## Animation playback
