@@ -7,8 +7,8 @@
 script = ExtResource( 1 )
 skill_name = "HEALING_AURA"
 skill_type = 1
-area_of_effect = 4
-area_of_effect_size = 2
+area_of_effect = 3
+area_of_effect_size = 1
 activation_rate = 0.3
 is_pusher = false
 primary_power = 1.0

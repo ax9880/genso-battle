@@ -5,11 +5,12 @@
 
 [resource]
 script = ExtResource( 1 )
-skill_name = "CHOMP_SKILL"
+skill_name = "CHOMP"
 skill_type = 0
 area_of_effect = 2
 area_of_effect_size = 1
 activation_rate = 1.0
+is_pusher = false
 primary_power = 3.0
 primary_weapon_type = 0
 primary_attribute = 0

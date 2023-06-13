@@ -7,12 +7,12 @@
 script = ExtResource( 1 )
 skill_name = "PUNCH"
 skill_type = 0
-area_of_effect = 3
+area_of_effect = 2
 area_of_effect_size = 1
-activation_rate = 0.0
+activation_rate = 0.2
 is_pusher = true
-primary_power = 1.0
-primary_weapon_type = 0
+primary_power = 1.5
+primary_weapon_type = 1
 primary_attribute = 0
 secondary_power = 0.0
 secondary_weapon_type = 1

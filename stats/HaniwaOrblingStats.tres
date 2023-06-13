@@ -4,16 +4,16 @@
 
 [resource]
 script = ExtResource( 1 )
-health = 1350
-attack = 45
-spiritual_attack = 27
-defense = 46
-spiritual_defense = 32
-status_ailment_vulnerability = 0.3
+health = 600
+attack = 37
+spiritual_attack = 2
+defense = 60
+spiritual_defense = 100
+status_ailment_vulnerability = 0.0
 status_ailment_vulnerabilities = {
 }
 same_attribute_resistance = 0.0
 attribute = 0
 weapon_type = 0
-max_turn_counter = 3
-movement_range = 5
+max_turn_counter = 2
+movement_range = 6

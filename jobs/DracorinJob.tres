@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=5 format=2]
+
+[ext_resource path="res://jobs/Job.gd" type="Script" id=1]
+[ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=2]
+[ext_resource path="res://skills/resources/SweepRow.tres" type="Resource" id=3]
+[ext_resource path="res://stats/DracorinStats.tres" type="Resource" id=4]
+
+[resource]
+script = ExtResource( 1 )
+stats = ExtResource( 4 )
+skills = [ ExtResource( 3 ) ]
+job_name = "DRACORIN"
+portrait = ExtResource( 2 )
+unit_scene_path = "res://units/Enemy.tscn"
+level = 1
