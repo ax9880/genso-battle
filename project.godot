@@ -74,6 +74,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://stats/StartingStats.gd"
 }, {
+"base": "Node2D",
+"class": "Trap",
+"language": "GDScript",
+"path": "res://Trap.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Unit",
 "language": "GDScript",
@@ -93,6 +98,7 @@ _global_script_class_icons={
 "Skill": "",
 "SkillEffect": "",
 "StartingStats": "",
+"Trap": "",
 "Unit": ""
 }
 

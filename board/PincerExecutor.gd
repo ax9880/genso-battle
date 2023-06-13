@@ -206,7 +206,7 @@ func _check_next_dead_unit() -> void:
 	else:
 		$DeathAnimationTimer.stop()
 		
-		emit_signal("finished_checking_for_dead_units")
+		call_deferred("emit_signal", "finished_checking_for_dead_units")
 
 
 func _add_dead_units_to_queue(units: Array, queue: Array) -> void:

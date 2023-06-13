@@ -293,6 +293,10 @@ func get_stats() -> StartingStats:
 	return $Job.current_stats
 
 
+func get_max_health() -> int:
+	return $Job.base_stats.health
+
+
 func calculate_attack_damage(attacker_stats: StartingStats) -> int:
 	var damage: int = calculate_damage(attacker_stats, get_stats(), 1.0, attacker_stats.weapon_type, attacker_stats.attribute)
 	

@@ -68,8 +68,9 @@ func _ready() -> void:
 	
 	_connect_cell_signals()
 	
-	_assign_units_to_cells()
+	_assign_traps_to_cells()
 	_assign_enemies_to_cells()
+	_assign_units_to_cells()
 	
 	_disable_player_units()
 	
@@ -103,6 +104,30 @@ func _connect_cell_signals() -> void:
 			_error = cell.connect("area_exited", self, "_on_Cell_area_exited", [cell])
 
 
+func _assign_traps_to_cells() -> void:
+	for trap in $Traps.get_children():
+		var cell_coordinates: Vector2 = grid.get_cell_coordinates(trap.position)
+		
+		trap.position = grid.cell_coordinates_to_cell_origin(cell_coordinates)
+		
+		grid.get_cell_from_coordinates(cell_coordinates).trap = trap
+
+
+func _assign_enemies_to_cells() -> void:
+	for enemy in enemy_units_node.get_children():
+		_assign_unit_to_cell(enemy)
+		
+		enemy.connect("action_done", self, "_on_Enemy_action_done")
+		enemy.connect("started_moving", self, "_on_Unit_picked_up")
+		enemy.connect("use_skill", self, "_on_Enemy_use_skill")
+		enemy.connect("released", self, "_on_Unit_released")
+		
+		if enemy.is_controlled_by_player:
+			enemy.connect("picked_up", self, "_on_Unit_picked_up")
+		
+		enemy.faction = Unit.ENEMY_FACTION
+
+
 func _assign_units_to_cells() -> void:
 	for unit in player_units_node.get_children():
 		_assign_unit_to_cell(unit)
@@ -113,20 +138,6 @@ func _assign_units_to_cells() -> void:
 		
 		unit.faction = Unit.PLAYER_FACTION
 
-
-func _assign_enemies_to_cells() -> void:
-	for enemy in enemy_units_node.get_children():
-		_assign_unit_to_cell(enemy)
-		
-		enemy.connect("action_done", self, "_on_Enemy_action_done")
-		enemy.connect("started_moving", self, "_on_Enemy_started_moving")
-		enemy.connect("use_skill", self, "_on_Enemy_use_skill")
-		
-		if enemy.is_controlled_by_player:
-			enemy.connect("picked_up", self, "_on_Unit_picked_up")
-			enemy.connect("released", self, "_on_Unit_released")
-		
-		enemy.faction = Unit.ENEMY_FACTION
 
 
 func _assign_unit_to_cell(unit: Unit) -> void:
@@ -307,6 +318,8 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 			printerr("Warning! Jumped more than 1 tile")
 		
 		_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
+		
+		_activate_trap(selected_cell, active_unit)
 
 
 func _update_active_unit(unit: Unit) -> void:
@@ -353,6 +366,14 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 			printerr("Swapped with an enemy")
 		
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
+
+
+func _activate_trap(cell: Cell, active_unit: Unit) -> void:
+	if cell.trap != null:
+		cell.trap.activate(active_unit)
+		
+		if active_unit.is_dead():
+			active_unit.release()
 
 
 func _execute_next_pincer() -> void:
@@ -490,10 +511,6 @@ func _on_Unit_picked_up(unit: Unit) -> void:
 				other_unit.disable_selection_area()
 
 
-func _on_Enemy_started_moving(enemy: Unit) -> void:
-	_update_active_unit(enemy)
-
-
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
 	
@@ -540,6 +557,10 @@ func _on_Unit_released(unit: Unit) -> void:
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if current_turn == Turn.PLAYER:
+		$PincerExecutor.check_dead_units()
+		
+		yield($PincerExecutor, "finished_checking_for_dead_units")
+		
 		if has_active_unit_exited_cell:
 			_clear_active_cells()
 			
@@ -558,9 +579,15 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	if unit.is_alive():
 		assert(grid.get_cell_from_position(unit.position).unit == unit)
 	else:
+		$PincerExecutor.check_dead_units()
+		
+		yield($PincerExecutor, "finished_checking_for_dead_units")
+		
 		assert(grid.get_cell_from_position(unit.position).unit == null)
 	
 	if has_active_unit_exited_cell:
+		_clear_active_cells()
+		
 		var pincers: Array = $Pincerer.find_pincers(grid, unit)
 		
 		pincer_queue = _filter_pincers_with_active_unit(pincers, unit)

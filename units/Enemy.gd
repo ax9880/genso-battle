@@ -188,6 +188,9 @@ func reset_turn_counter() -> void:
 
 
 func release() -> void:
+	if not path.empty() and $Tween.is_active():
+		$Tween.stop(self, ":position")
+	
 	.release()
 	
 	if is_controlled_by_player:

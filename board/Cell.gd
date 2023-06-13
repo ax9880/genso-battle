@@ -16,6 +16,9 @@ var coordinates: Vector2 = Vector2.ZERO
 # Unit inside this cell.
 var unit: Unit = null
 
+# Trap inside this cell
+var trap: Trap = null
+
 # Array of Cell. Only valid, non-null neighbors
 var neighbors: Array = []
 
