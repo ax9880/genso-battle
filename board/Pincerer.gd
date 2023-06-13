@@ -231,6 +231,8 @@ func _find_chains(grid: Grid, pincering_units: Array) -> Dictionary:
 	var chain_families: Dictionary = {}
 	
 	for pincering_unit in pincering_units:
+		assert(pincering_unit != null)
+		
 		chain_families[pincering_unit] = []
 	
 	for pincering_unit in pincering_units:

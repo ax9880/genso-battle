@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://assets/sfx/ceramic_drag_1.wav" type="AudioStream" id=9]
 [ext_resource path="res://units/ui/ActivatedSkillMarginContainer.tscn" type="PackedScene" id=10]
 [ext_resource path="res://units/ui/DamageNumbers.tscn" type="PackedScene" id=11]
+[ext_resource path="res://assets/ui/unit_glow.png" type="Texture" id=12]
 [ext_resource path="res://units/ui/DeathParticles.tscn" type="PackedScene" id=13]
 [ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=14]
 [ext_resource path="res://assets/fonts/Exo2-Regular.ttf" type="DynamicFontData" id=15]
@@ -59,6 +60,18 @@ tracks/2/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Sprite:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
 }
 
 [sub_resource type="Animation" id=5]
@@ -196,6 +209,23 @@ tracks/1/keys = {
 "values": [ true, false ]
 }
 
+[sub_resource type="Animation" id=13]
+resource_name = "scale up and down"
+length = 0.6
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.1, 1.1 ), Vector2( 1, 1 ) ]
+}
+
 [sub_resource type="Animation" id=9]
 resource_name = "shake"
 length = 0.3
@@ -240,6 +270,7 @@ anims/RESET = SubResource( 7 )
 anims/appear = SubResource( 5 )
 anims/death = SubResource( 6 )
 "anims/hide name" = SubResource( 12 )
+"anims/scale up and down" = SubResource( 13 )
 anims/shake = SubResource( 9 )
 
 [node name="Tween" type="Tween" parent="."]
@@ -259,6 +290,11 @@ texture = ExtResource( 21 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Glow" type="Sprite" parent="Sprite"]
+visible = false
+show_behind_parent = true
+texture = ExtResource( 12 )
 
 [node name="Icon" type="Sprite" parent="Sprite"]
 texture = ExtResource( 23 )
@@ -453,3 +489,5 @@ bus = "Sound effects"
 [connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
 [connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]
 [connection signal="input_event" from="SelectionArea2D" to="." method="_on_SelectionArea2D_input_event"]
+[connection signal="mouse_entered" from="SelectionArea2D" to="." method="_on_SelectionArea2D_mouse_entered"]
+[connection signal="mouse_exited" from="SelectionArea2D" to="." method="_on_SelectionArea2D_mouse_exited"]

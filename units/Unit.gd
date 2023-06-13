@@ -117,6 +117,27 @@ func is_death_animation_playing() -> bool:
 	return $AnimationPlayer.current_animation == "death"
 
 
+func play_scale_and_and_down_animation() -> void:
+	$Tween.remove($Sprite, ":scale")
+	
+	$AnimationPlayer.play("scale up and down")
+
+
+func stop_scale_and_and_down_animation() -> void:
+	assert($AnimationPlayer.current_animation == "scale up and down")
+	
+	$AnimationPlayer.stop(true)
+	
+	$Tween.remove($Sprite, ":scale")
+	
+	$Tween.interpolate_property($Sprite, "scale",
+		$Sprite.scale, Vector2.ONE,
+		0.15,
+		Tween.TRANS_LINEAR)
+	
+	$Tween.start()
+
+
 func move_to_new_cell(target_position: Vector2) -> void:
 	tween.remove(self, ":position")
 	
@@ -165,6 +186,8 @@ func disable_selection_area() -> void:
 	Utils.disable_object($SelectionArea2D/CollisionShape2D)
 	
 	$SelectionArea2D.monitorable = false
+	
+	$Sprite/Glow.hide()
 
 
 func _move_towards_mouse() -> void:
@@ -451,3 +474,11 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 		STATE.SWAPPING:
 			if key == ":position":
 				self.current_state = STATE.IDLE
+
+
+func _on_SelectionArea2D_mouse_entered():
+	$Sprite/Glow.show()
+
+
+func _on_SelectionArea2D_mouse_exited():
+	$Sprite/Glow.hide()

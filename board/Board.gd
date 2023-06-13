@@ -29,6 +29,8 @@ var enemy_queue := []
 # Array<Pincer>
 var pincer_queue := []
 
+var possible_chained_units := []
+
 var current_turn: int = Turn.NONE
 
 var player_units_node: Node2D
@@ -82,6 +84,8 @@ func _ready() -> void:
 
 
 func _load_player_units() -> void:
+	var discarded_units := []
+	
 	for i in range(player_units_node.get_child_count()):
 		# Load the first X active units
 		if i < save_data.active_units.size():
@@ -94,8 +98,11 @@ func _load_player_units() -> void:
 			# If there are more units than active units then we free the rest
 			var discarded_unit: Unit = player_units_node.get_child(i)
 			
-			player_units_node.remove_child(discarded_unit)
-			discarded_unit.queue_free()
+			discarded_units.append(discarded_unit)
+	
+	for unit in discarded_units:
+		player_units_node.remove_child(unit)
+		unit.queue_free()
 
 
 # Connect body enter and exit signals.
@@ -322,6 +329,8 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 		_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
 		
 		_activate_trap(selected_cell, active_unit)
+		
+		_highlight_possible_chains(active_unit)
 
 
 func _update_active_unit(unit: Unit) -> void:
@@ -507,10 +516,41 @@ func _on_Unit_picked_up(unit: Unit) -> void:
 	
 	unit.z_index += 1
 	
+	_highlight_possible_chains(unit)
+	
 	if current_turn == Turn.PLAYER:
 		for other_unit in player_units_node.get_children():
 			if other_unit != unit:
 				other_unit.disable_selection_area()
+
+
+func _highlight_possible_chains(unit: Unit) -> void:
+	_stop_possible_chained_units_animations()
+	
+	var chain_families: Dictionary = {}
+	
+	chain_families[unit] = []
+	var faction: int = unit.faction
+	
+	$Pincerer._find_chain(active_unit_current_cell, Cell.DIRECTION.RIGHT, chain_families, faction)
+	$Pincerer._find_chain(active_unit_current_cell, Cell.DIRECTION.LEFT, chain_families, faction)
+	$Pincerer._find_chain(active_unit_current_cell, Cell.DIRECTION.UP, chain_families, faction)
+	$Pincerer._find_chain(active_unit_current_cell, Cell.DIRECTION.DOWN, chain_families, faction)
+	
+	for chains in chain_families.values():
+		for chain in chains:
+			for unit in chain:
+				possible_chained_units.push_back(unit)
+	
+	for unit in possible_chained_units:
+		unit.play_scale_and_and_down_animation()
+
+
+func _stop_possible_chained_units_animations() -> void:
+	for unit in possible_chained_units:
+		unit.stop_scale_and_and_down_animation()
+	
+	possible_chained_units.clear()
 
 
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
@@ -542,6 +582,8 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 
 func _on_Unit_released(unit: Unit) -> void:
 	_stop_drag_timer()
+	
+	_stop_possible_chained_units_animations()
 	
 	# TODO: Store original Z index ?
 	unit.z_index -= 1
