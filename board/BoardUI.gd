@@ -70,7 +70,7 @@ func _on_DefeatScreen_try_again_button_pressed() -> void:
 
 
 func _on_VictoryScreen_continue_button_pressed() -> void:
-	pass # Replace with function body.
+	get_tree().change_scene("res://ui/PreBattleMenu.tscn")
 
 
 func _on_GiveUpButton_pressed() -> void:
