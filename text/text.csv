@@ -22,8 +22,24 @@ TRY_AGAIN,Try again,Intentar de nuevo
 TOTAL_DRAG_TIME,Total drag time: {time} s,Tiempo de arrastre: {time} s
 TURN_COUNT,Turns: {count}, Turnos: {count}
 CHANGE,Change,Cambiar
+CHOOSE,Choose,Elegir
+GIVE_UP,Give up,Rendirse
+NONE,None,Ninguno
+EQUIP,Equip,Equipado
+PINCER,Pincer,Cerco
+AREA_X,Area,Area
+CROSS_X,Cross,Cruz
+SELF,Self,Mismo/a
+HORIZONTAL_X,Horizontal,Horizontal
+VERTICAL_X,Vertical,Vertical
+ROWS_X,Rows,Filas
+COLUMNS_X,Columns,Columnas
+CHAIN,Chain,Cadena
+ALL,All,Todo/as
 CHOMP_SKILL,Chomp,Engullir
 HEAL,Heal,Curar
+PUNCH,Punch,Puño
+HEALING_AURA,Healing aura,Aura curativa
 HANIWA_WARRIOR,Haniwa Warrior,Guerrero Haniwa
 PAGE_1_LINE_1,This is the animal realm.,Este es el reino animal.
 PAGE_1_LINE_2,A place where the only the strong survive.,Un lugar donde solo los más fuertes sobreviven.
