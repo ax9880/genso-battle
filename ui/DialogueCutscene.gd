@@ -9,12 +9,12 @@ onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/S
 # TODO: Load from a JSON?
 var lines: Array = [
 	{"speaker": "YACHIE", "line": "Hello, I am Yachie."},
-	{"speaker": "SAKI", "line": "Hello, Yachie, I am Saki. How have you been?"},
-	{"speaker": "YACHIE", "line": "Eh, been better. Have you seen Yuuma around?\n\nShe owes me 10 bucks."},
+	{"speaker": "SAKI", "line": "Howdy, Yachie, I am Saki. How have you been?"},
+	{"speaker": "YACHIE", "line": "Eh, been better. Have you seen Yuuma around?\n\nShe owes me 10000 yen."},
 	{"speaker": "YUUMA", "line": "What's up gamers?"},
 	{"speaker": "SAKI", "line": "There she is."},
 	{"speaker": "YACHIE", "line": "Yuuma, I want my money back."},
-	{"speaker": "YUUMA", "line": "Money is fleeting, Yachie. How about we go watch a movie instead."},
+	{"speaker": "YUUMA", "line": "Sorry Yachie, I ate it."},
 ]
 
 var current_line: int = 0
