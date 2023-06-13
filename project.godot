@@ -111,7 +111,7 @@ _global_script_class_icons={
 [application]
 
 config/name="TouhouPrideGameJam5"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://Battle.tscn"
 boot_splash/image="res://assets/ui/splash_screen.png"
 config/icon="res://assets/icon.png"
 

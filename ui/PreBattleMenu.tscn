@@ -51,17 +51,16 @@ rect_min_size = Vector2( 320, 0 )
 size_flags_horizontal = 4
 text = "Haniwa attack!"
 
-[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="Button6" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
 margin_left = 150.0
 margin_top = 81.0
 margin_right = 470.0
 margin_bottom = 158.0
 rect_min_size = Vector2( 320, 0 )
 size_flags_horizontal = 4
-disabled = true
-text = "Into hell"
+text = "Test battle 2"
 
-[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="Button7" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
 margin_left = 150.0
 margin_top = 162.0
 margin_right = 470.0
@@ -69,9 +68,9 @@ margin_bottom = 239.0
 rect_min_size = Vector2( 320, 0 )
 size_flags_horizontal = 4
 disabled = true
-text = "No rest for the wicked"
+text = "Old hell, new troubles"
 
-[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
 margin_left = 150.0
 margin_top = 243.0
 margin_right = 470.0
@@ -79,9 +78,9 @@ margin_bottom = 320.0
 rect_min_size = Vector2( 320, 0 )
 size_flags_horizontal = 4
 disabled = true
-text = "Sins of the mother"
+text = "No rest for the wicked"
 
-[node name="Button5" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
 margin_left = 150.0
 margin_top = 324.0
 margin_right = 470.0
@@ -89,33 +88,13 @@ margin_bottom = 401.0
 rect_min_size = Vector2( 320, 0 )
 size_flags_horizontal = 4
 disabled = true
-text = "Two steps from heaven"
+text = "Sins of the mother"
 
-[node name="Button6" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="Button8" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
 margin_left = 150.0
 margin_top = 405.0
 margin_right = 470.0
 margin_bottom = 482.0
-rect_min_size = Vector2( 320, 0 )
-size_flags_horizontal = 4
-disabled = true
-text = "NEXT_BATTLE"
-
-[node name="Button7" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
-margin_left = 150.0
-margin_top = 486.0
-margin_right = 470.0
-margin_bottom = 563.0
-rect_min_size = Vector2( 320, 0 )
-size_flags_horizontal = 4
-disabled = true
-text = "Old hell, new troubles"
-
-[node name="Button8" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
-margin_left = 150.0
-margin_top = 567.0
-margin_right = 470.0
-margin_bottom = 644.0
 rect_min_size = Vector2( 320, 0 )
 size_flags_horizontal = 4
 disabled = true
@@ -144,5 +123,7 @@ size_flags_horizontal = 4
 text = "RETURN_TO_MAIN_MENU"
 clip_text = true
 
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer2/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer2/Button6" to="." method="_on_Button6_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SquadButton" to="." method="_on_SquadButton_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
