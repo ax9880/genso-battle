@@ -32,7 +32,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "BoardUtils",
 "language": "GDScript",
-"path": "res://BoardUtils.gd"
+"path": "res://board/BoardUtils.gd"
 }, {
 "base": "Area2D",
 "class": "Cell",
@@ -57,7 +57,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Pusher",
 "language": "GDScript",
-"path": "res://Pusher.gd"
+"path": "res://board/Pusher.gd"
 }, {
 "base": "Resource",
 "class": "SaveData",
@@ -82,7 +82,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "Trap",
 "language": "GDScript",
-"path": "res://Trap.gd"
+"path": "res://board/Trap.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "Unit",

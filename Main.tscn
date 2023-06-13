@@ -14,14 +14,14 @@
 [ext_resource path="res://board/BoardUI.gd" type="Script" id=12]
 [ext_resource path="res://ui/VictoryScreen.tscn" type="PackedScene" id=13]
 [ext_resource path="res://ui/DefeatScreen.tscn" type="PackedScene" id=14]
-[ext_resource path="res://Pusher.gd" type="Script" id=15]
+[ext_resource path="res://board/Pusher.gd" type="Script" id=15]
 [ext_resource path="res://theme.tres" type="Theme" id=16]
 [ext_resource path="res://assets/ui/arrow_right.png" type="Texture" id=17]
 [ext_resource path="res://assets/ui/sword.png" type="Texture" id=18]
 [ext_resource path="res://assets/ui/gun.png" type="Texture" id=19]
 [ext_resource path="res://assets/ui/spear.png" type="Texture" id=20]
 [ext_resource path="res://assets/ui/clock.png" type="Texture" id=21]
-[ext_resource path="res://Trap.tscn" type="PackedScene" id=22]
+[ext_resource path="res://board/Trap.tscn" type="PackedScene" id=22]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 324, 8 )
@@ -143,14 +143,13 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Trap" parent="Board/Traps" instance=ExtResource( 22 )]
-position = Vector2( 248, 355 )
+[node name="Trap7" parent="Board/Traps" instance=ExtResource( 22 )]
+position = Vector2( 52, 748 )
+percentage_damage = 1.0
 
-[node name="Trap2" parent="Board/Traps" instance=ExtResource( 22 )]
-position = Vector2( 440, 731 )
-
-[node name="Trap3" parent="Board/Traps" instance=ExtResource( 22 )]
-position = Vector2( 551, 637 )
+[node name="Trap8" parent="Board/Traps" instance=ExtResource( 22 )]
+position = Vector2( 48, 651 )
+percentage_damage = 1.0
 
 [node name="Enemies" type="Node2D" parent="Board"]
 __meta__ = {
@@ -169,13 +168,13 @@ __meta__ = {
 }
 
 [node name="Unit" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 448, 355 )
+position = Vector2( 52, 555 )
 
 [node name="Unit3" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 256, 658 )
+position = Vector2( 136, 739 )
 
 [node name="Unit4" parent="Board/Units" instance=ExtResource( 2 )]
-position = Vector2( 136, 531 )
+position = Vector2( 144, 643 )
 
 [node name="DebugUnits" type="Node2D" parent="Board"]
 visible = false
@@ -308,6 +307,22 @@ margin_right = 144.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
 texture = ExtResource( 20 )
+expand = true
+
+[node name="TextureRect6" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 140.0
+margin_right = 172.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = ExtResource( 17 )
+expand = true
+
+[node name="TextureRect7" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 168.0
+margin_right = 200.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = ExtResource( 18 )
 expand = true
 
 [node name="GiveUpButton" type="Button" parent="MarginContainer/HBoxContainer"]
