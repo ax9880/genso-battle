@@ -26,10 +26,13 @@ CHOOSE,Choose,Elegir
 GIVE_UP,Give up,Rendirse
 VICTORY,VICTORY,VICTORIA
 DEFEAT,DEFEAT,DERROTA
+CLICK,Click,Clic
+HOLD,Hold,Mantener
+DEFEAT,DEFEAT,DERROTA
 NONE,None,Ninguno
 EQUIP,Equip,Equipado
 PINCER,Pincer,Cerco
-AREA_X,Area,Area
+AREA_X,Area,Área
 CROSS_X,Cross,Cruz
 SELF,Self,Mismo/a
 HORIZONTAL_X,Horizontal,Horizontal
