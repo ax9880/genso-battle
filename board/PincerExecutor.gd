@@ -40,11 +40,16 @@ signal finished_checking_for_dead_units
 signal pincer_executed
 
 
-func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies: Array = [], _enemies: Array = []) -> void:
-	active_pincer = pincer
+func initialize(_grid: Grid, _allies: Array, _enemies: Array) -> void:
 	grid = _grid
 	allies = _allies
 	enemies = _enemies
+
+
+func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies: Array = [], _enemies: Array = []) -> void:
+	active_pincer = pincer
+	
+	initialize(_grid, _allies, _enemies)
 	
 	unit_queue = _queue_units(pincer)
 	complete_chains = _build_chains_including_pincering_unit(pincer)

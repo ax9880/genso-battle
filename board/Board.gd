@@ -187,6 +187,9 @@ func _make_player_units_appear() -> void:
 func _start_player_turn() -> void:
 	print("Starting player turn")
 	
+	$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
+	pincer_queue = []
+	
 	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or has_less_than_min_squad_size_alive(player_units_node.get_children()):
 		print("Defeat!")
 		
@@ -247,10 +250,7 @@ func _start_enemy_turn() -> void:
 		# affected cells when using a skill
 		
 		# TODO: Pass these parameters to the functions that need them
-		# Or call an initialize function
-		$PincerExecutor.grid = grid
-		$PincerExecutor.allies = enemy_units_node.get_children()
-		$PincerExecutor.enemies = player_units_node.get_children()
+		$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
 		pincer_queue = []
 		
 		# enemy turn starts right away, there's no animation
