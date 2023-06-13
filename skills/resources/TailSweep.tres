@@ -1,6 +1,7 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://skills/Skill.gd" type="Script" id=1]
+[ext_resource path="res://skills/effects/StaticSkillEffect.tscn" type="PackedScene" id=2]
 
 [resource]
 script = ExtResource( 1 )
@@ -20,3 +21,4 @@ absorb_rate = 0.0
 max_heal = 700
 status_effect = 0
 status_effect_duration_turns = 0
+effect_scene = ExtResource( 2 )

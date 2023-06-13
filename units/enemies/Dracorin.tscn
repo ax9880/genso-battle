@@ -8,4 +8,8 @@
 [node name="Job" parent="." index="2"]
 job = ExtResource( 2 )
 
+[node name="AIController" parent="." index="11"]
+behaviors = [ 1, 2, 2 ]
+preference = 1
+
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
