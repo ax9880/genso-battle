@@ -292,7 +292,7 @@ __meta__ = {
 }
 
 [node name="Glow" type="Sprite" parent="Sprite"]
-visible = false
+modulate = Color( 1, 0.309804, 0.309804, 1 )
 show_behind_parent = true
 texture = ExtResource( 12 )
 
