@@ -23,7 +23,7 @@ const INVALID_FACTION: int = -1
 const PLAYER_FACTION: int = 1
 const ENEMY_FACTION: int = 2
 
-const WEAPON_ADVANTAGE: float = 2.0
+const WEAPON_ADVANTAGE: float = 3.0
 const WEAPON_DISADVANTAGE: float = 1.0
 
 ## Exports
@@ -195,8 +195,6 @@ func disable_selection_area() -> void:
 	Utils.disable_object($SelectionArea2D/CollisionShape2D)
 	
 	$SelectionArea2D.monitorable = false
-	
-	$Sprite/Glow.hide()
 
 
 func _move_towards_mouse() -> void:
@@ -336,8 +334,13 @@ func get_max_health() -> int:
 	return $Job.base_stats.health
 
 
-func calculate_attack_damage(attacker_stats: StartingStats) -> int:
-	var damage: int = calculate_damage(attacker_stats, get_stats(), 1.0, attacker_stats.weapon_type, attacker_stats.attribute)
+func calculate_attack_damage(attacker_stats: StartingStats, pincering_unit_stats: StartingStats = null) -> int:
+	var attacker_weapon_type: int = attacker_stats.weapon_type
+	
+	if pincering_unit_stats != null:
+		attacker_weapon_type = pincering_unit_stats.weapon_type
+	
+	var damage: int = calculate_damage(attacker_stats, get_stats(), 1.0, attacker_weapon_type, attacker_stats.attribute)
 	
 	return damage
 
@@ -418,7 +421,7 @@ func calculate_damage(attacker_stats: StartingStats,
 func get_weapon_type_advantage(attacker_weapon_type, defender_weapon_type) -> float:
 	var disadvantaged_weapon_type = Enums.WEAPON_RELATIONSHIPS.get(attacker_weapon_type)
 	
-	if disadvantaged_weapon_type != null and disadvantaged_weapon_type == defender_weapon_type:
+	if disadvantaged_weapon_type == defender_weapon_type:
 		return WEAPON_ADVANTAGE
 	else:
 		return WEAPON_DISADVANTAGE
@@ -492,8 +495,15 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 
 
 func _on_SelectionArea2D_mouse_entered():
-	$Sprite/Glow.show()
+	if current_state == STATE.IDLE:
+		$Sprite/Glow.show()
+		
+		$Sprite.scale = Vector2(1.1, 1.1)
 
 
 func _on_SelectionArea2D_mouse_exited():
-	$Sprite/Glow.hide()
+	if current_state == STATE.IDLE:
+		#$Sprite/Glow.hide()
+		
+		$Sprite.scale = Vector2(1, 1)
+	
