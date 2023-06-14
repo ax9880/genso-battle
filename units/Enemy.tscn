@@ -26,6 +26,10 @@ visible = false
 [node name="Sprite" parent="." index="4"]
 texture = ExtResource( 6 )
 
+[node name="Glow" parent="Sprite" index="0"]
+visible = true
+modulate = Color( 0.780392, 0.968627, 0.94902, 1 )
+
 [node name="Icon" parent="Sprite" index="1"]
 texture = ExtResource( 7 )
 

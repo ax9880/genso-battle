@@ -8,14 +8,8 @@
 [node name="Job" parent="." index="2"]
 job = ExtResource( 2 )
 
-[node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
-margin_right = 335.0
-
-[node name="MarginContainer" parent="CanvasLayer/ActivatedSkillMarginContainer" index="2"]
-margin_right = 335.0
-
-[node name="VBoxContainer" parent="CanvasLayer/ActivatedSkillMarginContainer/MarginContainer" index="0"]
-margin_right = 320.0
+[node name="Glow" parent="Sprite" index="0"]
+visible = true
 
 [node name="AIController" parent="." index="11"]
 behaviors = [ 1, 2, 2 ]
