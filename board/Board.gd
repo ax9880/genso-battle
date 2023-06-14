@@ -342,6 +342,8 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 			
 			_highlight_possible_chains(active_unit)
 			
+			$ChainPreviewer.update_preview(active_unit, selected_cell)
+			
 			var _is_present: bool = active_unit_entered_cells.erase(cell)
 		
 		_activate_trap(selected_cell, active_unit)
@@ -411,6 +413,8 @@ func _update_active_unit(unit: Unit) -> void:
 		
 		for cell in active_unit_current_cell.get_cells_in_area():
 			active_unit_entered_cells[cell] = cell
+	
+	$ChainPreviewer.update_preview(unit, active_unit_current_cell)
 
 
 func _clear_active_cells() -> void:
@@ -630,6 +634,8 @@ func _update_trail(cell: Cell) -> void:
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
 	
+	_stop_possible_chained_units_animations()
+	
 	unit.play_skill_activation_animation([skill], 1)
 	
 	# Wait for it to finish
@@ -688,10 +694,14 @@ func _on_Unit_released(unit: Unit) -> void:
 	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
 	
 	unit.snap_to_grid(selected_cell.position)
+	
+	$ChainPreviewer.update_preview(unit, selected_cell)
 
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	if current_turn == Turn.PLAYER:
+		$ChainPreviewer.clear()
+		
 		$PincerExecutor.check_dead_units()
 		
 		yield($PincerExecutor, "finished_checking_for_dead_units")
@@ -711,6 +721,8 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:
+	_stop_possible_chained_units_animations()
+	
 	if unit.is_alive():
 		assert(grid.get_cell_from_position(unit.position).unit == unit)
 	else:
@@ -721,8 +733,6 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 		var cell = grid.get_cell_from_position(unit.position)
 	
 	unit.z_index = 0
-	
-	_stop_possible_chained_units_animations()
 	
 	if has_active_unit_exited_cell:
 		_clear_active_cells()
