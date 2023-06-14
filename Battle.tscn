@@ -141,17 +141,21 @@ __meta__ = {
 }
 
 [node name="Traps" type="Node2D" parent="Board"]
+z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="ChainPreviewer" type="Node2D" parent="Board"]
+z_index = 1
 script = ExtResource( 27 )
 chain_preview_line_2d_packed_scene = ExtResource( 28 )
 
 [node name="Trail2D" parent="Board" instance=ExtResource( 16 )]
+z_index = 1
 
 [node name="Enemies" type="Node2D" parent="Board"]
+z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
@@ -166,6 +170,7 @@ position = Vector2( 348, 248 )
 position = Vector2( 142, 448 )
 
 [node name="Units" type="Node2D" parent="Board"]
+z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
@@ -190,16 +195,19 @@ position = Vector2( 435, 647 )
 
 [node name="DebugUnits" type="Node2D" parent="Board"]
 visible = false
+z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="Attacker" parent="Board" instance=ExtResource( 19 )]
+z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="PincerExecutor" type="Node2D" parent="Board"]
+z_index = 1
 script = ExtResource( 13 )
 __meta__ = {
 "_edit_lock_": true
