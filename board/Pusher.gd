@@ -28,8 +28,9 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 			if direction == initial_direction:
 				print("Failed to find a suitable cell to move to in surrounding cells")
 				
+				cell_to_move_to = null
+				
 				break
-				# TODO: Use BFS search to find the closest free cell
 			else:
 				cell_to_move_to = pushed_unit_cell.get_neighbor(direction)
 		
