@@ -33,9 +33,9 @@ enum WeaponType {
 
 # {Weapon type: weapon type it has an advantage over}
 const WEAPON_RELATIONSHIPS: Dictionary = {
-	# Spear beats sword
 	# Sword beats gun
 	# Gun beats spear
+	# Spear beats sword
 	WeaponType.SWORD: WeaponType.GUN,
 	WeaponType.GUN: WeaponType.SPEAR,
 	WeaponType.SPEAR: WeaponType.SWORD,
