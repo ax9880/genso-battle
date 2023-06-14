@@ -32,6 +32,9 @@ texture = ExtResource( 7 )
 [node name="Border" parent="Sprite" index="2"]
 texture = ExtResource( 5 )
 
+[node name="CollisionShape2D" parent="SwapArea2D" index="0"]
+visible = true
+
 [node name="SelectionArea2D" parent="." index="7"]
 monitorable = false
 

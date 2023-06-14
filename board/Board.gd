@@ -154,7 +154,15 @@ func _assign_unit_to_cell(unit: Unit) -> void:
 	
 	unit.position = grid.cell_coordinates_to_cell_origin(cell_coordinates)
 	
-	grid.get_cell_from_coordinates(cell_coordinates).unit = unit
+	var cell: Cell = grid.get_cell_from_coordinates(cell_coordinates)
+	
+	if unit.is2x2():
+		var area_cells: Array = cell.get_cells_in_area()
+		
+		for area_cell in area_cells:
+			area_cell.unit = unit
+	else:
+		cell.unit = unit
 
 
 func _make_enemies_appear(units: Array) -> void:
@@ -287,9 +295,12 @@ func _update_enemy() -> void:
 
 
 func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
-	active_unit_entered_cells[cell] = cell
-	
-	cell.modulate = Color.red
+	if active_unit.is2x2():
+		_update_2x2_unit_cells(active_unit, cell)
+	else:
+		active_unit_entered_cells[cell] = cell
+		
+		cell.modulate = Color.red
 
 
 # Bugs to fix:
@@ -303,8 +314,6 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 		return
 	
 	assert(active_unit == area.get_unit(), "Unit exiting cells should be the same as the active unit")
-	
-	var _is_present: bool = active_unit_entered_cells.erase(cell)
 	
 	var selected_cell: Cell = _find_closest_cell(active_unit.position)
 	
@@ -326,25 +335,82 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 			
 			printerr("Warning! Jumped more than 1 tile")
 		
-		_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
+		if active_unit.is2x2():
+			_update_2x2_unit_cells(active_unit, selected_cell)
+		else:
+			_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
+			
+			_highlight_possible_chains(active_unit)
+			
+			var _is_present: bool = active_unit_entered_cells.erase(cell)
 		
 		_activate_trap(selected_cell, active_unit)
 		
-		_highlight_possible_chains(active_unit)
-		
 		_update_trail(selected_cell)
+
+
+func _update_2x2_unit_cells(unit: Unit, cell: Cell) -> void:
+	assert(active_unit_entered_cells.values().size() == 4)
+	assert(unit.is2x2())
+	
+	for entered_cell in active_unit_entered_cells.values():
+		assert(entered_cell.unit == unit)
+		
+		entered_cell.unit = null
+		
+		entered_cell.modulate = Color.white
+	
+	_push_cells_in_area(unit, cell)
+	
+	active_unit_entered_cells.clear()
+	
+	for area_cell in cell.get_cells_in_area():
+		active_unit_entered_cells[area_cell] = area_cell
+		
+		area_cell.modulate = Color.red
+	
+	assert(cell in active_unit_entered_cells)
+
+
+func _push_cells_in_area(unit: Unit, cell: Cell) -> void:
+	for area_cell in cell.get_cells_in_area():
+		area_cell.modulate = Color.red
+		
+		if area_cell.unit != null and area_cell.unit != unit:
+			$Pusher.push_unit(cell, area_cell)
+			
+		assert(area_cell.unit == null or area_cell.unit == unit)
+		
+		area_cell.unit = unit
+
+
+func _clean_up_cells_in_area(unit: Unit, cell: Cell) -> void:
+	assert(unit.is2x2())
+	
+	for area_cell in cell.get_cells_in_area():
+		if cell.unit == unit:
+			area_cell.modulate = Color.white
+			
+			cell.unit = null
 
 
 func _update_active_unit(unit: Unit) -> void:
 	active_unit = unit
 	
 	active_unit_current_cell = grid.get_cell_from_position(unit.position)
+	
 	active_unit_last_valid_cell = null
 	has_active_unit_exited_cell = false
 	
 	assert(active_unit_current_cell.unit == unit, "Unit %s is not in cell %s" % [unit.name, active_unit_current_cell.coordinates])
 	
 	active_unit_entered_cells.clear()
+	
+	if unit.is2x2():
+		_push_cells_in_area(unit, active_unit_current_cell)
+		
+		for cell in active_unit_current_cell.get_cells_in_area():
+			active_unit_entered_cells[cell] = cell
 
 
 func _clear_active_cells() -> void:
@@ -610,6 +676,14 @@ func _on_Unit_released(unit: Unit) -> void:
 		has_active_unit_exited_cell = true
 		
 		print("Unit %s exited a cell" % unit.name)
+	
+	if unit.is2x2():
+		for cell in active_unit_entered_cells:
+			if cell.unit == unit:
+				cell.unit = null
+				cell.modulate = Color.white
+		
+		_push_cells_in_area(unit, selected_cell)
 	
 	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
 	

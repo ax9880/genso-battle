@@ -37,3 +37,39 @@ func add_neighbor(neighbor: Cell, direction: int) -> void:
 # Gets directional neighbors, for convenience
 func get_neighbor(direction: int) -> Cell:
 	return all_neighbors[direction]
+
+
+# Returns Array<Cell>. If there are not enough neighbors, returns an empty array.
+# Assumes that the cell is at the top left corner of the area.
+func get_cells_in_area(var size: int = 2) -> Array:
+	var row_cell: Cell = self
+	
+	var cells := []
+	
+	# 0 -> 1
+	# 2 -> 3
+	
+	# 0 -> 1 -> 2
+	# 3 -> 4 -> 5
+	# 6 -> 7 -> 8
+	for x in range(size):
+		cells.push_back(row_cell)
+		
+		for y in range(size - 1):
+			var column_cell: Cell = row_cell.get_neighbor(DIRECTION.RIGHT)
+			
+			if column_cell != null:
+				cells.push_back(column_cell)
+			else:
+				break
+		
+		row_cell = row_cell.get_neighbor(DIRECTION.DOWN)
+		
+		if row_cell == null:
+			break
+	
+	if cells.size() == size * size:
+		return cells
+	else:
+		return []
+

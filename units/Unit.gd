@@ -240,6 +240,9 @@ func is_idle() -> bool:
 func _pick_up() -> void:
 	if current_state == STATE.IDLE:
 		self.current_state = STATE.PICKED_UP
+		
+		if is2x2():
+			Utils.disable_object($CollisionShape2D)
 
 
 func release() -> void:
