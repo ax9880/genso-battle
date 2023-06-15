@@ -126,3 +126,8 @@ enum SkillType {
 	
 	COUNTER
 }
+
+enum DragMode {
+	CLICK,
+	HOLD
+}

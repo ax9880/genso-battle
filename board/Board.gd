@@ -12,6 +12,8 @@ export(float) var time_before_player_units_appearance_seconds: float = 0.5
 # Set to true to use debug units instead of the player's squad
 export(bool) var can_use_debug_units: bool = false
 
+export(PackedScene) var trail_2d_packed_scene: PackedScene
+
 onready var grid := $Grid
 onready var grid_width: int = grid.width
 onready var grid_height: int = grid.height
@@ -19,6 +21,7 @@ onready var grid_height: int = grid.height
 var active_unit: Unit = null
 var active_unit_current_cell: Cell = null
 var active_unit_last_valid_cell: Cell = null
+var active_trail: Node2D = null
 
 # Dictionary<Cell, bool>
 var active_unit_entered_cells := {}
@@ -243,6 +246,11 @@ func is_all_units_dead(units: Array) -> bool:
 		is_all_dead = is_all_dead and unit.is_dead()
 	
 	return is_all_dead
+
+
+func update_drag_mode(drag_mode: int) -> void:
+	for unit in player_units_node.get_children():
+		unit.set_drag_mode(drag_mode)
 
 
 func _disable_player_units() -> void:
@@ -586,6 +594,12 @@ func _stop_drag_timer() -> void:
 func _on_Unit_picked_up(unit: Unit) -> void:
 	_update_active_unit(unit)
 	
+	assert(active_trail == null)
+	
+	active_trail = trail_2d_packed_scene.instance()
+	
+	$Trails.add_child(active_trail)
+	
 	_update_trail(grid.get_cell_from_position(unit.position))
 	
 	unit.z_index += 1
@@ -628,13 +642,21 @@ func _stop_possible_chained_units_animations() -> void:
 
 
 func _update_trail(cell: Cell) -> void:
-	$Trail2D.add(cell.position)
+	active_trail.add(cell.position)
+
+
+func _clear_active_trail() -> void:
+	if active_trail != null:
+		active_trail.queue_clear()
+		active_trail = null
 
 
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
 	
 	_stop_possible_chained_units_animations()
+	
+	_clear_active_trail()
 	
 	unit.play_skill_activation_animation([skill], 1)
 	
@@ -666,8 +688,6 @@ func _on_Unit_released(unit: Unit) -> void:
 	
 	_stop_possible_chained_units_animations()
 	
-	$Trail2D.clear()
-	
 	# TODO: Store original Z index ?
 	unit.z_index -= 1
 	
@@ -696,6 +716,9 @@ func _on_Unit_released(unit: Unit) -> void:
 	unit.snap_to_grid(selected_cell.position)
 	
 	$ChainPreviewer.update_preview(unit, selected_cell)
+	
+	_update_trail(selected_cell)
+	_clear_active_trail()
 
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
@@ -722,6 +745,8 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 
 func _on_Enemy_action_done(unit: Unit) -> void:
 	_stop_possible_chained_units_animations()
+	
+	_clear_active_trail()
 	
 	if unit.is_alive():
 		assert(grid.get_cell_from_position(unit.position).unit == unit)

@@ -265,6 +265,15 @@ func set_job(new_job: Job) -> void:
 	_load_job_textures()
 
 
+func set_drag_mode(drag_mode: int) -> void:
+	if drag_mode == Enums.DragMode.CLICK:
+		is_click_to_drag = true
+		set_process_input(false)
+	else:
+		is_click_to_drag = false
+		set_process_input(true)
+
+
 # Setter function for current_state.
 func set_current_state(new_state) -> void:
 	current_state = new_state

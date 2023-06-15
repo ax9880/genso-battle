@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://board/Board.gd" type="Script" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
@@ -21,10 +21,9 @@
 [ext_resource path="res://board/Attacker.tscn" type="PackedScene" id=19]
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=20]
 [ext_resource path="res://ui/VictoryScreen.tscn" type="PackedScene" id=21]
+[ext_resource path="res://ui/DragModeOptionButton.tscn" type="PackedScene" id=22]
 [ext_resource path="res://units/enemies/HaniwaOrbling.tscn" type="PackedScene" id=23]
 [ext_resource path="res://units/enemies/Dracorin.tscn" type="PackedScene" id=24]
-[ext_resource path="res://assets/ui/drag.png" type="Texture" id=25]
-[ext_resource path="res://assets/ui/click.png" type="Texture" id=26]
 [ext_resource path="res://board/ChainPreviewer.gd" type="Script" id=27]
 [ext_resource path="res://board/ChainPreviewLine2D.tscn" type="PackedScene" id=28]
 
@@ -58,6 +57,7 @@ __meta__ = {
 [node name="Board" type="Node2D" parent="."]
 position = Vector2( 59, 128 )
 script = ExtResource( 1 )
+trail_2d_packed_scene = ExtResource( 16 )
 
 [node name="Grid" type="Node2D" parent="Board"]
 script = ExtResource( 3 )
@@ -151,8 +151,7 @@ z_index = 1
 script = ExtResource( 27 )
 chain_preview_line_2d_packed_scene = ExtResource( 28 )
 
-[node name="Trail2D" parent="Board" instance=ExtResource( 16 )]
-z_index = 1
+[node name="Trails" type="Node2D" parent="Board"]
 
 [node name="Enemies" type="Node2D" parent="Board"]
 z_index = 1
@@ -345,15 +344,9 @@ rect_min_size = Vector2( 32, 32 )
 texture = ExtResource( 7 )
 expand = true
 
-[node name="OptionButton" type="OptionButton" parent="MarginContainer/HBoxContainer"]
+[node name="DragModeOptionButton" parent="MarginContainer/HBoxContainer" instance=ExtResource( 22 )]
 margin_left = 364.0
 margin_right = 564.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 200, 0 )
-text = "CLICK"
-icon = ExtResource( 26 )
-items = [ "CLICK", ExtResource( 26 ), false, 0, null, "HOLD", ExtResource( 25 ), false, 1, null ]
-selected = 0
 
 [node name="GiveUpButton" type="Button" parent="MarginContainer/HBoxContainer"]
 margin_left = 580.0
@@ -388,6 +381,7 @@ margin_bottom = 960.0
 [connection signal="tree_exiting" from="Board/PincerExecutor" to="Board/PincerExecutor" method="_on_PincerExecutor_tree_exiting"]
 [connection signal="timeout" from="Board/PincerExecutor/SkillActivationTimer" to="Board/PincerExecutor" method="_on_SkillActivationTimer_timeout"]
 [connection signal="timeout" from="Board/PincerExecutor/DeathAnimationTimer" to="Board/PincerExecutor" method="_on_DeathAnimationTimer_timeout"]
+[connection signal="drag_mode_changed" from="MarginContainer/HBoxContainer/DragModeOptionButton" to="." method="_on_DragModeOptionButton_drag_mode_changed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/GiveUpButton" to="." method="_on_GiveUpButton_pressed"]
 [connection signal="quit_button_pressed" from="CanvasLayer/DefeatScreen" to="." method="_on_DefeatScreen_quit_button_pressed"]
 [connection signal="try_again_button_pressed" from="CanvasLayer/DefeatScreen" to="." method="_on_DefeatScreen_try_again_button_pressed"]

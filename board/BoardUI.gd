@@ -75,3 +75,7 @@ func _on_VictoryScreen_continue_button_pressed() -> void:
 
 func _on_GiveUpButton_pressed() -> void:
 	_on_Board_defeat()
+
+
+func _on_DragModeOptionButton_drag_mode_changed(drag_mode: int) -> void:
+	$Board.update_drag_mode(drag_mode)
