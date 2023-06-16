@@ -62,6 +62,8 @@ func _build_heal_particles(unit: Unit) -> void:
 	unit.add_child(particles)
 	
 	particles.emitting = true
+	
+	$AbsorbHealSound.play()
 
 
 func _apply_skill(unit: Unit, skill: Skill, target_cell: Cell) -> void:
@@ -109,5 +111,8 @@ func _update_count(unit: Unit) -> void:
 		
 		if $SkillSound.playing:
 			yield($SkillSound, "finished")
+		
+		if $AbsorbHealSound.playing:
+			yield($AbsorbHealSound, "finished")
 		
 		queue_free()

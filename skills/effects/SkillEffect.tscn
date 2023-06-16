@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://skills/effects/SkillEffect.gd" type="Script" id=1]
 [ext_resource path="res://skills/HealParticles.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/sfx/magic_heal.wav" type="AudioStream" id=3]
 
 [node name="SkillEffect" type="Node2D"]
 z_index = 1
@@ -12,5 +13,8 @@ heal_particles_packed_scene = ExtResource( 2 )
 
 [node name="SkillSound" type="AudioStreamPlayer" parent="."]
 bus = "Sound effects"
+
+[node name="AbsorbHealSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
 
 [node name="Tween" type="Tween" parent="."]
