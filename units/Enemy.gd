@@ -1,6 +1,7 @@
 extends Unit
 
 export var turn_counter: int = 1 setget set_turn_counter
+export var chance_to_move_to_enemy_during_move_behavior: float = 0.8
 
 var turn_counter_max_value: int
 
@@ -50,8 +51,10 @@ func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
 			_find_skill_move(grid, navigation_graph, allies, enemies)
 		AIController.Behavior.MOVE:
 			_move_to_cell_or_enemy(grid, navigation_graph, allies, enemies)
-		_:
+		AIController.Behavior.PINCER:
 			_find_pincer(grid, navigation_graph, allies, enemies)
+		_:
+			emit_signal("action_done", self)
 
 
 func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
@@ -88,7 +91,7 @@ func _use_skill(skill: Skill) -> void:
 		emit_signal("action_done", self)
 
 func _move_to_cell_or_enemy(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
-	if random.randf() < 0.8:
+	if random.randf() < chance_to_move_to_enemy_during_move_behavior:
 		_find_cell_close_to_enemy(grid, navigation_graph, allies, enemies)
 	else:
 		_find_cell_to_move_to(grid, navigation_graph, allies, enemies)

@@ -6,7 +6,8 @@ class_name AIController
 enum Behavior {
 	MOVE,
 	USE_SKILL,
-	PINCER
+	PINCER,
+	NONE
 }
 
 enum Preference {

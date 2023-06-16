@@ -20,6 +20,7 @@ script = ExtResource( 2 )
 swap_velocity_pixels_per_second = 700.0
 is_controlled_by_player = false
 turn_counter = 1
+chance_to_move_to_enemy_during_move_behavior = 0.8
 
 [node name="CollisionShape2D" parent="." index="3"]
 visible = false
