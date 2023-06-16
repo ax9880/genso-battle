@@ -39,6 +39,10 @@ var current_turn: int = Turn.NONE
 var player_units_node: Node2D
 var enemy_units_node: Node2D
 
+var enemy_phase_count: int = 0
+var current_enemy_phase: int = 0
+var enemy_phases_queue: Array
+
 var save_data: SaveData
 
 signal drag_timer_started(timer)
@@ -53,6 +57,9 @@ signal victory
 
 # Emitted when the player has less than 2 units on the board.
 signal defeat
+
+signal enemy_phase_started(current_enemy_phase, enemy_phase_count)
+signal enemies_appeared
 
 
 func _ready() -> void:
@@ -71,12 +78,11 @@ func _ready() -> void:
 	
 	_load_player_units()
 	
-	enemy_units_node = $Enemies
-	
 	_connect_cell_signals()
 	
 	_assign_traps_to_cells()
-	_assign_enemies_to_cells()
+	_load_enemy_phases()
+	_load_next_enemy_phase()
 	_assign_units_to_cells()
 	
 	_disable_player_units()
@@ -116,6 +122,32 @@ func _connect_cell_signals() -> void:
 			_error = cell.connect("area_exited", self, "_on_Cell_area_exited", [cell])
 
 
+func _load_enemy_phases() -> void:
+	enemy_phases_queue = $EnemyPhases.get_children()
+	
+	for enemy_phase in enemy_phases_queue:
+		if not enemy_phase.get_children().empty():
+			enemy_phase_count += 1
+		
+		$EnemyPhases.remove_child(enemy_phase)
+
+
+func _load_next_enemy_phase() -> void:
+	enemy_units_node = enemy_phases_queue.pop_front()
+	
+	if enemy_units_node == null:
+		emit_signal("victory")
+	else:
+		$EnemyPhases.add_child(enemy_units_node)
+		enemy_units_node.show()
+		
+		_assign_enemies_to_cells()
+		
+		current_enemy_phase += 1
+		
+		emit_signal("enemy_phase_started", current_enemy_phase, enemy_phase_count)
+
+
 func _assign_traps_to_cells() -> void:
 	for trap in $Traps.get_children():
 		var cell_coordinates: Vector2 = grid.get_cell_coordinates(trap.position)
@@ -151,7 +183,6 @@ func _assign_units_to_cells() -> void:
 		unit.faction = Unit.PLAYER_FACTION
 
 
-
 func _assign_unit_to_cell(unit: Unit) -> void:
 	var cell_coordinates: Vector2 = grid.get_cell_coordinates(unit.position)
 	
@@ -159,10 +190,20 @@ func _assign_unit_to_cell(unit: Unit) -> void:
 	
 	var cell: Cell = grid.get_cell_from_coordinates(cell_coordinates)
 	
+	if cell.unit != null:
+		$Pusher.push_unit(cell, cell)
+	
+	assert(cell.unit == null)
+	
 	if unit.is2x2():
 		var area_cells: Array = cell.get_cells_in_area()
 		
 		for area_cell in area_cells:
+			if area_cell.unit != null:
+				$Pusher.push_unit(area_cell, area_cell)
+			
+			assert(area_cell.unit == null)
+			
 			area_cell.unit = unit
 	else:
 		cell.unit = unit
@@ -181,6 +222,8 @@ func _make_enemies_appear(units: Array) -> void:
 	
 	for unit in units:
 		unit.hide_name()
+	
+	emit_signal("enemies_appeared")
 	
 	_make_player_units_appear()
 
@@ -215,7 +258,18 @@ func _start_player_turn() -> void:
 		
 		emit_signal("defeat")
 	elif is_all_units_dead(enemy_units_node.get_children()):
-		emit_signal("victory")
+		_load_next_enemy_phase()
+		
+		if enemy_units_node != null:
+			_make_enemies_appear(enemy_units_node.get_children())
+			
+			current_turn = Turn.PLAYER
+			
+			emit_signal("drag_timer_reset")
+			emit_signal("player_turn_started")
+		
+			for unit in player_units_node.get_children():
+				unit.enable_selection_area()
 	else:
 		current_turn = Turn.PLAYER
 		
@@ -816,3 +870,9 @@ func _on_DragTimer_timeout() -> void:
 	active_unit.release()
 	
 	_stop_drag_timer()
+
+
+func _on_Board_tree_exiting() -> void:
+	# Free unused enemy phases
+	for enemy_phase in enemy_phases_queue:
+		enemy_phase.free()

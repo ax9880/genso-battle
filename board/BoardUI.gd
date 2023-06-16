@@ -79,3 +79,13 @@ func _on_GiveUpButton_pressed() -> void:
 
 func _on_DragModeOptionButton_drag_mode_changed(drag_mode: int) -> void:
 	$Board.update_drag_mode(drag_mode)
+
+
+func _on_Board_enemy_phase_started(current_enemy_phase: int, enemy_phase_count: int) -> void:
+	$CanvasLayer/EnemyPhaseCenterContainer.show()
+	
+	$CanvasLayer/EnemyPhaseCenterContainer/NinePatchRect/Label.text = "%s %d/%d" % [tr("BATTLE"), current_enemy_phase, enemy_phase_count]
+
+
+func _on_Board_enemies_appeared():
+	$CanvasLayer/EnemyPhaseCenterContainer.hide()

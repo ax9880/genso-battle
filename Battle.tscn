@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://board/Board.gd" type="Script" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
@@ -24,6 +24,7 @@
 [ext_resource path="res://ui/DragModeOptionButton.tscn" type="PackedScene" id=22]
 [ext_resource path="res://units/enemies/HaniwaOrbling.tscn" type="PackedScene" id=23]
 [ext_resource path="res://units/enemies/Dracorin.tscn" type="PackedScene" id=24]
+[ext_resource path="res://assets/ui/bright_red_panel_transparent.png" type="Texture" id=25]
 [ext_resource path="res://board/ChainPreviewer.gd" type="Script" id=27]
 [ext_resource path="res://board/ChainPreviewLine2D.tscn" type="PackedScene" id=28]
 
@@ -153,20 +154,81 @@ chain_preview_line_2d_packed_scene = ExtResource( 28 )
 
 [node name="Trails" type="Node2D" parent="Board"]
 
-[node name="Enemies" type="Node2D" parent="Board"]
+[node name="EnemyPhases" type="Node2D" parent="Board"]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Phase1" type="Node2D" parent="Board/EnemyPhases"]
+visible = false
 z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Dracorin" parent="Board/Enemies" instance=ExtResource( 24 )]
+[node name="Dracorin" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 24 )]
 position = Vector2( 258, 337 )
 
-[node name="HaniwaOrbling" parent="Board/Enemies" instance=ExtResource( 23 )]
+[node name="Dracorin2" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 24 )]
+position = Vector2( 437, 440 )
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 23 )]
 position = Vector2( 348, 248 )
 
-[node name="HaniwaOrbling2" parent="Board/Enemies" instance=ExtResource( 23 )]
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 23 )]
 position = Vector2( 142, 448 )
+
+[node name="Phase2" type="Node2D" parent="Board/EnemyPhases"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
+position = Vector2( 348, 248 )
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
+position = Vector2( 142, 448 )
+
+[node name="HaniwaOrbling3" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
+position = Vector2( 237, 351 )
+
+[node name="HaniwaOrbling4" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
+position = Vector2( 231, 544 )
+
+[node name="HaniwaOrbling5" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
+position = Vector2( 332, 449 )
+
+[node name="HaniwaOrbling6" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
+position = Vector2( 462, 432 )
+
+[node name="HaniwaOrbling7" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
+position = Vector2( 349, 338 )
+
+[node name="HaniwaOrbling8" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
+position = Vector2( 355, 544 )
+
+[node name="Phase3" type="Node2D" parent="Board/EnemyPhases"]
+visible = false
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase3" instance=ExtResource( 24 )]
+position = Vector2( 258, 337 )
+
+[node name="Phase4" type="Node2D" parent="Board/EnemyPhases"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Phase5" type="Node2D" parent="Board/EnemyPhases"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Units" type="Node2D" parent="Board"]
 z_index = 1
@@ -356,6 +418,31 @@ text = "GIVE_UP"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
+[node name="EnemyPhaseCenterContainer" type="CenterContainer" parent="CanvasLayer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/EnemyPhaseCenterContainer"]
+margin_left = 200.0
+margin_top = 448.0
+margin_right = 520.0
+margin_bottom = 512.0
+rect_min_size = Vector2( 320, 64 )
+texture = ExtResource( 25 )
+patch_margin_left = 26
+patch_margin_top = 29
+patch_margin_right = 27
+patch_margin_bottom = 19
+
+[node name="Label" type="Label" parent="CanvasLayer/EnemyPhaseCenterContainer/NinePatchRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+text = "BATTLE 1/5"
+align = 1
+valign = 1
+
 [node name="DefeatScreen" parent="CanvasLayer" instance=ExtResource( 17 )]
 visible = false
 anchor_right = 0.0
@@ -370,11 +457,16 @@ anchor_bottom = 0.0
 margin_right = 720.0
 margin_bottom = 960.0
 
+[node name="BattleTheme" type="AudioStreamPlayer" parent="."]
+
 [connection signal="defeat" from="Board" to="." method="_on_Board_defeat"]
 [connection signal="drag_timer_reset" from="Board" to="." method="_on_Board_drag_timer_reset"]
 [connection signal="drag_timer_started" from="Board" to="." method="_on_Board_drag_timer_started"]
 [connection signal="drag_timer_stopped" from="Board" to="." method="_on_Board_drag_timer_stopped"]
+[connection signal="enemies_appeared" from="Board" to="." method="_on_Board_enemies_appeared"]
+[connection signal="enemy_phase_started" from="Board" to="." method="_on_Board_enemy_phase_started"]
 [connection signal="player_turn_started" from="Board" to="." method="_on_Board_player_turn_started"]
+[connection signal="tree_exiting" from="Board" to="Board" method="_on_Board_tree_exiting"]
 [connection signal="victory" from="Board" to="." method="_on_Board_victory"]
 [connection signal="timeout" from="Board/DragTimer" to="Board" method="_on_DragTimer_timeout"]
 [connection signal="pincer_executed" from="Board/PincerExecutor" to="Board" method="_on_PincerExecutor_pincer_executed"]
