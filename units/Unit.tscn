@@ -18,8 +18,8 @@
 [ext_resource path="res://assets/sfx/casino/shove2.wav" type="AudioStream" id=16]
 [ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=17]
 [ext_resource path="res://assets/sfx/youkai_death.wav" type="AudioStream" id=18]
+[ext_resource path="res://assets/ui/unit_square_bg_red.png" type="Texture" id=19]
 [ext_resource path="res://assets/sfx/ceramic_drag_2.wav" type="AudioStream" id=20]
-[ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=21]
 [ext_resource path="res://assets/ui/sword.png" type="Texture" id=22]
 [ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=23]
 
@@ -286,7 +286,7 @@ __meta__ = {
 }
 
 [node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 21 )
+texture = ExtResource( 19 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -479,7 +479,7 @@ bus = "Sound effects"
 
 [node name="SwapAudio" type="AudioStreamPlayer" parent="Sound"]
 stream = SubResource( 11 )
-volume_db = 16.0
+volume_db = 12.0
 bus = "Sound effects"
 
 [node name="SnapAudio" type="AudioStreamPlayer" parent="Sound"]
