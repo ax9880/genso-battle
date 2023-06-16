@@ -1042,6 +1042,7 @@ visible = false
 
 [connection signal="enemy_phase_started" from="Board" to="Board/Guidelines" method="_on_Board_enemy_phase_started"]
 [connection signal="player_turn_started" from="Board" to="Board/Guidelines" method="_on_Board_player_turn_started"]
+[connection signal="pressed" from="CanvasLayer/MarginContainer/HBoxContainer/GiveUpButton" to="Board/Guidelines" method="_on_GiveUpButton_pressed"]
 
 [editable path="Board/EnemyPhases/Phase5/TrainingOrbling5"]
 [editable path="Board/EnemyPhases/Phase5/TrainingOrbling5/CanvasLayer/ActivatedSkillMarginContainer"]
