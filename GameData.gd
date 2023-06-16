@@ -10,6 +10,9 @@ func _ready() -> void:
 
 # Loads data into globals
 func load_data():
+	if save_data != null:
+		return
+	
 	var file: File = File.new()
 	
 	if file.file_exists(_get_config_file_path()):
@@ -57,6 +60,7 @@ func _load_data_from_default_resource() -> void:
 	
 	save_data.jobs.clear()
 	
+	# Duplicate the jobs because their level and other members can be changed
 	for default_job in default_save_data.jobs:
 		var job = default_job.duplicate()
 		
@@ -68,7 +72,8 @@ func _load_data_from_default_resource() -> void:
 func save() -> void:
 	var jobs := []
 	
-	# Save jobs an array of dictionaries
+	# Save jobs as an array of dictionaries. Preserve the order
+	# so that active_units can point to the correct units.
 	for job in save_data.jobs:
 		jobs.push_back(job.to_dictionary())
 	
