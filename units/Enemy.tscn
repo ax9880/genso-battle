@@ -48,10 +48,10 @@ disabled = true
 [node name="Control" parent="." index="8"]
 theme = ExtResource( 10 )
 
-[node name="HpBar" parent="Control" index="1"]
+[node name="HpBar" parent="Control" index="0"]
 texture_progress = ExtResource( 4 )
 
-[node name="Container" parent="Control" index="4"]
+[node name="Container" parent="Control" index="3"]
 visible = true
 
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]

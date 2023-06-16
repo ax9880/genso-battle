@@ -395,7 +395,7 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 		damage = int(damage * random.randf_range(0.9, 1.1))
 		
 		if skill.is_healing():
-			damage = -damage
+			damage = -damage * 3
 		
 		var absorbed_damage = int(skill.absorb_rate * damage)
 		
@@ -415,14 +415,14 @@ func calculate_damage(attacker_stats: StartingStats,
 			attribute: int) -> int:
 	var damage: float = 0
 	
-	if weapon_type != Enums.WeaponType.STAFF:
-		damage = 1.57 * power * attacker_stats.attack * attacker_stats.attack / defender_stats.defense
-		
-		damage = damage * get_weapon_type_advantage(attacker_stats.weapon_type, defender_stats.weapon_type)
-	else:
+	if weapon_type == Enums.WeaponType.STAFF:
 		damage = 1.8 * power * attacker_stats.attack * attacker_stats.attack / defender_stats.defense
 		
 		damage = damage * (1 - get_attribute_resistance(defender_stats, attribute, defender_stats.attribute))
+	else:
+		damage = 1.57 * power * attacker_stats.attack * attacker_stats.attack / defender_stats.defense
+		
+		damage = damage * get_weapon_type_advantage(attacker_stats.weapon_type, defender_stats.weapon_type)
 	
 	return int(damage)
 
