@@ -2,9 +2,10 @@ extends HBoxContainer
 
 
 const ICONS: Dictionary = {
-	"YACHIE": "res://assets/enemies/orbling_haniwa.png",
-	"SAKI": "res://assets/enemies/orbling_dracorin.png",
-	"YUUMA": "res://assets/enemies/orbling_haniwa.png",
+	"YACHIE": "res://assets/player/yachie.png",
+	"SAKI": "res://assets/player/saki.png",
+	"YUUMA": "res://assets/player/yuuma.png",
+	"HAWK_SPIRIT": "res://assets/player/eagle_1.png"
 }
 
 const NINE_PATCH_TEXTURES: Dictionary = {
@@ -50,13 +51,13 @@ func initialize(dialogue_message) -> void:
 	if NINE_PATCH_TEXTURES.has(speaker):
 		$MarginContainer/NinePatchRect.texture  = load(NINE_PATCH_TEXTURES[speaker])
 	
-	
 	message_label.percent_visible = 0
 	accumulated_time_seconds = 0
 
 
 func start_showing_text() -> void:
-	set_process(true)
+	if message_label.percent_visible < 1.0:
+		set_process(true)
 
 
 func _slowly_make_text_visible(delta: float, label: Label) -> void:
@@ -66,7 +67,7 @@ func _slowly_make_text_visible(delta: float, label: Label) -> void:
 		label.visible_characters += 1
 		accumulated_time_seconds = 0
 	
-	if label.percent_visible >= 1:
+	if label.percent_visible >= 1.0:
 		set_text_fully_visible()
 
 
