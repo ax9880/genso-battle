@@ -17,6 +17,7 @@ WOLF_SPIRIT,Wolf Spirit,Espíritu Lobo
 EAGLE_SPIRIT,Eagle Spirit,Espíritu Águila
 HAWK_SPIRIT,Eagle Spirit,Espíritu Águila
 BATTLES,Battles,Batallas
+BATTLE,Battle,Batalla
 SQUAD,Squad,Escuadrón
 SQUAD_DESCRIPTION,You can have up to 6 units in your squad,Puedes tener hasta 6 unidades en tu escuadrón
 CHOOSE,Choose,Elegir
@@ -35,6 +36,14 @@ DEFEAT,DEFEAT,DERROTA
 CLICK,Click,Clic
 HOLD,Hold,Mantener
 DEFEAT,DEFEAT,DERROTA
+POST_BATTLE,"After the battle, the leaders retire to their quarters to rest.","Después de la batalla, las líderes se retiran a sus cuarteles para descansar."
+CHOOSE_A_PAIR,Choose a pair.,Elige una pareja.
+YACHIE_AND_SAKI,Yachie and Saki,Yachie y Saki
+SAKI_AND_YUUMA,Saki and Yuuma,Saki y Yuuma
+YUUMA_AND_YACHIE,Yuuma and Yachie,Yuuma y Yachie
+THIS_IS_IT,"This is it for now, but please look forward to the rest of the game soon!","Eso es todo por ahora, pero por favor espera próximamente al resto del juego."
+TUTORIAL,Tutorial,Tutorial
+BATTLE_1_TITLE,Greaves of Clay,Grebas de Arcilla
 NONE,None,Ninguno
 EQUIP,Equip,Equipado
 PINCER,Pincer,Cerco
