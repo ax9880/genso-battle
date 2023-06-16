@@ -12,8 +12,14 @@ CREDITS_TEXT,"TODO: Write credits","TODO: Escribir créditos"
 YACHIE,Yachie,Yachie
 SAKI,Saki,Saki
 YUUMA,Yuuma,Yuuma
+OTTER,Eagle Spirit,Espíritu Nutria
+WOLF,Wolf Spirit,Espíritu Lobo
+EAGLE,Eagle Spirit,Espíritu Águila
+HAWK_SPIRIT,Eagle Spirit,Espíritu Águila
 BATTLES,Battles,Batallas
 SQUAD,Squad,Escuadrón
+SQUAD_DESCRIPTION,You can have up to 6 units in your squad,Puedes tener hasta 6 unidades en tu escuadrón
+CHOOSE,Choose,Elegir
 RETURN_TO_MAIN_MENU,Main menu,Menú principal
 ADD_UNIT,Add unit,Agregar unidad
 REMOVE,Remove,Quitar
@@ -47,13 +53,51 @@ PUNCH,Punch,Puño
 HEALING_AURA,Healing aura,Aura curativa
 SWEEP,Sweep,Barrido
 TAIL_SWEEP,Tail sweep,Barrido de cola
+GUN_SHOT,Gun shot,Disparo
 HANIWA_WARRIOR,Haniwa Warrior,Guerrero Haniwa
 HANIWA_ORBLING,Haniwa Orbling,Orbe Haniwa
 DRACORIN,Dracorin,Dracorín
-PAGE_1_LINE_1,This is the animal realm.,Este es el reino animal.
-PAGE_1_LINE_2,A place where only the strong survive.,Un lugar donde solo los más fuertes sobreviven.
-PAGE_2_LINE_1,"And this is a longer sentence—
-
-With a line break.","Y esta es una frase más larga—
-
-Con un salto de línea."
+PART_1_TITLE,Greaves of Clay Stomping On A Spirit’s Head Forever,Grebas de Arcilla Pisoteando Eternamente la Cabeza de un Espíritu
+PART_1_PROLOGUE_LINE_1,"Immortal soldiers of clay, the hollow haniwa, have invaded the animal realm.","Soldados de arcilla inmortales, los haniwa, han invadido el reino animal."
+PART_1_PROLOGUE_LINE_2,"The streets shake with their thousands-strong march.
+","Las calles se sacuden con la marcha de millares de soldados.
+"
+PART_1_PROLOGUE_LINE_3,"Every day they seize another swath of land.","Cada día toman otro pedazo de tierra."
+PART_1_PROLOGUE_LINE_4,"Every day, a skyscraper falls.","Cada día, cae un rascacielos."
+PART_1_PROLOGUE_LINE_5,"Every day, a reckless cavalry charge routes a division of animal spirits.
+","Cada día, una carga de caballería insensata derrota una división de espíritus animales.
+"
+PART_1_PROLOGUE_LINE_6,"The haniwa’s tactics were seemingly suicidal, taking devastating losses while fighting to the last, until a long awaited report arrived to a certain matriarch.
+","Las tácticas de los haniwa eran aparentemente suicidas, tomando pérdidas devastadoras y luchando hasta lo último, hasta que un esperado reporte llegó a cierta matriarca.
+"
+PART_1_PROLOGUE_LINE_7,"From the very mud of the Primate Garden they came, sculpted to life.
+","Surgieron del mismo barro del Jardín de los Primates, esculpidos a la vida.
+"
+PART_1_PROLOGUE_LINE_8,"When the dreadful news spread, a deal between the great houses of the animal realm was struck…","Cuando se difundió la terrible noticia, se realizó una alianza entre las grandes familias del reino animal…"
+PART_1_DIALOGUE_LINE_1,"I don’t trust you.","No confío en ti."
+PART_1_DIALOGUE_LINE_2,"I haven't started yet.","Ni he empezado."
+PART_1_DIALOGUE_LINE_3,"I know what I said.","Sé lo que dije."
+PART_1_DIALOGUE_LINE_4,"An alliance, was it?","¿Una alianza, dijiste?"
+PART_1_DIALOGUE_LINE_5,"Yes, of the non-aggression variety. We DON’T use our spirits for backstabbing one another until after the haniwa threat is dealt with. ","Si, una de no agresión. En la que NO usamos nuestros espíritus para darnos puñaladas en la espalda las unas a las otras hasta que hayamos lidado con los haniwa."
+PART_1_DIALOGUE_LINE_6,"Think you two can handle that?","¿Creen que pueden aguantar eso?"
+PART_1_DIALOGUE_LINE_7,"What about…?","¿Qué hay de...?"
+PART_1_DIALOGUE_LINE_8,"“Frontstabbing,” falls under backstabbing.","“Puñaladas de frente”, cuentan como puñaladas por la espalda."
+PART_1_DIALOGUE_LINE_9,"Darn it. ","Rayos."
+PART_1_DIALOGUE_LINE_10,"Surely that’s not the only reason we’re all here. ","Apuesto a que esa no es la única razón por la que estamos aquí."
+PART_1_DIALOGUE_LINE_11,"I also have a plan. ","También tengo un plan."
+PART_1_DIALOGUE_LINE_12,"Caw! Chairwoman Yuuma!","¡Co, co! ¡Presidenta Yuuma!"
+PART_1_DIALOGUE_LINE_13,"What is it? Report!","¿Qué sucede? ¡Repórtalo!"
+PART_1_DIALOGUE_LINE_14,"A division of haniwa is marching toward our position. Caw!","Una división de haniwa está marchando hacia nuestra ubicación. ¡Co!"
+PART_1_DIALOGUE_LINE_15,"Let’s further acquaint ourselves in the fight.","Platiquemos un poco más en la pelea."
+PART_1_DIALOGUE_LINE_16,"Yeah! Violence!","¡Si! ¡Violencia!"
+PART_1_DIALOGUE_LINE_17,"If we must.","Si no hay más remedio."
+PART_1_EPILOGUE_LINE_1,"Shards of clay litter the streets.
+","Fragmentos de arcilla yacían por toda la calle.
+"
+PART_1_EPILOGUE_LINE_2,"The battle was won, but the war raged elsewhere. Outside of their immediate control, the matriarchs knew any clash with the haniwa would be pyrrhic at best.
+","Se ganó la batalla, pero la guerra seguía. Fuera de su control inmediato, las matriarcas sabían que cualquier contienda con los haniwa sería una victoria pírrica en el mejor de los casos.
+"
+PART_1_EPILOGUE_LINE_3,"They couldn’t win in an honest war, but no one fights fair in the Animal Realm.
+","No podían ganar en una guerra honesta, pero nadie da una lucha honesta en el Reino Animal.
+"
+PART_1_EPILOGUE_LINE_4,"Yachie said, “About your plan, Yuuma…”","Yachie dijo, “Sobre tu plan, Yuuma…”"
