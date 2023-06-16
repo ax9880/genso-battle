@@ -1,6 +1,8 @@
 extends Control
 
 
+export(String, FILE, "*.tscn") var next_scene: String
+
 export(PackedScene) var dialogue_message_container_packed_scene
 export(String, MULTILINE) var dialogue_json: String
 
@@ -90,8 +92,7 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	#var _error = get_tree().change_scene("res://ui/PreBattleMenu.tscn")
-	Navigator.go_to_next()
+	var _error = get_tree().change_scene(next_scene)
 
 
 func _on_Timer_timeout() -> void:

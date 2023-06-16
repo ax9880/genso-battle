@@ -1,5 +1,6 @@
 extends Control
 
+export(String, FILE, "*.tscn") var next_scene: String
 
 export(Array, Array, String) var pages := []
 
@@ -100,7 +101,7 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	Navigator.go_to_next()
+	var _error = get_tree().change_scene(next_scene)
 
 
 func _on_SkipButton_pressed() -> void:

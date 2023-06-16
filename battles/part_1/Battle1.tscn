@@ -1,5 +1,82 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Battle.tscn" type="PackedScene" id=1]
+[ext_resource path="res://units/enemies/Dracorin.tscn" type="PackedScene" id=2]
+[ext_resource path="res://units/enemies/HaniwaOrbling.tscn" type="PackedScene" id=3]
 
 [node name="BoardUI" instance=ExtResource( 1 )]
+next_scene = "res://battles/part_1/ScriptCutscenePart1Epilogue.tscn"
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 3 )]
+position = Vector2( 251, 256 )
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="1" instance=ExtResource( 3 )]
+position = Vector2( 349, 253 )
+turn_counter = 2
+
+[node name="Phase2" parent="Board/EnemyPhases" index="1"]
+visible = false
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase2" index="0" instance=ExtResource( 3 )]
+position = Vector2( 149, 352 )
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase2" index="1" instance=ExtResource( 3 )]
+position = Vector2( 449, 344 )
+turn_counter = 2
+
+[node name="HaniwaOrbling4" parent="Board/EnemyPhases/Phase2" index="2" instance=ExtResource( 3 )]
+position = Vector2( 453, 145 )
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase2" index="3" instance=ExtResource( 2 )]
+position = Vector2( 157, 152 )
+turn_counter = 2
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase3" index="0" instance=ExtResource( 2 )]
+position = Vector2( 61, 344 )
+turn_counter = 2
+
+[node name="Dracorin2" parent="Board/EnemyPhases/Phase3" index="1" instance=ExtResource( 2 )]
+position = Vector2( 53, 454 )
+turn_counter = 3
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase3" index="2" instance=ExtResource( 3 )]
+position = Vector2( 549, 456 )
+turn_counter = 2
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase3" index="3" instance=ExtResource( 3 )]
+position = Vector2( 549, 560 )
+
+[node name="Phase4" parent="Board/EnemyPhases" index="3"]
+visible = false
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase4" index="0" instance=ExtResource( 3 )]
+position = Vector2( 57, 49 )
+turn_counter = 2
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase4" index="1" instance=ExtResource( 3 )]
+position = Vector2( 549, 50 )
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase4" index="2" instance=ExtResource( 2 )]
+position = Vector2( 251, 248 )
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase5" index="0" instance=ExtResource( 2 )]
+position = Vector2( 251, 351 )
+
+[node name="Dracorin2" parent="Board/EnemyPhases/Phase5" index="1" instance=ExtResource( 2 )]
+position = Vector2( 349, 248 )
+
+[node name="Dracorin3" parent="Board/EnemyPhases/Phase5" index="2" instance=ExtResource( 2 )]
+position = Vector2( 149, 152 )
+turn_counter = 2
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase5" index="3" instance=ExtResource( 3 )]
+position = Vector2( 253, 744 )
+turn_counter = 3
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase5" index="4" instance=ExtResource( 3 )]
+position = Vector2( 341, 656 )
+turn_counter = 2
+
+[node name="HaniwaOrbling3" parent="Board/EnemyPhases/Phase5" index="5" instance=ExtResource( 3 )]
+position = Vector2( 253, 566 )
+turn_counter = 2
