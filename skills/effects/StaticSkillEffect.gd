@@ -16,6 +16,7 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 		
 		add_child(animated_sprite)
 		animated_sprite.position = cell.position
+		animated_sprite.frame = 0
 		
 		if activation_frame > 0:
 			var _error = animated_sprite.connect("frame_changed", self,

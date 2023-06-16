@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://skills/Skill.gd" type="Script" id=1]
-[ext_resource path="res://skills/effects/StaticSkillEffect.tscn" type="PackedScene" id=2]
+[ext_resource path="res://skills/effects/ChompSkillEffect.tscn" type="PackedScene" id=2]
 
 [resource]
 script = ExtResource( 1 )
@@ -9,15 +9,15 @@ skill_name = "CHOMP"
 skill_type = 0
 area_of_effect = 2
 area_of_effect_size = 1
-activation_rate = 1.0
+activation_rate = 0.3
 is_pusher = false
-primary_power = 3.0
+primary_power = 1.5
 primary_weapon_type = 2
 primary_attribute = 0
 secondary_power = 0.0
 secondary_weapon_type = 1
 secondary_attribute = 0
-absorb_rate = 0.3
+absorb_rate = 0.6
 max_heal = 700
 status_effect = 0
 status_effect_duration_turns = 0

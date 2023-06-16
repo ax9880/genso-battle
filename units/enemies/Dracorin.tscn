@@ -1,15 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://units/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://jobs/DracorinJob.tres" type="Resource" id=2]
+[ext_resource path="res://assets/sfx/pot_break_2.wav" type="AudioStream" id=3]
 
 [node name="Dracorin" instance=ExtResource( 1 )]
 
 [node name="Job" parent="." index="2"]
 job = ExtResource( 2 )
 
-[node name="Glow" parent="Sprite" index="0"]
-visible = true
+[node name="DeathAudio" parent="Sound" index="1"]
+stream = ExtResource( 3 )
 
 [node name="AIController" parent="." index="11"]
 behaviors = [ 1, 2, 2 ]

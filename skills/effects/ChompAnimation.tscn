@@ -1,50 +1,87 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://assets/vfx/hit_simple.png" type="Texture" id=1]
+[ext_resource path="res://assets/vfx/chomp.png" type="Texture" id=1]
 
 [sub_resource type="CanvasItemMaterial" id=8]
 blend_mode = 1
 
-[sub_resource type="AtlasTexture" id=1]
-flags = 5
+[sub_resource type="AtlasTexture" id=9]
+flags = 4
 atlas = ExtResource( 1 )
-region = Rect2( 0, 0, 512, 512 )
+region = Rect2( 0, 0, 256, 256 )
 
-[sub_resource type="AtlasTexture" id=2]
-flags = 5
+[sub_resource type="AtlasTexture" id=10]
+flags = 4
 atlas = ExtResource( 1 )
-region = Rect2( 512, 0, 512, 512 )
+region = Rect2( 256, 0, 256, 256 )
 
-[sub_resource type="AtlasTexture" id=3]
-flags = 5
+[sub_resource type="AtlasTexture" id=11]
+flags = 4
 atlas = ExtResource( 1 )
-region = Rect2( 1024, 0, 512, 512 )
+region = Rect2( 512, 0, 256, 256 )
 
-[sub_resource type="AtlasTexture" id=4]
-flags = 5
+[sub_resource type="AtlasTexture" id=12]
+flags = 4
 atlas = ExtResource( 1 )
-region = Rect2( 0, 512, 512, 512 )
+region = Rect2( 768, 0, 256, 256 )
 
-[sub_resource type="AtlasTexture" id=5]
-flags = 5
+[sub_resource type="AtlasTexture" id=13]
+flags = 4
 atlas = ExtResource( 1 )
-region = Rect2( 512, 512, 512, 512 )
+region = Rect2( 0, 256, 256, 256 )
 
-[sub_resource type="AtlasTexture" id=6]
-flags = 5
+[sub_resource type="AtlasTexture" id=14]
+flags = 4
 atlas = ExtResource( 1 )
-region = Rect2( 1024, 512, 512, 512 )
+region = Rect2( 256, 256, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=15]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 512, 256, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=16]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 768, 256, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=17]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 512, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=18]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 256, 512, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=19]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 512, 512, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=20]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 768, 512, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=21]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 256, 768, 256, 256 )
 
 [sub_resource type="SpriteFrames" id=7]
 animations = [ {
-"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"frames": [ SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ), SubResource( 20 ), SubResource( 21 ) ],
 "loop": false,
 "name": "default",
-"speed": 12.0
+"speed": 16.0
 } ]
 
 [node name="ChompAnimation" type="AnimatedSprite"]
-modulate = Color( 0.258824, 0.913725, 0.694118, 1 )
+modulate = Color( 0.780392, 0.968627, 0.94902, 1 )
 material = SubResource( 8 )
-scale = Vector2( 0.25, 0.25 )
+scale = Vector2( 0.4, 0.4 )
 frames = SubResource( 7 )
+frame = 12
+playing = true

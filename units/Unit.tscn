@@ -17,7 +17,7 @@
 [ext_resource path="res://assets/fonts/Exo2-Regular.ttf" type="DynamicFontData" id=15]
 [ext_resource path="res://assets/sfx/casino/shove2.wav" type="AudioStream" id=16]
 [ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=17]
-[ext_resource path="res://assets/sfx/pot_break_2.wav" type="AudioStream" id=19]
+[ext_resource path="res://assets/sfx/youkai_death.wav" type="AudioStream" id=18]
 [ext_resource path="res://assets/sfx/ceramic_drag_2.wav" type="AudioStream" id=20]
 [ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=21]
 [ext_resource path="res://assets/ui/sword.png" type="Texture" id=22]
@@ -468,7 +468,7 @@ stream = ExtResource( 16 )
 bus = "Sound effects"
 
 [node name="DeathAudio" type="AudioStreamPlayer" parent="Sound"]
-stream = ExtResource( 19 )
+stream = ExtResource( 18 )
 volume_db = 3.0
 bus = "Sound effects"
 

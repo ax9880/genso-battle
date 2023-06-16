@@ -117,7 +117,7 @@ func _find_pincer(grid: Grid, navigation_graph: Dictionary, allies: Array, enemi
 	
 	if next_cell == null:
 		# Random chance to use a skill if a pincer is not found
-		if random.randf() < 0.4:
+		if random.randf() < 0.6:
 			_find_skill_move(grid, navigation_graph, allies, enemies)
 		else:
 			_find_cell_close_to_enemy(grid, navigation_graph, allies, enemies)

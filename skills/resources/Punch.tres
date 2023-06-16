@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://skills/Skill.gd" type="Script" id=1]
-[ext_resource path="res://skills/effects/StaticSkillEffect.tscn" type="PackedScene" id=2]
+[ext_resource path="res://skills/effects/SimpleHitSkillEffect.tscn" type="PackedScene" id=2]
 
 [resource]
 script = ExtResource( 1 )
@@ -9,7 +9,7 @@ skill_name = "PUNCH"
 skill_type = 0
 area_of_effect = 2
 area_of_effect_size = 1
-activation_rate = 0.2
+activation_rate = 0.3
 is_pusher = false
 primary_power = 1.5
 primary_weapon_type = 1

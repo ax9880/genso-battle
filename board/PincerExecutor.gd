@@ -88,6 +88,9 @@ func _activate_next_skill() -> void:
 	else:
 		$SkillActivationTimer.stop()
 		
+		if not (attack_skills.empty() and heal_skills.empty()):
+			yield(get_tree().create_timer(1), "timeout")
+		
 		emit_signal("skill_activation_phase_finished")
 
 

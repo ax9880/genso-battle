@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://skills/Skill.gd" type="Script" id=1]
-[ext_resource path="res://skills/effects/StaticSkillEffect.tscn" type="PackedScene" id=2]
+[ext_resource path="res://skills/effects/SweepSkillEffect.tscn" type="PackedScene" id=2]
 
 [resource]
 script = ExtResource( 1 )
@@ -11,7 +11,7 @@ area_of_effect = 6
 area_of_effect_size = 2
 activation_rate = 0.3
 is_pusher = false
-primary_power = 0.5
+primary_power = 1.5
 primary_weapon_type = 0
 primary_attribute = 0
 secondary_power = 0.0

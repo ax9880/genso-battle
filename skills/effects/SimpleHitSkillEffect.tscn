@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://skills/effects/StaticSkillEffect.tscn" type="PackedScene" id=1]
+[ext_resource path="res://skills/effects/SimpleHitAnimation.tscn" type="PackedScene" id=2]
+
+[node name="StaticSkillEffect" instance=ExtResource( 1 )]
+animation_packed_scene = ExtResource( 2 )

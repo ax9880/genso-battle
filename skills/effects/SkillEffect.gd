@@ -106,4 +106,8 @@ func _update_count(unit: Unit) -> void:
 		
 		emit_signal("effect_finished")
 		hide()
+		
+		if $SkillSound.playing:
+			yield($SkillSound, "finished")
+		
 		queue_free()
