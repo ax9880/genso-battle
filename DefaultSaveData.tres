@@ -1,15 +1,18 @@
-[gd_resource type="Resource" load_steps=5 format=2]
+[gd_resource type="Resource" load_steps=8 format=2]
 
 [ext_resource path="res://SaveData.gd" type="Script" id=1]
 [ext_resource path="res://jobs/SakiJob.tres" type="Resource" id=2]
 [ext_resource path="res://jobs/YachieJob.tres" type="Resource" id=3]
 [ext_resource path="res://jobs/YuumaJob.tres" type="Resource" id=4]
+[ext_resource path="res://jobs/OtterSpiritJob.tres" type="Resource" id=5]
+[ext_resource path="res://jobs/EagleSpiritJob.tres" type="Resource" id=6]
+[ext_resource path="res://jobs/WolfSpiritJob.tres" type="Resource" id=7]
 
 [resource]
 script = ExtResource( 1 )
 version = 1
-jobs = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 2 ) ]
-active_units = [ 0, 1, 2 ]
+jobs = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 6 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 6 ) ]
+active_units = [ 0, 1, 2, 3, 4, 5 ]
 battle_progress = {
 }
 current_battle_index = 0
