@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/TitleScreen.gd" type="Script" id=2]
+[ext_resource path="res://assets/ui/title.png" type="Texture" id=3]
 
 [node name="TitleScreen" type="Control"]
 anchor_right = 1.0
@@ -32,17 +33,17 @@ grow_vertical = 2
 custom_constants/separation = 12
 alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer2"]
-margin_top = 193.0
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer2"]
 margin_right = 620.0
-margin_bottom = 222.0
-size_flags_vertical = 6
-text = "GAME TITLE"
-align = 1
+margin_bottom = 504.0
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer2"]
 margin_left = 190.0
-margin_top = 427.0
+margin_top = 516.0
 margin_right = 430.0
 margin_bottom = 860.0
 rect_min_size = Vector2( 240, 0 )
@@ -57,6 +58,7 @@ margin_bottom = 77.0
 text = "START"
 
 [node name="ContinueButton" type="Button" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
+visible = false
 margin_top = 89.0
 margin_right = 240.0
 margin_bottom = 166.0
@@ -64,21 +66,21 @@ disabled = true
 text = "CONTINUE"
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
-margin_top = 178.0
+margin_top = 89.0
 margin_right = 240.0
-margin_bottom = 255.0
+margin_bottom = 166.0
 text = "SETTINGS"
 
 [node name="CreditsButton" type="Button" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
-margin_top = 267.0
+margin_top = 178.0
 margin_right = 240.0
-margin_bottom = 344.0
+margin_bottom = 255.0
 text = "CREDITS"
 
 [node name="QuitButton" type="Button" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
-margin_top = 356.0
+margin_top = 267.0
 margin_right = 240.0
-margin_bottom = 433.0
+margin_bottom = 344.0
 text = "QUIT"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/StartButton" to="." method="_on_StartButton_pressed"]
