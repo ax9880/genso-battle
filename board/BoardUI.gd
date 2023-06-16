@@ -3,8 +3,8 @@ extends MarginContainer
 
 export(String, FILE, "*.tscn") var next_scene: String
 
-onready var progress_bar: TextureProgress = $MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
-onready var tween: Tween = $MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
+onready var progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
+onready var tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
 
 var timer: Timer
 var player_turn_count: int = 0
