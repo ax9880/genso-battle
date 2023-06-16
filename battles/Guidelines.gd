@@ -31,4 +31,7 @@ func _on_Board_player_turn_started() -> void:
 		
 		for i in range(1, units.get_child_count()):
 			units.get_child(i).disable_selection_area()
-	
+
+
+func _on_GiveUpButton_pressed() -> void:
+	$Phase4/CanvasLayer.hide()
