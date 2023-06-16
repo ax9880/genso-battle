@@ -100,7 +100,7 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	get_tree().change_scene("res://ui/DialogueCutscene.tscn")
+	Navigator.go_to_next()
 
 
 func _on_SkipButton_pressed() -> void:

@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
-pages = [ [ "PAGE_1_LINE_1", "PAGE_1_LINE_2" ], [ "PAGE_2_LINE_1" ] ]
+pages = [ [ "" ] ]
 text_label_packed_scene = ExtResource( 5 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -51,7 +51,7 @@ margin_bottom = 910.0
 
 [node name="TextVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 margin_right = 620.0
-margin_bottom = 779.0
+margin_bottom = 775.0
 size_flags_vertical = 3
 
 [node name="Label" parent="MarginContainer/VBoxContainer/TextVBoxContainer" instance=ExtResource( 5 )]
