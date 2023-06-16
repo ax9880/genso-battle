@@ -2,29 +2,30 @@ extends Control
 
 
 export(PackedScene) var dialogue_message_container_packed_scene
+export(String, MULTILINE) var dialogue_json: String
 
 onready var messages_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer
 onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
 
-# TODO: Load from a JSON?
-var lines: Array = [
-	{"speaker": "YACHIE", "line": "Hello, I am Yachie."},
-	{"speaker": "SAKI", "line": "Howdy, Yachie, I am Saki. How have you been?"},
-	{"speaker": "YACHIE", "line": "Eh, been better. Have you seen Yuuma around?\n\nShe owes me 10000 yen."},
-	{"speaker": "YUUMA", "line": "What's up gamers?"},
-	{"speaker": "SAKI", "line": "There she is."},
-	{"speaker": "YACHIE", "line": "Yuuma, I want my money back."},
-	{"speaker": "YUUMA", "line": "Sorry Yachie, I ate it."},
-]
+# Array of objects with these members:
+# speaker: String
+# line: String
+var lines: Array = []
 
 var current_line: int = 0
 var current_dialogue_message_container: Control
 var estimated_container_size: float
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	_free_container_children()
+	
+	var json: JSONParseResult = JSON.parse(dialogue_json)
+	
+	assert(typeof(json.result) == TYPE_ARRAY)
+	
+	if typeof(json.result) == TYPE_ARRAY:
+		lines = json.result
 	
 	_show_next_line()
 
@@ -47,7 +48,7 @@ func update_scroll() -> void:
 	if estimated_container_size > scroll_container.rect_size.y:
 		$Tween.interpolate_property(scroll_container, "scroll_vertical",
 			scroll_container.scroll_vertical, scroll_container.get_v_scrollbar().max_value,
-			1.0,
+			1.2,
 			Tween.TRANS_SINE)
 		
 		$Tween.start()
@@ -89,7 +90,8 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	var _error = get_tree().change_scene("res://ui/PreBattleMenu.tscn")
+	#var _error = get_tree().change_scene("res://ui/PreBattleMenu.tscn")
+	Navigator.go_to_next()
 
 
 func _on_Timer_timeout() -> void:
