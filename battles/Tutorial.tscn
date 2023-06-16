@@ -872,6 +872,7 @@ position = Vector2( 151, 753 )
 texture = ExtResource( 2 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Board/Guidelines/Phase4" index="6"]
+visible = false
 
 [node name="MarginContainer" type="MarginContainer" parent="Board/Guidelines/Phase4/CanvasLayer" index="0"]
 anchor_left = 0.5
@@ -914,6 +915,7 @@ margin_left = 64.0
 margin_top = 64.0
 margin_right = 464.0
 margin_bottom = 384.0
+mouse_filter = 2
 custom_constants/margin_right = 8
 custom_constants/margin_top = 8
 custom_constants/margin_left = 8
