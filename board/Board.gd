@@ -99,10 +99,15 @@ func _load_player_units() -> void:
 		# Load the first X active units
 		if i < save_data.active_units.size():
 			var index: int = save_data.active_units[i]
-		
+			
 			var job: Job = save_data.jobs[index]
 			
-			player_units_node.get_child(i).set_job(job)
+			var unit: Unit = player_units_node.get_child(i)
+			
+			if unit.visible:
+				unit.set_job(job)
+			else:
+				discarded_units.append(unit)
 		else:
 			# If there are more units than active units then we free the rest
 			var discarded_unit: Unit = player_units_node.get_child(i)
@@ -133,11 +138,13 @@ func _load_enemy_phases() -> void:
 
 
 func _load_next_enemy_phase() -> void:
-	enemy_units_node = enemy_phases_queue.pop_front()
-	
-	if enemy_units_node == null or current_enemy_phase == enemy_phase_count:
+	if current_enemy_phase == enemy_phase_count:
 		emit_signal("victory")
+		
+		current_enemy_phase += 1
 	else:
+		enemy_units_node = enemy_phases_queue[current_enemy_phase]
+	
 		$EnemyPhases.add_child(enemy_units_node)
 		enemy_units_node.show()
 		
@@ -260,16 +267,16 @@ func _start_player_turn() -> void:
 	elif is_all_units_dead(enemy_units_node.get_children()):
 		_load_next_enemy_phase()
 		
-		if enemy_units_node != null:
+		if current_enemy_phase <= enemy_phase_count:
 			_make_enemies_appear(enemy_units_node.get_children())
-			
-			current_turn = Turn.PLAYER
-			
-			emit_signal("drag_timer_reset")
-			emit_signal("player_turn_started")
 		
-			for unit in player_units_node.get_children():
-				unit.enable_selection_area()
+		current_turn = Turn.PLAYER
+		
+		emit_signal("drag_timer_reset")
+		emit_signal("player_turn_started")
+	
+		for unit in player_units_node.get_children():
+			unit.enable_selection_area()
 	else:
 		current_turn = Turn.PLAYER
 		
