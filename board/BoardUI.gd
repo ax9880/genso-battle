@@ -1,6 +1,8 @@
 extends MarginContainer
 
 
+export(String, FILE, "*.tscn") var next_scene: String
+
 onready var progress_bar: TextureProgress = $MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
 onready var tween: Tween = $MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
 
@@ -13,6 +15,8 @@ func _ready() -> void:
 	set_process(false)
 	
 	GameData.load_data()
+	
+	$BattleTheme.play()
 
 
 func _process(_delta: float) -> void:
@@ -59,6 +63,8 @@ func _on_Board_victory() -> void:
 
 func _on_Board_defeat():
 	$CanvasLayer/DefeatScreen.show()
+	
+	$BattleTheme.stop()
 
 
 func _on_DefeatScreen_quit_button_pressed() -> void:
@@ -70,7 +76,7 @@ func _on_DefeatScreen_try_again_button_pressed() -> void:
 
 
 func _on_VictoryScreen_continue_button_pressed() -> void:
-	get_tree().change_scene("res://ui/PreBattleMenu.tscn")
+	get_tree().change_scene(next_scene)
 
 
 func _on_GiveUpButton_pressed() -> void:
