@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/DialogueCutscene.tscn" type="PackedScene" id=1]
+[ext_resource path="res://battles/part_1/DialogueCutscenePart1.gd" type="Script" id=2]
+
+[node name="DialogueCutscene" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+dialogue_json = "[
+    {
+        \"speaker\": \"SAKI\",
+        \"line\": \"PART_1_DIALOGUE_LINE_1\"
+    },
+    {
+        \"speaker\": \"YUUMA\",
+        \"line\": \"PART_1_DIALOGUE_LINE_2\"
+    },
+    {
+        \"speaker\": \"SAKI\",
+        \"line\": \"PART_1_DIALOGUE_LINE_3\"
+    },
+    {
+        \"speaker\": \"YACHIE\",
+        \"line\": \"PART_1_DIALOGUE_LINE_4\"
+    },
+    {
+        \"speaker\": \"YUUMA\",
+        \"line\": \"PART_1_DIALOGUE_LINE_5\"
+    },
+    {
+        \"speaker\": \"YUUMA\",
+        \"line\": \"PART_1_DIALOGUE_LINE_6\"
+    },
+    {
+        \"speaker\": \"SAKI\",
+        \"line\": \"PART_1_DIALOGUE_LINE_7\"
+    },
+    {
+        \"speaker\": \"YUUMA\",
+        \"line\": \"PART_1_DIALOGUE_LINE_8\"
+    },
+    {
+        \"speaker\": \"SAKI\",
+        \"line\": \"PART_1_DIALOGUE_LINE_9\"
+    },
+    {
+        \"speaker\": \"YACHIE\",
+        \"line\": \"PART_1_DIALOGUE_LINE_10\"
+    },
+    {
+        \"speaker\": \"YUUMA\",
+        \"line\": \"PART_1_DIALOGUE_LINE_11\"
+    },
+    {
+        \"speaker\": \"HAWK_SPIRIT\",
+        \"line\": \"PART_1_DIALOGUE_LINE_12\"
+    },
+    {
+        \"speaker\": \"YUUMA\",
+        \"line\": \"PART_1_DIALOGUE_LINE_13\"
+    },
+    {
+        \"speaker\": \"HAWK_SPIRIT\",
+        \"line\": \"PART_1_DIALOGUE_LINE_14\"
+    },
+    {
+        \"speaker\": \"YUUMA\",
+        \"line\": \"PART_1_DIALOGUE_LINE_15\"
+    },
+    {
+        \"speaker\": \"SAKI\",
+        \"line\": \"PART_1_DIALOGUE_LINE_16\"
+    },
+    {
+        \"speaker\": \"YACHIE\",
+        \"line\": \"PART_1_DIALOGUE_LINE_17\"
+    },
+]"
+
+[node name="Timer" parent="." index="4"]
+wait_time = 0.7
