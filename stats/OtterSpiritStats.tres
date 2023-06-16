@@ -6,7 +6,7 @@
 script = ExtResource( 1 )
 health = 1412
 attack = 42
-spiritual_attack = 68
+spiritual_attack = 78
 defense = 38
 spiritual_defense = 62
 status_ailment_vulnerability = 0.4
