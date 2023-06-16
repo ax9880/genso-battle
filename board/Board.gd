@@ -272,22 +272,22 @@ func _start_player_turn() -> void:
 		
 		current_turn = Turn.PLAYER
 		
-		emit_signal("drag_timer_reset")
-		emit_signal("player_turn_started")
-	
 		for unit in player_units_node.get_children():
 			unit.enable_selection_area()
+		
+		emit_signal("drag_timer_reset")
+		emit_signal("player_turn_started")
 	else:
 		current_turn = Turn.PLAYER
 		
 		for enemy in enemy_units_node.get_children():
 			enemy.reset_turn_counter()
 		
-		emit_signal("drag_timer_reset")
-		emit_signal("player_turn_started")
-		
 		for unit in player_units_node.get_children():
 			unit.enable_selection_area()
+		
+		emit_signal("drag_timer_reset")
+		emit_signal("player_turn_started")
 
 
 func has_less_than_min_squad_size_alive(units: Array) -> bool:

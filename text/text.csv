@@ -43,6 +43,15 @@ SAKI_AND_YUUMA,Saki and Yuuma,Saki y Yuuma
 YUUMA_AND_YACHIE,Yuuma and Yachie,Yuuma y Yachie
 THIS_IS_IT,"This is it for now, but please look forward to the rest of the game soon!","Eso es todo por ahora, pero por favor espera próximamente al resto del juego."
 TUTORIAL,Tutorial,Tutorial
+TUTORIAL_SWAP_PROMPT,"All but one units have been disabled.
+
+Swap your other units around by dragging said unit over them.
+
+Swap repeatedly unti you can line up your units for a pincer.","Se han deshabilitado todas las unidades, excepto una.
+
+Empuja tus otras unidades arrastrando la unidad habilitada sobre ellas.
+
+Empuja repetidamente hasta que puedas alinear tus unidades para cercar al enemigo."
 BATTLE_1_TITLE,Greaves of Clay,Grebas de Arcilla
 NONE,None,Ninguno
 EQUIP,Equip,Equipado
