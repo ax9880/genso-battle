@@ -11,3 +11,4 @@ damage_type = 1
 damage_effect_packed_scene = ExtResource( 2 )
 
 [node name="ActivationAudio" type="AudioStreamPlayer" parent="."]
+bus = "Sound effects"
