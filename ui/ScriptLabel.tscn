@@ -10,3 +10,4 @@ size_flags_horizontal = 3
 theme = ExtResource( 2 )
 custom_fonts/font = ExtResource( 1 )
 text = "TEXT"
+autowrap = true
