@@ -5,11 +5,11 @@
 
 [resource]
 script = ExtResource( 1 )
-skill_name = ""
+skill_name = "SHOOT"
 skill_type = 0
 area_of_effect = 2
 area_of_effect_size = 1
-activation_rate = 1.0
+activation_rate = 0.3
 is_pusher = false
 primary_power = 1.5
 primary_weapon_type = 1

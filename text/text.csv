@@ -12,9 +12,9 @@ CREDITS_TEXT,"TODO: Write credits","TODO: Escribir créditos"
 YACHIE,Yachie,Yachie
 SAKI,Saki,Saki
 YUUMA,Yuuma,Yuuma
-OTTER,Eagle Spirit,Espíritu Nutria
-WOLF,Wolf Spirit,Espíritu Lobo
-EAGLE,Eagle Spirit,Espíritu Águila
+OTTER_SPIRIT,Eagle Spirit,Espíritu Nutria
+WOLF_SPIRIT,Wolf Spirit,Espíritu Lobo
+EAGLE_SPIRIT,Eagle Spirit,Espíritu Águila
 HAWK_SPIRIT,Eagle Spirit,Espíritu Águila
 BATTLES,Battles,Batallas
 SQUAD,Squad,Escuadrón
@@ -53,7 +53,8 @@ PUNCH,Punch,Puño
 HEALING_AURA,Healing aura,Aura curativa
 SWEEP,Sweep,Barrido
 TAIL_SWEEP,Tail sweep,Barrido de cola
-GUN_SHOT,Gun shot,Disparo
+SHOOT,Gunshot,Disparo
+SLASH,Slash,Corte
 HANIWA_WARRIOR,Haniwa Warrior,Guerrero Haniwa
 HANIWA_ORBLING,Haniwa Orbling,Orbe Haniwa
 DRACORIN,Dracorin,Dracorín
@@ -65,7 +66,7 @@ PART_1_PROLOGUE_LINE_2,"The streets shake with their thousands-strong march.
 PART_1_PROLOGUE_LINE_3,"Every day they seize another swath of land.","Cada día toman otro pedazo de tierra."
 PART_1_PROLOGUE_LINE_4,"Every day, a skyscraper falls.","Cada día, cae un rascacielos."
 PART_1_PROLOGUE_LINE_5,"Every day, a reckless cavalry charge routes a division of animal spirits.
-","Cada día, una carga de caballería insensata derrota una división de espíritus animales.
+","Cada día, una carga de caballería insensata derrota a una división de espíritus animales.
 "
 PART_1_PROLOGUE_LINE_6,"The haniwa’s tactics were seemingly suicidal, taking devastating losses while fighting to the last, until a long awaited report arrived to a certain matriarch.
 ","Las tácticas de los haniwa eran aparentemente suicidas, tomando pérdidas devastadoras y luchando hasta lo último, hasta que un esperado reporte llegó a cierta matriarca.

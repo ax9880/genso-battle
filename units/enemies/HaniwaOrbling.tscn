@@ -8,10 +8,7 @@
 [node name="Job" parent="." index="2"]
 job = ExtResource( 2 )
 
-[node name="SkillLabelContainer" parent="CanvasLayer/ActivatedSkillMarginContainer/MarginContainer/VBoxContainer" index="0"]
-margin_right = 305.0
-
 [node name="AIController" parent="." index="11"]
-behaviors = [ 2, 1, 0, 0 ]
+behaviors = [ 2, 1, 2, 2 ]
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
