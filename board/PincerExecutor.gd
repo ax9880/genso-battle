@@ -83,6 +83,8 @@ func _activate_next_skill() -> void:
 			_queue_skills(unit, activated_skills)
 			
 			unit.play_skill_activation_animation(activated_skills, current_z_index)
+			
+			unit.play_scale_and_and_down_animation()
 		
 		current_z_index += 1
 	else:
@@ -179,6 +181,8 @@ func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 		var start_cell: Cell = grid.get_cell_from_position(next_skill.unit.position)
 		
 		skill_effect.start(next_skill.unit, next_skill.skill, filtered_cells, start_cell, pusher)
+		
+		next_skill.unit.stop_scale_and_and_down_animation()
 	else:
 		emit_signal(finish_signal)
 
