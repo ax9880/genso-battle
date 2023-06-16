@@ -18,7 +18,7 @@
 [ext_resource path="res://assets/sfx/casino/shove2.wav" type="AudioStream" id=16]
 [ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=17]
 [ext_resource path="res://assets/sfx/youkai_death.wav" type="AudioStream" id=18]
-[ext_resource path="res://assets/ui/unit_square_bg_red.png" type="Texture" id=19]
+[ext_resource path="res://assets/ui/unit_square_bg_2.png" type="Texture" id=19]
 [ext_resource path="res://assets/sfx/ceramic_drag_2.wav" type="AudioStream" id=20]
 [ext_resource path="res://assets/ui/sword.png" type="Texture" id=22]
 [ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=23]
@@ -350,14 +350,6 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Border" type="TextureRect" parent="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-__meta__ = {
-"_edit_lock_": true
-}
-
 [node name="HpBar" type="TextureProgress" parent="Control"]
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -378,6 +370,7 @@ script = ExtResource( 8 )
 [node name="Tween" type="Tween" parent="Control/HpBar"]
 
 [node name="Attribute" type="TextureRect" parent="Control"]
+visible = false
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
