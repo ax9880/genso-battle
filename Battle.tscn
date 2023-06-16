@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://board/Board.gd" type="Script" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
@@ -22,7 +22,6 @@
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=20]
 [ext_resource path="res://ui/VictoryScreen.tscn" type="PackedScene" id=21]
 [ext_resource path="res://ui/DragModeOptionButton.tscn" type="PackedScene" id=22]
-[ext_resource path="res://units/enemies/HaniwaOrbling.tscn" type="PackedScene" id=23]
 [ext_resource path="res://units/enemies/Dracorin.tscn" type="PackedScene" id=24]
 [ext_resource path="res://assets/ui/bright_red_panel_transparent.png" type="Texture" id=25]
 [ext_resource path="res://board/ChainPreviewer.gd" type="Script" id=27]
@@ -160,7 +159,6 @@ __meta__ = {
 }
 
 [node name="Phase1" type="Node2D" parent="Board/EnemyPhases"]
-visible = false
 z_index = 1
 __meta__ = {
 "_edit_lock_": true
@@ -169,44 +167,14 @@ __meta__ = {
 [node name="Dracorin" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 24 )]
 position = Vector2( 258, 337 )
 
-[node name="Dracorin2" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 24 )]
-position = Vector2( 437, 440 )
-
-[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 23 )]
-position = Vector2( 348, 248 )
-
-[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 23 )]
-position = Vector2( 142, 448 )
-
 [node name="Phase2" type="Node2D" parent="Board/EnemyPhases"]
 z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
-position = Vector2( 348, 248 )
-
-[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
-position = Vector2( 142, 448 )
-
-[node name="HaniwaOrbling3" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
-position = Vector2( 237, 351 )
-
-[node name="HaniwaOrbling4" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
-position = Vector2( 231, 544 )
-
-[node name="HaniwaOrbling5" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
-position = Vector2( 332, 449 )
-
-[node name="HaniwaOrbling6" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
-position = Vector2( 462, 432 )
-
-[node name="HaniwaOrbling7" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
-position = Vector2( 349, 338 )
-
-[node name="HaniwaOrbling8" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 23 )]
-position = Vector2( 355, 544 )
+[node name="Dracorin2" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 24 )]
+position = Vector2( 258, 337 )
 
 [node name="Phase3" type="Node2D" parent="Board/EnemyPhases"]
 visible = false
@@ -214,9 +182,6 @@ z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
-
-[node name="Dracorin" parent="Board/EnemyPhases/Phase3" instance=ExtResource( 24 )]
-position = Vector2( 258, 337 )
 
 [node name="Phase4" type="Node2D" parent="Board/EnemyPhases"]
 z_index = 1

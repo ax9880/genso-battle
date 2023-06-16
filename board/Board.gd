@@ -135,7 +135,7 @@ func _load_enemy_phases() -> void:
 func _load_next_enemy_phase() -> void:
 	enemy_units_node = enemy_phases_queue.pop_front()
 	
-	if enemy_units_node == null:
+	if enemy_units_node == null or current_enemy_phase == enemy_phase_count:
 		emit_signal("victory")
 	else:
 		$EnemyPhases.add_child(enemy_units_node)
