@@ -603,12 +603,9 @@ func _start_status_effect_phase() -> void:
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
 	var attack_queue := []
 	
-	# Pincering units first
+	# Pincering unit followed by its chain
 	for pincering_unit in pincer.pincering_units:
 		_queue_attack(attack_queue, pincer.pincered_units, pincering_unit)
-	
-	# Chained units next
-	for pincering_unit in pincer.pincering_units:
 		_queue_chain_attacks(attack_queue, pincer.chain_families[pincering_unit], pincer.pincered_units, pincering_unit)
 	
 	return attack_queue
@@ -811,12 +808,10 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	
 	if unit.is_alive():
 		assert(grid.get_cell_from_position(unit.position).unit == unit)
-	else:
-		$PincerExecutor.check_dead_units()
-		
-		yield($PincerExecutor, "finished_checking_for_dead_units")
-		
-		var cell = grid.get_cell_from_position(unit.position)
+	
+	$PincerExecutor.check_dead_units()
+	
+	yield($PincerExecutor, "finished_checking_for_dead_units")
 	
 	unit.z_index = 0
 	

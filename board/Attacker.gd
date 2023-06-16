@@ -50,6 +50,16 @@ func _execute_next_attack() -> void:
 
 
 func _execute_attack(attack: Attack) -> void:
+	match(attack.pincering_unit.get_stats().weapon_type):
+		Enums.WeaponType.SWORD:
+			$SwordAudio.play()
+		Enums.WeaponType.GUN:
+			$GunAudio.play()
+		Enums.WeaponType.SPEAR:
+			$SpearAudio.play()
+		Enums.WeaponType.STAFF:
+			$StaffAudio.play()
+	
 	for targeted_unit in attack.targeted_units:
 		var damage: int = targeted_unit.calculate_attack_damage(attack.attacking_unit.get_stats(), attack.pincering_unit.get_stats()) * random.randf_range(0.9, 1.1)
 		
@@ -57,8 +67,6 @@ func _execute_attack(attack: Attack) -> void:
 		add_child(attack_effect)
 		
 		attack_effect.position = targeted_unit.position
-		
-		$AudioStreamPlayer.play()
 		
 		targeted_unit.inflict_damage(damage)
 
