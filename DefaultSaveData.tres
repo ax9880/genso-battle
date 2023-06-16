@@ -7,8 +7,14 @@
 
 [resource]
 script = ExtResource( 1 )
+version = 1
 jobs = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 2 ) ]
 active_units = [ 0, 1, 2 ]
+battle_progress = {
+}
+current_battle_index = 0
+current_battle_scene_index = 0
 music_volume = 1.0
 sound_effects_volume = 1.0
 locale = ""
+drag_mode = 0
