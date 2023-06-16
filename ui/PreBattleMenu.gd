@@ -16,8 +16,8 @@ func _on_QuitButton_pressed() -> void:
 
 
 func _on_Button_pressed():
-	get_tree().change_scene("res://battles/TestBattle1.tscn")
+	get_tree().change_scene("res://battles/part_1/Battle1.tscn")
 
 
-func _on_Button6_pressed():
-	get_tree().change_scene("res://battles/TestBattle2.tscn")
+func _on_TutorialButton_pressed():
+	get_tree().change_scene("res://battles/Tutorial.tscn")

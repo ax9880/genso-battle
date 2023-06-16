@@ -83,6 +83,7 @@ size_flags_horizontal = 4
 text = "RETURN_TO_MAIN_MENU"
 clip_text = true
 
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer2/TutorialButton" to="." method="_on_TutorialButton_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer2/Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SquadButton" to="." method="_on_SquadButton_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
