@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Navigator.gd" type="Script" id=1]
+[ext_resource path="res://game_data/Battle1.tres" type="Resource" id=2]
+
+[node name="Navigator" type="Node"]
+script = ExtResource( 1 )
+battles = [ ExtResource( 2 ) ]

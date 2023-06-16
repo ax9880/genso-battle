@@ -39,6 +39,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://board/Attacker.gd"
 }, {
+"base": "Resource",
+"class": "BattleScenes",
+"language": "GDScript",
+"path": "res://game_data/BattleScenes.gd"
+}, {
 "base": "Node2D",
 "class": "Board",
 "language": "GDScript",
@@ -111,6 +116,7 @@ _global_script_class_icons={
 "AntialiasedRegularPolygon2D": "res://addons/antialiased_line2d/antialiased_regular_polygon2d.svg",
 "Attack": "",
 "Attacker": "",
+"BattleScenes": "",
 "Board": "",
 "BoardUtils": "",
 "Cell": "",
@@ -138,6 +144,7 @@ config/icon="res://assets/icon.png"
 Utils="*res://Utils.gd"
 Enums="*res://Enums.gd"
 GameData="*res://GameData.gd"
+Navigator="*res://Navigator.tscn"
 AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
 
 [display]
@@ -148,6 +155,10 @@ window/dpi/allow_hidpi=true
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
+
+[editor]
+
+main_run_args="--verbose"
 
 [editor_plugins]
 
