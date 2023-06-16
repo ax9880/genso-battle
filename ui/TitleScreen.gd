@@ -5,16 +5,25 @@ onready var quit_button: Button = $MarginContainer/VBoxContainer2/VBoxContainer/
 onready var start_button: Button = $MarginContainer/VBoxContainer2/VBoxContainer/StartButton
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	if OS.get_name() == "HTML5":
 		quit_button.hide()
 	
 	start_button.grab_focus()
+	
+	var save_data: SaveData = GameData.save_data
+	
+	if save_data.current_battle_index > 0 or save_data.current_battle_scene_index > 0:
+		start_button.text = tr("CONTINUE")
 
 
 func _on_StartButton_pressed() -> void:
-	var _error = get_tree().change_scene("res://ui/ScriptCutscene.tscn")
+	var save_data: SaveData = GameData.save_data
+	
+	if save_data.current_battle_index == 0 and save_data.current_battle_scene_index == 0:
+		var _error = get_tree().change_scene("res://battles/part_1/ScriptCutscenePart1.tscn")
+	else:
+		var _error = get_tree().change_scene("res://ui/PreBattleMenu.tscn")
 
 
 func _on_ContinueButton_pressed() -> void:
