@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://board/Board.gd" type="Script" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
@@ -22,7 +22,8 @@
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=20]
 [ext_resource path="res://ui/VictoryScreen.tscn" type="PackedScene" id=21]
 [ext_resource path="res://ui/DragModeOptionButton.tscn" type="PackedScene" id=22]
-[ext_resource path="res://units/enemies/Dracorin.tscn" type="PackedScene" id=24]
+[ext_resource path="res://assets/city_bg.png" type="Texture" id=23]
+[ext_resource path="res://assets/music/Unlocated_Hell.mp3" type="AudioStream" id=24]
 [ext_resource path="res://assets/ui/bright_red_panel_transparent.png" type="Texture" id=25]
 [ext_resource path="res://board/ChainPreviewer.gd" type="Script" id=27]
 [ext_resource path="res://board/ChainPreviewLine2D.tscn" type="PackedScene" id=28]
@@ -50,6 +51,21 @@ margin_right = 720.0
 margin_bottom = 960.0
 mouse_filter = 2
 color = Color( 0.207843, 0.0313726, 0.164706, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 720.0
+margin_bottom = 960.0
+mouse_filter = 2
+texture = ExtResource( 23 )
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+margin_right = 720.0
+margin_bottom = 960.0
+mouse_filter = 2
+color = Color( 0.207843, 0.0313726, 0.164706, 0.752941 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -164,17 +180,11 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Dracorin" parent="Board/EnemyPhases/Phase1" instance=ExtResource( 24 )]
-position = Vector2( 258, 337 )
-
 [node name="Phase2" type="Node2D" parent="Board/EnemyPhases"]
 z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
-
-[node name="Dracorin2" parent="Board/EnemyPhases/Phase2" instance=ExtResource( 24 )]
-position = Vector2( 258, 337 )
 
 [node name="Phase3" type="Node2D" parent="Board/EnemyPhases"]
 visible = false
@@ -202,22 +212,22 @@ __meta__ = {
 }
 
 [node name="Unit" parent="Board/Units" instance=ExtResource( 20 )]
-position = Vector2( 341, 744 )
+position = Vector2( 251, 456 )
 
 [node name="Unit2" parent="Board/Units" instance=ExtResource( 20 )]
-position = Vector2( 448, 744 )
+position = Vector2( 354, 455 )
 
 [node name="Unit3" parent="Board/Units" instance=ExtResource( 20 )]
-position = Vector2( 553, 752 )
+position = Vector2( 453, 552 )
 
 [node name="Unit4" parent="Board/Units" instance=ExtResource( 20 )]
-position = Vector2( 251, 646 )
+position = Vector2( 149, 549 )
 
 [node name="Unit5" parent="Board/Units" instance=ExtResource( 20 )]
-position = Vector2( 347, 643 )
+position = Vector2( 156, 648 )
 
 [node name="Unit6" parent="Board/Units" instance=ExtResource( 20 )]
-position = Vector2( 435, 647 )
+position = Vector2( 449, 649 )
 
 [node name="DebugUnits" type="Node2D" parent="Board"]
 visible = false
@@ -387,6 +397,7 @@ text = "GIVE_UP"
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 2 )
 
 [node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/EnemyPhaseCenterContainer"]
 margin_left = 200.0
@@ -423,6 +434,8 @@ margin_right = 720.0
 margin_bottom = 960.0
 
 [node name="BattleTheme" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 24 )
+volume_db = 1.0
 
 [connection signal="defeat" from="Board" to="." method="_on_Board_defeat"]
 [connection signal="drag_timer_reset" from="Board" to="." method="_on_Board_drag_timer_reset"]
