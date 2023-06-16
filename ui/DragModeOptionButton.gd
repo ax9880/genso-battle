@@ -8,10 +8,12 @@ signal drag_mode_changed(drag_mode)
 
 
 func _ready() -> void:
-	# TODO: Store and load this parameter
-	# TODO: update the option shown depending on the parameter
-	#var save_data: SaveData = GameData.load_data()
-	pass
+	var save_data: SaveData = GameData.save_data
+	
+	if save_data.drag_mode == Enums.DragMode.CLICK:
+		select(CLICK_MODE_INDEX)
+	else:
+		select(HOLD_MODE_INDEX)
 
 
 func _on_DragModeOptionButton_item_selected(index: int) -> void:
