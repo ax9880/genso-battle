@@ -50,15 +50,7 @@ func _execute_next_attack() -> void:
 
 
 func _execute_attack(attack: Attack) -> void:
-	match(attack.pincering_unit.get_stats().weapon_type):
-		Enums.WeaponType.SWORD:
-			$SwordAudio.play()
-		Enums.WeaponType.GUN:
-			$GunAudio.play()
-		Enums.WeaponType.SPEAR:
-			$SpearAudio.play()
-		Enums.WeaponType.STAFF:
-			$StaffAudio.play()
+	_play_sound(attack.pincering_unit.get_stats().weapon_type)
 	
 	for targeted_unit in attack.targeted_units:
 		var damage: int = targeted_unit.calculate_attack_damage(attack.attacking_unit.get_stats(), attack.pincering_unit.get_stats()) * random.randf_range(0.9, 1.1)
@@ -69,6 +61,28 @@ func _execute_attack(attack: Attack) -> void:
 		attack_effect.position = targeted_unit.position
 		
 		targeted_unit.inflict_damage(damage)
+
+
+func _play_sound(weapon_type: int) -> void:
+	var audio_stream_player: AudioStreamPlayer = _get_audio_stream_player(weapon_type)
+	
+	if audio_stream_player.playing:
+		$BackupAudio.stream = audio_stream_player.stream
+		audio_stream_player = $BackupAudio
+	
+	audio_stream_player.play()
+
+
+func _get_audio_stream_player(weapon_type: int) -> Node:
+	match(weapon_type):
+		Enums.WeaponType.SWORD:
+			return $SwordAudio
+		Enums.WeaponType.GUN:
+			return $GunAudio
+		Enums.WeaponType.SPEAR:
+			return $SpearAudio
+		_:
+			return $StaffAudio
 
 
 func _on_Timer_timeout() -> void:
