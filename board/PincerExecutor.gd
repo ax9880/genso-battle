@@ -220,6 +220,9 @@ func _check_next_dead_unit() -> void:
 		
 		# If 2x2, check neighbor cells
 		var cell: Cell = grid.get_cell_from_position(unit.position)
+		
+		assert(cell.unit == unit)
+		
 		cell.unit = null
 		
 		print("Setting cell of unit %s to null" % unit.name)
