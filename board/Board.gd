@@ -593,6 +593,8 @@ func _start_heal_phase() -> void:
 		
 		$PincerExecutor.start_heal_phase()
 	else:
+		$PincerExecutor.clear_chain_previews()
+		
 		_execute_next_enemy_pincer()
 
 
@@ -865,6 +867,8 @@ func _on_PincerExecutor_heal_phase_finished() -> void:
 
 
 func _on_PincerExecutor_pincer_executed() -> void:
+	$PincerExecutor.clear_chain_previews()
+	
 	_execute_next_pincer()
 
 

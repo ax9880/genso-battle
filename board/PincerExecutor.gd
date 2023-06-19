@@ -7,6 +7,8 @@ class SkillAttack extends Reference:
 	var skill: Skill
 
 
+export(PackedScene) var chain_previewer_packed_scene: PackedScene
+
 var unit_queue := []
 var dead_units := []
 
@@ -33,6 +35,9 @@ var current_z_index: int = 1
 
 var pusher: Pusher = null
 
+# Array<ChainPreviewer>
+var chain_previews := []
+
 # Finished executing a pincer
 signal skill_activation_phase_finished
 signal attack_skill_phase_finished
@@ -55,6 +60,7 @@ func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies:
 	
 	unit_queue = _queue_units(pincer)
 	complete_chains = _build_chains_including_pincering_unit(pincer)
+	_show_chain_previews(pincer)
 	
 	$SkillActivationTimer.start()
 	
@@ -147,6 +153,26 @@ func _queue_skills(unit: Unit, activated_skills: Array) -> void:
 				heal_skills.push_back(skill_attack)
 			_:
 				printerr("Unrecognized skill type: ", skill.skill_type)
+
+
+func _show_chain_previews(pincer: Pincerer.Pincer) -> void:
+	clear_chain_previews()
+	
+	for unit in pincer.pincering_units:
+		var chain_previewer = chain_previewer_packed_scene.instance()
+		
+		add_child(chain_previewer)
+		chain_previews.push_back(chain_previewer)
+		
+		chain_previewer.update_preview(unit, grid.get_cell_from_position(unit.position))
+		chain_previewer.z_index = -1
+
+
+func clear_chain_previews() -> void:
+	for chain_previewer in chain_previews:
+		chain_previewer.queue_free()
+	
+	chain_previews.clear()
 
 
 func start_attack_skill_phase() -> void:
