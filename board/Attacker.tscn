@@ -34,5 +34,6 @@ volume_db = -2.0
 bus = "Sound effects"
 
 [node name="BackupAudio" type="AudioStreamPlayer" parent="."]
+bus = "Sound effects"
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -68,6 +68,7 @@ func _play_sound(weapon_type: int) -> void:
 	
 	if audio_stream_player.playing:
 		$BackupAudio.stream = audio_stream_player.stream
+		$BackupAudio.volume_db = audio_stream_player.volume_db
 		audio_stream_player = $BackupAudio
 	
 	audio_stream_player.play()
