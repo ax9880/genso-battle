@@ -206,8 +206,12 @@ func _move_towards_mouse() -> void:
 
 
 func _input(event: InputEvent):
-	if not is_click_to_drag and event.is_action_released("ui_select"):
-		release()
+	if not is_click_to_drag:
+		if event.is_action_released("ui_select"):
+			release()
+		elif event is InputEventScreenTouch:
+			if not event.pressed:
+				release()
 
 
 func snap_to_grid(cell_origin: Vector2) -> void:
