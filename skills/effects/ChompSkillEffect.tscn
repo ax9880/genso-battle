@@ -8,3 +8,4 @@ activation_frame = 5
 
 [node name="SkillSound" parent="." index="2"]
 stream = ExtResource( 2 )
+volume_db = -3.0
