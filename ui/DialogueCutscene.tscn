@@ -72,18 +72,18 @@ margin_left = 50.0
 margin_top = 50.0
 margin_right = 670.0
 margin_bottom = 910.0
-custom_constants/separation = 32
+custom_constants/separation = 48
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 margin_right = 620.0
-margin_bottom = 751.0
+margin_bottom = 735.0
 size_flags_vertical = 3
 theme = SubResource( 1 )
 scroll_horizontal_enabled = false
 
 [node name="MessagesVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
 margin_right = 620.0
-margin_bottom = 751.0
+margin_bottom = 735.0
 rect_clip_content = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
