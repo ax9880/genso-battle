@@ -254,7 +254,7 @@ func _make_player_units_appear() -> void:
 		_start_player_turn()
 
 
-func _start_player_turn() -> void:
+func _start_player_turn(var has_same_cell: bool = false) -> void:
 	print("Starting player turn")
 	
 	$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
@@ -276,7 +276,9 @@ func _start_player_turn() -> void:
 			unit.enable_selection_area()
 		
 		emit_signal("drag_timer_reset")
-		emit_signal("player_turn_started")
+		
+		if not has_same_cell:
+			emit_signal("player_turn_started")
 	else:
 		current_turn = Turn.PLAYER
 		
@@ -287,7 +289,9 @@ func _start_player_turn() -> void:
 			unit.enable_selection_area()
 		
 		emit_signal("drag_timer_reset")
-		emit_signal("player_turn_started")
+		
+		if not has_same_cell:
+			emit_signal("player_turn_started")
 
 
 func has_less_than_min_squad_size_alive(units: Array) -> bool:
@@ -800,7 +804,8 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 			_execute_next_pincer()
 		else:
 			# Do nothing
-			_start_player_turn()
+			# Has same cell = true
+			_start_player_turn(true)
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:
