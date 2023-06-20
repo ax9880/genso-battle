@@ -9,4 +9,4 @@ animation_packed_scene = ExtResource( 2 )
 
 [node name="SkillSound" parent="." index="2"]
 stream = ExtResource( 3 )
-volume_db = -1.0
+volume_db = -2.0
