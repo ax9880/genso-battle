@@ -426,12 +426,12 @@ func calculate_damage(attacker_stats: StartingStats,
 	else:
 		damage = 1.57 * power * attacker_stats.attack * attacker_stats.attack / defender_stats.defense
 		
-		damage = damage * get_weapon_type_advantage(attacker_stats.weapon_type, defender_stats.weapon_type)
+		damage = damage * get_weapon_type_advantage(weapon_type, defender_stats.weapon_type)
 	
 	return int(damage)
 
 
-func get_weapon_type_advantage(attacker_weapon_type, defender_weapon_type) -> float:
+func get_weapon_type_advantage(attacker_weapon_type: int, defender_weapon_type: int) -> float:
 	var disadvantaged_weapon_type = Enums.WEAPON_RELATIONSHIPS.get(attacker_weapon_type)
 	
 	if disadvantaged_weapon_type == defender_weapon_type:
