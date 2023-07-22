@@ -27,7 +27,8 @@ func play(start_position: Vector2, target_position: Vector2) -> void:
 	else:
 		total_tween_time_seconds = distance / trail_velocity_pixels_per_second
 	
-	rotation = start_position.angle_to_point(target_position)
+	# Must be in this order
+	rotation = target_position.angle_to_point(start_position)
 	
 	create_arc_height_tween(arc_height)
 	

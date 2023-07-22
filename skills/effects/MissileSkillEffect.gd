@@ -13,11 +13,17 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 			
 			unit.add_child(particle_arc)
 			
+			if unit.is2x2():
+				particle_arc.position = unit.sprite.position
+			
 			var _error = particle_arc.connect("target_reached", self,
 							"_on_ParticleArc_target_reached",
 							[unit, skill, target_cell])
 			
-			particle_arc.play(target_cell.position, unit.position)
+			var start_position: Vector2 = _get_start_position(unit)
+			var target_position: Vector2 = _get_target_position(target_cell, skill)
+			
+			particle_arc.play(start_position, target_position)
 
 
 func _on_ParticleArc_target_reached(unit: Unit, skill: Skill, target_cell: Cell) -> void:
@@ -34,3 +40,17 @@ func _on_ParticleArc_target_reached(unit: Unit, skill: Skill, target_cell: Cell)
 
 	# TODO: when target is reached, if healing, instance heal particles / instance the next effect on arrival
 	# and free it when it's done
+
+
+func _get_start_position(unit: Unit) -> Vector2:
+	if unit.is2x2():
+		return unit.get_offset_origin()
+	else:
+		return unit.position
+
+
+func _get_target_position(target_cell: Cell, skill: Skill) -> Vector2:
+	if skill.is_targeted_individually() and target_cell.unit.is2x2():
+		return target_cell.unit.get_offset_origin()
+	else:
+		return target_cell.position
