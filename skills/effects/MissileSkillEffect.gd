@@ -26,6 +26,8 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 			particle_arc.play(start_position, target_position)
 
 
+# Instance heal particles / instance the next effect on arrival
+# It should free itself oncen it's done
 func _on_ParticleArc_target_reached(unit: Unit, skill: Skill, target_cell: Cell) -> void:
 	var hit_effect: Node2D = hit_effect_packed_scene.instance()
 	
@@ -37,9 +39,6 @@ func _on_ParticleArc_target_reached(unit: Unit, skill: Skill, target_cell: Cell)
 	_apply_skill(unit, skill, target_cell)
 	
 	_update_count(unit)
-
-	# TODO: when target is reached, if healing, instance heal particles / instance the next effect on arrival
-	# and free it when it's done
 
 
 func _get_start_position(unit: Unit) -> Vector2:
