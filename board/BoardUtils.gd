@@ -31,7 +31,11 @@ static func build_navigation_graph(grid: Grid, unit_position: Vector2, faction: 
 		
 		for neighbor in node.neighbors:
 			if not discovered_dict.has(neighbor):
-				if neighbor.unit == null or neighbor.unit.is_ally(faction):
+				var unit: Unit = neighbor.unit
+				
+				if unit == null or (unit.is_ally(faction) and not unit.is2x2()):
+					# FIXME: Calculate the distance using the shortest path, and
+					# use that to find out if you can reach that cell
 					if get_distance_to_cell(start_cell, neighbor) <= movement_range:
 						navigation_graph[node].push_back(neighbor)
 						
