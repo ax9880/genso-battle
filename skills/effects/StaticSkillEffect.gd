@@ -18,6 +18,9 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 		animated_sprite.position = cell.position
 		animated_sprite.frame = 0
 		
+		if skill.is_targeted_individually():
+			animated_sprite.position = cell.unit.get_offset_origin()
+		
 		if activation_frame > 0:
 			var _error = animated_sprite.connect("frame_changed", self,
 							"_on_AnimatedSprite_frame_changed",

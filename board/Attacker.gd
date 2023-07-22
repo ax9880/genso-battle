@@ -58,7 +58,7 @@ func _execute_attack(attack: Attack) -> void:
 		var attack_effect: Node2D = attack_effect_packed_scene.instance()
 		add_child(attack_effect)
 		
-		attack_effect.position = targeted_unit.position
+		attack_effect.position = targeted_unit.get_offset_origin()
 		
 		targeted_unit.inflict_damage(damage)
 
