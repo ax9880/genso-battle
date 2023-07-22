@@ -114,7 +114,7 @@ func play_death_animation() -> void:
 	
 	var death_effect: Node2D = death_effect_packed_scene.instance()
 	
-	add_child(death_effect)
+	sprite.add_child(death_effect)
 	death_effect.play()
 	
 	disable_selection_area()
@@ -365,7 +365,8 @@ func inflict_damage(damage: int) -> void:
 		$AnimationPlayer.play("shake")
 	
 	var damage_numbers: Node2D = damage_numbers_packed_scene.instance()
-	add_child(damage_numbers)
+	
+	sprite.add_child(damage_numbers)
 	
 	damage_numbers.play(damage)
 
@@ -420,11 +421,11 @@ func calculate_damage(attacker_stats: StartingStats,
 	var damage: float = 0
 	
 	if weapon_type == Enums.WeaponType.STAFF:
-		damage = 1.8 * power * attacker_stats.attack * attacker_stats.attack / defender_stats.defense
+		damage = 1.8 * power * attacker_stats.attack * attacker_stats.attack / float(defender_stats.defense)
 		
 		damage = damage * (1 - get_attribute_resistance(defender_stats, attribute, defender_stats.attribute))
 	else:
-		damage = 1.57 * power * attacker_stats.attack * attacker_stats.attack / defender_stats.defense
+		damage = 1.57 * power * attacker_stats.attack * attacker_stats.attack / float(defender_stats.defense)
 		
 		damage = damage * get_weapon_type_advantage(weapon_type, defender_stats.weapon_type)
 	
@@ -468,6 +469,10 @@ func is2x2() -> bool:
 	return size == Size.DOUBLE_2X2
 
 
+func get_offset_origin() -> Vector2:
+	return position + sprite.position
+
+
 ## Animation playback
 
 
@@ -488,7 +493,7 @@ func _on_snap_to_grid() -> void:
 
 ## Signals
 
-func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
+func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		match(current_state):
 			STATE.IDLE:
@@ -497,7 +502,7 @@ func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_
 				release()
 
 
-func _on_Tween_tween_completed(_object: Object, key: String):
+func _on_Tween_tween_completed(_object: Object, key: String) -> void:
 	match(current_state):
 		STATE.SNAPPING_TO_GRID:
 			if key == ":position":
@@ -507,14 +512,14 @@ func _on_Tween_tween_completed(_object: Object, key: String):
 				self.current_state = STATE.IDLE
 
 
-func _on_SelectionArea2D_mouse_entered():
+func _on_SelectionArea2D_mouse_entered() -> void:
 	if current_state == STATE.IDLE:
 		$Sprite/Glow.show()
 		
 		$Sprite.scale = Vector2(1.1, 1.1)
 
 
-func _on_SelectionArea2D_mouse_exited():
+func _on_SelectionArea2D_mouse_exited() -> void:
 	if current_state == STATE.IDLE:
 		#$Sprite/Glow.hide()
 		
