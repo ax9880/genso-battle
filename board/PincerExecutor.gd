@@ -247,9 +247,19 @@ func _check_next_dead_unit() -> void:
 		# If 2x2, check neighbor cells
 		var cell: Cell = grid.get_cell_from_position(unit.position)
 		
-		assert(cell.unit == unit)
+		if cell.unit != null:
+			assert(cell.unit == unit)
+		else:
+			printerr("Unit %s died but cell unit is null" % unit.name)
 		
-		cell.unit = null
+		
+		if unit.is2x2():
+			for area_cell in cell.get_cells_in_area():
+				assert(area_cell.unit == unit)
+				
+				area_cell.unit = null
+		else:
+			cell.unit = null
 		
 		print("Setting cell of unit %s to null" % unit.name)
 	else:
