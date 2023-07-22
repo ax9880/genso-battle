@@ -20,6 +20,8 @@ static func build_navigation_graph(grid: Grid, unit_position: Vector2, faction: 
 	# Graph as adjacency list
 	var navigation_graph := {}
 	
+	var unit: Unit = start_cell.unit
+	
 	while not queue.empty():
 		var node: Cell = queue.pop_front()
 		
@@ -31,17 +33,30 @@ static func build_navigation_graph(grid: Grid, unit_position: Vector2, faction: 
 		
 		for neighbor in node.neighbors:
 			if not discovered_dict.has(neighbor):
-				var unit: Unit = neighbor.unit
+				var cell_unit: Unit = neighbor.unit
 				
-				if unit == null or (unit.is_ally(faction) and not unit.is2x2()):
+				if _can_enter_cell(unit, cell_unit, faction):
 					# FIXME: Calculate the distance using the shortest path, and
 					# use that to find out if you can reach that cell
 					if get_distance_to_cell(start_cell, neighbor) <= movement_range:
-						navigation_graph[node].push_back(neighbor)
-						
-						queue.push_back(neighbor)
+						if _can_fit_unit(unit, neighbor):
+							navigation_graph[node].push_back(neighbor)
+							
+							queue.push_back(neighbor)
 	
 	return navigation_graph
+
+
+# 2x2 units can enter any cell, because they can push the unit inside said cell
+# Single units ignore cells with 2x2 units, because they cannot swap with them
+static func _can_enter_cell(unit: Unit, cell_unit: Unit, faction: int) -> bool:
+	return cell_unit == null or \
+			unit.is2x2() or \
+			cell_unit.is_ally(faction) and not cell_unit.is2x2()
+
+
+static func _can_fit_unit(unit: Unit, cell: Cell) -> bool:
+	return not (unit.is2x2() and cell.get_cells_in_area().empty())
 
 
 static func get_distance_to_cell(start_cell: Cell, end_cell: Cell) -> float:
