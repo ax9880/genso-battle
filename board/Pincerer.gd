@@ -197,7 +197,11 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 				break
 			elif next_unit.is_enemy(faction):
 				# Is an enemy
-				pincer.pincered_units.push_back(next_unit)
+				
+				# Check if the unit has not been added before, to avoid adding
+				# 2x2 units twice
+				if not pincer.pincered_units.has(next_unit):
+					pincer.pincered_units.push_back(next_unit)
 				
 				neighbor = neighbor.get_neighbor(direction)
 			else:
