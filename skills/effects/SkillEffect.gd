@@ -61,6 +61,9 @@ func _build_heal_particles(unit: Unit) -> void:
 	# Particles is freed automatically after its timer expires
 	unit.add_child(particles)
 	
+	if unit.is2x2():
+		particles.position = unit.sprite.position
+	
 	particles.emitting = true
 	
 	$AbsorbHealSound.play()
