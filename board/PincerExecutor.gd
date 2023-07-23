@@ -188,15 +188,14 @@ func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 		assert(!chain.empty())
 		
 		# Array<Cell>
-		var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(next_skill.unit.position,
+		var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(next_skill.unit,
+			next_skill.unit.position,
 			next_skill.skill,
 			grid,
 			active_pincer.pincered_units,
 			chain,
 			allies,
 			enemies)
-		
-		var filtered_cells: Array = BoardUtils.filter_cells(next_skill.unit, next_skill.skill, target_cells)
 		
 		var skill_effect: Node2D = next_skill.skill.effect_scene.instance()
 		
@@ -206,7 +205,7 @@ func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 		
 		var start_cell: Cell = grid.get_cell_from_position(next_skill.unit.position)
 		
-		skill_effect.start(next_skill.unit, next_skill.skill, filtered_cells, start_cell, pusher)
+		skill_effect.start(next_skill.unit, next_skill.skill, target_cells, start_cell, pusher)
 		
 		next_skill.unit.stop_scale_and_and_down_animation()
 	else:

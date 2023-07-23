@@ -113,8 +113,10 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 	return path
 
 
-# Returns Array<Cell>
-static func find_area_of_effect_target_cells(var unit_position: Vector2,
+# Returns Array<Cell>, filtered (meaning cells with null units or with targeted
+# units that are either allies or enemies depending on the skill type)
+static func find_area_of_effect_target_cells(var unit: Unit,
+		var start_position: Vector2,
 		var skill: Skill,
 		var grid: Grid,
 		var pincered_units: Array = [], # Array<Unit>
@@ -123,8 +125,34 @@ static func find_area_of_effect_target_cells(var unit_position: Vector2,
 		var enemies: Array = [] # Array<Unit>
 	) -> Array:
 	
-	var cell: Cell = grid.get_cell_from_position(unit_position)
+	var cell: Cell = grid.get_cell_from_position(start_position)
 	
+	# For 2x2 units and skills that target areas, the final area is the union of all
+	# the targeted cells starting from each cell occupied by the 2x2 unit. If the
+	# 2x2 unit appears in more than one cell in the list, it is okay because
+	# the skill effect node keeps track of affected units and will not apply a 
+	# skill to the same unit twice
+	if unit.is2x2() and not skill.is_targeted_individually():
+		var cells: Array = cell.get_cells_in_area()
+		
+		var targeted_cells := []
+		
+		for area_cell in cells:
+			targeted_cells.append_array(_find_area_of_effect(area_cell, skill, grid, pincered_units, chain, allies, enemies))
+		
+		return filter_cells(unit, skill, targeted_cells)
+	else:
+		return filter_cells(unit, skill, _find_area_of_effect(cell, skill, grid, pincered_units, chain, allies, enemies))
+
+
+static func _find_area_of_effect(var cell: Cell, # Start cell from which skill is called
+		var skill: Skill,
+		var grid: Grid,
+		var pincered_units: Array, # Array<Unit>
+		var chain: Array, # Array<Unit>, including the pincering unit that started the chain
+		var allies: Array, # Array<Unit>
+		var enemies: Array # Array<Unit>
+	) -> Array:
 	match(skill.area_of_effect):
 		Enums.AreaOfEffect.NONE, Enums.AreaOfEffect.PINCER:
 			return _units_to_cells(grid, pincered_units)
@@ -147,11 +175,8 @@ static func find_area_of_effect_target_cells(var unit_position: Vector2,
 			
 			return targets
 		Enums.AreaOfEffect.SELF:
-			return [grid.get_cell_from_position(unit_position)]
+			return [cell]
 		Enums.AreaOfEffect.HORIZONTAL_X:
-			# TODO: If unit is 2x2 then you have to do this for each cell it occupies
-			# and then the cells that it occupies are filtered out
-			
 			return _find_horizontal_x_cells(grid, cell, skill.area_of_effect_size)
 		Enums.AreaOfEffect.VERTICAL_X:
 
@@ -218,9 +243,8 @@ static func find_area_of_effect_target_cells(var unit_position: Vector2,
 
 # Filter cells to leave only the ones with null units or with targeted units that are
 # either allies or enemies depending on the skill type
+# Note: If the unit is 2x2 it will be in more than one cell
 static func filter_cells(unit: Unit, skill: Skill, targeted_cells: Array) -> Array:
-	# If the unit is 2x2 it will be in more than one cell, so don't add it twice
-	
 	# Array<Cell>
 	var filtered_cells := []
 	

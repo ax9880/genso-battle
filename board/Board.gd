@@ -463,10 +463,10 @@ func _clean_up_cells_in_area(unit: Unit, cell: Cell) -> void:
 	assert(unit.is2x2())
 	
 	for area_cell in cell.get_cells_in_area():
-		if cell.unit == unit:
+		if area_cell.unit == unit:
 			area_cell.modulate = Color.white
 			
-			cell.unit = null
+			area_cell.unit = null
 
 
 func _update_active_unit(unit: Unit) -> void:
@@ -727,8 +727,7 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	# Wait for it to finish
 	yield(get_tree().create_timer(1.0), "timeout")
 	
-	var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit.position, skill, grid)
-	var filtered_cells: Array = BoardUtils.filter_cells(unit, skill, target_cells)
+	var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, unit.position, skill, grid)
 	
 	var skill_effect: Node2D = skill.effect_scene.instance()
 	
@@ -738,7 +737,7 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	
 	assert(start_cell != null)
 	
-	skill_effect.start(unit, skill, filtered_cells, start_cell, $Pusher)
+	skill_effect.start(unit, skill, target_cells, start_cell, $Pusher)
 	
 	yield(skill_effect, "effect_finished")
 	

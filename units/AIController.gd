@@ -77,11 +77,9 @@ func evaluate_skill(unit: Unit, skill: Skill, grid: Grid, navigation_graph: Dict
 		
 		# FIXME: If skill targets all then I have to pass in allies and enemies because the
 		# board won't find it by itself
-		var targeted_cells: Array = BoardUtils.find_area_of_effect_target_cells(cell.position, skill, grid)
+		var targeted_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, cell.position, skill, grid)
 		
-		var filtered_cells: Array = BoardUtils.filter_cells(unit, skill, targeted_cells)
-		
-		for targeted_cell in filtered_cells:
+		for targeted_cell in targeted_cells:
 			var targeted_unit: Unit = targeted_cell.unit
 			
 			if targeted_unit != null:
