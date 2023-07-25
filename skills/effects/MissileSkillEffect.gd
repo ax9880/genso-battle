@@ -29,6 +29,7 @@ func _on_ParticleArc_target_reached(unit: Unit, skill: Skill, target_cell: Cell)
 	var hit_effect: Node2D = hit_effect_packed_scene.instance()
 	
 	# Hit effect has to free automatically
+	# TODO: If skill is targeted individually, add hit effect as child of target_cell.unit
 	target_cell.add_child(hit_effect)
 	
 	hit_effect.play()
