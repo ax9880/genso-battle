@@ -114,7 +114,7 @@ func play_death_animation() -> void:
 	
 	var death_effect: Node2D = death_effect_packed_scene.instance()
 	
-	sprite.add_child(death_effect)
+	add_child_at_offset(death_effect)
 	death_effect.play()
 	
 	disable_selection_area()
