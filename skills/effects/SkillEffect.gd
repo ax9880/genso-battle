@@ -59,10 +59,7 @@ func _build_heal_particles(unit: Unit) -> void:
 	var particles: CPUParticles2D = heal_particles_packed_scene.instance()
 	
 	# Particles is freed automatically after its timer expires
-	unit.add_child(particles)
-	
-	if unit.is2x2():
-		particles.position = unit.sprite.position
+	unit.add_child_at_offset(particles)
 	
 	particles.emitting = true
 	

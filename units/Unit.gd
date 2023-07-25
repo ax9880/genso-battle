@@ -366,7 +366,7 @@ func inflict_damage(damage: int) -> void:
 	
 	var damage_numbers: Node2D = damage_numbers_packed_scene.instance()
 	
-	sprite.add_child(damage_numbers)
+	add_child_at_offset(damage_numbers)
 	
 	damage_numbers.play(damage)
 
@@ -471,6 +471,12 @@ func is2x2() -> bool:
 
 func get_offset_origin() -> Vector2:
 	return position + sprite.position
+
+
+func add_child_at_offset(node: Node2D) -> void:
+	add_child(node)
+	
+	node.position = sprite.position
 
 
 ## Animation playback

@@ -11,10 +11,7 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 		else:
 			var particle_arc: Node2D = particle_arc_scene.instance()
 			
-			unit.add_child(particle_arc)
-			
-			if unit.is2x2():
-				particle_arc.position = unit.sprite.position
+			unit.add_child_at_offset(particle_arc)
 			
 			var _error = particle_arc.connect("target_reached", self,
 							"_on_ParticleArc_target_reached",
