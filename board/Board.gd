@@ -756,6 +756,12 @@ func _on_Unit_released(unit: Unit) -> void:
 	
 	var selected_cell: Cell = _find_closest_cell(unit.position)
 	
+	if unit.is2x2():
+		var cell_below: Cell = grid.get_cell_from_position(unit.position)
+		
+		if unit.position.distance_squared_to(cell_below.position) < unit.position.distance_squared_to(selected_cell.position):
+			selected_cell = cell_below
+	
 	if active_unit_last_valid_cell == null and selected_cell != active_unit_current_cell:
 		has_active_unit_exited_cell = true
 	
