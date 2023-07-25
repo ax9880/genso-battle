@@ -52,10 +52,10 @@ func get_cells_in_area(var size: int = 2) -> Array:
 	# 0 -> 1 -> 2
 	# 3 -> 4 -> 5
 	# 6 -> 7 -> 8
-	for x in range(size):
+	for _x in range(size):
 		cells.push_back(row_cell)
 		
-		for y in range(size - 1):
+		for _y in range(size - 1):
 			var column_cell: Cell = row_cell.get_neighbor(DIRECTION.RIGHT)
 			
 			if column_cell != null:

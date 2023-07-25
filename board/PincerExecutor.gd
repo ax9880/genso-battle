@@ -38,12 +38,13 @@ var pusher: Pusher = null
 # Array<ChainPreviewer>
 var chain_previews := []
 
-# Finished executing a pincer
+# The names of these signals are passed as parameters and emitted inside functions
 signal skill_activation_phase_finished
 signal attack_skill_phase_finished
 signal heal_phase_finished
 signal finished_checking_for_dead_units
 
+# Finished executing a pincer
 signal pincer_executed
 
 

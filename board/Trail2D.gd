@@ -38,7 +38,7 @@ func add(point: Vector2) -> void:
 		last_stored_cell_point = point
 	
 	if line_2d.get_point_count() > max_point_count:
-		for i in range(points_to_remove_when_adding_a_point):
+		for _i in range(points_to_remove_when_adding_a_point):
 			line_2d.remove_point(0)
 	
 	if $RemovalStartTimer.is_stopped():

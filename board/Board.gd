@@ -524,12 +524,12 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
 
-func _activate_trap(cell: Cell, active_unit: Unit) -> void:
+func _activate_trap(cell: Cell, unit: Unit) -> void:
 	if cell.trap != null:
-		cell.trap.activate(active_unit)
+		cell.trap.activate(unit)
 		
-		if active_unit.is_dead():
-			active_unit.release()
+		if unit.is_dead():
+			unit.release()
 
 
 func _execute_next_pincer() -> void:
@@ -864,7 +864,7 @@ func _on_PincerExecutor_skill_activation_phase_finished(pincer: Pincerer.Pincer)
 	_start_attack_phase(pincer)
 
 
-func _on_PincerExecutor_attack_skill_phase_finished(pincer: Pincerer.Pincer) -> void:
+func _on_PincerExecutor_attack_skill_phase_finished(_pincer: Pincerer.Pincer) -> void:
 	_check_for_dead_units()
 
 
