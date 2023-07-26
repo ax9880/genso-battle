@@ -10,6 +10,7 @@ signal started_moving(unit)
 signal use_skill(unit, skill)
 
 var can_use_skill_after_moving := false
+var is_moving := false
 var selected_skill: Skill
 
 # Array of Vector2
@@ -34,6 +35,7 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 				self.turn_counter = turn_counter - 1
 			
 			can_use_skill_after_moving = false
+			is_moving = false
 			
 			if turn_counter == 0:
 				_find_next_move(grid, allies, enemies)
@@ -89,6 +91,7 @@ func _use_skill(skill: Skill) -> void:
 		emit_signal("use_skill", self, skill)
 	else:
 		emit_signal("action_done", self)
+
 
 func _move_to_cell_or_enemy(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
 	if random.randf() < chance_to_move_to_enemy_during_move_behavior:
@@ -157,6 +160,8 @@ func _start_moving() -> void:
 		# the unit not having a reference to its cell)
 		return
 	
+	is_moving = true
+	
 	emit_signal("started_moving", self)
 	
 	self.current_state = STATE.PICKED_UP
@@ -177,14 +182,16 @@ func _move() -> void:
 			
 		tween.start()
 	else:
-		self.current_state = STATE.IDLE
+		release()
 		
 		path = []
-		
-		if can_use_skill_after_moving:
-			_use_skill(selected_skill)
-		else:
-			emit_signal("action_done", self)
+
+
+func _execute_after_move() -> void:
+	if can_use_skill_after_moving:
+		_use_skill(selected_skill)
+	else:
+		emit_signal("action_done", self)
 
 
 func reset_turn_counter() -> void:
@@ -213,7 +220,11 @@ func set_turn_counter(value: int) -> void:
 func _on_snap_to_grid() -> void:
 	._on_snap_to_grid()
 	
-	emit_signal("action_done", self)
+	if is_moving:
+		_execute_after_move()
+	else:
+		# Called when unit is controlled by player?
+		emit_signal("action_done", self)
 
 
 func _on_Tween_tween_completed(_object: Object, key: String) -> void:
