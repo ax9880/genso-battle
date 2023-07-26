@@ -148,7 +148,7 @@ func stop_scale_and_and_down_animation() -> void:
 
 
 func move_to_new_cell(target_position: Vector2) -> void:
-	tween.remove(self, ":position")
+	tween.remove(self, "position")
 	
 	var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
 	
@@ -530,4 +530,3 @@ func _on_SelectionArea2D_mouse_exited() -> void:
 		#$Sprite/Glow.hide()
 		
 		$Sprite.scale = Vector2(1, 1)
-	
