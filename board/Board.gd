@@ -453,7 +453,7 @@ func _push_cells_in_area(unit: Unit, cell: Cell) -> void:
 		
 		if area_cell.unit != null and area_cell.unit != unit:
 			$Pusher.push_unit(cell, area_cell)
-			
+		
 		assert(area_cell.unit == null or area_cell.unit == unit)
 		
 		area_cell.unit = unit
@@ -520,6 +520,8 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 	if unit_to_swap != null and unit != unit_to_swap:
 		if unit.is_enemy(unit_to_swap.faction):
 			printerr("Swapped with an enemy")
+		
+		assert(!unit_to_swap.is2x2())
 		
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
@@ -773,18 +775,19 @@ func _on_Unit_released(unit: Unit) -> void:
 		print("Unit %s exited a cell" % unit.name)
 	
 	if unit.is2x2():
+		_update_2x2_unit_cells(unit, selected_cell)
+		
 		for cell in active_unit_entered_cells:
 			if cell.unit == unit:
-				cell.unit = null
 				cell.modulate = Color.white
-		
-		_push_cells_in_area(unit, selected_cell)
-	
-	_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
+	else:
+		_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
 	
 	unit.snap_to_grid(selected_cell.position)
 	
 	$ChainPreviewer.update_preview(unit, selected_cell)
+	
+	assert(selected_cell.unit == unit)
 	
 	_update_trail(selected_cell)
 	_clear_active_trail()

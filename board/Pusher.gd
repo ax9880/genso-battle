@@ -42,6 +42,8 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 		if cell_to_move_to == null:
 			printerr("Failed to a free cell in the entire grid")
 		else:
+			assert(cell_to_move_to.unit == null)
+			
 			var unit: Unit = pushed_unit_cell.unit
 			
 			pushed_unit_cell.unit = null
@@ -50,6 +52,7 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 			unit.push_to_cell(cell_to_move_to.position)
 			
 			# TODO: Use setter in cell to activate trap when unit is set?
+			# TODO: Only activate trap after snapping to that cell?
 			if cell_to_move_to.trap != null:
 				cell_to_move_to.trap.activate(unit)
 
