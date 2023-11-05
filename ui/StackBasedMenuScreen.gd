@@ -3,7 +3,7 @@ extends Control
 class_name StackBasedMenuScreen
 
 
-signal navigate(scene_path)
+signal navigate(scene_path, data)
 signal go_back()
 
 
@@ -15,8 +15,9 @@ func change_scene(scene_path: String) -> void:
 
 
 # Emits navigate signal and removes focus in all buttons
-func navigate(scene_path: String) -> void:
-	emit_signal("navigate", scene_path)
+# Passes the given data to the new scene
+func navigate(scene_path: String, data: Object = null) -> void:
+	emit_signal("navigate", scene_path, data)
 	
 	_remove_focus(self)
 
@@ -25,6 +26,10 @@ func go_back() -> void:
 	emit_signal("go_back")
 	
 	_remove_focus(self)
+
+
+func on_add_to_tree(_data: Object) -> void:
+	pass
 
 
 # Callback executed when the loading animation finished playing and the

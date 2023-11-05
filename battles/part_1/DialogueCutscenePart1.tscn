@@ -5,6 +5,7 @@
 
 [node name="DialogueCutscene" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+next_scene = "res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
 dialogue_json = "[
     {
         \"speaker\": \"SAKI\",

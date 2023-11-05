@@ -95,6 +95,7 @@ func _advance_to_next_page() -> void:
 		_show_next_paragraph()
 
 
+# Frees any default or test text containers that you may have added
 func _free_container_children() -> void:
 	for child in text_container.get_children():
 		child.queue_free()

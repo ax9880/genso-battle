@@ -6,4 +6,4 @@ func _skip_dialogue() -> void:
 	
 	save_data.current_battle_scene_index += 1
 	
-	var _error = get_tree().change_scene("res://ui/PreBattleMenu.tscn")
+	._skip_dialogue()
