@@ -145,8 +145,8 @@ config/windows_native_icon="res://icon.ico"
 Utils="*res://Utils.gd"
 Enums="*res://Enums.gd"
 GameData="*res://GameData.gd"
-Navigator="*res://Navigator.tscn"
 AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
+Loader="*res://Loader.gd"
 
 [display]
 
