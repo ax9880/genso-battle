@@ -69,6 +69,7 @@ func change_scene(path: String) -> int:
 		return ERR_CANT_CREATE
 	else:
 		#Events.emit_signal("scene_changed")
+		_play_loading_animation()
 		
 		return OK
 

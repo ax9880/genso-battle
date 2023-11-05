@@ -7,6 +7,13 @@ signal navigate(scene_path)
 signal go_back()
 
 
+func change_scene(scene_path: String) -> void:
+	if Loader.change_scene(scene_path) == OK:
+		_remove_focus(self)
+	else:
+		printerr("Failed to change scene to %s" % scene_path)
+
+
 # Emits navigate signal and removes focus in all buttons
 func navigate(scene_path: String) -> void:
 	emit_signal("navigate", scene_path)
