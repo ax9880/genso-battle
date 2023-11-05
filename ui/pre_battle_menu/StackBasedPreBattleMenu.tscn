@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://ui/PreBattleMenu.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ui/pre_battle_menu/PreBattleMenu.tscn" type="PackedScene" id=1]
 [ext_resource path="res://ui/StackBasedMenu.tscn" type="PackedScene" id=2]
 
 [node name="StackBasedPreBattleMenu" instance=ExtResource( 2 )]

@@ -19,6 +19,7 @@ func _ready() -> void:
 	
 	screens.push_back(root_screen)
 
+
 func _notify_scene_on_add_to_tree(data: Object) -> void:
 	assert(!screens.empty())
 	
@@ -89,3 +90,8 @@ func _fade_out() -> void:
 	yield(loading_screen_instance, "fade_out_finished")
 	
 	remove_child(loading_screen_instance)
+
+
+func _on_StackBasedMenu_tree_exiting():
+	if not loading_screen_instance.is_inside_tree():
+		loading_screen_instance.queue_free()

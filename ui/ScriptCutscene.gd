@@ -102,7 +102,7 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	var _error = get_tree().change_scene(next_scene)
+	var _error = Loader.change_scene(next_scene)
 
 
 func _on_SkipButton_pressed() -> void:

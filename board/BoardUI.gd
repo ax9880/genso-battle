@@ -68,15 +68,16 @@ func _on_Board_defeat():
 
 
 func _on_DefeatScreen_quit_button_pressed() -> void:
-	get_tree().change_scene("res://ui/PreBattleMenu.tscn")
+	Loader.change_scene("res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn")
 
 
 func _on_DefeatScreen_try_again_button_pressed() -> void:
-	get_tree().reload_current_scene()
+	if Loader.change_scene(filename) != OK:
+		print("Failed to reload scene")
 
 
 func _on_VictoryScreen_continue_button_pressed() -> void:
-	get_tree().change_scene(next_scene)
+	Loader.change_scene(next_scene)
 
 
 func _on_GiveUpButton_pressed() -> void:
