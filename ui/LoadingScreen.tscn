@@ -86,6 +86,7 @@ align = 1
 valign = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 2.5
 "anims/Fade in" = SubResource( 1 )
 "anims/Fade out" = SubResource( 2 )
 

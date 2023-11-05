@@ -1,15 +1,15 @@
-extends Control
+extends StackBasedMenuScreen
 
 
 onready var return_button: Button = $MarginContainer/VBoxContainer/ReturnButton
 
 
-func _ready() -> void:
+func on_load() -> void:
 	return_button.grab_focus()
 
 
 func _on_ReturnButton_pressed() -> void:
-	var _error = get_tree().change_scene("res://ui/TitleScreen.tscn")
+	go_back()
 
 
 func _on_VolumeSlider_on_changed(bus_name: String, volume: float) -> void:
