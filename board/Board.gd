@@ -499,17 +499,25 @@ func _clear_active_cells() -> void:
 
 
 func _find_closest_cell(unit_position: Vector2) -> Cell:
-	var minimum_distance: float = 1000000.0
-	var selected_cell: Cell = null
-	
-	for entered_cell in active_unit_entered_cells.values():
-		var distance_squared: float = unit_position.distance_squared_to(entered_cell.position)
+	# If empty then unit hasn't moved
+	if active_unit_entered_cells.empty():
+		var cell = grid.get_cell_from_position(unit_position)
 		
-		if distance_squared < minimum_distance: # and cell does not contain an enemy unit (just in case)
-			minimum_distance = distance_squared
-			selected_cell = entered_cell
-	
-	return selected_cell
+		assert(cell.unit != null)
+		
+		return cell
+	else:
+		var selected_cell: Cell = null
+		var minimum_distance: float = 1000000.0
+		
+		for entered_cell in active_unit_entered_cells.values():
+			var distance_squared: float = unit_position.distance_squared_to(entered_cell.position)
+			
+			if distance_squared < minimum_distance: # and cell does not contain an enemy unit (just in case)
+				minimum_distance = distance_squared
+				selected_cell = entered_cell
+		
+		return selected_cell
 
 
 func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_valid_cell: Cell) -> void:
@@ -757,6 +765,8 @@ func _on_Unit_released(unit: Unit) -> void:
 	unit.z_index -= 1
 	
 	var selected_cell: Cell = _find_closest_cell(unit.position)
+	
+	assert(selected_cell != null)
 	
 	if unit.is2x2():
 		var cell_below: Cell = grid.get_cell_from_position(unit.position)
