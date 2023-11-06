@@ -141,7 +141,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Genso Battle"
-run/main_scene="res://ui/main_menu/StackBasedMainMenu.tscn"
+run/main_scene="res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
 boot_splash/image="res://assets/ui/splash_screen.png"
 config/icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"
@@ -150,9 +150,9 @@ config/windows_native_icon="res://icon.ico"
 
 Utils="*res://Utils.gd"
 Enums="*res://Enums.gd"
+Loader="*res://Loader.gd"
 GameData="*res://GameData.gd"
 AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
-Loader="*res://Loader.gd"
 
 [display]
 
@@ -195,7 +195,11 @@ ui_select={
 
 [locale]
 
-translations=PoolStringArray( "res://text/text.en.translation", "res://text/text.es.translation" )
+translations=PoolStringArray( "res://text/text.en.translation", "res://text/text.es.translation", "res://text/script.en.translation", "res://text/script.es.translation", "res://text/dialogue.en.translation", "res://text/dialogue.es.translation" )
+
+[network]
+
+limits/debugger_stdout/max_chars_per_second=10000
 
 [physics]
 

@@ -28,15 +28,6 @@ theme = ExtResource( 1 )
 script = ExtResource( 3 )
 next_scene = "res://ui/PreBattleMenu.tscn"
 dialogue_message_container_packed_scene = ExtResource( 2 )
-dialogue_json = "[
-    {\"speaker\": \"YACHIE\", \"line\": \"Hello, I am Yachie.\"},
-    {\"speaker\": \"SAKI\", \"line\": \"Howdy, Yachie, I am Saki. How have you been?\"},
-    {\"speaker\": \"YACHIE\", \"line\": \"Eh, been better. Have you seen Yuuma around?\\n\\nShe owes me 10000 yen.\"},
-    {\"speaker\": \"YUUMA\", \"line\": \"What's up gamers?\"},
-    {\"speaker\": \"SAKI\", \"line\": \"There she is.\"},
-    {\"speaker\": \"YACHIE\", \"line\": \"Yuuma, I want my money back.\"},
-    {\"speaker\": \"YUUMA\", \"line\": \"Sorry Yachie, I ate it.\"},
-]"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0

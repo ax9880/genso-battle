@@ -2,7 +2,8 @@ extends Control
 
 export(String, FILE, "*.tscn") var next_scene: String
 
-export(Array, Array, String) var pages := []
+# Scene title as saved in the script sheet or CSV
+export(String) var scene_title: String 
 
 export(PackedScene) var text_label_packed_scene: PackedScene
 
@@ -16,8 +17,13 @@ var current_label: Label
 
 var accumulated_time_seconds: float = 0
 
+# Array<Array>
+var pages: Array
+
 
 func _ready():
+	_read_pages()
+	
 	_free_container_children()
 	
 	_show_next_paragraph()
@@ -27,16 +33,59 @@ func _process(delta: float) -> void:
 	_slowly_make_text_visible(delta, current_label)
 
 
+# Reads pages and splits them into lines
+func _read_pages() -> void:
+	var file: File = File.new()
+	
+	if file.open("res://text/script_" + scene_title.to_lower() + ".json", File.READ) != OK:
+		printerr("Failed to read file")
+		
+		_skip_dialogue()
+	else:
+		var parse_result: JSONParseResult = JSON.parse(file.get_as_text())
+		
+		file.close()
+		
+		if parse_result.error == OK:
+			var json = parse_result.result
+			
+			pages = []
+			
+			for page_key in json:
+				_add_page(page_key["line"])
+		else:
+			printerr("Failed to load JSON")
+
+
+func _add_page(key: String) -> void:
+	var page: String = tr(key)
+	
+	var lines: Array = page.split("\n", true) # Allow empty
+	
+	pages.push_back(lines)
+
+
 func _show_next_paragraph() -> void:
 	var paragraph: String = pages[current_page][current_paragraph]
 	
-	current_label = text_label_packed_scene.instance()
-	current_label.text = tr(paragraph)
-	current_label.percent_visible = 0
-	
-	text_container.add_child(current_label)
-	
-	set_process(true)
+	if paragraph.empty():
+		# If empty, adds an empty label so that it serves as a line break
+		current_label = text_label_packed_scene.instance()
+		current_label.text = ""
+		current_label.percent_visible = 1
+		
+		text_container.add_child(current_label)
+		
+		# Note: Potentially recursive call
+		_advance_to_next_paragraph()
+	else:
+		current_label = text_label_packed_scene.instance()
+		current_label.text = tr(paragraph)
+		current_label.percent_visible = 0
+		
+		text_container.add_child(current_label)
+		
+		set_process(true)
 
 
 # Increases percent visible of the given label. When it is >= 1 it is set to 1.0

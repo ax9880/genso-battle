@@ -4,7 +4,7 @@ extends Control
 export(String, FILE, "*.tscn") var next_scene: String
 
 export(PackedScene) var dialogue_message_container_packed_scene
-export(String, MULTILINE) var dialogue_json: String
+export(String) var scene_title: String
 
 onready var messages_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer
 onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
@@ -22,14 +22,31 @@ var estimated_container_size: float
 func _ready():
 	_free_container_children()
 	
-	var json: JSONParseResult = JSON.parse(dialogue_json)
-	
-	assert(typeof(json.result) == TYPE_ARRAY)
-	
-	if typeof(json.result) == TYPE_ARRAY:
-		lines = json.result
+	_load_lines_keys()
 	
 	_show_next_line()
+
+
+func _load_lines_keys() -> void:
+	var dialogue_json: String = "res://text/dialogue_%s.json" % scene_title.to_lower()
+	
+	var file: File = File.new()
+	
+	if file.open(dialogue_json, File.READ) != OK:
+		printerr("Failed to read file")
+		
+		# FIXME: Can't skip dialogue in _ready() because loading screen
+		# may not be ready yet
+		#_skip_dialogue()
+	else:
+		var parse_result: JSONParseResult = JSON.parse(file.get_as_text())
+		
+		file.close()
+		
+		if parse_result.error == OK:
+			lines = parse_result.result
+		else:
+			printerr("Failed to load JSON")
 
 
 func _show_next_line() -> void:

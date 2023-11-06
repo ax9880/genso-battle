@@ -4,7 +4,7 @@
 
 [node name="ScriptCutscene" instance=ExtResource( 1 )]
 next_scene = "res://battles/part_1/SupportSelectionMenuPart1.tscn"
-pages = [ [ "PART_1_EPILOGUE_LINE_1", "PART_1_EPILOGUE_LINE_2", "PART_1_EPILOGUE_LINE_3", "PART_1_EPILOGUE_LINE_4" ] ]
+scene_title = "GREAVES_OF_CLAY_EPILOGUE"
 
 [node name="MarginContainer" parent="." index="2"]
 anchor_left = 0.0
