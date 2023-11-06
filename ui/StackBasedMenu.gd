@@ -94,4 +94,8 @@ func _fade_out() -> void:
 
 func _on_StackBasedMenu_tree_exiting():
 	if not loading_screen_instance.is_inside_tree():
-		loading_screen_instance.queue_free()
+		loading_screen_instance.free()
+	
+	for screen in screens:
+		if not screen.is_inside_tree():
+			screen.free()
