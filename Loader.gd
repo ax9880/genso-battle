@@ -64,11 +64,12 @@ func change_scene(path: String) -> int:
 	loader = ResourceLoader.load_interactive(path)
 	
 	if loader == null:
-		printerr("Couldn't load interactive loader!")
+		printerr("Couldn't load interactive loader for %s!" % path)
 		
 		return ERR_CANT_CREATE
 	else:
 		#Events.emit_signal("scene_changed")
+		
 		_play_loading_animation()
 		
 		return OK
