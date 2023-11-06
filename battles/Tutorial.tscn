@@ -791,7 +791,7 @@ tracks/2/keys = {
 }
 
 [node name="BoardUI" instance=ExtResource( 1 )]
-next_scene = "res://ui/PreBattleMenu.tscn"
+next_scene = "res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
 
 [node name="Guidelines" type="Node2D" parent="Board" index="11"]
 script = ExtResource( 4 )
