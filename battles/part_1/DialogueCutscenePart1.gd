@@ -1,4 +1,4 @@
-extends "res://ui/DialogueCutscene.gd"
+extends "res://ui/cutscenes/DialogueCutscene.gd"
 
 
 func _skip_dialogue() -> void:
