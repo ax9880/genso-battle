@@ -47,7 +47,7 @@ func from_dictionary(dictionary: Dictionary) -> void:
 	
 	for skill in dictionary.skills:
 		skills.push_back(load(skill))
-		
+	
 	job_name = dictionary.job_name
 	portrait = load(dictionary.portrait)
 	unit_scene_path = unit_scene_path

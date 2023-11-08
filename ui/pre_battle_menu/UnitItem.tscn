@@ -1,0 +1,185 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://assets/fonts/Exo2Regular16.tres" type="DynamicFont" id=2]
+[ext_resource path="res://assets/ui/sword.png" type="Texture" id=3]
+[ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=4]
+[ext_resource path="res://assets/ui/red_panel_border.png" type="Texture" id=5]
+[ext_resource path="res://ui/pre_battle_menu/UnitItemContainer.gd" type="Script" id=6]
+
+[node name="UnitItemContainer" type="HBoxContainer"]
+anchor_right = 1.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+theme = ExtResource( 1 )
+custom_constants/separation = 16
+script = ExtResource( 6 )
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+margin_right = 100.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 100, 100 )
+texture = ExtResource( 5 )
+patch_margin_left = 29
+patch_margin_top = 28
+patch_margin_right = 27
+patch_margin_bottom = 26
+
+[node name="IconBackground" type="TextureRect" parent="NinePatchRect"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 4 )
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="NinePatchRect"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 4 )
+stretch_mode = 4
+
+[node name="WeaponTypeTexture" type="TextureRect" parent="NinePatchRect"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 6.0
+margin_top = -66.0
+margin_right = 71.0
+margin_bottom = -1.0
+texture = ExtResource( 3 )
+stretch_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 116.0
+margin_right = 448.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 332.0
+margin_bottom = 29.0
+
+[node name="NameLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_right = 130.0
+margin_bottom = 29.0
+custom_colors/font_color = Color( 1, 0.976471, 0.443137, 1 )
+text = "UNIT_NAME"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 37.0
+margin_right = 332.0
+margin_bottom = 95.0
+custom_constants/separation = -1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_right = 332.0
+margin_bottom = 20.0
+
+[node name="HealthLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer3"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_colors/font_color = Color( 0.933333, 0.188235, 0.27451, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "HP:"
+
+[node name="HealthNumber" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 58.0
+margin_right = 94.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 2 )
+text = "9999"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 19.0
+margin_right = 332.0
+margin_bottom = 39.0
+
+[node name="AttackLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "ATK:"
+
+[node name="AttackNumber" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 58.0
+margin_right = 108.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "9999"
+
+[node name="DefenseLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 116.0
+margin_right = 166.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "DEF:"
+
+[node name="DefenseNumber" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 174.0
+margin_right = 224.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "9999"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 38.0
+margin_right = 332.0
+margin_bottom = 58.0
+
+[node name="SpiritualAttackLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "SATK:"
+
+[node name="SpiritualAttackNumber" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 58.0
+margin_right = 108.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "9999"
+
+[node name="SpiritualDefenseLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 116.0
+margin_right = 166.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "SDEF:"
+
+[node name="SpiritualDefenseNumber" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 174.0
+margin_right = 224.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "9999"
+
+[node name="ViewButton" type="Button" parent="."]
+margin_left = 464.0
+margin_right = 584.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 120, 0 )
+size_flags_vertical = 3
+disabled = true
+text = "VIEW"
+
+[node name="ChangeButton" type="Button" parent="."]
+margin_left = 600.0
+margin_right = 720.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 120, 0 )
+size_flags_vertical = 3
+text = "CHANGE"
+
+[connection signal="pressed" from="ViewButton" to="." method="_on_ViewButton_pressed"]
+[connection signal="pressed" from="ChangeButton" to="." method="_on_ChangeButton_pressed"]
