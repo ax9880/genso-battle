@@ -48,10 +48,16 @@ func _show_active_units() -> void:
 		
 		list_container.add_child(unit_item)
 		
-		unit_item.initialize(job)
+		unit_item.initialize(job, true) # Is draggable
 		
-		unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job])
-		unit_item.connect("view_button_clicked", self, "_on_UnitItem_view_button_clicked", [job])
+		if unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job]) != OK:
+			printerr("Failed to connect signal")
+		
+		if unit_item.connect("view_button_clicked", self, "_on_UnitItem_view_button_clicked", [job]) != OK:
+			printerr("Failed to connect signal")
+		
+		if unit_item.connect("unit_dropped_on_unit", self, "_on_UnitItem_unit_dropped_on_unit") != OK:
+			printerr("Failed to connect signal")
 	
 	# TODO: Show empty spaces to show that player can have up to six units
 	$MarginContainer/VBoxContainer/ReturnButton.disabled = save_data.active_units.size() < SaveData.MIN_SQUAD_SIZE
@@ -73,6 +79,35 @@ func _on_UnitItem_view_button_clicked(job: Job) -> void:
 	# TODO: Show unit view
 	# And reuse this screen for viewing enemy stats during battle
 	print("view")
+
+
+func _on_UnitItem_unit_dropped_on_unit(target_unit_item: Control, dropped_unit_item: Control) -> void:
+	var target_unit_item_position: int = _get_index_of_child(list_container, target_unit_item)
+	var dropped_unit_item_position: int = _get_index_of_child(list_container, dropped_unit_item)
+	
+	assert(target_unit_item_position != -1)
+	assert(dropped_unit_item_position != -1)
+	
+	list_container.move_child(dropped_unit_item, target_unit_item_position)
+	list_container.move_child(target_unit_item, dropped_unit_item_position)
+	
+	var save_data: SaveData = GameData.save_data
+	
+	save_data.swap_jobs(target_unit_item.job, dropped_unit_item.job)
+	
+	$PlaceSound.play()
+
+
+func _get_index_of_child(parent_node: Node, child_node: Node) -> int:
+	var index: int = 0
+	
+	for child in parent_node.get_children():
+		if child == child_node:
+			return index
+		
+		index += 1
+	
+	return -1
 
 
 func _on_ReturnButton_pressed() -> void:

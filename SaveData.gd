@@ -30,3 +30,32 @@ export(float) var sound_effects_volume: float = 1.0
 export(String, "en", "es") var locale: String = ""
 export(Enums.DragMode) var drag_mode: int = Enums.DragMode.CLICK
 
+
+func swap_jobs(old_job: Job, new_job: Job) -> void:
+	if old_job != null:
+		var index_of_old_job: int = jobs.find(old_job)
+		
+		assert(index_of_old_job != -1)
+		
+		#var index_of_new_job
+		var index_of_old_job_in_active_units: int = active_units.find(index_of_old_job)
+		
+		assert(index_of_old_job_in_active_units != -1)
+		
+		var index_of_new_job: int = jobs.find(new_job)
+		
+		assert(index_of_new_job != -1)
+		
+		var index_of_new_job_in_active_units: int = active_units.find(index_of_new_job)
+		
+		active_units[index_of_old_job_in_active_units] = index_of_new_job
+		
+		if index_of_new_job_in_active_units != -1:
+			active_units[index_of_new_job_in_active_units] = index_of_old_job
+	else:
+		var index_of_new_job: int = jobs.find(new_job)
+		assert(index_of_new_job != -1)
+		
+		active_units.push_back(index_of_new_job)
+		
+		assert(active_units.size() <= MAX_SQUAD_SIZE)

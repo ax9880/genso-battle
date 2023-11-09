@@ -33,6 +33,7 @@ func _ready() -> void:
 			
 			var _error = unit_item.connect("change_button_clicked", self, "_on_UnitItemContainer_change_button_clicked", [job])
 
+
 func on_add_to_tree(data: Object) -> void:
 	active_job = data as Job
 	
@@ -53,28 +54,7 @@ func on_load() -> void:
 func _on_UnitItemContainer_change_button_clicked(new_job: Job) -> void:
 	var save_data: SaveData = GameData.save_data
 	
-	if active_job != null:
-		var index_of_old_job: int = save_data.jobs.find(active_job)
-		
-		assert(index_of_old_job != -1)
-		
-		#var index_of_new_job
-		var index: int = save_data.active_units.find(index_of_old_job)
-		
-		assert(index != -1)
-		
-		var index_of_new_job: int = save_data.jobs.find(new_job)
-		
-		assert(index_of_new_job != -1)
-		
-		save_data.active_units[index] = index_of_new_job
-	else:
-		var index_of_new_job: int = save_data.jobs.find(new_job)
-		assert(index_of_new_job != -1)
-		
-		save_data.active_units.push_back(index_of_new_job)
-		
-		assert(save_data.active_units.size() <= SaveData.MAX_SQUAD_SIZE)
+	save_data.swap_jobs(active_job, new_job)
 	
 	go_back()
 
