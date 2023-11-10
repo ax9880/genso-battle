@@ -1,8 +1,9 @@
 extends MarginContainer
 
 
-onready var vbox_container := $MarginContainer/VBoxContainer
 export(PackedScene) var activated_skill_hbox_container_packed_scene: PackedScene
+
+onready var vbox_container := $MarginContainer/VBoxContainer
 
 
 func play(activated_skills: Array) -> void:
@@ -18,10 +19,10 @@ func play(activated_skills: Array) -> void:
 			activated_skill_hbox_container.initialize(skill)
 			
 			vbox_container.add_child(activated_skill_hbox_container)
-			
-			_set_growth_position()
-			
-			$AnimationPlayer.play("Fade in and then out")
+		
+		_set_growth_position()
+		
+		$AnimationPlayer.play("Fade in and then out")
 
 
 func _set_growth_position() -> void:
