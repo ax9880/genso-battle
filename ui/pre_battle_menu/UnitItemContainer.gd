@@ -58,11 +58,11 @@ func _show_compared_number(label: Label, job_stat: int, compare_job_stat: int) -
 	var difference: int = job_stat - compare_job_stat
 	
 	if difference > 0:
-		label.add_color_override("font_color", Color.green)
+		label.add_color_override("font_color", Color("#9bd547"))
 		
 		label.text = "%d (%+d)" % [job_stat, difference]
 	elif difference < 0:
-		label.add_color_override("font_color", Color.red)
+		label.add_color_override("font_color", Color("#ff4f4f"))
 		
 		label.text = "%d (%+d)" % [job_stat, difference]
 	else:
