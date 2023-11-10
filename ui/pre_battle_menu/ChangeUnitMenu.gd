@@ -10,7 +10,11 @@ onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/Scrol
 var active_job: Job = null
 
 
-func _ready() -> void:
+func _show_active_unit() -> void:
+	pass
+
+
+func _show_units() -> void:
 	for child in list_container.get_children():
 		child.queue_free()
 	
@@ -27,11 +31,13 @@ func _ready() -> void:
 			
 			list_container.add_child(unit_item)
 			
-			unit_item.initialize(job)
+			# false: not draggable
+			unit_item.initialize(job, false, active_job)
 			
 			unit_item.hide_view_button()
+			unit_item.hide_change_button()
 			
-			var _error = unit_item.connect("change_button_clicked", self, "_on_UnitItemContainer_change_button_clicked", [job])
+			var _error = unit_item.connect("unit_selected", self, "_on_UnitItemContainer_unit_selected", [job])
 
 
 func on_add_to_tree(data: Object) -> void:
@@ -39,6 +45,10 @@ func on_add_to_tree(data: Object) -> void:
 	
 	if active_job == null:
 		$MarginContainer/VBoxContainer/RemoveButton.disabled = true
+	
+	_show_units()
+	
+	_show_active_unit()
 
 
 func on_load() -> void:
@@ -51,7 +61,7 @@ func on_load() -> void:
 	$MarginContainer/VBoxContainer/ReturnButton.grab_focus()
 
 
-func _on_UnitItemContainer_change_button_clicked(new_job: Job) -> void:
+func _on_UnitItemContainer_unit_selected(new_job: Job) -> void:
 	var save_data: SaveData = GameData.save_data
 	
 	save_data.swap_jobs(active_job, new_job)
