@@ -84,8 +84,9 @@ TRAINING_ORBLING,Training orbling,Orbe de entrenamiento
 PART_1_TITLE,Greaves of Clay Stomping On A Spirit’s Head Forever,Grebas de Arcilla Pisoteando Eternamente la Cabeza de un Espíritu
 PRIMARY_WEAPON_DAMAGE_DESCRIPTION,%.1fx %s damage,%.1fx daño de tipo %s
 HEAL_DESCRIPTION,%.1fx healing power,%.1fx de poder curativo
+MAX_HEAL_DESCRIPTION,(Up to %d HP),(Máximo %d puntos de vida)
 SECONDARY_WEAPON_DAMAGE_DESCRIPTION,(+%.1fx %s damage),(+%.1fx daño de %s)
-ABSORB_DESCRIPTION,absorb %.0f%%,absorbe %.0f%%
+ABSORB_DESCRIPTION,absorb %.0f%% of attack damage,absorbe %.0f%% del daño infligido
 STATUS_EFFECT_DESCRIPTION,inflict %s for %d turns,inflige %s por %d turnos
 SWORD,Sword,Espada
 GUN,Gun,Arma de fuego
