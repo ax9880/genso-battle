@@ -11,6 +11,7 @@ anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
 unit_item_packed_scene = ExtResource( 4 )
+view_unit_menu_scene = "res://ui/ViewUnitMenu.tscn"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0

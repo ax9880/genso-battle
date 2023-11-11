@@ -9,7 +9,6 @@ var is_draggable: bool = false
 
 var compare_job: Job
 
-signal view_button_clicked
 signal change_button_clicked
 signal unit_selected
 signal unit_dropped_on_unit(target_unit_item, dropped_unit_item)
@@ -23,8 +22,12 @@ func initialize(_job: Job, _is_draggable: bool = false, _compare_job: Job = null
 	
 	name_label.text = tr(job.job_name)
 	
-	$UnitIcon.initialize(job, is_draggable, compare_job)
+	$UnitIcon.initialize(job, is_draggable)
 	$VBoxContainer/UnitStatsContainer.initialize(job, compare_job)
+
+
+func set_change_button_as_choose_button() -> void:
+	$ChangeButton.text = tr("CHOOSE")
 
 
 func get_drag_data(_position: Vector2):
@@ -56,17 +59,8 @@ func _build_drag_preview() -> Control:
 	return nine_patch_rect
 
 
-func hide_view_button() -> void:
-	#$ViewButton.hide()
-	pass
-
-
 func hide_change_button() -> void:
 	$ChangeButton.hide()
-
-
-func _on_ViewButton_pressed() -> void:
-	emit_signal("view_button_clicked")
 
 
 func _on_ChangeButton_pressed() -> void:
@@ -90,6 +84,5 @@ func _on_UnitIcon_gui_input(event: InputEvent) -> void:
 		emit_signal("unit_selected")
 	
 	if event is InputEventMouseButton and event.doubleclick:
-		print("double clicked!")
 		emit_signal("unit_double_clicked")
 

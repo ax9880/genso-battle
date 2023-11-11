@@ -7,9 +7,11 @@ export(PackedScene) var skill_label_container_packed_scene: PackedScene
 onready var full_name_label := $MarginContainer/VBoxContainer/FullNameLabel
 onready var title_label := $MarginContainer/VBoxContainer/TitleLabel
 
+onready var full_portrait_texture_rect := $MarginContainer/VBoxContainer/HBoxContainer/UnitFullTextureRect
+
 onready var species_label := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/SpeciesLabel
 
-onready var unit_icon := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/UnitIcon
+onready var unit_icon := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/UnitIcon
 
 onready var unit_stats_container := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/UnitStatsContainer
 
@@ -25,6 +27,8 @@ func initialize(job: Job) -> void:
 		child.queue_free()
 	
 	full_name_label.text = job.job_name
+	
+	full_portrait_texture_rect.texture = job.full_portrait
 	
 	unit_icon.initialize(job)
 	

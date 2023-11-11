@@ -54,9 +54,6 @@ func _show_active_units() -> void:
 		if unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job]) != OK:
 			printerr("Failed to connect signal")
 		
-		if unit_item.connect("view_button_clicked", self, "_on_UnitItem_view_button_clicked", [job]) != OK:
-			printerr("Failed to connect signal")
-		
 		if unit_item.connect("unit_dropped_on_unit", self, "_on_UnitItem_unit_dropped_on_unit") != OK:
 			printerr("Failed to connect signal")
 			

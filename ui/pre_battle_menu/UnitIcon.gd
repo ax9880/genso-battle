@@ -5,7 +5,7 @@ onready var glow_texture_rect: TextureRect = $GlowTextureRect
 onready var weapon_type_texture_rect: TextureRect = $WeaponTypeTexture
 
 
-func initialize(job: Job, is_draggable: bool = false, compare_job: Job = null) -> void:
+func initialize(job: Job, is_draggable: bool = false) -> void:
 	if not is_draggable:
 		mouse_default_cursor_shape = Control.CURSOR_ARROW
 	
