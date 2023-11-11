@@ -3,6 +3,7 @@ extends StackBasedMenuScreen
 export(PackedScene) var unit_item_packed_scene: PackedScene
 
 export(String, FILE, "*.tscn") var change_unit_item_menu_scene: String
+export(String, FILE, "*.tscn") var view_unit_menu_scene: String
 
 onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer
 onready var scene_container: MarginContainer = $MarginContainer
@@ -57,6 +58,9 @@ func _show_active_units() -> void:
 			printerr("Failed to connect signal")
 		
 		if unit_item.connect("unit_dropped_on_unit", self, "_on_UnitItem_unit_dropped_on_unit") != OK:
+			printerr("Failed to connect signal")
+			
+		if unit_item.connect("unit_double_clicked", self, "_on_UnitItem_unit_double_clicked", [job]) != OK:
 			printerr("Failed to connect signal")
 	
 	# TODO: Show empty spaces to show that player can have up to six units
@@ -116,3 +120,7 @@ func _on_ReturnButton_pressed() -> void:
 
 func _on_AddUnitButton_pressed() -> void:
 	_on_UnitItem_change_button_clicked(null)
+
+
+func _on_UnitItem_unit_double_clicked(job: Job) -> void:
+	navigate(view_unit_menu_scene, job)

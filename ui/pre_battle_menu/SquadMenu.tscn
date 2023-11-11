@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
-[ext_resource path="res://ui/pre_battle_menu/UnitItem.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ui/pre_battle_menu/UnitItemContainer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui/pre_battle_menu/SquadMenu.gd" type="Script" id=3]
 [ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=4]
 
@@ -13,6 +13,7 @@ theme = ExtResource( 1 )
 script = ExtResource( 3 )
 unit_item_packed_scene = ExtResource( 2 )
 change_unit_item_menu_scene = "res://ui/pre_battle_menu/ChangeUnitMenu.tscn"
+view_unit_menu_scene = "res://ui/ViewUnitMenu.tscn"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
