@@ -1,0 +1,58 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://ui/pre_battle_menu/UnitStatsContainer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ui/pre_battle_menu/UnitIcon.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ui/pre_battle_menu/UnitItemContainer.gd" type="Script" id=6]
+
+[node name="UnitItemContainer" type="HBoxContainer"]
+anchor_right = 1.0
+margin_bottom = 100.0
+mouse_filter = 2
+size_flags_horizontal = 3
+theme = ExtResource( 1 )
+custom_constants/separation = 16
+script = ExtResource( 6 )
+
+[node name="UnitIcon" parent="." instance=ExtResource( 3 )]
+margin_right = 100.0
+margin_bottom = 100.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 116.0
+margin_right = 584.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 468.0
+margin_bottom = 29.0
+
+[node name="NameLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_right = 130.0
+margin_bottom = 29.0
+custom_colors/font_color = Color( 1, 0.976471, 0.443137, 1 )
+text = "UNIT_NAME"
+
+[node name="UnitStatsContainer" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 37.0
+margin_right = 468.0
+margin_bottom = 95.0
+
+[node name="ChangeButton" type="Button" parent="."]
+margin_left = 600.0
+margin_right = 720.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 120, 0 )
+size_flags_vertical = 3
+text = "CHANGE"
+
+[connection signal="gui_input" from="UnitIcon" to="." method="_on_UnitIcon_gui_input"]
+[connection signal="mouse_entered" from="UnitIcon" to="." method="_on_UnitIcon_mouse_entered"]
+[connection signal="mouse_exited" from="UnitIcon" to="." method="_on_UnitIcon_mouse_exited"]
+[connection signal="pressed" from="ChangeButton" to="." method="_on_ChangeButton_pressed"]

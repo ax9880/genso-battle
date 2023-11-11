@@ -1,0 +1,107 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/fonts/Exo2Regular16.tres" type="DynamicFont" id=1]
+[ext_resource path="res://ui/pre_battle_menu/UnitStatsContainer.gd" type="Script" id=2]
+
+[node name="UnitStatsContainer" type="VBoxContainer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -152.0
+margin_top = -29.0
+margin_right = 152.0
+margin_bottom = 29.0
+custom_constants/separation = -1
+script = ExtResource( 2 )
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+margin_right = 304.0
+margin_bottom = 20.0
+
+[node name="HealthLabel" type="Label" parent="HBoxContainer3"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_colors/font_color = Color( 0.933333, 0.188235, 0.27451, 1 )
+custom_fonts/font = ExtResource( 1 )
+text = "HP:"
+
+[node name="HealthNumber" type="Label" parent="HBoxContainer3"]
+margin_left = 58.0
+margin_right = 94.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 1 )
+text = "9999"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 19.0
+margin_right = 304.0
+margin_bottom = 39.0
+
+[node name="AttackLabel" type="Label" parent="HBoxContainer"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "ATK:"
+
+[node name="AttackNumber" type="Label" parent="HBoxContainer"]
+margin_left = 58.0
+margin_right = 148.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 90, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "9999 (-999)"
+
+[node name="DefenseLabel" type="Label" parent="HBoxContainer"]
+margin_left = 156.0
+margin_right = 206.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "DEF:"
+
+[node name="DefenseNumber" type="Label" parent="HBoxContainer"]
+margin_left = 214.0
+margin_right = 304.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 90, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "9999"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+margin_top = 38.0
+margin_right = 304.0
+margin_bottom = 58.0
+
+[node name="SpiritualAttackLabel" type="Label" parent="HBoxContainer2"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "SATK:"
+
+[node name="SpiritualAttackNumber" type="Label" parent="HBoxContainer2"]
+margin_left = 58.0
+margin_right = 148.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 90, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "9999"
+
+[node name="SpiritualDefenseLabel" type="Label" parent="HBoxContainer2"]
+margin_left = 156.0
+margin_right = 206.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "SDEF:"
+
+[node name="SpiritualDefenseNumber" type="Label" parent="HBoxContainer2"]
+margin_left = 214.0
+margin_right = 304.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 90, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "9999"
