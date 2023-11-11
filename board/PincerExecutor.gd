@@ -9,6 +9,9 @@ class SkillAttack extends Reference:
 
 export(PackedScene) var chain_previewer_packed_scene: PackedScene
 
+export(PackedScene) var pincer_highlight_packed_scene: PackedScene
+
+
 var unit_queue := []
 var dead_units := []
 
@@ -62,6 +65,9 @@ func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies:
 	unit_queue = _queue_units(pincer)
 	complete_chains = _build_chains_including_pincering_unit(pincer)
 	_show_chain_previews(pincer)
+	
+	# yield?
+	highlight_pincer(pincer)
 	
 	$SkillActivationTimer.start()
 	
@@ -174,6 +180,14 @@ func clear_chain_previews() -> void:
 		chain_previewer.queue_free()
 	
 	chain_previews.clear()
+
+
+func highlight_pincer(pincer: Pincerer.Pincer) -> void:
+	var pincer_higlight: Node2D = pincer_highlight_packed_scene.instance()
+	
+	add_child(pincer_higlight)
+	
+	pincer_higlight.initialize(pincer)
 
 
 func start_attack_skill_phase() -> void:

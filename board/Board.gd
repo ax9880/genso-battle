@@ -570,8 +570,9 @@ func _execute_next_enemy_pincer() -> void:
 		pincer = pincer_queue.pop_front()
 	
 	if pincer != null:
-		# TODO: Play pincer animation
 		print("Start enemy pincers")
+		
+		$PincerExecutor.highlight_pincer(pincer)
 		
 		_start_attack_phase(pincer)
 	else:
