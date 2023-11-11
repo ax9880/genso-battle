@@ -46,10 +46,13 @@ func _show_units() -> void:
 
 
 func on_add_to_tree(data: Object) -> void:
-	active_job = data as Job
-	
-	if active_job == null:
-		$MarginContainer/VBoxContainer/RemoveButton.disabled = true
+	# Data can be null when returning from unit view menu, so don't reassign
+	# active job in that case
+	if data == null:
+		if active_job == null:
+			$MarginContainer/VBoxContainer/RemoveButton.disabled = true
+	else:
+		active_job = data as Job
 	
 	_show_units()
 	
