@@ -13,6 +13,8 @@ export(String) var job_name: String = ""
 
 export(Texture) var portrait: Texture = null
 
+export(Texture) var full_portrait: Texture = null
+
 export(String, FILE, "*.tscn") var unit_scene_path: String = ""
 
 # Between 1 and 3. Level determines how many skills are unlocked.
@@ -31,7 +33,10 @@ func to_dictionary() -> Dictionary:
 	
 	dictionary["skills"] = skills_paths
 	dictionary["job_name"] = job_name
+	
 	dictionary["portrait"] = portrait.resource_path
+	dictionary["full_portrait"] = full_portrait.resource_path
+	
 	dictionary["unit_scene_path"] = unit_scene_path
 	dictionary["level"] = level
 	
@@ -49,6 +54,9 @@ func from_dictionary(dictionary: Dictionary) -> void:
 		skills.push_back(load(skill))
 	
 	job_name = dictionary.job_name
+	
 	portrait = load(dictionary.portrait)
+	full_portrait = load(dictionary.full_portrait)
+	
 	unit_scene_path = unit_scene_path
 	level = level

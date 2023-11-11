@@ -1,10 +1,11 @@
-[gd_resource type="Resource" load_steps=6 format=2]
+[gd_resource type="Resource" load_steps=7 format=2]
 
 [ext_resource path="res://jobs/Job.gd" type="Script" id=1]
 [ext_resource path="res://skills/resources/HealingAura.tres" type="Resource" id=2]
 [ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=3]
 [ext_resource path="res://stats/HaniwaOrblingStats.tres" type="Resource" id=4]
 [ext_resource path="res://skills/resources/PushingSlash.tres" type="Resource" id=5]
+[ext_resource path="res://assets/enemies/orbling_haniwa_full.png" type="Texture" id=6]
 
 [resource]
 script = ExtResource( 1 )
@@ -12,5 +13,6 @@ stats = ExtResource( 4 )
 skills = [ ExtResource( 2 ), ExtResource( 5 ) ]
 job_name = "HANIWA_ORBLING"
 portrait = ExtResource( 3 )
+full_portrait = ExtResource( 6 )
 unit_scene_path = "res://units/Enemy.tscn"
 level = 1
