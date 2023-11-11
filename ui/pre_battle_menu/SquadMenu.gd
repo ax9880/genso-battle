@@ -76,12 +76,6 @@ func _on_UnitItem_change_button_clicked(job: Job) -> void:
 	navigate(change_unit_item_menu_scene, job)
 
 
-func _on_UnitItem_view_button_clicked(job: Job) -> void:
-	# TODO: Show unit view
-	# And reuse this screen for viewing enemy stats during battle
-	print("view")
-
-
 func _on_UnitItem_unit_dropped_on_unit(target_unit_item: Control, dropped_unit_item: Control) -> void:
 	var target_unit_item_position: int = _get_index_of_child(list_container, target_unit_item)
 	var dropped_unit_item_position: int = _get_index_of_child(list_container, dropped_unit_item)
