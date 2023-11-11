@@ -51,12 +51,18 @@ const WEAPON_TYPE_TEXTURES: Dictionary = {
 enum StatusEffectType {
 	NONE,
 	
+	# Inflicts damage over time.
 	POISON,
 	
+	# Causes the unit to sleep, unless woken up by an attack. A sleeping unit
+	# can't move or participate in pincers
 	SLEEP,
 	
+	# Paralyzes the unit until the effect ends. A paralyzed unit can't move or
+	# participate in pincers
 	PARALYZE,
 	
+	# Para
 	CONFUSE,
 	
 	DEMORALIZE
@@ -130,4 +136,18 @@ enum SkillType {
 enum DragMode {
 	CLICK,
 	HOLD
+}
+
+enum PincerOrientation {
+	HORIZONTAL,
+	
+	VERTICAL,
+	
+	BOTTOM_LEFT_CORNER,
+	
+	BOTTOM_RIGHT_CORNER
+	
+	TOP_LEFT_CORNER,
+	
+	TOP_RIGHT_CORNER,
 }

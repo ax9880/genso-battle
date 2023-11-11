@@ -331,6 +331,10 @@ func _restore_sprite_size() -> void:
 	tween.start()
 
 
+func is_player() -> bool:
+	return faction == PLAYER_FACTION
+
+
 func is_ally(unit_faction: int) -> bool:
 	return (faction & unit_faction) != 0
 
@@ -393,6 +397,7 @@ func play_skill_activation_animation(activated_skills: Array, layer_z_index: int
 	$CanvasLayer.z_index = layer_z_index
 
 
+# TODO: Move this somewhere else?
 func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef) -> void:
 	if skill.is_attack() or skill.is_healing():
 		var damage := calculate_damage(unit.get_stats(), get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
@@ -409,8 +414,15 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 		inflict_damage(damage)
 	else:
 		# If it's buff or debuff, try to apply it
-		# If it has status effect, try to apply it
+		# After applying buff or debuff, recalculate the current stats
 		printerr("Don't know how to apply skill %s" % skill.skill_name)
+	
+	# If it has status effect, try to apply it
+	# Skill can cause damage AND inflict status effect, so it can't be if-else
+	if skill.has_status_effect():
+		# if _can_apply_status_effect(unit, skill):
+		#  add_status_effect(skill.status_effect_resource or script)
+		pass
 
 
 func calculate_damage(attacker_stats: StartingStats,
@@ -457,6 +469,12 @@ func get_attribute_resistance(defender_stats: StartingStats, attacker_attribute,
 			return 0.0
 
 
+func _can_apply_status_effect(skill: Skill) -> bool:
+	# TODO: Get resistance
+	
+	return false
+
+
 func is_dead() -> bool:
 	return get_stats().health <= 0
 
@@ -500,6 +518,9 @@ func _on_snap_to_grid() -> void:
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.doubleclick:
+		print("double click!")
+	
 	if event is InputEventMouseButton and event.pressed:
 		match(current_state):
 			STATE.IDLE:

@@ -16,6 +16,8 @@ class Pincer extends Reference:
 	# is its chain level. The chain does include the pincering units.
 	var chain_families: Dictionary
 	
+	var pincer_orientation: int = Enums.PincerOrientation.HORIZONTAL
+	
 	
 	# Size of the pincer (amount of units involved, including pincering and pincered units)
 	func size() -> int:
@@ -73,7 +75,7 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 		var x: int = 0
 		
 		while x < grid_width:
-			var pincer: Pincer = _check_neighbors_for_pincers(grid, x, y, faction, Cell.DIRECTION.RIGHT)
+			var pincer: Pincer = _check_neighbors_for_pincers(grid, x, y, faction, Cell.DIRECTION.RIGHT, Enums.PincerOrientation.HORIZONTAL)
 			
 			if pincer == null:
 				x += 1
@@ -86,7 +88,7 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 		var y: int = grid_height - 1
 		
 		while y > -1:
-			var pincer: Pincer = _check_neighbors_for_pincers(grid, x, y, faction, Cell.DIRECTION.UP)
+			var pincer: Pincer = _check_neighbors_for_pincers(grid, x, y, faction, Cell.DIRECTION.UP, Enums.PincerOrientation.VERTICAL)
 			
 			if pincer == null:
 				y -= 1
@@ -114,22 +116,22 @@ func _find_corner_pincers(grid: Grid, active_unit: Unit, leading_pincers: Array,
 	
 	var faction: int = active_unit.faction
 	
-	var down_left_corner: Cell = grid.get_cell_from_coordinates(Vector2(0, grid_height - 1))
-	var down_right_corner: Cell = grid.get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
-	var up_left_corner: Cell = grid.get_cell_from_coordinates(Vector2(0, 0))
-	var up_right_corner: Cell = grid.get_cell_from_coordinates(Vector2(grid_width - 1, 0))
+	var bottom_left_corner: Cell = grid.get_cell_from_coordinates(Vector2(0, grid_height - 1))
+	var bottom_right_corner: Cell = grid.get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
+	var top_left_corner: Cell = grid.get_cell_from_coordinates(Vector2(0, 0))
+	var top_right_corner: Cell = grid.get_cell_from_coordinates(Vector2(grid_width - 1, 0))
 	
-	corner_pincers.push_back(_find_corner_pincer(down_left_corner, faction))
-	corner_pincers.push_back(_find_corner_pincer(down_right_corner, faction))
-	corner_pincers.push_back(_find_corner_pincer(up_left_corner, faction))
-	corner_pincers.push_back(_find_corner_pincer(up_right_corner, faction))
+	corner_pincers.push_back(_find_corner_pincer(bottom_left_corner, faction, Enums.PincerOrientation.BOTTOM_LEFT_CORNER))
+	corner_pincers.push_back(_find_corner_pincer(bottom_right_corner, faction, Enums.PincerOrientation.BOTTOM_RIGHT_CORNER))
+	corner_pincers.push_back(_find_corner_pincer(top_left_corner, faction, Enums.PincerOrientation.TOP_LEFT_CORNER))
+	corner_pincers.push_back(_find_corner_pincer(top_right_corner, faction, Enums.PincerOrientation.TOP_RIGHT_CORNER))
 	
 	for pincer in corner_pincers:
 		if pincer != null:
 			_add_pincer(active_unit, leading_pincers, pincers, pincer)
 
 
-func _find_corner_pincer(corner: Cell, faction: int) -> Pincer:
+func _find_corner_pincer(corner: Cell, faction: int, pincer_orientation: int) -> Pincer:
 	var neighbors: Array = corner.neighbors
 	
 	assert(neighbors.size() == 2, "Corner should have 2 neighbors")
@@ -157,6 +159,8 @@ func _find_corner_pincer(corner: Cell, faction: int) -> Pincer:
 		pincer.pincered_units.push_back(corner.unit)
 	
 	if is_pincer:
+		pincer.pincer_orientation = pincer_orientation
+		
 		return pincer
 	else:
 		return null
@@ -173,7 +177,7 @@ func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pinc
 		pincers.push_back(pincer)
 
 
-func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, faction: int, direction: int) -> Pincer:
+func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, faction: int, direction: int, pincer_orientation: int) -> Pincer:
 	var cell: Cell = grid.get_cell_from_coordinates(Vector2(start_x, start_y))
 	
 	var unit = cell.unit
@@ -222,6 +226,8 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 	
 	if is_pincer:
 		assert(pincer.pincering_units.size() == 2, "Pincer should have 2 pincering/leading units")
+		
+		pincer.pincer_orientation = pincer_orientation
 		
 		return pincer
 	else:
