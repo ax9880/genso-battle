@@ -61,6 +61,9 @@ var faction: int = INVALID_FACTION
 
 var random := RandomNumberGenerator.new()
 
+# Array<StatusEffect>
+var status_effects: Array = []
+
 
 ## Signals
 
@@ -137,6 +140,7 @@ func stop_scale_and_and_down_animation() -> void:
 	
 	$AnimationPlayer.stop(true)
 	
+	# TODO: Check if these tweens are being removed
 	$Tween.remove($Sprite, ":scale")
 	
 	$Tween.interpolate_property($Sprite, "scale",
@@ -420,9 +424,24 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 	# If it has status effect, try to apply it
 	# Skill can cause damage AND inflict status effect, so it can't be if-else
 	if skill.has_status_effect():
-		# if _can_apply_status_effect(unit, skill):
-		#  add_status_effect(skill.status_effect_resource or script)
-		pass
+		var status_effect: StatusEffect = skill.get_status_effect()
+		
+		var current_status_effect: StatusEffect = _find_status_effect_with_same_type(status_effect.get_type())
+		
+		# TODO: Check resistances to know if you can inflict it
+		
+		if current_status_effect == null:
+			status_effect.initialize(unit.get_stats(), skill.status_effect_duration_turns, "")
+			
+			status_effects.append(status_effect)
+			
+			print("Inflicted %s on enemy %s" % [status_effect.get_type(), name])
+		else:
+			if current_status_effect.can_stack(status_effect):
+				current_status_effect.stack(status_effect)
+			elif status_effect.can_replace(current_status_effect):
+				# TODO: Replace
+				pass
 
 
 func calculate_damage(attacker_stats: StartingStats,
@@ -514,6 +533,32 @@ func _on_snap_to_grid() -> void:
 	emit_signal("snapped_to_grid", self)
 	
 	$Sound/SnapAudio.play()
+
+
+func inflict(status_effect_type: int) -> void:
+	var status_effect: StatusEffect = _find_status_effect_with_same_type(status_effect_type)
+	
+	if status_effect != null:
+		var damage: int = status_effect.calculate_damage($Job.current_stats)
+		
+		inflict_damage(damage)
+
+
+func _find_status_effect_with_same_type(status_effect_type: int) -> StatusEffect:
+	for effect in status_effects:
+		if effect.get_type() == status_effect_type:
+			return effect
+	
+	return null
+
+
+func has_status_effect_of_type(status_effect_type: int) -> bool:
+	for effect in status_effects:
+		if effect.get_type() == status_effect_type:
+			return true
+	
+	return false
+
 
 ## Signals
 

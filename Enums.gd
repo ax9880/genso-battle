@@ -62,9 +62,11 @@ enum StatusEffectType {
 	# participate in pincers
 	PARALYZE,
 	
-	# Para
+	# Makes the unit move randomly. A confused unit can't move or participate
+	# in pincers
 	CONFUSE,
 	
+	# Reduces attack and spiritual attack to zero, and unit can't use skills
 	DEMORALIZE
 }
 

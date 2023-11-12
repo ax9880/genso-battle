@@ -257,6 +257,8 @@ func _make_player_units_appear() -> void:
 func _start_player_turn(var has_same_cell: bool = false) -> void:
 	print("Starting player turn")
 	
+	_apply_status_effects_on_enemy_units()
+	
 	$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
 	pincer_queue = []
 	
@@ -724,6 +726,41 @@ func _clear_active_trail() -> void:
 	if active_trail != null:
 		active_trail.queue_clear()
 		active_trail = null
+
+
+func _apply_status_effects_on_player_units() -> void:
+	#$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
+	
+	var player_units: Array = player_units_node.get_children()
+	
+	var units_with_poison: Array = []
+	
+	for unit in player_units:
+		if unit.is_alive() and unit.has_status_effect_of_type(Enums.StatusEffectType.POISON):
+			units_with_poison.append(unit)
+	
+	for unit_with_poison in units_with_poison:
+		unit_with_poison.inflict(Enums.StatusEffectType.POISON)
+		# TODO: Instance scene and play animation and sound
+	
+	# TODO: Wait X seconds
+
+
+func _apply_status_effects_on_enemy_units() -> void:
+	var player_units: Array = enemy_units_node.get_children()
+	
+	var units_with_poison: Array = []
+	
+	for unit in player_units:
+		if unit.is_alive() and unit.has_status_effect_of_type(Enums.StatusEffectType.POISON):
+			units_with_poison.append(unit)
+	
+	for unit_with_poison in units_with_poison:
+		unit_with_poison.inflict(Enums.StatusEffectType.POISON)
+		# TODO: Instance scene and play animation and sound
+	
+	# TODO: Wait X seconds
+	# TODO: Check for dead units
 
 
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
