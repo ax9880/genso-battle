@@ -18,6 +18,9 @@ class Pincer extends Reference:
 	
 	var pincer_orientation: int = Enums.PincerOrientation.HORIZONTAL
 	
+	# TODO: Add start position and end position and get them from the cell
+	# positions when you create the pincer. This is so the pincer highlight
+	# uses these positions and it works correctly for 2x2 units
 	
 	# Size of the pincer (amount of units involved, including pincering and pincered units)
 	func size() -> int:
@@ -29,17 +32,17 @@ class Pincer extends Reference:
 	# Pincered units can be killed by skills before the pincer is executed.
 	# Pincering units can be killed by traps.
 	func is_valid() -> bool:
-		var is_valid: bool = false
+		var is_any_pincered_unit_alive: bool = false
 		
 		for unit in pincered_units:
-			is_valid = is_valid or unit.is_alive()
+			is_any_pincered_unit_alive = is_any_pincered_unit_alive or unit.is_alive()
 		
 		var is_pincering_units_alive: bool = true
 		
 		for unit in pincering_units:
 			is_pincering_units_alive = is_pincering_units_alive and unit.is_alive()
 		
-		return is_valid and is_pincering_units_alive
+		return is_any_pincered_unit_alive and is_pincering_units_alive
 
 
 var pincer_queue := []
