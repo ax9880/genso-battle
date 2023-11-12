@@ -3,6 +3,8 @@ extends Node
 # Job
 export(Resource) var job: Resource
 
+export(int) var level: int = 0
+
 var base_stats: StartingStats
 
 # Stats after buffs and debuffs
@@ -20,11 +22,12 @@ func _ready() -> void:
 
 func get_unlocked_skills() -> Array:
 	# TODO: Convert job level to "max skills" count
-	return skills.slice(0, job.level - 1)
+	return skills.slice(0, level - 1)
 
 
-func set_job(new_job: Job) -> void:
-	job = new_job
+func set_job_reference(job_reference: JobReference) -> void:
+	job = job_reference.job
+	level = job_reference.level
 	
 	_update_stats()
 

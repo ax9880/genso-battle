@@ -1,5 +1,10 @@
 extends Node
 
+const _UNIT_DATA_SECTION: String = "unit_data"
+const _SETTINGS_SECTION: String = "settings"
+
+const _JOB_REFERENCES_KEY: String = "job_references"
+
 var save_data: SaveData
 var config_file = ConfigFile.new()
 
@@ -37,52 +42,42 @@ func _load_config_file():
 func _load_data_from_configs_file() -> void:
 	save_data = SaveData.new()
 	
-	var unit_data: Array = config_file.get_value("unit_data", "jobs", null)
+	var unit_data: Array = config_file.get_value(_UNIT_DATA_SECTION, _JOB_REFERENCES_KEY, null)
 	
-	for job_dictionary in unit_data:
-		var job := Job.new()
+	for job_reference_dictionary in unit_data:
+		var job_reference := JobReference.new()
 		
-		job.from_dictionary(job_dictionary)
+		job_reference.from_dictionary(job_reference_dictionary)
 		
-		save_data.jobs.push_back(job)
+		save_data.job.push_back(job_reference)
 	
-	save_data.active_units = config_file.get_value("unit_data", "active_units", save_data.active_units)
+	save_data.active_units = config_file.get_value(_UNIT_DATA_SECTION, "active_units", save_data.active_units)
 	
-	save_data.music_volume = config_file.get_value("settings", "music_volume", 1.0)
-	save_data.sound_effects_volume = config_file.get_value("settings", "sound_effects_volume", 1.0)
-	save_data.locale = config_file.get_value("settings", "locale", "")
+	save_data.music_volume = config_file.get_value(_SETTINGS_SECTION, "music_volume", 1.0)
+	save_data.sound_effects_volume = config_file.get_value(_SETTINGS_SECTION, "sound_effects_volume", 1.0)
+	save_data.locale = config_file.get_value(_SETTINGS_SECTION, "locale", "")
 
 
 func _load_data_from_default_resource() -> void:
 	var default_save_data: SaveData = load("res://DefaultSaveData.tres")
 	
 	save_data = default_save_data.duplicate()
-	
-	save_data.jobs.clear()
-	
-	# Duplicate the jobs because their level and other members can be changed
-	for default_job in default_save_data.jobs:
-		var job = default_job.duplicate()
-		
-		job.stats = default_job.stats.duplicate()
-		
-		save_data.jobs.push_back(job)
 
 
 func save() -> void:
-	var jobs := []
+	var jobs_references := []
 	
-	# Save jobs as an array of dictionaries. Preserve the order
+	# Save jobs references as an array of dictionaries. Preserve the order
 	# so that active_units can point to the correct units.
-	for job in save_data.jobs:
-		jobs.push_back(job.to_dictionary())
+	for job_reference in save_data.jobs_references:
+		jobs_references.push_back(job_reference.to_dictionary())
 	
-	config_file.set_value("unit_data", "jobs", jobs)
-	config_file.set_value("unit_data", "active_units", save_data.active_units)
+	config_file.set_value(_UNIT_DATA_SECTION, _JOB_REFERENCES_KEY, jobs_references)
+	config_file.set_value(_UNIT_DATA_SECTION, "active_units", save_data.active_units)
 	
-	config_file.set_value("settings", "music_volume", save_data.music_volume)
-	config_file.set_value("settings", "sound_effects_volume", save_data.sound_effects_volume)
-	config_file.set_value("settings", "locale", save_data.locale)
+	config_file.set_value(_SETTINGS_SECTION, "music_volume", save_data.music_volume)
+	config_file.set_value(_SETTINGS_SECTION, "sound_effects_volume", save_data.sound_effects_volume)
+	config_file.set_value(_SETTINGS_SECTION, "locale", save_data.locale)
 	
 	_save_config_file()
 

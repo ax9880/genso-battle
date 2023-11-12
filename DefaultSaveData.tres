@@ -1,17 +1,63 @@
-[gd_resource type="Resource" load_steps=8 format=2]
+[gd_resource type="Resource" load_steps=18 format=2]
 
 [ext_resource path="res://SaveData.gd" type="Script" id=1]
-[ext_resource path="res://jobs/SakiJob.tres" type="Resource" id=2]
-[ext_resource path="res://jobs/YachieJob.tres" type="Resource" id=3]
+[ext_resource path="res://JobReference.gd" type="Script" id=2]
+[ext_resource path="res://jobs/SakiJob.tres" type="Resource" id=3]
 [ext_resource path="res://jobs/YuumaJob.tres" type="Resource" id=4]
-[ext_resource path="res://jobs/OtterSpiritJob.tres" type="Resource" id=5]
-[ext_resource path="res://jobs/EagleSpiritJob.tres" type="Resource" id=6]
-[ext_resource path="res://jobs/WolfSpiritJob.tres" type="Resource" id=7]
+[ext_resource path="res://jobs/YachieJob.tres" type="Resource" id=5]
+[ext_resource path="res://jobs/WolfSpiritJob.tres" type="Resource" id=6]
+[ext_resource path="res://jobs/EagleSpiritJob.tres" type="Resource" id=7]
+[ext_resource path="res://jobs/OtterSpiritJob.tres" type="Resource" id=8]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+job = ExtResource( 3 )
+level = 0
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 2 )
+job = ExtResource( 5 )
+level = 0
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 2 )
+job = ExtResource( 4 )
+level = 0
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 2 )
+job = ExtResource( 8 )
+level = 0
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 2 )
+job = ExtResource( 7 )
+level = 0
+
+[sub_resource type="Resource" id=6]
+script = ExtResource( 2 )
+job = ExtResource( 6 )
+level = 0
+
+[sub_resource type="Resource" id=7]
+script = ExtResource( 2 )
+job = ExtResource( 8 )
+level = 0
+
+[sub_resource type="Resource" id=8]
+script = ExtResource( 2 )
+job = ExtResource( 7 )
+level = 0
+
+[sub_resource type="Resource" id=9]
+script = ExtResource( 2 )
+job = ExtResource( 6 )
+level = 0
 
 [resource]
 script = ExtResource( 1 )
 version = 1
-jobs = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 6 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 6 ) ]
+job_references = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ]
 active_units = [ 0, 1, 2, 3, 4, 5 ]
 battle_progress = {
 }

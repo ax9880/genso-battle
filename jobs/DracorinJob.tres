@@ -13,5 +13,3 @@ skills = [ ExtResource( 3 ) ]
 job_name = "DRACORIN"
 portrait = ExtResource( 2 )
 full_portrait = ExtResource( 5 )
-unit_scene_path = "res://units/Enemy.tscn"
-level = 1

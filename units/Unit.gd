@@ -263,8 +263,8 @@ func _load_job_textures() -> void:
 
 ## Setters
 
-func set_job(new_job: Job) -> void:
-	$Job.set_job(new_job)
+func set_job_reference(job_reference: JobReference) -> void:
+	$Job.set_job_reference(job_reference)
 	
 	_load_job_textures()
 

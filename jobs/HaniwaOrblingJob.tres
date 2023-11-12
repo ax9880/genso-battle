@@ -14,5 +14,3 @@ skills = [ ExtResource( 2 ), ExtResource( 5 ) ]
 job_name = "HANIWA_ORBLING"
 portrait = ExtResource( 3 )
 full_portrait = ExtResource( 6 )
-unit_scene_path = "res://units/Enemy.tscn"
-level = 1

@@ -100,12 +100,12 @@ func _load_player_units() -> void:
 		if i < save_data.active_units.size():
 			var index: int = save_data.active_units[i]
 			
-			var job: Job = save_data.jobs[index]
+			var job_reference: JobReference = save_data.job_references[index]
 			
 			var unit: Unit = player_units_node.get_child(i)
 			
 			if unit.visible:
-				unit.set_job(job)
+				unit.set_job_reference(job_reference)
 			else:
 				discarded_units.append(unit)
 		else:

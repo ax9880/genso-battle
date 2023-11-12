@@ -43,28 +43,29 @@ func _show_active_units() -> void:
 		$MarginContainer/VBoxContainer/AddUnitButton.hide()
 	
 	for index in save_data.active_units:
-		var job: Job = save_data.jobs[index]
+		var job_reference: JobReference = save_data.job_references[index]
+		var job: Job = job_reference.job
 		
 		var unit_item: Control = unit_item_packed_scene.instance()
 		
 		list_container.add_child(unit_item)
 		
-		unit_item.initialize(job, true) # Is draggable
+		unit_item.initialize(job_reference, true) # Is draggable
 		
-		if unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job]) != OK:
+		if unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job_reference]) != OK:
 			printerr("Failed to connect signal")
 		
 		if unit_item.connect("unit_dropped_on_unit", self, "_on_UnitItem_unit_dropped_on_unit") != OK:
 			printerr("Failed to connect signal")
 			
-		if unit_item.connect("unit_double_clicked", self, "_on_UnitItem_unit_double_clicked", [job]) != OK:
+		if unit_item.connect("unit_double_clicked", self, "_on_UnitItem_unit_double_clicked", [job_reference]) != OK:
 			printerr("Failed to connect signal")
 	
 	# TODO: Show empty spaces to show that player can have up to six units
 	$MarginContainer/VBoxContainer/ReturnButton.disabled = save_data.active_units.size() < SaveData.MIN_SQUAD_SIZE
 
 
-func _on_UnitItem_change_button_clicked(job: Job) -> void:
+func _on_UnitItem_change_button_clicked(job_reference: JobReference) -> void:
 	# TODO: When changing, compare available units to active unit
 	# Green stat: Better (show difference? There might not be enough space)
 	# Red stat: Worse
@@ -73,7 +74,7 @@ func _on_UnitItem_change_button_clicked(job: Job) -> void:
 	# TODO: Make it so you can't remove the three leaders (unless you complete the game?)
 	
 	# When you return, highlight the changed unit and play a sound
-	navigate(change_unit_item_menu_scene, job)
+	navigate(change_unit_item_menu_scene, job_reference)
 
 
 func _on_UnitItem_unit_dropped_on_unit(target_unit_item: Control, dropped_unit_item: Control) -> void:
@@ -88,7 +89,7 @@ func _on_UnitItem_unit_dropped_on_unit(target_unit_item: Control, dropped_unit_i
 	
 	var save_data: SaveData = GameData.save_data
 	
-	save_data.swap_jobs(target_unit_item.job, dropped_unit_item.job)
+	save_data.swap_job_references(target_unit_item.job_reference, dropped_unit_item.job_reference)
 	
 	$PlaceSound.play()
 
@@ -113,5 +114,5 @@ func _on_AddUnitButton_pressed() -> void:
 	_on_UnitItem_change_button_clicked(null)
 
 
-func _on_UnitItem_unit_double_clicked(job: Job) -> void:
-	navigate(view_unit_menu_scene, job)
+func _on_UnitItem_unit_double_clicked(job_reference: JobReference) -> void:
+	navigate(view_unit_menu_scene, job_reference)
