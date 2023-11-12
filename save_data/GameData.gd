@@ -59,7 +59,7 @@ func _load_data_from_configs_file() -> void:
 
 
 func _load_data_from_default_resource() -> void:
-	var default_save_data: SaveData = load("res://DefaultSaveData.tres")
+	var default_save_data: SaveData = load("res://save_data/DefaultSaveData.tres")
 	
 	save_data = default_save_data.duplicate()
 

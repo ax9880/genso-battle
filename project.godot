@@ -72,7 +72,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "JobReference",
 "language": "GDScript",
-"path": "res://JobReference.gd"
+"path": "res://save_data/JobReference.gd"
 }, {
 "base": "Node",
 "class": "Pincerer",
@@ -92,7 +92,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "SaveData",
 "language": "GDScript",
-"path": "res://SaveData.gd"
+"path": "res://save_data/SaveData.gd"
 }, {
 "base": "Resource",
 "class": "Skill",
@@ -159,7 +159,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Genso Battle"
-run/main_scene="res://battles/TestBattle2.tscn"
+run/main_scene="res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
 boot_splash/image="res://assets/ui/splash_screen.png"
 config/icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"
@@ -169,7 +169,7 @@ config/windows_native_icon="res://icon.ico"
 Utils="*res://Utils.gd"
 Enums="*res://Enums.gd"
 Loader="*res://Loader.gd"
-GameData="*res://GameData.gd"
+GameData="*res://save_data/GameData.gd"
 AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
 
 [display]
