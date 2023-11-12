@@ -44,11 +44,10 @@ func initialize(skill: Skill, can_show_full_data: bool = false) -> void:
 			skill_description += " " + tr("MAX_HEAL_DESCRIPTION").to_lower() % skill.max_heal
 		
 		if skill.has_status_effects():
-			# TODO:
-			#var status_effect_type_translation_key: String = Enums.StatusEffectType.keys()[skill.status_effect]
-			
-			#skill_description += COMMA_AND_SPACE + tr("STATUS_EFFECT_DESCRIPTION") % [tr(status_effect_type_translation_key).to_lower(), skill.status_effect_duration_turns]
-			pass
+			for status_effect in skill.status_effects:
+				var status_effect_type_translation_key: String = Enums.StatusEffectType.keys()[status_effect.status_effect_type]
+				
+				skill_description += COMMA_AND_SPACE + tr("STATUS_EFFECT_DESCRIPTION") % [tr(status_effect_type_translation_key).to_lower(), status_effect.duration_turns]
 	
 	$Label.text = skill_description
 	

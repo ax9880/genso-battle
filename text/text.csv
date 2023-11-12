@@ -77,6 +77,7 @@ SLASH,Slash,Corte
 WIDE_BITE,Wide bite,Mordida ancha
 VERTICAL_STAB,Vertical stab,Puñalada vertical
 CIRCLE_SLASH,Circle slash,Corte circular
+POISONED_DAGGER,Poisoned dagger,Daga envenenada
 HANIWA_WARRIOR,Haniwa Warrior,Guerrero Haniwa
 HANIWA_ORBLING,Haniwa Orbling,Orbe Haniwa
 DRACORIN,Dracorin,Dracorín
@@ -87,14 +88,14 @@ HEAL_DESCRIPTION,%.1fx healing power,%.1fx de poder curativo
 MAX_HEAL_DESCRIPTION,(Up to %d HP),(Máximo %d puntos de vida)
 SECONDARY_WEAPON_DAMAGE_DESCRIPTION,(+%.1fx %s damage),(+%.1fx daño de %s)
 ABSORB_DESCRIPTION,absorb %.0f%% of attack damage,absorbe %.0f%% del daño infligido
-STATUS_EFFECT_DESCRIPTION,inflict %s for %d turns,inflige %s por %d turnos
+STATUS_EFFECT_DESCRIPTION,inflict %s for %d turn(s),inflige %s por %d turno(s)
 SWORD,Sword,Espada
 GUN,Gun,Arma de fuego
 SPEAR,Spear,Lanza
 STAFF,Spiritual,Espiritual
 NONE,None,Ninguno
 POISON,Poison,Veneno
-SLEEP,Sleep,Dormir
+SLEEP,Sleep,Sueño
 PARALYZE,Paralyze,Paralizar
-CONFUSE,Confuse,Confudir
+CONFUSE,Confuse,Confundir
 DEMORALIZE,Demoralize,Desmoralizar
