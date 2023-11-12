@@ -125,31 +125,38 @@ custom_constants/margin_top = 16
 custom_constants/margin_left = 16
 custom_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
 margin_left = 16.0
 margin_top = 16.0
 margin_right = 616.0
 margin_bottom = 370.0
+size_flags_horizontal = 3
+scroll_horizontal_enabled = false
 
-[node name="SkillLabelContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
+[node name="SkillsVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer"]
+margin_right = 600.0
+margin_bottom = 192.0
+size_flags_horizontal = 3
+
+[node name="SkillLabelContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
 margin_right = 600.0
 
-[node name="SkillLabelContainer2" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
+[node name="SkillLabelContainer2" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
 margin_top = 40.0
 margin_right = 600.0
 margin_bottom = 72.0
 
-[node name="SkillLabelContainer3" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
+[node name="SkillLabelContainer3" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
 margin_top = 80.0
 margin_right = 600.0
 margin_bottom = 112.0
 
-[node name="SkillLabelContainer4" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
+[node name="SkillLabelContainer4" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
 margin_top = 120.0
 margin_right = 600.0
 margin_bottom = 152.0
 
-[node name="SkillLabelContainer5" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
+[node name="SkillLabelContainer5" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
 margin_top = 160.0
 margin_right = 600.0
 margin_bottom = 192.0

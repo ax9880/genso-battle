@@ -15,16 +15,18 @@ onready var unit_icon := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContai
 
 onready var unit_stats_container := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/UnitStatsContainer
 
-onready var skills_vbox_container := $MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer
+onready var skills_vbox_container := $MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer
 
 # TODO:
 # onready var status_effects_vbox_container := $...
 
 
 # TODO: Initialize with a Unit object? That way you get all the data you need
-func initialize(job: Job) -> void:
+func initialize(job_reference: JobReference) -> void:
 	for child in skills_vbox_container.get_children():
 		child.queue_free()
+	
+	var job: Job = job_reference.job
 	
 	full_name_label.text = job.job_name
 	
@@ -32,9 +34,10 @@ func initialize(job: Job) -> void:
 	
 	unit_icon.initialize(job)
 	
-	# No compare job, don't show remaining health
+	# No compare job_reference, don't show remaining health
 	unit_stats_container.initialize(job, null)
 	
+	# TODO: Use level in JobReference to know which skills are unlocked
 	for s in job.skills:
 		var skill: Skill = s
 		
@@ -47,9 +50,9 @@ func initialize(job: Job) -> void:
 
 
 func on_add_to_tree(data: Object) -> void:
-	var job: Job = data as Job
+	var job_reference: JobReference = data as JobReference
 	
-	initialize(job)
+	initialize(job_reference)
 
 
 func _on_ReturnButton_pressed() -> void:
