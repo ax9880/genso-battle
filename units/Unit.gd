@@ -423,25 +423,17 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 	
 	# If it has status effect, try to apply it
 	# Skill can cause damage AND inflict status effect, so it can't be if-else
-	if skill.has_status_effect():
-		var status_effect: StatusEffect = skill.get_status_effect()
-		
-		var current_status_effect: StatusEffect = _find_status_effect_with_same_type(status_effect.get_type())
-		
-		# TODO: Check resistances to know if you can inflict it
-		
-		if current_status_effect == null:
-			status_effect.initialize(unit.get_stats(), skill.status_effect_duration_turns, "")
+	if skill.has_status_effects():
+		for status_effect_resource in skill.status_effects:
+			var status_effect: StatusEffect = status_effect_resource.duplicate()
 			
+			# TODO: Check vulnerabilities to know if you can inflict it
+			status_effect.initialize(unit.get_stats())
+			
+			# TODO: Update status effect icons
 			status_effects.append(status_effect)
 			
-			print("Inflicted %s on enemy %s" % [status_effect.get_type(), name])
-		else:
-			if current_status_effect.can_stack(status_effect):
-				current_status_effect.stack(status_effect)
-			elif status_effect.can_replace(current_status_effect):
-				# TODO: Replace
-				pass
+			print("Inflicted %s on enemy %s" % [status_effect.status_effect_type, name])
 
 
 func calculate_damage(attacker_stats: StartingStats,
@@ -488,10 +480,16 @@ func get_attribute_resistance(defender_stats: StartingStats, attacker_attribute,
 			return 0.0
 
 
-func _can_apply_status_effect(skill: Skill) -> bool:
-	# TODO: Get resistance
+func _can_apply_status_effect(status_effect: StatusEffect) -> bool:
+	var vulnerability: float = 1.0
 	
-	return false
+	# TODO: Convert type enum to string and then search it
+	if $Job.current_stats.status_ailment_vulnerabilities.has(status_effect.status_effect_type):
+		vulnerability = $Job.current_stats.status_ailment_vulnerabilities.get(status_effect.status_effect_type)
+	else:
+		vulnerability = $Job.current_stats.status_ailment_vulnerability
+	
+	return random.randf() < vulnerability
 
 
 func is_dead() -> bool:
@@ -536,25 +534,32 @@ func _on_snap_to_grid() -> void:
 
 
 func inflict(status_effect_type: int) -> void:
-	var status_effect: StatusEffect = _find_status_effect_with_same_type(status_effect_type)
+	var accumulated_damage: int = 0
 	
-	if status_effect != null:
-		var damage: int = status_effect.calculate_damage($Job.current_stats)
+	for status_effect in status_effects:
+		if status_effect.status_effect_type == status_effect_type:
+			accumulated_damage += status_effect.calculate_damage($Job.current_stats)
+			
+			status_effect.update()
+	
+	inflict_damage(accumulated_damage)
+	
+	var active_status_effects := []
+	
+	for status_effect in status_effects:
+		if not status_effect.is_done():
+			active_status_effects.append(status_effect)
 		
-		inflict_damage(damage)
-
-
-func _find_status_effect_with_same_type(status_effect_type: int) -> StatusEffect:
-	for effect in status_effects:
-		if effect.get_type() == status_effect_type:
-			return effect
+		# else free? Or is that done automatically?
 	
-	return null
+	status_effects = active_status_effects
+	
+	print("Active status effects: " + str(status_effects))
 
 
 func has_status_effect_of_type(status_effect_type: int) -> bool:
 	for effect in status_effects:
-		if effect.get_type() == status_effect_type:
+		if effect.status_effect_type == status_effect_type:
 			return true
 	
 	return false

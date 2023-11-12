@@ -30,16 +30,12 @@ export(float, 0, 1, 0.1) var absorb_rate: float = 0
 # Max HP healed. Also applies to absorbed HP
 export(int, 0, 9000, 100) var max_heal: int = 700
 
-# TODO: Move these fields to a resource or script?
-export(Enums.StatusEffectType) var status_effect_type: int = Enums.StatusEffectType.NONE
+export(Array, Resource) var status_effects: Array = []
 
-# If it's zero then it does not inflict a status effect
-export(int, 0, 5, 1) var status_effect_duration_turns: int = 0
+# TODO: Buffs or debuffs
+#export(Array, Resource) buffs: Array = []
 
 export(PackedScene) var effect_scene: PackedScene = null
-
-# TODO: Move this to Status Effect ?
-export(PackedScene) var status_effect_effect_scene: PackedScene = null
 
 
 func get_description() -> String:
@@ -66,16 +62,8 @@ func is_buff() -> bool:
 	return skill_type == Enums.SkillType.BUFF
 
 
-func has_status_effect() -> bool:
-	return status_effect_type != Enums.StatusEffectType.NONE
-
-
-func get_status_effect() -> StatusEffect:
-	match(status_effect_type):
-		Enums.StatusEffectType.POISON:
-			return Poison.new()
-		_:
-			return null
+func has_status_effects() -> bool:
+	return not status_effects.empty()
 
 
 func is_enemy_targeted() -> bool:

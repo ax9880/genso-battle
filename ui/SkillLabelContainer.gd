@@ -4,6 +4,8 @@ const COMMA_AND_SPACE: String = ", "
 
 
 func initialize(skill: Skill, can_show_full_data: bool = false) -> void:
+	$TextureRect.texture = load(Enums.WEAPON_TYPE_TEXTURES[skill.primary_weapon_type])
+	
 	# The translation keys are the names of the enum values
 	var area_of_effect_translation_key: String = Enums.AreaOfEffect.keys()[skill.area_of_effect]
 	
@@ -41,11 +43,12 @@ func initialize(skill: Skill, can_show_full_data: bool = false) -> void:
 			
 			skill_description += " " + tr("MAX_HEAL_DESCRIPTION").to_lower() % skill.max_heal
 		
-		if skill.status_effect != Enums.StatusEffectType.NONE:
-			var status_effect_type_translation_key: String = Enums.StatusEffectType.keys()[skill.status_effect]
+		if skill.has_status_effects():
+			# TODO:
+			#var status_effect_type_translation_key: String = Enums.StatusEffectType.keys()[skill.status_effect]
 			
-			skill_description += COMMA_AND_SPACE + tr("STATUS_EFFECT_DESCRIPTION") % [tr(status_effect_type_translation_key).to_lower(), skill.status_effect_duration_turns]
+			#skill_description += COMMA_AND_SPACE + tr("STATUS_EFFECT_DESCRIPTION") % [tr(status_effect_type_translation_key).to_lower(), skill.status_effect_duration_turns]
+			pass
 	
 	$Label.text = skill_description
 	
-	$TextureRect.texture = load(Enums.WEAPON_TYPE_TEXTURES[skill.primary_weapon_type])

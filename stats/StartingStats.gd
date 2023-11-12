@@ -15,8 +15,9 @@ export var spiritual_defense: int = 0
 # is immune (besides exceptions in status_ailment_vulnerabilities)
 export(float, 0, 5, 0.1) var status_ailment_vulnerability: float = 0.0
 
-# Dictionary<StatusAilmentType (as int? String?), float>
+# Dictionary<StatusAilmentType (String), float>
 # Vulnerabilities to specific status ailments
+# 0: immune. 1: completely vulnerable
 export var status_ailment_vulnerabilities: Dictionary = {}
 
 # Same attribute resistance. If it's > 1 then attacks with same attribute
@@ -40,8 +41,9 @@ func is_physical() -> bool:
 	return weapon_type != Enums.WeaponType.STAFF
 
 
+# TODO: Erase, not used anymore
 func to_dictionary() -> Dictionary:
-	var dict = {
+	var dicttionary := {
 	  "health": health,
 	  "attack": attack,
 	  "spiritual_attack": spiritual_attack,
@@ -56,7 +58,7 @@ func to_dictionary() -> Dictionary:
 	  "movement_range": movement_range,
 	}
 	
-	return dict
+	return dicttionary
 
 
 func from_dictionary(dictionary: Dictionary) -> void:
