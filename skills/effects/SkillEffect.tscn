@@ -19,3 +19,12 @@ stream = ExtResource( 3 )
 bus = "Sound effects"
 
 [node name="Tween" type="Tween" parent="."]
+
+[node name="DelayBeforeAbsorbingDamageTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="DelayAfterAbsorbingDamageTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="DelayAfterSkillWithoutAbsorbTimer" type="Timer" parent="."]
+wait_time = 0.2

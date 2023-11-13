@@ -8,7 +8,6 @@ export(float) var displacement_time_seconds := 0.2
 export(bool) var is_tween_fixed_time := true
 
 export(float) var arc_height := 100.0
-export(float) var delay_before_free_seconds: float = 1.0
 
 onready var particles: CPUParticles2D = $HealParticles
 onready var tween := $Tween
@@ -54,7 +53,9 @@ func _on_Tween_tween_all_completed() -> void:
 	
 	particles.emitting = false
 	
-	yield(get_tree().create_timer(delay_before_free_seconds), "timeout")
+	$Timer.start()
+	
+	yield($Timer, "timeout")
 	
 	queue_free()
 

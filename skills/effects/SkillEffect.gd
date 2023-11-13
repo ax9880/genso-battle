@@ -96,15 +96,21 @@ func _update_count(unit: Unit) -> void:
 	
 	if targets_affected >= target_count:
 		if absorbed_damage > 0:
-			yield(get_tree().create_timer(delay_before_absorbing_damage_seconds), "timeout")
+			$DelayBeforeAbsorbingDamageTimer.start()
+			
+			yield($DelayBeforeAbsorbingDamageTimer, "timeout")
 			
 			unit.inflict_damage(int(max(-max_absorbed_damage, -absorbed_damage)))
 			
 			_build_heal_particles(unit)
 			
-			yield(get_tree().create_timer(delay_after_absorbing_damage_seconds), "timeout")
+			$DelayAfterAbsorbingDamageTimer.start()
+			
+			yield($DelayAfterAbsorbingDamageTimer, "timeout")
 		else:
-			yield(get_tree().create_timer(delay_after_skill_without_absorb_seconds), "timeout")
+			$DelayAfterSkillWithoutAbsorbTimer.start()
+			
+			yield($DelayAfterSkillWithoutAbsorbTimer, "timeout")
 		
 		emit_signal("effect_finished")
 		hide()
