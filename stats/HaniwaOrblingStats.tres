@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource( 1 )
-health = 8000
+health = 800
 attack = 70
 spiritual_attack = 2
 defense = 59
