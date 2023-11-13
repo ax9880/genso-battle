@@ -103,6 +103,14 @@ script = ExtResource( 14 )
 [node name="Pusher" type="Node" parent="Board"]
 script = ExtResource( 4 )
 
+[node name="EnemyAppearanceTimer" type="Timer" parent="Board"]
+wait_time = 0.5
+one_shot = true
+
+[node name="PlayerAppearanceTimer" type="Timer" parent="Board"]
+wait_time = 0.5
+one_shot = true
+
 [node name="DragTimer" type="Timer" parent="Board"]
 wait_time = 4.0
 one_shot = true

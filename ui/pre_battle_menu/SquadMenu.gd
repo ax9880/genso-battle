@@ -66,14 +66,9 @@ func _show_active_units() -> void:
 
 
 func _on_UnitItem_change_button_clicked(job_reference: JobReference) -> void:
-	# TODO: When changing, compare available units to active unit
-	# Green stat: Better (show difference? There might not be enough space)
-	# Red stat: Worse
-	# White stat: Same
-	
 	# TODO: Make it so you can't remove the three leaders (unless you complete the game?)
 	
-	# When you return, highlight the changed unit and play a sound
+	# TODO: When you return, highlight the changed unit and play a sound
 	navigate(change_unit_item_menu_scene, job_reference)
 
 

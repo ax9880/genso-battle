@@ -229,11 +229,9 @@ func _make_enemies_appear(units: Array) -> void:
 	for unit in units:
 		unit.appear()
 		
-		# FIXME: Use timer node
-		yield(get_tree().create_timer(time_between_enemy_appearance_seconds), "timeout")
+		yield($EnemyAppearanceTimer, "timeout")
 	
-	# FIXME: Use timer node
-	yield(get_tree().create_timer(time_before_player_units_appearance_seconds), "timeout")
+	yield($PlayerAppearanceTimer, "timeout")
 	
 	for unit in units:
 		unit.hide_name()
@@ -408,7 +406,6 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 	
 	if selected_cell != null:
 		# TODO: If there's an enemy in the selected cell then don't do this assignment
-		# FIXME: drag timer doesn't start when exiting first cell
 		if active_unit_last_valid_cell != active_unit_current_cell:
 			active_unit_last_valid_cell = active_unit_current_cell
 			
