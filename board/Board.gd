@@ -227,9 +227,13 @@ func _make_enemies_appear(units: Array) -> void:
 		unit.hide()
 	
 	for unit in units:
+		$EnemyAppearanceTimer.start()
+		
 		unit.appear()
 		
 		yield($EnemyAppearanceTimer, "timeout")
+	
+	$PlayerAppearanceTimer.start()
 	
 	yield($PlayerAppearanceTimer, "timeout")
 	
