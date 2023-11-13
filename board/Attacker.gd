@@ -46,7 +46,7 @@ func _execute_next_attack() -> void:
 	else:
 		timer.stop()
 		
-		emit_signal("attack_phase_finished")
+		call_deferred("emit_signal", "attack_phase_finished")
 
 
 func _execute_attack(attack: Attack) -> void:

@@ -62,6 +62,20 @@ tracks/3/keys = {
 "method": "queue_free"
 } ]
 }
+tracks/4/type = "method"
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "pincer_highlighted" ],
+"method": "emit_signal"
+} ]
+}
 
 [node name="PincerHighlight" type="Node2D"]
 script = ExtResource( 8 )
@@ -69,9 +83,7 @@ player_color = Color( 1, 0.309804, 0.309804, 1 )
 enemy_color = Color( 0.780392, 0.968627, 0.94902, 1 )
 
 [node name="Highlight" type="Node2D" parent="."]
-visible = false
 modulate = Color( 1, 1, 1, 0 )
-scale = Vector2( 1.1, 1.1 )
 
 [node name="PincerHighlight3Units" type="Sprite" parent="Highlight"]
 texture = ExtResource( 1 )

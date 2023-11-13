@@ -3,7 +3,7 @@
 [ext_resource path="res://board/Attacker.gd" type="Script" id=1]
 [ext_resource path="res://skills/AttackEffect.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/sfx/sfx_whitewidow_attack_impact.wav" type="AudioStream" id=3]
-[ext_resource path="res://assets/sfx/sfx_f4_general_attack_impact_short_2.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/sfx/sfx_f2general_attack_impact_3.wav" type="AudioStream" id=4]
 [ext_resource path="res://assets/sfx/gun_with_ricochet.wav" type="AudioStream" id=5]
 [ext_resource path="res://assets/sfx/sfx_neutral_sunelemental_impact.wav" type="AudioStream" id=6]
 

@@ -42,9 +42,11 @@ var pusher: Pusher = null
 var chain_previews := []
 
 # The names of these signals are passed as parameters and emitted inside functions
+signal pincer_highlighted
 signal skill_activation_phase_finished
 signal attack_skill_phase_finished
 signal heal_phase_finished
+signal status_effect_phase_finished
 signal finished_checking_for_dead_units
 
 # Finished executing a pincer
@@ -65,9 +67,6 @@ func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies:
 	unit_queue = _queue_units(pincer)
 	complete_chains = _build_chains_including_pincering_unit(pincer)
 	_show_chain_previews(pincer)
-	
-	# yield?
-	highlight_pincer(pincer)
 	
 	$SkillActivationTimer.start()
 	
@@ -104,9 +103,15 @@ func _activate_next_skill() -> void:
 		$SkillActivationTimer.stop()
 		
 		if not (attack_skills.empty() and heal_skills.empty()):
-			yield(get_tree().create_timer(1), "timeout")
+			$BeforeSkillActivationPhaseFinishesTimer.start()
+			
+			yield($BeforeSkillActivationPhaseFinishesTimer, "timeout")
+		else:
+			$NoSkillsActivatedTimer.start()
+			
+			yield($NoSkillsActivatedTimer, "timeout")
 		
-		emit_signal("skill_activation_phase_finished")
+		_emit_deferred("skill_activation_phase_finished")
 
 
 # Queue units to activate their skills one by one
@@ -188,6 +193,10 @@ func highlight_pincer(pincer: Pincerer.Pincer) -> void:
 	add_child(pincer_higlight)
 	
 	pincer_higlight.initialize(pincer)
+	
+	yield(pincer_higlight, "pincer_highlighted")
+	
+	emit_signal("pincer_highlighted")
 
 
 func start_attack_skill_phase() -> void:
@@ -224,7 +233,7 @@ func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 		
 		next_skill.unit.stop_scale_and_and_down_animation()
 	else:
-		emit_signal(finish_signal)
+		_emit_deferred(finish_signal)
 
 
 # Find the chain a unit belongs to.
@@ -266,7 +275,6 @@ func _check_next_dead_unit() -> void:
 		else:
 			printerr("Unit %s died but cell unit is null" % unit.name)
 		
-		
 		if unit.is2x2():
 			for area_cell in cell.get_cells_in_area():
 				assert(area_cell.unit == unit)
@@ -279,7 +287,7 @@ func _check_next_dead_unit() -> void:
 	else:
 		$DeathAnimationTimer.stop()
 		
-		call_deferred("emit_signal", "finished_checking_for_dead_units")
+		_emit_deferred("finished_checking_for_dead_units")
 
 
 func _add_dead_units_to_queue(units: Array, queue: Array) -> void:
@@ -288,12 +296,54 @@ func _add_dead_units_to_queue(units: Array, queue: Array) -> void:
 			queue.push_back(unit)
 
 
+func _emit_deferred(signal_name: String) -> void:
+	call_deferred("emit_signal", signal_name)
+
+
 func start_heal_phase() -> void:
 	_execute_next_skill(heal_skills, "heal_phase_finished")
+	
+	# TODO: Add a delay so it doesn't overlap with status effect phase
 
 
 func start_status_effect_phase() -> void:
-	emit_signal("pincer_executed")
+	var enemies_with_poison := get_units_with_poison(enemies)
+	
+	# TODO: Make function, reuse code
+	if not enemies_with_poison.empty():
+		inflict_poison(enemies_with_poison)
+		
+		$StatusEffectTimer.start()
+		
+		yield($StatusEffectTimer, "timeout")
+	
+	var player_units_with_poison := get_units_with_poison(allies)
+	
+	if not player_units_with_poison.empty():
+		inflict_poison(player_units_with_poison)
+		
+		$StatusEffectTimer.start()
+		
+		yield($StatusEffectTimer, "timeout")
+	
+	_emit_deferred("status_effect_phase_finished")
+
+
+func get_units_with_poison(target_units: Array) -> Array:
+	var units_with_poison: Array = []
+	
+	for unit in target_units:
+		if unit.is_alive() and unit.has_status_effect_of_type(Enums.StatusEffectType.POISON):
+			units_with_poison.append(unit)
+	
+	return units_with_poison
+
+
+func inflict_poison(units: Array) -> void:
+	for unit in units:
+		unit.inflict(Enums.StatusEffectType.POISON)
+		
+		# TODO: Instance scene and play animation and sound
 
 
 func _on_SkillEffect_effect_finished(skill_queue: Array, finish_signal: String) -> void:

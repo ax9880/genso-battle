@@ -70,9 +70,9 @@ func _ready() -> void:
 	if can_use_debug_units:
 		player_units_node = $DebugUnits
 		
-		$Units.queue_free()
+		$PlayerUnits.queue_free()
 	else:
-		player_units_node = $Units
+		player_units_node = $PlayerUnits
 		
 		$DebugUnits.queue_free()
 	
@@ -92,6 +92,7 @@ func _ready() -> void:
 	player_units_node.hide()
 
 
+# Units node
 func _load_player_units() -> void:
 	var discarded_units := []
 	
@@ -127,6 +128,7 @@ func _connect_cell_signals() -> void:
 			_error = cell.connect("area_exited", self, "_on_Cell_area_exited", [cell])
 
 
+# EnemyPhases
 func _load_enemy_phases() -> void:
 	enemy_phases_queue = $EnemyPhases.get_children()
 	
@@ -137,6 +139,7 @@ func _load_enemy_phases() -> void:
 		$EnemyPhases.remove_child(enemy_phase)
 
 
+# EnemyPhases
 func _load_next_enemy_phase() -> void:
 	if current_enemy_phase == enemy_phase_count:
 		emit_signal("victory")
@@ -155,6 +158,7 @@ func _load_next_enemy_phase() -> void:
 		emit_signal("enemy_phase_started", current_enemy_phase, enemy_phase_count)
 
 
+# Traps?
 func _assign_traps_to_cells() -> void:
 	for trap in $Traps.get_children():
 		var cell_coordinates: Vector2 = grid.get_cell_coordinates(trap.position)
@@ -164,6 +168,7 @@ func _assign_traps_to_cells() -> void:
 		grid.get_cell_from_coordinates(cell_coordinates).trap = trap
 
 
+# Grid? Or here?
 func _assign_enemies_to_cells() -> void:
 	for enemy in enemy_units_node.get_children():
 		_assign_unit_to_cell(enemy)
@@ -216,6 +221,7 @@ func _assign_unit_to_cell(unit: Unit) -> void:
 		cell.unit = unit
 
 
+# EnemyPhases
 func _make_enemies_appear(units: Array) -> void:
 	for unit in units:
 		unit.hide()
@@ -223,8 +229,10 @@ func _make_enemies_appear(units: Array) -> void:
 	for unit in units:
 		unit.appear()
 		
+		# FIXME: Use timer node
 		yield(get_tree().create_timer(time_between_enemy_appearance_seconds), "timeout")
 	
+	# FIXME: Use timer node
 	yield(get_tree().create_timer(time_before_player_units_appearance_seconds), "timeout")
 	
 	for unit in units:
@@ -235,6 +243,8 @@ func _make_enemies_appear(units: Array) -> void:
 	_make_player_units_appear()
 
 
+# Units. Rename it to PlayerUnits
+# And also make DebugUnits of same type
 func _make_player_units_appear() -> void:
 	if player_units_node.visible:
 		return
@@ -251,13 +261,13 @@ func _make_player_units_appear() -> void:
 		
 		yield($Tween, "tween_all_completed")
 		
+		# TODO: Apply equip skills
+		
 		_start_player_turn()
 
 
 func _start_player_turn(var has_same_cell: bool = false) -> void:
 	print("Starting player turn")
-	
-	_apply_status_effects_on_enemy_units()
 	
 	$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
 	pincer_queue = []
@@ -315,11 +325,13 @@ func is_all_units_dead(units: Array) -> bool:
 	return is_all_dead
 
 
+# Use global signal?
 func update_drag_mode(drag_mode: int) -> void:
 	for unit in player_units_node.get_children():
 		unit.set_drag_mode(drag_mode)
 
 
+# Use global signal?
 func _disable_player_units() -> void:
 	for unit in player_units_node.get_children():
 		unit.disable_selection_area()
@@ -340,9 +352,8 @@ func _start_enemy_turn() -> void:
 		# Initialize these parameters. Allies and enemies are used when
 		# checking for dead units. The grid is used when checking for
 		# affected cells when using a skill
-		
-		# TODO: Pass these parameters to the functions that need them
 		$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
+		
 		pincer_queue = []
 		
 		# enemy turn starts right away, there's no animation
@@ -355,6 +366,7 @@ func _start_enemy_turn() -> void:
 		for enemy in enemy_units_node.get_children():
 			enemy_queue.push_back(enemy)
 	
+	# TODO: Only do this inside else above?
 	_update_enemy()
 
 
@@ -369,6 +381,8 @@ func _update_enemy() -> void:
 		_start_player_turn()
 
 
+# Move to UnitMonitor/GridMonitor/CellMonitor ?
+# UnitMovementMonitor
 func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 	if active_unit.is2x2():
 		_update_2x2_unit_cells(active_unit, cell)
@@ -451,6 +465,7 @@ func _update_2x2_unit_cells(unit: Unit, cell: Cell) -> void:
 
 func _push_cells_in_area(unit: Unit, cell: Cell) -> void:
 	for area_cell in cell.get_cells_in_area():
+		# TODO: Only for debug mode
 		area_cell.modulate = Color.red
 		
 		if area_cell.unit != null and area_cell.unit != unit:
@@ -536,6 +551,7 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
 
 
+# Move to cell?
 func _activate_trap(cell: Cell, unit: Unit) -> void:
 	if cell.trap != null:
 		cell.trap.activate(unit)
@@ -544,79 +560,62 @@ func _activate_trap(cell: Cell, unit: Unit) -> void:
 			unit.release()
 
 
-func _execute_next_pincer() -> void:
-	var pincer: Pincerer.Pincer = pincer_queue.pop_front()
+func _execute_pincers(unit: Unit) -> void:
+	$PincerExecutor.check_dead_units()
 	
-	while(pincer != null and not pincer.is_valid()):
-		pincer = pincer_queue.pop_front()
+	yield($PincerExecutor, "finished_checking_for_dead_units")
 	
-	if pincer != null:
-		# TODO: Play pincer animation
+	pincer_queue = $Pincerer.find_pincers(grid, unit)
+	
+	if current_turn == Turn.ENEMY:
+		pincer_queue = _filter_pincers_with_active_unit(pincer_queue, unit)
+	
+	print("Found %d pincers" % pincer_queue.size())
+	
+	while not pincer_queue.empty() and pincer_queue.front() != null and pincer_queue.front().is_valid():
+		print("Evaluating pincer")
 		
-		var _error = $PincerExecutor.connect("skill_activation_phase_finished", self, "_on_PincerExecutor_skill_activation_phase_finished", [pincer], CONNECT_ONESHOT)
-		
-		$PincerExecutor.start_skill_activation_phase(pincer, grid, player_units_node.get_children(), enemy_units_node.get_children())
-	else:
-		print("All pincers done!")
-		
-		if current_turn == Turn.PLAYER:
-			_start_enemy_turn()
-		else:
-			_start_player_turn()
-
-
-func _execute_next_enemy_pincer() -> void:
-	var pincer: Pincerer.Pincer = pincer_queue.pop_front()
-	
-	while(pincer != null and not pincer.is_valid()):
-		pincer = pincer_queue.pop_front()
-	
-	if pincer != null:
-		print("Start enemy pincers")
+		var pincer: Pincerer.Pincer = pincer_queue.pop_front()
 		
 		$PincerExecutor.highlight_pincer(pincer)
 		
-		_start_attack_phase(pincer)
-	else:
-		print("All enemy pincers done!")
+		yield($PincerExecutor, "pincer_highlighted")
 		
-		_update_enemy()
-
-
-func _start_attack_phase(pincer: Pincerer.Pincer) -> void:
-	var attack_queue: Array = _queue_attacks(pincer)
+		if current_turn == Turn.PLAYER:
+			$PincerExecutor.start_skill_activation_phase(pincer, grid, player_units_node.get_children(), enemy_units_node.get_children())
+			
+			yield($PincerExecutor, "skill_activation_phase_finished")
+		
+		$Attacker.start(_queue_attacks(pincer))
+		yield($Attacker, "attack_phase_finished")
+		
+		$PincerExecutor.start_attack_skill_phase()
+		yield($PincerExecutor, "attack_skill_phase_finished")
+		
+		$PincerExecutor.check_dead_units()
+		yield($PincerExecutor, "finished_checking_for_dead_units")
+		
+		if current_turn == Turn.PLAYER:
+			$PincerExecutor.start_heal_phase()
+			
+			yield($PincerExecutor, "heal_phase_finished")
 	
-	if $Attacker.connect("attack_phase_finished", self, "_on_Attacker_attack_phase_finished", [pincer], CONNECT_ONESHOT) != OK:
-		push_warning("Signal is already connected")
+	print("All pincers done!")
 	
-	$Attacker.start(attack_queue)
-
-
-func _start_attack_skill_phase(pincer: Pincerer.Pincer) -> void:
-	var _error = $PincerExecutor.connect("attack_skill_phase_finished", self, "_on_PincerExecutor_attack_skill_phase_finished", [pincer], CONNECT_ONESHOT)
+	$PincerExecutor.clear_chain_previews()
 	
-	$PincerExecutor.start_attack_skill_phase()
-
-
-func _check_for_dead_units() -> void:
-	var _error = $PincerExecutor.connect("finished_checking_for_dead_units", self, "_on_PincerExecutor_finished_checking_for_dead_units", [], CONNECT_ONESHOT)
-	
-	$PincerExecutor.check_dead_units()
-
-
-func _start_heal_phase() -> void:
 	if current_turn == Turn.PLAYER:
-		var _error = $PincerExecutor.connect("heal_phase_finished", self, "_on_PincerExecutor_heal_phase_finished", [], CONNECT_ONESHOT)
+		$PincerExecutor.start_status_effect_phase()
 		
-		$PincerExecutor.start_heal_phase()
+		yield($PincerExecutor, "status_effect_phase_finished")
+		
+		$PincerExecutor.check_dead_units()
+		
+		yield($PincerExecutor, "finished_checking_for_dead_units")
+		
+		_start_enemy_turn()
 	else:
-		$PincerExecutor.clear_chain_previews()
-		
-		_execute_next_enemy_pincer()
-
-
-func _start_status_effect_phase() -> void:
-	$PincerExecutor.start_status_effect_phase()
+		_update_enemy()
 
 
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
@@ -728,43 +727,10 @@ func _clear_active_trail() -> void:
 		active_trail = null
 
 
-func _apply_status_effects_on_player_units() -> void:
-	#$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
-	
-	var player_units: Array = player_units_node.get_children()
-	
-	var units_with_poison: Array = []
-	
-	for unit in player_units:
-		if unit.is_alive() and unit.has_status_effect_of_type(Enums.StatusEffectType.POISON):
-			units_with_poison.append(unit)
-	
-	for unit_with_poison in units_with_poison:
-		unit_with_poison.inflict(Enums.StatusEffectType.POISON)
-		# TODO: Instance scene and play animation and sound
-	
-	# TODO: Wait X seconds
-
-
-func _apply_status_effects_on_enemy_units() -> void:
-	var player_units: Array = enemy_units_node.get_children()
-	
-	var units_with_poison: Array = []
-	
-	for unit in player_units:
-		if unit.is_alive() and unit.has_status_effect_of_type(Enums.StatusEffectType.POISON):
-			units_with_poison.append(unit)
-	
-	for unit_with_poison in units_with_poison:
-		unit_with_poison.inflict(Enums.StatusEffectType.POISON)
-		# TODO: Instance scene and play animation and sound
-	
-	# TODO: Wait X seconds
-	# TODO: Check for dead units
-
-
 func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
+	
+	$ChainPreviewer.clear()
 	
 	_stop_possible_chained_units_animations()
 	
@@ -773,12 +739,15 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	unit.play_skill_activation_animation([skill], 1)
 	
 	# Wait for it to finish
-	yield(get_tree().create_timer(1.0), "timeout")
+	$PincerExecutor/BeforeSkillActivationPhaseFinishesTimer.start()
+	
+	yield($PincerExecutor/BeforeSkillActivationPhaseFinishesTimer, "timeout")
+	
+	$PincerExecutor/BeforeSkillActivationPhaseFinishesTimer.stop()
 	
 	var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, unit.position, skill, grid)
 	
 	var skill_effect: Node2D = skill.effect_scene.instance()
-	
 	add_child(skill_effect)
 	
 	var start_cell: Cell = grid.get_cell_from_position(unit.position)
@@ -791,7 +760,11 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	
 	unit.z_index = 0
 	
-	_check_for_dead_units()
+	$PincerExecutor.check_dead_units()
+	
+	yield($PincerExecutor, "finished_checking_for_dead_units")
+	
+	_update_enemy()
 
 
 func _on_Unit_released(unit: Unit) -> void:
@@ -842,9 +815,9 @@ func _on_Unit_released(unit: Unit) -> void:
 
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
+	$ChainPreviewer.clear()
+	
 	if current_turn == Turn.PLAYER:
-		$ChainPreviewer.clear()
-		
 		$PincerExecutor.check_dead_units()
 		
 		yield($PincerExecutor, "finished_checking_for_dead_units")
@@ -854,10 +827,7 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 			
 			_disable_player_units()
 			
-			# Adds pincers to pincer queue
-			pincer_queue = $Pincerer.find_pincers(grid, unit)
-			
-			_execute_next_pincer()
+			_execute_pincers(unit)
 		else:
 			# Do nothing
 			# Has same cell = true
@@ -881,13 +851,7 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	if has_active_unit_exited_cell:
 		_clear_active_cells()
 		
-		var pincers: Array = $Pincerer.find_pincers(grid, unit)
-		
-		pincer_queue = _filter_pincers_with_active_unit(pincers, unit)
-		
-		print("Found %d enemy pincers" % pincer_queue.size())
-		
-		_execute_next_enemy_pincer()
+		_execute_pincers(unit)
 	else:
 		_update_enemy()
 
@@ -900,37 +864,6 @@ func _filter_pincers_with_active_unit(pincers: Array, unit: Unit) -> Array:
 			filtered_pincers.push_back(pincer)
 	
 	return filtered_pincers
-
-
-func _on_Attacker_attack_phase_finished(pincer: Pincerer.Pincer) -> void:
-	if current_turn == Turn.PLAYER:
-		_start_attack_skill_phase(pincer)
-	else:
-		print("Checking for dead units killed by enemies")
-		
-		_check_for_dead_units()
-
-
-func _on_PincerExecutor_skill_activation_phase_finished(pincer: Pincerer.Pincer) -> void:
-	_start_attack_phase(pincer)
-
-
-func _on_PincerExecutor_attack_skill_phase_finished(_pincer: Pincerer.Pincer) -> void:
-	_check_for_dead_units()
-
-
-func _on_PincerExecutor_finished_checking_for_dead_units() -> void:
-	_start_heal_phase()
-
-
-func _on_PincerExecutor_heal_phase_finished() -> void:
-	_start_status_effect_phase()
-
-
-func _on_PincerExecutor_pincer_executed() -> void:
-	$PincerExecutor.clear_chain_previews()
-	
-	_execute_next_pincer()
 
 
 func _on_DragTimer_timeout() -> void:
