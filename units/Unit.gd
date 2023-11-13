@@ -129,7 +129,7 @@ func is_death_animation_playing() -> bool:
 	return $AnimationPlayer.current_animation == "death"
 
 
-func play_scale_and_and_down_animation() -> void:
+func play_scale_up_and_down_animation() -> void:
 	$Tween.remove($Sprite, ":scale")
 	
 	$AnimationPlayer.play("scale up and down")

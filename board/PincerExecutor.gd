@@ -96,7 +96,7 @@ func _activate_next_skill() -> void:
 			
 			unit.play_skill_activation_animation(activated_skills, current_z_index)
 			
-			unit.play_scale_and_and_down_animation()
+			unit.play_scale_up_and_down_animation()
 		
 		current_z_index += 1
 	else:
