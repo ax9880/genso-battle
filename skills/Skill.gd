@@ -30,7 +30,11 @@ export(float, 0, 1, 0.1) var absorb_rate: float = 0
 # Max HP healed. Also applies to absorbed HP
 export(int, 0, 9000, 100) var max_heal: int = 700
 
+# Status effects that this skill inflicts on the enemy
 export(Array, Resource) var status_effects: Array = []
+
+# Status effects that this skill removes or cures
+export(Array, Enums.StatusEffectType) var cured_status_effects: Array = []
 
 # TODO: Buffs or debuffs
 #export(Array, Resource) buffs: Array = []
@@ -64,6 +68,10 @@ func is_buff() -> bool:
 
 func has_status_effects() -> bool:
 	return not status_effects.empty()
+
+
+func cures_status_effects() -> bool:
+	return not cured_status_effects.empty()
 
 
 func is_enemy_targeted() -> bool:

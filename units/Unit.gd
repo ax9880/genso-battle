@@ -252,7 +252,7 @@ func _pick_up() -> void:
 
 
 func release() -> void:
-	if current_state == STATE.PICKED_UP:
+	if is_picked_up():
 		self.current_state = STATE.IDLE
 		
 		emit_signal("released", self)
@@ -276,9 +276,11 @@ func set_job_reference(job_reference: JobReference) -> void:
 func set_drag_mode(drag_mode: int) -> void:
 	if drag_mode == Enums.DragMode.CLICK:
 		is_click_to_drag = true
+		
 		set_process_input(false)
 	else:
 		is_click_to_drag = false
+		
 		set_process_input(true)
 
 
@@ -390,7 +392,7 @@ func activate_skills() -> Array:
 		
 		var activation: float = random.randf()
 		
-		if skill.activation_rate > activation:
+		if activation < skill.activation_rate:
 			activated_skills.push_back(skill)
 	
 	return activated_skills
@@ -416,10 +418,10 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 		on_damage_absorbed_callback.call_func(absorbed_damage)
 		
 		inflict_damage(damage)
-	else:
-		# If it's buff or debuff, try to apply it
-		# After applying buff or debuff, recalculate the current stats
-		printerr("Don't know how to apply skill %s" % skill.skill_name)
+	
+	# If it's buff or debuff, try to apply it
+	# After applying buff or debuff, recalculate the current stats
+	printerr("Don't know how to apply skill %s" % skill.skill_name)
 	
 	# If it has status effect, try to apply it
 	# Skill can cause damage AND inflict status effect, so it can't be if-else
@@ -434,6 +436,16 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 			status_effects.append(status_effect)
 			
 			print("Inflicted %s on enemy %s" % [status_effect.status_effect_type, name])
+	
+	if skill.cures_status_effects():
+		for status_effect_type in skill.cured_status_effects:
+			var remaining_status_effects := []
+			
+			for status_effect in status_effects:
+				if not status_effect.status_effect_type in skill.cured_status_effects:
+					remaining_status_effects.append(status_effect)
+			
+			status_effects = remaining_status_effects
 
 
 func calculate_damage(attacker_stats: StartingStats,

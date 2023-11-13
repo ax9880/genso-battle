@@ -21,4 +21,5 @@ secondary_attribute = 0
 absorb_rate = 0.0
 max_heal = 700
 status_effects = [ ExtResource( 3 ) ]
+cured_status_effects = [  ]
 effect_scene = ExtResource( 2 )
