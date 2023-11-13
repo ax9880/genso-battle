@@ -435,6 +435,8 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 			status_effects.append(status_effect)
 			
 			print("Inflicted %s on enemy %s" % [status_effect.status_effect_type, name])
+			
+			$Sprite/StatusEffects.add(status_effect.status_effect_type, status_effect.effect_scene)
 	
 	if skill.cures_status_effects():
 		for status_effect_type in skill.cured_status_effects:
@@ -445,6 +447,8 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 					remaining_status_effects.append(status_effect)
 			
 			status_effects = remaining_status_effects
+			
+			$Sprite/StatusEffects.remove(status_effect_type)
 
 
 func calculate_damage(attacker_stats: StartingStats,
@@ -560,8 +564,8 @@ func inflict(status_effect_type: int) -> void:
 	for status_effect in status_effects:
 		if not status_effect.is_done():
 			active_status_effects.append(status_effect)
-		
-		# else free? Or is that done automatically?
+		else:
+			$Sprite/StatusEffects.remove(status_effect.status_effect_type)
 	
 	status_effects = active_status_effects
 	

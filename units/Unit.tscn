@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
@@ -20,6 +20,7 @@
 [ext_resource path="res://assets/sfx/youkai_death.wav" type="AudioStream" id=18]
 [ext_resource path="res://assets/ui/unit_square_bg_2.png" type="Texture" id=19]
 [ext_resource path="res://assets/sfx/ceramic_drag_2.wav" type="AudioStream" id=20]
+[ext_resource path="res://units/StatusEffects.gd" type="Script" id=21]
 [ext_resource path="res://assets/ui/sword.png" type="Texture" id=22]
 [ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=23]
 
@@ -302,6 +303,9 @@ texture = ExtResource( 23 )
 
 [node name="Border" type="Sprite" parent="Sprite"]
 texture = ExtResource( 2 )
+
+[node name="StatusEffects" type="Node2D" parent="Sprite"]
+script = ExtResource( 21 )
 
 [node name="FullSprite" type="Sprite" parent="."]
 visible = false

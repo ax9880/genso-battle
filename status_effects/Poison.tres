@@ -1,9 +1,11 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://status_effects/Poison.gd" type="Script" id=1]
+[ext_resource path="res://status_effects/effects/PoisonParticles.tscn" type="PackedScene" id=2]
 
 [resource]
 resource_local_to_scene = true
 script = ExtResource( 1 )
 status_effect_type = 1
 duration_turns = 3
+effect_scene = ExtResource( 2 )
