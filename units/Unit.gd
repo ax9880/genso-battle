@@ -421,7 +421,6 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 	
 	# If it's buff or debuff, try to apply it
 	# After applying buff or debuff, recalculate the current stats
-	printerr("Don't know how to apply skill %s" % skill.skill_name)
 	
 	# If it has status effect, try to apply it
 	# Skill can cause damage AND inflict status effect, so it can't be if-else
