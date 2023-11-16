@@ -58,8 +58,7 @@ func is_attack() -> bool:
 
 
 func is_healing() -> bool:
-	return skill_type == Enums.SkillType.HEAL or \
-			skill_type == Enums.SkillType.CURE_AILMENT
+	return skill_type == Enums.SkillType.HEAL
 
 
 func is_buff() -> bool:
