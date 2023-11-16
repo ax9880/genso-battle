@@ -66,7 +66,6 @@ func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies:
 	
 	unit_queue = _queue_units(pincer)
 	complete_chains = _build_chains_including_pincering_unit(pincer)
-	_show_chain_previews(pincer)
 	
 	$SkillActivationTimer.start()
 	
@@ -193,6 +192,8 @@ func highlight_pincer(pincer: Pincerer.Pincer) -> void:
 	add_child(pincer_higlight)
 	
 	pincer_higlight.initialize(pincer)
+	
+	_show_chain_previews(pincer)
 	
 	yield(pincer_higlight, "pincer_highlighted")
 	
