@@ -9,16 +9,23 @@ export(bool) var is_tween_fixed_time := true
 
 export(float) var arc_height := 100.0
 
-onready var particles: CPUParticles2D = $HealParticles
+export(NodePath) var particles_node_path: NodePath
+
 onready var tween := $Tween
 
+var particles: CPUParticles2D
 var target: Vector2
 var total_tween_time_seconds: float
 
 signal target_reached
 
+func _ready() -> void:
+	 particles = get_node(particles_node_path)
+
 
 func play(start_position: Vector2, target_position: Vector2) -> void:
+	particles.emitting = true
+	
 	var distance: float = start_position.distance_to(target_position)
 	
 	if is_tween_fixed_time:
