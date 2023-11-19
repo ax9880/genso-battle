@@ -798,10 +798,9 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_lock_": true
 }
-units_node_path = NodePath("../Units")
+units_node_path = NodePath("../PlayerUnits")
 
 [node name="Phase1" type="Node2D" parent="Board/Guidelines" index="0"]
-visible = false
 __meta__ = {
 "_edit_lock_": true
 }
@@ -843,6 +842,7 @@ position = Vector2( 151, 52 )
 texture = ExtResource( 2 )
 
 [node name="Phase4" type="Node2D" parent="Board/Guidelines" index="3"]
+visible = false
 __meta__ = {
 "_edit_lock_": true
 }
@@ -941,7 +941,6 @@ __meta__ = {
 }
 
 [node name="TrainingOrbling" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 3 )]
-visible = false
 position = Vector2( 253, 349 )
 
 [node name="Phase2" parent="Board/EnemyPhases" index="1"]
@@ -955,6 +954,9 @@ position = Vector2( 350, 548 )
 
 [node name="TrainingOrbling3" parent="Board/EnemyPhases/Phase3" index="0" instance=ExtResource( 3 )]
 position = Vector2( 53, 54 )
+
+[node name="Phase4" parent="Board/EnemyPhases" index="3"]
+visible = false
 
 [node name="TrainingOrbling4" parent="Board/EnemyPhases/Phase4" index="0" instance=ExtResource( 3 )]
 position = Vector2( 452, 650 )
@@ -1019,25 +1021,22 @@ anims/shake = SubResource( 27 )
 [node name="AIController" parent="Board/EnemyPhases/Phase5/TrainingOrbling7" index="11"]
 behaviors = [ 0 ]
 
-[node name="Units" parent="Board" index="13"]
+[node name="Unit" parent="Board/PlayerUnits" index="0"]
+position = Vector2( 251, 558 )
+
+[node name="Unit2" parent="Board/PlayerUnits" index="1"]
+position = Vector2( 249, 153 )
+
+[node name="Unit3" parent="Board/PlayerUnits" index="2"]
+position = Vector2( 448, 447 )
+
+[node name="Unit4" parent="Board/PlayerUnits" index="3"]
 visible = false
 
-[node name="Unit" parent="Board/Units" index="0"]
-position = Vector2( 253, 648 )
-
-[node name="Unit2" parent="Board/Units" index="1"]
-position = Vector2( 449, 648 )
-
-[node name="Unit3" parent="Board/Units" index="2"]
-position = Vector2( 149, 246 )
-
-[node name="Unit4" parent="Board/Units" index="3"]
+[node name="Unit5" parent="Board/PlayerUnits" index="4"]
 visible = false
 
-[node name="Unit5" parent="Board/Units" index="4"]
-visible = false
-
-[node name="Unit6" parent="Board/Units" index="5"]
+[node name="Unit6" parent="Board/PlayerUnits" index="5"]
 visible = false
 
 [connection signal="enemy_phase_started" from="Board" to="Board/Guidelines" method="_on_Board_enemy_phase_started"]

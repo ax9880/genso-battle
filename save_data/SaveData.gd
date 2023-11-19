@@ -15,9 +15,6 @@ export(Array, Resource) var job_references: Array = []
 # Array<int>
 export(Array, int) var active_units: Array = []
 
-# Dictionary<String (battle title), int (current index of scene of said battle)>
-export(Dictionary) var battle_progress: Dictionary = {}
-
 # TODO: Save in file
 export(int) var current_battle_index: int = 0
 export(int) var current_battle_scene_index: int = 0
@@ -29,6 +26,20 @@ export(float) var sound_effects_volume: float = 1.0
 
 export(String, "en", "es") var locale: String = ""
 export(Enums.DragMode) var drag_mode: int = Enums.DragMode.CLICK
+
+var unlocked_levels: Array = []
+
+
+func load_defaults() -> void:
+	var tutorial := UnlockedLevel.new()
+	tutorial.title = "TUTORIAL"
+	tutorial.current_scene = "res://battles/Tutorial.tscn"
+	
+	var greaves_of_clay := UnlockedLevel.new()
+	greaves_of_clay.title = "GREAVES_OF_CLAY"
+	greaves_of_clay.current_scene = "res://battles/part_1/ScriptCutscenePart1.tscn"
+	
+	unlocked_levels = [tutorial, greaves_of_clay]
 
 
 func swap_job_references(old_job_reference: JobReference, new_job_reference: JobReference) -> void:

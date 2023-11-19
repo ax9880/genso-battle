@@ -5,7 +5,7 @@
 
 [node name="DialogueCutscene" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-next_scene = "res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
+next_scene = "res://battles/part_1/Battle1.tscn"
 scene_title = "GREAVES_OF_CLAY"
 
 [node name="Timer" parent="." index="4"]

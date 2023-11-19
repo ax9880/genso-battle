@@ -52,16 +52,23 @@ func _load_data_from_configs_file() -> void:
 		save_data.job.push_back(job_reference)
 	
 	save_data.active_units = config_file.get_value(_UNIT_DATA_SECTION, "active_units", save_data.active_units)
-	
+
 	save_data.music_volume = config_file.get_value(_SETTINGS_SECTION, "music_volume", 1.0)
 	save_data.sound_effects_volume = config_file.get_value(_SETTINGS_SECTION, "sound_effects_volume", 1.0)
 	save_data.locale = config_file.get_value(_SETTINGS_SECTION, "locale", "")
+	
+	save_data.unlocked_levels = config_file.get_value("levels", "unlocked_levels", null)
+	
+	if save_data.unlocked_levels == null:
+		save_data.load_defaults()
 
 
 func _load_data_from_default_resource() -> void:
 	var default_save_data: SaveData = load("res://save_data/DefaultSaveData.tres")
 	
 	save_data = default_save_data.duplicate()
+	
+	save_data.load_defaults()
 
 
 func save() -> void:
@@ -78,6 +85,8 @@ func save() -> void:
 	config_file.set_value(_SETTINGS_SECTION, "music_volume", save_data.music_volume)
 	config_file.set_value(_SETTINGS_SECTION, "sound_effects_volume", save_data.sound_effects_volume)
 	config_file.set_value(_SETTINGS_SECTION, "locale", save_data.locale)
+	
+	config_file.set_value("levels", "unlocked_levels", save_data.unlocked_levels)
 	
 	_save_config_file()
 
