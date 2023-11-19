@@ -27,19 +27,19 @@ export(float) var sound_effects_volume: float = 1.0
 export(String, "en", "es") var locale: String = ""
 export(Enums.DragMode) var drag_mode: int = Enums.DragMode.CLICK
 
-var unlocked_levels: Array = []
+var unlocked_battles: Array = []
 
 
 func load_defaults() -> void:
-	var tutorial := UnlockedLevel.new()
+	var tutorial := UnlockedBattle.new()
 	tutorial.title = "TUTORIAL"
 	tutorial.current_scene = "res://battles/Tutorial.tscn"
 	
-	var greaves_of_clay := UnlockedLevel.new()
+	var greaves_of_clay := UnlockedBattle.new()
 	greaves_of_clay.title = "GREAVES_OF_CLAY"
 	greaves_of_clay.current_scene = "res://battles/part_1/ScriptCutscenePart1.tscn"
 	
-	unlocked_levels = [tutorial, greaves_of_clay]
+	unlocked_battles = [tutorial, greaves_of_clay]
 
 
 func swap_job_references(old_job_reference: JobReference, new_job_reference: JobReference) -> void:

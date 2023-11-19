@@ -40,9 +40,14 @@ _global_script_classes=[ {
 "path": "res://board/Attacker.gd"
 }, {
 "base": "Resource",
+"class": "BattleData",
+"language": "GDScript",
+"path": "res://save_data/BattleData.gd"
+}, {
+"base": "Resource",
 "class": "BattleScenes",
 "language": "GDScript",
-"path": "res://game_data/BattleScenes.gd"
+"path": "res://save_data/BattleScenes.gd"
 }, {
 "base": "Node2D",
 "class": "Board",
@@ -130,9 +135,9 @@ _global_script_classes=[ {
 "path": "res://units/Unit.gd"
 }, {
 "base": "Reference",
-"class": "UnlockedLevel",
+"class": "UnlockedBattle",
 "language": "GDScript",
-"path": "res://save_data/UnlockedLevel.gd"
+"path": "res://save_data/UnlockedBattle.gd"
 } ]
 _global_script_class_icons={
 "AIController": "",
@@ -141,6 +146,7 @@ _global_script_class_icons={
 "AntialiasedRegularPolygon2D": "res://addons/antialiased_line2d/antialiased_regular_polygon2d.svg",
 "Attack": "",
 "Attacker": "",
+"BattleData": "",
 "BattleScenes": "",
 "Board": "",
 "BoardUtils": "",
@@ -159,7 +165,7 @@ _global_script_class_icons={
 "StatusEffect": "",
 "Trap": "",
 "Unit": "",
-"UnlockedLevel": ""
+"UnlockedBattle": ""
 }
 
 [application]

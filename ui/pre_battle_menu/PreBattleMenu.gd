@@ -26,14 +26,14 @@ func _create_buttons_for_unlocked_battles() -> void:
 	
 	var save_data: SaveData = GameData.save_data
 	
-	var unlocked_levels = save_data.unlocked_levels
+	var unlocked_battles = save_data.unlocked_battles
 	
-	for unlocked_level in save_data.unlocked_levels:
+	for unlocked_battle in save_data.unlocked_battles:
 		var button: Button = battle_button_packed_scene.instance()
 		
-		button.text = tr(unlocked_level.title)
+		button.text = tr(unlocked_battle.title)
 		
-		button.connect("pressed", self, "on_BattleButton_pressed", [unlocked_level])
+		button.connect("pressed", self, "on_BattleButton_pressed", [unlocked_battle])
 		
 		$MarginContainer/VBoxContainer/VBoxContainer2.add_child(button)
 
@@ -46,8 +46,8 @@ func _on_QuitButton_pressed() -> void:
 	change_scene("res://ui/main_menu/StackBasedMainMenu.tscn")
 
 
-func on_BattleButton_pressed(unlocked_level: UnlockedLevel) -> void:
-	var current_scene_path: String = unlocked_level.current_scene
+func on_BattleButton_pressed(unlocked_battle: UnlockedBattle) -> void:
+	var current_scene_path: String = unlocked_battle.current_scene
 	
 	if current_scene_path == null:
 		# TODO: Get path from constants or resource

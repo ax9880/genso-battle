@@ -1,8 +1,0 @@
-[gd_resource type="Resource" load_steps=2 format=2]
-
-[ext_resource path="res://game_data/BattleScenes.gd" type="Script" id=1]
-
-[resource]
-script = ExtResource( 1 )
-scenes = [ "res://battles/part_1/ScriptCutscenePart1.tscn", "res://battles/part_1/DialogueCutscenePart1.tscn", "res://battles/part_1/Battle1.tscn", "res://battles/part_1/ScriptCutscenePart1Epilogue.tscn", "res://battles/part_1/SupportSelectionMenuPart1.tscn" ]
-title = "BATTLE_1_TITLE"

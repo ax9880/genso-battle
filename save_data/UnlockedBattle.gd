@@ -1,6 +1,7 @@
 extends Reference
 
-class_name UnlockedLevel
+class_name UnlockedBattle
+
 
 var title: String
 

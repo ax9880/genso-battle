@@ -6,7 +6,8 @@ const _SETTINGS_SECTION: String = "settings"
 const _JOB_REFERENCES_KEY: String = "job_references"
 
 var save_data: SaveData
-var config_file = ConfigFile.new()
+
+var config_file := ConfigFile.new()
 
 
 func _ready() -> void:
@@ -57,9 +58,9 @@ func _load_data_from_configs_file() -> void:
 	save_data.sound_effects_volume = config_file.get_value(_SETTINGS_SECTION, "sound_effects_volume", 1.0)
 	save_data.locale = config_file.get_value(_SETTINGS_SECTION, "locale", "")
 	
-	save_data.unlocked_levels = config_file.get_value("levels", "unlocked_levels", null)
+	save_data.unlocked_battles = config_file.get_value("levels", "unlocked_battles", null)
 	
-	if save_data.unlocked_levels == null:
+	if save_data.unlocked_battles == null:
 		save_data.load_defaults()
 
 
@@ -86,7 +87,7 @@ func save() -> void:
 	config_file.set_value(_SETTINGS_SECTION, "sound_effects_volume", save_data.sound_effects_volume)
 	config_file.set_value(_SETTINGS_SECTION, "locale", save_data.locale)
 	
-	config_file.set_value("levels", "unlocked_levels", save_data.unlocked_levels)
+	config_file.set_value("levels", "unlocked_battles", save_data.unlocked_battles)
 	
 	_save_config_file()
 
