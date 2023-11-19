@@ -12,5 +12,3 @@ skills = [  ]
 job_name = "TRAINING_ORBLING"
 portrait = ExtResource( 4 )
 full_portrait = ExtResource( 2 )
-unit_scene_path = ""
-level = 1
