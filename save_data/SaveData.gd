@@ -60,6 +60,15 @@ func find_unlocked_chapter_by_title(title: String) -> ChapterSaveData:
 	return null
 
 
+func add_job(job: Job, level: int) -> void:
+	var job_reference: JobReference = JobReference.new()
+	
+	job_reference.job = job
+	job_reference.level = level
+	
+	job_references.push_back(job_reference)
+
+
 func swap_job_references(old_job_reference: JobReference, new_job_reference: JobReference) -> void:
 	if old_job_reference != null:
 		var index_of_old_job_reference: int = job_references.find(old_job_reference)
