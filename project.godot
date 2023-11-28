@@ -44,11 +44,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://save_data/BattleData.gd"
 }, {
-"base": "Resource",
-"class": "BattleScenes",
-"language": "GDScript",
-"path": "res://save_data/BattleScenes.gd"
-}, {
 "base": "Node2D",
 "class": "Board",
 "language": "GDScript",
@@ -162,7 +157,6 @@ _global_script_class_icons={
 "Attack": "",
 "Attacker": "",
 "BattleData": "",
-"BattleScenes": "",
 "Board": "",
 "BoardUtils": "",
 "Cell": "",
