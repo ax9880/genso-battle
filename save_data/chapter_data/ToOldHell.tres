@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Resource
+
+class_name ChapterData
+
+
+export(String) var title: String
+
+export(String, FILE, \"*.tscn\") var first_scene: String
+"
+
+[resource]
+script = SubResource( 1 )
+title = "TO_OLD_HELL"
+first_scene = "res://battles/to_old_hell/ToOldHellScriptCutscene.tscn"
