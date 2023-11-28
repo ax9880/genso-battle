@@ -64,6 +64,21 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://board/Cell.gd"
 }, {
+"base": "Resource",
+"class": "ChapterData",
+"language": "GDScript",
+"path": "res://save_data/chapter_data/ChapterData.gd"
+}, {
+"base": "Resource",
+"class": "ChapterList",
+"language": "GDScript",
+"path": "res://save_data/chapter_data/ChapterList.gd"
+}, {
+"base": "Node",
+"class": "ChapterSaveData",
+"language": "GDScript",
+"path": "res://save_data/ChapterSaveData.gd"
+}, {
 "base": "Node2D",
 "class": "Grid",
 "language": "GDScript",
@@ -151,6 +166,9 @@ _global_script_class_icons={
 "Board": "",
 "BoardUtils": "",
 "Cell": "",
+"ChapterData": "",
+"ChapterList": "",
+"ChapterSaveData": "",
 "Grid": "",
 "Job": "",
 "JobReference": "",
@@ -171,7 +189,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Genso Battle"
-run/main_scene="res://battles/TestBattle2.tscn"
+run/main_scene="res://battles/TestBattle1.tscn"
 boot_splash/image="res://assets/ui/splash_screen.png"
 config/icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"
