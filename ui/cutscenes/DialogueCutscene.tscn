@@ -26,7 +26,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 3 )
-next_scene = "res://ui/PreBattleMenu.tscn"
+next_scene = "res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
 dialogue_message_container_packed_scene = ExtResource( 2 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
