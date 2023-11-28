@@ -27,19 +27,37 @@ export(float) var sound_effects_volume: float = 1.0
 export(String, "en", "es") var locale: String = ""
 export(Enums.DragMode) var drag_mode: int = Enums.DragMode.CLICK
 
-var unlocked_battles: Array = []
+# TODO: Supports
+# Array<ChapterSaveData>
+var unlocked_chapters: Array = []
 
 
-func load_defaults() -> void:
-	var tutorial := UnlockedBattle.new()
-	tutorial.title = "TUTORIAL"
-	tutorial.current_scene = "res://battles/Tutorial.tscn"
+func unlock_chapter(title: String) -> void:
+	var chapter_list: ChapterList = load("res://save_data/chapter_data/MainStoryChapterList.tres")
 	
-	var greaves_of_clay := UnlockedBattle.new()
-	greaves_of_clay.title = "GREAVES_OF_CLAY"
-	greaves_of_clay.current_scene = "res://battles/part_1/ScriptCutscenePart1.tscn"
+	var chapter = chapter_list.find_by_title(title)
 	
-	unlocked_battles = [tutorial, greaves_of_clay]
+	assert(chapter != null)
+	
+	var chapter_save_data = find_unlocked_chapter_by_title(title)
+	
+	if chapter_save_data != null:
+		print("Chapter %s already unlocked" % title)
+	else:
+		var unlocked_chapter: ChapterSaveData = ChapterSaveData.new()
+		
+		unlocked_chapter.title = chapter.title
+		unlocked_chapter.current_scene = chapter.first_scene
+		
+		unlocked_chapters.push_back(unlocked_chapter)
+
+
+func find_unlocked_chapter_by_title(title: String) -> ChapterSaveData:
+	for chapter_save_data in unlocked_chapters:
+		if chapter_save_data.title == title:
+			return chapter_save_data
+	
+	return null
 
 
 func swap_job_references(old_job_reference: JobReference, new_job_reference: JobReference) -> void:

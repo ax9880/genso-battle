@@ -58,18 +58,21 @@ func _load_data_from_configs_file() -> void:
 	save_data.sound_effects_volume = config_file.get_value(_SETTINGS_SECTION, "sound_effects_volume", 1.0)
 	save_data.locale = config_file.get_value(_SETTINGS_SECTION, "locale", "")
 	
-	save_data.unlocked_battles = config_file.get_value("levels", "unlocked_battles", null)
+	save_data.unlocked_chapters = config_file.get_value("levels", "unlocked_chapters", null)
 	
-	if save_data.unlocked_battles == null:
-		save_data.load_defaults()
+	if save_data.unlocked_chapters == null:
+		unlock_default_chapters()
 
 
 func _load_data_from_default_resource() -> void:
 	var default_save_data: SaveData = load("res://save_data/DefaultSaveData.tres")
 	
 	save_data = default_save_data.duplicate()
-	
-	save_data.load_defaults()
+
+
+func unlock_default_chapters() -> void:
+	save_data.unlock_chapter("TUTORIAL")
+	save_data.unlock_chapter("GREAVES_OF_CLAY")
 
 
 func save() -> void:
@@ -87,7 +90,7 @@ func save() -> void:
 	config_file.set_value(_SETTINGS_SECTION, "sound_effects_volume", save_data.sound_effects_volume)
 	config_file.set_value(_SETTINGS_SECTION, "locale", save_data.locale)
 	
-	config_file.set_value("levels", "unlocked_battles", save_data.unlocked_battles)
+	config_file.set_value("levels", "unlocked_chapters", save_data.unlocked_chapters)
 	
 	_save_config_file()
 
