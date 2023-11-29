@@ -68,6 +68,8 @@ func _load_data_from_default_resource() -> void:
 	var default_save_data: SaveData = load("res://save_data/DefaultSaveData.tres")
 	
 	save_data = default_save_data.duplicate()
+	
+	unlock_default_chapters()
 
 
 func unlock_default_chapters() -> void:
