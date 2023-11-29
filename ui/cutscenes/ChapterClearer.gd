@@ -19,6 +19,13 @@ func unlock_next_chapter() -> void:
 	
 	var current_chapter_save_data = save_data.find_unlocked_chapter_by_title(current_chapter_data.title)
 	
+	if current_chapter_save_data == null:
+		push_warning("Save data for chapter %s is null. Unlocking this chapter" % current_chapter_data.title)
+		
+		save_data.unlock_chapter(current_chapter_data.title)
+		
+		current_chapter_save_data = save_data.find_unlocked_chapter_by_title(current_chapter_data.title)
+	
 	assert(current_chapter_save_data != null)
 	
 	if current_chapter_save_data.is_cleared:
