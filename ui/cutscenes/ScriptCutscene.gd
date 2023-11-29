@@ -9,6 +9,9 @@ export(PackedScene) var text_label_packed_scene: PackedScene
 
 export(float) var new_character_every_x_seconds: float = 0.0
 
+export(bool) var is_end_of_chapter := false
+
+
 onready var text_container: VBoxContainer = $MarginContainer/VBoxContainer/TextVBoxContainer
 
 var current_page: int = 0
@@ -151,6 +154,9 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
+	if is_end_of_chapter:
+		$ChapterClearer.unlock_next_chapter()
+	
 	var _error = Loader.change_scene(next_scene)
 
 
