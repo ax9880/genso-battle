@@ -2,6 +2,8 @@ extends Control
 
 export(String, FILE, "*.tscn") var next_scene: String
 
+export(String, FILE, "*.tscn") var default_next_scene: String
+
 # Scene title as saved in the script sheet or CSV
 export(String) var scene_title: String 
 
@@ -22,6 +24,8 @@ var accumulated_time_seconds: float = 0
 
 # Array<Array>
 var pages: Array
+
+var is_finished := false
 
 
 func _ready():
@@ -154,10 +158,21 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	if is_end_of_chapter:
-		$ChapterClearer.unlock_next_chapter()
-	
-	var _error = Loader.change_scene(next_scene)
+	if not is_finished:
+		is_finished = true
+		
+		if is_end_of_chapter:
+			$ChapterClearer.unlock_next_chapter()
+		
+		if next_scene != null:
+			if Loader.change_scene(next_scene) != OK:
+				_go_to_default_next_scene()
+		else:
+			_go_to_default_next_scene()
+
+
+func _go_to_default_next_scene() -> void:
+	var _error = Loader.change_scene(default_next_scene)
 
 
 func _on_SkipButton_pressed() -> void:

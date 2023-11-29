@@ -11,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
+default_next_scene = "res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
 text_label_packed_scene = ExtResource( 5 )
 
 [node name="ChapterClearer" parent="." instance=ExtResource( 2 )]
