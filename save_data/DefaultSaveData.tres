@@ -9,14 +9,14 @@
 [ext_resource path="res://jobs/EagleSpiritJob.tres" type="Resource" id=7]
 [ext_resource path="res://jobs/OtterSpiritJob.tres" type="Resource" id=8]
 
-[sub_resource type="Resource" id=1]
-script = ExtResource( 2 )
-job = ExtResource( 3 )
-level = 0
-
 [sub_resource type="Resource" id=2]
 script = ExtResource( 2 )
 job = ExtResource( 5 )
+level = 0
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+job = ExtResource( 3 )
 level = 0
 
 [sub_resource type="Resource" id=3]
@@ -29,14 +29,14 @@ script = ExtResource( 2 )
 job = ExtResource( 8 )
 level = 0
 
-[sub_resource type="Resource" id=5]
-script = ExtResource( 2 )
-job = ExtResource( 7 )
-level = 0
-
 [sub_resource type="Resource" id=6]
 script = ExtResource( 2 )
 job = ExtResource( 6 )
+level = 0
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 2 )
+job = ExtResource( 7 )
 level = 0
 
 [sub_resource type="Resource" id=7]
@@ -44,23 +44,21 @@ script = ExtResource( 2 )
 job = ExtResource( 8 )
 level = 0
 
-[sub_resource type="Resource" id=8]
-script = ExtResource( 2 )
-job = ExtResource( 7 )
-level = 0
-
 [sub_resource type="Resource" id=9]
 script = ExtResource( 2 )
 job = ExtResource( 6 )
 level = 0
 
+[sub_resource type="Resource" id=8]
+script = ExtResource( 2 )
+job = ExtResource( 7 )
+level = 0
+
 [resource]
 script = ExtResource( 1 )
 version = 1
-job_references = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ]
+job_references = [ SubResource( 2 ), SubResource( 1 ), SubResource( 3 ), SubResource( 4 ), SubResource( 6 ), SubResource( 5 ), SubResource( 7 ), SubResource( 9 ), SubResource( 8 ) ]
 active_units = [ 0, 1, 2, 3, 4, 5 ]
-current_battle_index = 0
-current_battle_scene_index = 0
 music_volume = 1.0
 sound_effects_volume = 1.0
 locale = ""
