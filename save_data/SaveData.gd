@@ -15,12 +15,6 @@ export(Array, Resource) var job_references: Array = []
 # Array<int>
 export(Array, int) var active_units: Array = []
 
-# TODO: Save in file
-export(int) var current_battle_index: int = 0
-export(int) var current_battle_scene_index: int = 0
-
-# TODO: chosen supports
-
 export(float) var music_volume: float = 1.0
 export(float) var sound_effects_volume: float = 1.0
 
@@ -28,14 +22,15 @@ export(String, "en", "es") var locale: String = ""
 export(Enums.DragMode) var drag_mode: int = Enums.DragMode.CLICK
 
 # TODO: Supports
+
 # Array<ChapterSaveData>
 var unlocked_chapters: Array = []
 
+var current_chapter: ChapterData
+
 
 func unlock_chapter(title: String) -> void:
-	var chapter_list: ChapterList = load("res://save_data/chapter_data/MainStoryChapterList.tres")
-	
-	var chapter = chapter_list.find_by_title(title)
+	var chapter: ChapterData = find_chapter_data_by_title(title)
 	
 	assert(chapter != null)
 	
@@ -47,9 +42,14 @@ func unlock_chapter(title: String) -> void:
 		var unlocked_chapter: ChapterSaveData = ChapterSaveData.new()
 		
 		unlocked_chapter.title = chapter.title
-		unlocked_chapter.current_scene = chapter.first_scene
 		
 		unlocked_chapters.push_back(unlocked_chapter)
+
+
+func find_chapter_data_by_title(title: String) -> ChapterData:
+	var chapter_list: ChapterList = load("res://save_data/chapter_data/MainStoryChapterList.tres")
+	
+	return chapter_list.find_by_title(title)
 
 
 func find_unlocked_chapter_by_title(title: String) -> ChapterSaveData:

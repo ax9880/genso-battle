@@ -4,6 +4,7 @@
 [ext_resource path="res://units/enemies/HaniwaOrbling.tscn" type="PackedScene" id=2]
 
 [node name="BoardUI" instance=ExtResource( 1 )]
+next_scene = "res://ui/cutscenes/PostBattleScriptCutscene.tscn"
 
 [node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 2 )]
 position = Vector2( 451, 452 )

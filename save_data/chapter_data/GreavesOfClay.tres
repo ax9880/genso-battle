@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource( 1 )
 title = "GREAVES_OF_CLAY"
-first_scene = "res://battles/part_1/ScriptCutscenePart1.tscn"
+battle_scene_path = "res://battles/introduction/GreavesOfClay.tscn"

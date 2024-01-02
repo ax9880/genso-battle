@@ -1,13 +1,9 @@
 extends Control
 
 
-export(String, FILE, "*.tscn") var next_scene: String
+export(Resource) var chapter_data: Resource 
 
 export(PackedScene) var dialogue_message_container_packed_scene
-export(String) var scene_title: String
-
-onready var messages_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer
-onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
 
 # Array of objects with these members:
 # speaker: String
@@ -18,26 +14,38 @@ var current_line: int = 0
 var current_dialogue_message_container: Control
 var estimated_container_size: float
 
+onready var messages_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer
+onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
+
+signal finished
+
 
 func _ready():
 	_free_container_children()
 	
 	_load_lines_keys()
 	
-	_show_next_line()
+	if not lines.empty():
+		_show_next_line()
+
+
+func on_instance(data: Object) -> void:
+	assert(data is ChapterData)
+	
+	chapter_data = data
 
 
 func _load_lines_keys() -> void:
+	var scene_title: String = chapter_data.title
+	
 	var dialogue_json: String = "res://text/dialogue_%s.json" % scene_title.to_lower()
 	
 	var file: File = File.new()
 	
 	if file.open(dialogue_json, File.READ) != OK:
-		printerr("Failed to read file")
+		printerr("Failed to read file for scene %s, skipping dialogue" % scene_title)
 		
-		# FIXME: Can't skip dialogue in _ready() because loading screen
-		# may not be ready yet
-		#_skip_dialogue()
+		_skip_dialogue()
 	else:
 		var parse_result: JSONParseResult = JSON.parse(file.get_as_text())
 		
@@ -109,7 +117,10 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	var _error = Loader.change_scene(next_scene)
+	if Loader.change_scene(chapter_data.battle_scene_path, chapter_data) != OK:
+		printerr("Failed to change scene")
+	
+	set_process(false)
 
 
 func _on_Timer_timeout() -> void:

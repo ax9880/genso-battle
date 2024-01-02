@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://chapters/Chapter.gd" type="Script" id=1]
+[ext_resource path="res://ui/cutscenes/ScriptCutscene.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ui/cutscenes/DialogueCutscene.tscn" type="PackedScene" id=3]
+
+[node name="Chapter" type="Node"]
+script = ExtResource( 1 )
+script_packed_scene = ExtResource( 2 )
+dialogue_script_packed_scene = ExtResource( 3 )

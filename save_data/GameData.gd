@@ -75,6 +75,8 @@ func _load_data_from_default_resource() -> void:
 func unlock_default_chapters() -> void:
 	save_data.unlock_chapter("TUTORIAL")
 	save_data.unlock_chapter("GREAVES_OF_CLAY")
+	
+	save_data.current_chapter = save_data.unlocked_chapters.back()
 
 
 func save() -> void:

@@ -3,6 +3,8 @@ extends MarginContainer
 
 export(String, FILE, "*.tscn") var next_scene: String
 
+export(Resource) var chapter_data: Resource 
+
 onready var progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
 onready var tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
 
@@ -23,6 +25,12 @@ func _process(_delta: float) -> void:
 	var percentage_left = progress_bar.max_value * timer.time_left / timer.wait_time
 	
 	progress_bar.value = percentage_left
+
+
+func on_instance(data: Object) -> void:
+	assert(data is ChapterData)
+	
+	chapter_data = data
 
 
 func _on_Board_drag_timer_started(_timer: Timer) -> void:
@@ -73,12 +81,13 @@ func _on_DefeatScreen_quit_button_pressed() -> void:
 
 
 func _on_DefeatScreen_try_again_button_pressed() -> void:
-	if Loader.change_scene(filename) != OK:
+	if Loader.change_scene(filename, chapter_data) != OK:
 		printerr("Failed to reload scene")
 
 
 func _on_VictoryScreen_continue_button_pressed() -> void:
-	if Loader.change_scene(next_scene) != OK:
+	# TODO: Change to post-battle script scene
+	if Loader.change_scene(next_scene, chapter_data) != OK:
 		printerr("Failed to change to %s" % next_scene)
 
 

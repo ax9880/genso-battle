@@ -31,7 +31,9 @@ func _create_buttons_for_unlocked_chapters() -> void:
 		
 		button.text = tr(unlocked_chapter.title)
 		
-		button.connect("pressed", self, "on_ChapterButton_pressed", [unlocked_chapter])
+		var chapter_data: ChapterData = save_data.find_chapter_data_by_title(unlocked_chapter.title)
+		
+		button.connect("pressed", self, "on_ChapterButton_pressed", [chapter_data])
 		
 		$MarginContainer/VBoxContainer/VBoxContainer2.add_child(button)
 
@@ -44,11 +46,5 @@ func _on_QuitButton_pressed() -> void:
 	change_scene("res://ui/main_menu/StackBasedMainMenu.tscn")
 
 
-func on_ChapterButton_pressed(unlocked_chapter: ChapterSaveData) -> void:
-	var current_scene_path: String = unlocked_chapter.current_scene
-	
-	if current_scene_path == null:
-		# TODO: Get path from constants or resource
-		pass
-	
-	change_scene(current_scene_path)
+func on_ChapterButton_pressed(chapter_data: ChapterData) -> void:
+	change_scene("res://ui/cutscenes/ScriptCutscene.tscn", chapter_data)

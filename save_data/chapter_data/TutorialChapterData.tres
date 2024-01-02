@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource( 1 )
 title = "TUTORIAL"
-first_scene = "res://battles/Tutorial.tscn"
+battle_scene_path = "res://battles/tutorial/Tutorial.tscn"

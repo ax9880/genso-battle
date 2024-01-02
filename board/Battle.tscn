@@ -45,6 +45,7 @@ script = ExtResource( 7 )
 __meta__ = {
 "_edit_lock_": true
 }
+next_scene = "res://ui/cutscenes/PostBattleScriptCutscene.tscn"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_right = 720.0

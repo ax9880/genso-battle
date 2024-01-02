@@ -1,18 +1,20 @@
 extends Control
 
-export(String, FILE, "*.tscn") var next_scene: String
-
-export(String, FILE, "*.tscn") var default_next_scene: String
-
-# Scene title as saved in the script sheet or CSV
-export(String) var scene_title: String 
+# Chapter data with scene title
+# Set by Loader in on_instance(), but exported to be able to test this scene
+# locally
+export(Resource) var chapter_data: Resource 
 
 export(PackedScene) var text_label_packed_scene: PackedScene
+
+# Next scene
+export(String, FILE, "*.tscn") var dialogue_scene_path: String
 
 export(float) var new_character_every_x_seconds: float = 0.0
 
 export(bool) var is_end_of_chapter := false
 
+export(String) var title_suffix: String = ""
 
 onready var text_container: VBoxContainer = $MarginContainer/VBoxContainer/TextVBoxContainer
 
@@ -25,27 +27,34 @@ var accumulated_time_seconds: float = 0
 # Array<Array>
 var pages: Array
 
-var is_finished := false
 
-
-func _ready():
-	_read_pages()
-	
+func _ready() -> void:
 	_free_container_children()
 	
-	_show_next_paragraph()
+	_read_pages()
+	
+	if not pages.empty():
+		_show_next_paragraph()
 
 
 func _process(delta: float) -> void:
 	_slowly_make_text_visible(delta, current_label)
 
 
+func on_instance(data: Object) -> void:
+	assert(data is ChapterData)
+	
+	chapter_data = data
+
+
 # Reads pages and splits them into lines
 func _read_pages() -> void:
 	var file: File = File.new()
 	
+	var scene_title = chapter_data.title + title_suffix
+	
 	if file.open("res://text/script_" + scene_title.to_lower() + ".json", File.READ) != OK:
-		printerr("Failed to read file")
+		printerr("Failed to read file for scene %s, skipping script" % scene_title)
 		
 		_skip_dialogue()
 	else:
@@ -158,21 +167,13 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	if not is_finished:
-		is_finished = true
-		
-		if is_end_of_chapter:
-			$ChapterClearer.unlock_next_chapter()
-		
-		if next_scene != null:
-			if Loader.change_scene(next_scene) != OK:
-				_go_to_default_next_scene()
-		else:
-			_go_to_default_next_scene()
-
-
-func _go_to_default_next_scene() -> void:
-	var _error = Loader.change_scene(default_next_scene)
+	if is_end_of_chapter:
+		$ChapterClearer.unlock_next_chapter()
+	
+	if Loader.change_scene(dialogue_scene_path, chapter_data) != OK:
+		printerr("Failed to change scene")
+	
+	set_process(false)
 
 
 func _on_SkipButton_pressed() -> void:

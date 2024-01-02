@@ -1,18 +1,20 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/cutscenes/ChapterClearer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/ui/circle_gradient.png" type="Texture" id=3]
 [ext_resource path="res://ui/cutscenes/ScriptCutscene.gd" type="Script" id=4]
 [ext_resource path="res://ui/cutscenes/ScriptLabel.tscn" type="PackedScene" id=5]
+[ext_resource path="res://save_data/chapter_data/GreavesOfClay.tres" type="Resource" id=6]
 
 [node name="ScriptCutscene" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
-default_next_scene = "res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
+chapter_data = ExtResource( 6 )
 text_label_packed_scene = ExtResource( 5 )
+dialogue_scene_path = "res://ui/cutscenes/DialogueCutscene.tscn"
 
 [node name="ChapterClearer" parent="." instance=ExtResource( 2 )]
 
