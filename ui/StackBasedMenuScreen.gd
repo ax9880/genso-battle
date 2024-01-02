@@ -7,8 +7,8 @@ signal navigate(scene_path, data)
 signal go_back()
 
 
-func change_scene(scene_path: String) -> void:
-	if Loader.change_scene(scene_path) == OK:
+func change_scene(scene_path: String, data: Object = null) -> void:
+	if Loader.change_scene(scene_path, data) == OK:
 		_remove_focus(self)
 	else:
 		printerr("Failed to change scene to %s" % scene_path)
