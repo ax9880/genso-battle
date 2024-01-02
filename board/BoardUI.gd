@@ -86,7 +86,6 @@ func _on_DefeatScreen_try_again_button_pressed() -> void:
 
 
 func _on_VictoryScreen_continue_button_pressed() -> void:
-	# TODO: Change to post-battle script scene
 	if Loader.change_scene(next_scene, chapter_data) != OK:
 		printerr("Failed to change to %s" % next_scene)
 
