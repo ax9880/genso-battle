@@ -97,8 +97,6 @@ func change_scene(path: String, _data = null) -> int:
 
 
 func _play_loading_animation() -> void:
-	printerr("playing fade in animation")
-	
 	is_loading = true
 	
 	loading_screen_instance = loading_screen.instance()
