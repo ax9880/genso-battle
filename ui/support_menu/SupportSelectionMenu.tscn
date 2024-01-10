@@ -1,13 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://ui/support_menu/SupportSelectionMenu.gd" type="Script" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
+[ext_resource path="res://save_data/chapter_data/GreavesOfClay.tres" type="Resource" id=3]
+[ext_resource path="res://save_data/chapter_data/ToOldHell.tres" type="Resource" id=4]
 
 [node name="SupportSelectionMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
+support_level_chapters = [ ExtResource( 3 ), ExtResource( 4 ), null, null ]
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -92,7 +95,4 @@ rect_min_size = Vector2( 240, 0 )
 size_flags_horizontal = 4
 text = "RETURN"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/YachieAndSakiButton" to="." method="_on_YachieAndSakiButton_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/SakiAndYuumaButton" to="." method="_on_SakiAndYuumaButton_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/YuumaAndYachieButton" to="." method="_on_YuumaAndYachieButton_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/ReturnButton" to="." method="_on_ReturnButton_pressed"]

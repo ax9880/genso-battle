@@ -21,7 +21,9 @@ export(float) var sound_effects_volume: float = 1.0
 export(String, "en", "es") var locale: String = ""
 export(Enums.DragMode) var drag_mode: int = Enums.DragMode.CLICK
 
-# TODO: Supports
+# Dictionary<String (Pair), int (support level, 1 - 4)>
+# TODO: Save and load from file
+var supports: Dictionary = {}
 
 # Array<ChapterSaveData>
 var unlocked_chapters: Array = []

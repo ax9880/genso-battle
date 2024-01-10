@@ -17,8 +17,6 @@ var estimated_container_size: float
 onready var messages_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer
 onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
 
-signal finished
-
 
 func _ready():
 	_free_container_children()
@@ -35,15 +33,17 @@ func on_instance(data: Object) -> void:
 	chapter_data = data
 
 
+func get_dialogue_json_filename() -> String:
+	return "res://text/dialogue_%s.json" % chapter_data.title.to_lower()
+
+
 func _load_lines_keys() -> void:
-	var scene_title: String = chapter_data.title
-	
-	var dialogue_json: String = "res://text/dialogue_%s.json" % scene_title.to_lower()
+	var dialogue_json: String = get_dialogue_json_filename()
 	
 	var file: File = File.new()
 	
 	if file.open(dialogue_json, File.READ) != OK:
-		printerr("Failed to read file for scene %s, skipping dialogue" % scene_title)
+		printerr("Failed to read file for scene %s, skipping dialogue" % dialogue_json)
 		
 		_skip_dialogue()
 	else:
