@@ -6,8 +6,10 @@ export(int, 1, 4) var support_level: int = 1
 
 
 func on_instance(data: Object) -> void:
-	pair = data["pair"]
-	support_level = data["support_level"]
+	assert(data is SupportDialogueData)
+	
+	pair = data.pair
+	support_level = data.support_level
 
 
 func get_dialogue_json_filename() -> String:

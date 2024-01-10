@@ -44,13 +44,12 @@ func _set_up_button(button: Button, pair: String, save_data: SaveData, max_suppo
 
 
 func _on_support_button_pressed(pair: String, save_data: SaveData, next_support_level: int) -> void:
-	# TODO: Use object
-	var args := {}
+	var support_dialogue_data := SupportDialogueData.new()
 	
-	args["pair"] = pair
-	args["next_support_level"] = next_support_level
+	support_dialogue_data.pair = pair
+	support_dialogue_data.support_level = next_support_level
 	
-	Loader.change_scene("res://ui/cutscenes/SupportDialogueCutscene.tscn", args)
+	Loader.change_scene("res://ui/cutscenes/SupportDialogueCutscene.tscn", support_dialogue_data)
 
 
 func _on_ReturnButton_pressed() -> void:
