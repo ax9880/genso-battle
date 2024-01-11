@@ -62,6 +62,16 @@ func find_unlocked_chapter_by_title(title: String) -> ChapterSaveData:
 	return null
 
 
+func is_chapter_unlocked(title: String) -> bool:
+	return find_unlocked_chapter_by_title(title) != null
+
+
+func is_chapter_cleared(title: String) -> bool:
+	var chapter_save_data: ChapterSaveData = find_unlocked_chapter_by_title(title)
+	
+	return chapter_save_data != null && chapter_save_data.is_cleared
+
+
 func add_job(job: Job, level: int) -> void:
 	var job_reference: JobReference = JobReference.new()
 	
@@ -108,3 +118,9 @@ func remove_job_reference(job_reference: JobReference) -> void:
 		assert(index != -1)
 		
 		active_units.erase(index)
+
+
+func add_support_level(pair: String) -> void:
+	var current_support_level: int = supports.get(pair, 0)
+	
+	supports[pair] = current_support_level + 1
