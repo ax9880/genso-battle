@@ -17,10 +17,8 @@ func _ready() -> void:
 	
 	_set_focus()
 	
-	var save_data: SaveData = GameData.save_data
-	
-	if save_data.current_battle_index > 0 or save_data.current_battle_scene_index > 0:
-		start_button.text = tr("CONTINUE")
+	# TODO: Show continue text if there is valid save data
+	# start_button.text = tr("CONTINUE")
 
 
 func on_load() -> void:
