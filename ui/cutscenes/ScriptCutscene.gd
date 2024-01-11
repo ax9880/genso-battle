@@ -12,8 +12,6 @@ export(String, FILE, "*.tscn") var dialogue_scene_path: String
 
 export(float) var new_character_every_x_seconds: float = 0.0
 
-export(bool) var is_end_of_chapter := false
-
 export(String) var title_suffix: String = ""
 
 onready var text_container: VBoxContainer = $MarginContainer/VBoxContainer/TextVBoxContainer
@@ -167,9 +165,6 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	if is_end_of_chapter:
-		$ChapterClearer.unlock_next_chapter()
-	
 	if Loader.change_scene(dialogue_scene_path, chapter_data) != OK:
 		printerr("Failed to change scene")
 	
