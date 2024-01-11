@@ -77,6 +77,11 @@ func change_scene(path: String, _data = null) -> int:
 	if path == "":
 		return ERR_CANT_CREATE
 	
+	if loader != null:
+		push_warning("Loader is busy")
+		
+		return ERR_ALREADY_IN_USE
+	
 	loader = ResourceLoader.load_interactive(path)
 	
 	if loader == null:
