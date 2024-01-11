@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=2]
-
-[ext_resource path="res://ui/StackBasedMenu.tscn" type="PackedScene" id=1]
-[ext_resource path="res://ui/support_menu/SupportSelectionMenu.tscn" type="PackedScene" id=2]
-
-[node name="StackBasedSupportMenu" instance=ExtResource( 1 )]
-root_screen_node_path = NodePath("SupportSelectionMenu")
-
-[node name="SupportSelectionMenu" parent="." index="0" instance=ExtResource( 2 )]
