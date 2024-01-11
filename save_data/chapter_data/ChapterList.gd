@@ -3,6 +3,7 @@ extends Resource
 class_name ChapterList
 
 # Array<ChapterData>
+# Collection of all the chapters that can be unlocked in the game
 export(Array, Resource) var chapters: Array
 
 
