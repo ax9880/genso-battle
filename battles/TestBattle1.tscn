@@ -11,26 +11,17 @@ position = Vector2( 451, 452 )
 [node name="HaniwaOrbling3" parent="Board/EnemyPhases/Phase1" index="1" instance=ExtResource( 2 )]
 position = Vector2( 149, 456 )
 
-[node name="HaniwaOrbling5" parent="Board/EnemyPhases/Phase1" index="2" instance=ExtResource( 2 )]
-position = Vector2( 349, 446 )
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="2" instance=ExtResource( 2 )]
+position = Vector2( 165, 351 )
 
 [node name="HaniwaOrbling4" parent="Board/EnemyPhases/Phase1" index="3" instance=ExtResource( 2 )]
 position = Vector2( 165, 248 )
 
-[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="4" instance=ExtResource( 2 )]
-position = Vector2( 165, 351 )
-
-[node name="HaniwaOrbling6" parent="Board/EnemyPhases/Phase1" index="5" instance=ExtResource( 2 )]
+[node name="HaniwaOrbling6" parent="Board/EnemyPhases/Phase1" index="4" instance=ExtResource( 2 )]
 position = Vector2( 144, 144 )
 
-[node name="HaniwaOrbling7" parent="Board/EnemyPhases/Phase1" index="6" instance=ExtResource( 2 )]
-position = Vector2( 158, 546 )
-
-[node name="HaniwaOrbling8" parent="Board/EnemyPhases/Phase1" index="7" instance=ExtResource( 2 )]
-position = Vector2( 141, 648 )
-
-[node name="HaniwaOrbling9" parent="Board/EnemyPhases/Phase1" index="8" instance=ExtResource( 2 )]
-position = Vector2( 253, 457 )
+[node name="Unit" parent="Board/PlayerUnits" index="0"]
+position = Vector2( 253, 453 )
 
 [node name="Unit2" parent="Board/PlayerUnits" index="1"]
-position = Vector2( 349, 451 )
+position = Vector2( 351, 448 )

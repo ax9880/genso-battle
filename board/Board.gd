@@ -6,9 +6,6 @@ enum Turn {
 	NONE, PLAYER, ENEMY
 }
 
-export(float) var time_between_enemy_appearance_seconds: float = 0.5
-export(float) var time_before_player_units_appearance_seconds: float = 0.5
-
 # Set to true to use debug units instead of the player's squad
 export(bool) var can_use_debug_units: bool = false
 
