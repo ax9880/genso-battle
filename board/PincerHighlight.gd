@@ -16,8 +16,8 @@ func initialize(pincer: Pincerer.Pincer) -> void:
 	if(pincer.pincer_orientation == Enums.PincerOrientation.HORIZONTAL || pincer.pincer_orientation == Enums.PincerOrientation.VERTICAL):
 		sprite = _get_sprite_based_on_size(pincer.size())
 		
-		var start_position: Vector2 = pincer.pincering_units.front().position
-		var end_position: Vector2 = pincer.pincering_units.back().position
+		var start_position: Vector2 = pincer.start_position
+		var end_position: Vector2 = pincer.end_position
 		
 		position = (start_position + end_position) / 2.0
 		

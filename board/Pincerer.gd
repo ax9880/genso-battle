@@ -18,9 +18,11 @@ class Pincer extends Reference:
 	
 	var pincer_orientation: int = Enums.PincerOrientation.HORIZONTAL
 	
-	# TODO: Add start position and end position and get them from the cell
-	# positions when you create the pincer. This is so the pincer highlight
+	# start position and end position so the pincer highlight
 	# uses these positions and it works correctly for 2x2 units
+	var start_position: Vector2
+	var end_position: Vector2
+	
 	
 	# Size of the pincer (amount of units involved, including pincering and pincered units)
 	func size() -> int:
@@ -187,6 +189,8 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 	
 	var pincer: Pincer = Pincer.new()
 	
+	pincer.start_position = cell.position
+	
 	# Flag enabled if a pincer is detected
 	var is_pincer := false
 	
@@ -221,6 +225,8 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 					
 					# End unit
 					pincer.pincering_units.push_back(next_unit)
+					
+					pincer.end_position = neighbor.position
 				
 				# Else, it's an ally followed by another ally,
 				# we can't make a pincer. Either way you have to break
