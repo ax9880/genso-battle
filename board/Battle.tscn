@@ -449,6 +449,8 @@ text = "BATTLE 1/5"
 align = 1
 valign = 1
 
+[node name="Tween" type="Tween" parent="CanvasLayer/EnemyPhaseCenterContainer"]
+
 [node name="DefeatScreen" parent="CanvasLayer" instance=ExtResource( 26 )]
 visible = false
 anchor_right = 0.0

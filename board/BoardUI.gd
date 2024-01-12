@@ -5,6 +5,9 @@ export(String, FILE, "*.tscn") var next_scene: String
 
 export(Resource) var chapter_data: Resource 
 
+export(float) var enemy_phase_container_fade_time_seconds: float = 0.75
+
+
 onready var progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
 onready var tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
 
@@ -99,10 +102,40 @@ func _on_DragModeOptionButton_drag_mode_changed(drag_mode: int) -> void:
 
 
 func _on_Board_enemy_phase_started(current_enemy_phase: int, enemy_phase_count: int) -> void:
-	$CanvasLayer/EnemyPhaseCenterContainer.show()
+	var control: Control = $CanvasLayer/EnemyPhaseCenterContainer
+	
+	control.show()
+	
+	var tween: Tween = $CanvasLayer/EnemyPhaseCenterContainer/Tween
+	
+	tween.interpolate_property(control,
+		"modulate",
+		Color.transparent,
+		Color.white,
+		enemy_phase_container_fade_time_seconds,
+		Tween.TRANS_LINEAR
+	)
+	
+	tween.start()
 	
 	$CanvasLayer/EnemyPhaseCenterContainer/NinePatchRect/Label.text = "%s %d/%d" % [tr("BATTLE"), current_enemy_phase, enemy_phase_count]
 
 
-func _on_Board_enemies_appeared():
+func _on_Board_enemies_appeared() -> void:
+	var control: Control = $CanvasLayer/EnemyPhaseCenterContainer
+	
+	var tween: Tween = $CanvasLayer/EnemyPhaseCenterContainer/Tween
+	
+	tween.interpolate_property(control,
+		"modulate",
+		control.modulate,
+		Color.transparent,
+		enemy_phase_container_fade_time_seconds,
+		Tween.TRANS_LINEAR
+	)
+	
+	tween.start()
+	
+	yield(tween, "tween_all_completed")
+	
 	$CanvasLayer/EnemyPhaseCenterContainer.hide()
