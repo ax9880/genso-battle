@@ -3,7 +3,7 @@ extends HBoxContainer
 const COMMA_AND_SPACE: String = ", "
 
 
-func initialize(skill: Skill, can_show_full_data: bool = false) -> void:
+func initialize(skill: Skill, can_show_full_data: bool = false, can_include_activation_rate: bool = true) -> void:
 	$TextureRect.texture = load(Enums.WEAPON_TYPE_TEXTURES[skill.primary_weapon_type])
 	
 	# The translation keys are the names of the enum values
@@ -22,7 +22,8 @@ func initialize(skill: Skill, can_show_full_data: bool = false) -> void:
 	if can_show_full_data:
 		$Label.autowrap = true
 		
-		skill_description += COMMA_AND_SPACE + "%.0f%%" % (100.0 * skill.activation_rate)
+		if can_include_activation_rate:
+			skill_description += COMMA_AND_SPACE + "%.0f%%" % (100.0 * skill.activation_rate)
 		
 		if skill.is_attack():
 			var primary_weapon_type_translation_key: String = Enums.WeaponType.keys()[skill.primary_weapon_type]
