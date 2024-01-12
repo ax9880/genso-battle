@@ -5,6 +5,8 @@ const _SETTINGS_SECTION: String = "settings"
 
 const _JOB_REFERENCES_KEY: String = "job_references"
 
+const _PASSWORD: String = "SkIHn2y08Z6RKbsFAU1axABs6GHf00qUmY0OP5SKfZMG1g9pzQ"
+
 var save_data: SaveData
 
 var config_file := ConfigFile.new()
@@ -37,7 +39,7 @@ func _load_config_file():
 	if OS.is_debug_build():
 		return config_file.load(_get_config_file_path())
 	else:
-		return config_file.load_encrypted_pass(_get_config_file_path(), "password")
+		return config_file.load_encrypted_pass(_get_config_file_path(), _PASSWORD)
 
 
 func _load_data_from_configs_file() -> void:
@@ -104,7 +106,7 @@ func _save_config_file() -> void:
 		if config_file.save(_get_config_file_path()) != OK:
 			push_error("Failed to save data")
 	else:
-		if config_file.save_encrypted_pass(_get_config_file_path(), "password") != OK:
+		if config_file.save_encrypted_pass(_get_config_file_path(), _PASSWORD) != OK:
 			push_error("Failed to save data")
 
 
