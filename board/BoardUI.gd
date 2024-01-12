@@ -108,7 +108,7 @@ func _on_Board_enemy_phase_started(current_enemy_phase: int, enemy_phase_count: 
 	
 	var control_tween: Tween = $CanvasLayer/EnemyPhaseCenterContainer/Tween
 	
-	control_tween.interpolate_property(control,
+	var _error = control_tween.interpolate_property(control,
 		"modulate",
 		Color.transparent,
 		Color.white,
@@ -116,7 +116,7 @@ func _on_Board_enemy_phase_started(current_enemy_phase: int, enemy_phase_count: 
 		Tween.TRANS_LINEAR
 	)
 	
-	control_tween.start()
+	_error = control_tween.start()
 	
 	$CanvasLayer/EnemyPhaseCenterContainer/NinePatchRect/Label.text = "%s %d/%d" % [tr("BATTLE"), current_enemy_phase, enemy_phase_count]
 
@@ -126,7 +126,7 @@ func _on_Board_enemies_appeared() -> void:
 	
 	var control_tween: Tween = $CanvasLayer/EnemyPhaseCenterContainer/Tween
 	
-	control_tween.interpolate_property(control,
+	var _error = control_tween.interpolate_property(control,
 		"modulate",
 		control.modulate,
 		Color.transparent,
@@ -134,7 +134,7 @@ func _on_Board_enemies_appeared() -> void:
 		Tween.TRANS_LINEAR
 	)
 	
-	control_tween.start()
+	_error = control_tween.start()
 	
 	yield(control_tween, "tween_all_completed")
 	
