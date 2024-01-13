@@ -443,8 +443,6 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 				$Sprite/StatusEffects.add(status_effect.status_effect_type, status_effect.effect_scene)
 			else:
 				print("%s resisted %s" % [name, status_effect.status_effect_type])
-	else:
-		print("Did not pass status effect infliction check")
 	
 	if skill.cures_status_effects():
 		for status_effect_type in skill.cured_status_effects:
