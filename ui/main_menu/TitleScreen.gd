@@ -39,10 +39,7 @@ func _set_focus() -> void:
 func _on_StartButton_pressed() -> void:
 	var save_data: SaveData = GameData.save_data
 	
-	if save_data.current_battle_index == 0 and save_data.current_battle_scene_index == 0:
-		change_scene("res://battles/part_1/ScriptCutscenePart1.tscn")
-	else:
-		change_scene("res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn")
+	change_scene("res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn")
 
 
 func _on_ContinueButton_pressed() -> void:
