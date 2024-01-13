@@ -1,20 +1,16 @@
 extends HBoxContainer
 
 
-const ICONS: Dictionary = {
+const _ICONS: Dictionary = {
 	"YACHIE": "res://assets/player/yachie.png",
 	"SAKI": "res://assets/player/saki.png",
 	"YUUMA": "res://assets/player/yuuma.png",
 	"HAWK_SPIRIT": "res://assets/player/eagle_1.png"
 }
 
-const NINE_PATCH_TEXTURES: Dictionary = {
-	"YACHIE": "res://assets/ui/green_panel.png",
-	"SAKI": "res://assets/ui/bright_red_panel.png",
-	"YUUMA": "res://assets/ui/purple_panel.png"
-}
-
 export(float) var new_character_every_x_seconds: float = 0
+
+export(Color) var dim_color: Color
 
 onready var name_label := $VBoxContainer/NameLabel
 onready var message_label := $MarginContainer/MarginContainer/MessageLabel
@@ -45,14 +41,13 @@ func initialize(dialogue_message) -> void:
 	name_label.text = tr(speaker)
 	message_label.text = tr(dialogue_message.line)
 	
-	if ICONS.has(speaker):
-		$VBoxContainer/TextureRect.texture = load(ICONS[speaker])
-	
-	if NINE_PATCH_TEXTURES.has(speaker):
-		$MarginContainer/NinePatchRect.texture  = load(NINE_PATCH_TEXTURES[speaker])
+	if _ICONS.has(speaker):
+		$VBoxContainer/TextureRect.texture = load(_ICONS[speaker])
 	
 	message_label.percent_visible = 0
 	accumulated_time_seconds = 0
+	
+	$DialogueAudio.play()
 
 
 func start_showing_text() -> void:
@@ -81,3 +76,7 @@ func set_text_fully_visible() -> void:
 	emit_signal("text_fully_visible")
 	
 	set_process(false)
+
+
+func dim_text() -> void:
+	modulate = dim_color

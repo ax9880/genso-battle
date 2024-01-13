@@ -5,6 +5,8 @@ export(Resource) var chapter_data: Resource
 
 export(PackedScene) var dialogue_message_container_packed_scene
 
+export(float) var scroll_tween_time_seconds: float = 0.75
+
 # Array of objects with these members:
 # speaker: String
 # line: String
@@ -58,6 +60,8 @@ func _load_lines_keys() -> void:
 
 
 func _show_next_line() -> void:
+	_dim_text_of_last_line()
+	
 	var dialogue_message = lines[current_line]
 	
 	current_dialogue_message_container = dialogue_message_container_packed_scene.instance()
@@ -65,24 +69,37 @@ func _show_next_line() -> void:
 	messages_container.add_child(current_dialogue_message_container)
 	
 	current_dialogue_message_container.initialize(dialogue_message)
+	current_dialogue_message_container.modulate = Color.transparent
 	
 	call_deferred("update_scroll")
+
+
+func _dim_text_of_last_line() -> void:
+	var last_dialogue_message_container: Control = messages_container.get_child(messages_container.get_child_count() - 1)
+	
+	if last_dialogue_message_container != null:
+		last_dialogue_message_container.dim_text()
 
 
 func update_scroll() -> void:
 	estimated_container_size += current_dialogue_message_container.rect_size.y
 	
-	if estimated_container_size > scroll_container.rect_size.y:
-		$Tween.interpolate_property(scroll_container, "scroll_vertical",
-			scroll_container.scroll_vertical, scroll_container.get_v_scrollbar().max_value,
-			1.2,
-			Tween.TRANS_SINE)
-		
-		$Tween.start()
-		
-		$Timer.start()
-	else:
-		current_dialogue_message_container.start_showing_text()
+	$Tween.interpolate_property(scroll_container, "scroll_vertical",
+		scroll_container.scroll_vertical, scroll_container.get_v_scrollbar().max_value,
+		scroll_tween_time_seconds,
+		Tween.TRANS_SINE)
+	
+	$Tween.start()
+	
+	$Tween.interpolate_property(current_dialogue_message_container, "modulate",
+		Color.transparent,
+		Color.white,
+		$Timer.wait_time,
+		Tween.TRANS_SINE)
+	
+	$Tween.start()
+	
+	$Timer.start()
 
 
 func _input(event: InputEvent) -> void:
