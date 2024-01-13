@@ -160,13 +160,18 @@ func _start_moving() -> void:
 		# the unit not having a reference to its cell)
 		return
 	
-	is_moving = true
-	
-	emit_signal("started_moving", self)
-	
-	self.current_state = STATE.PICKED_UP
-	
-	_move()
+	if path.size() <= 1:
+		# Path points to current cell
+		
+		emit_signal("action_done", self)
+	else:
+		is_moving = true
+		
+		emit_signal("started_moving", self)
+		
+		self.current_state = STATE.PICKED_UP
+		
+		_move()
 
 
 func _move() -> void:
