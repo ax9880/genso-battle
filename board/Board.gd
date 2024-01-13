@@ -58,6 +58,8 @@ signal defeat
 signal enemy_phase_started(current_enemy_phase, enemy_phase_count)
 signal enemies_appeared
 
+signal unit_selected_for_view(job)
+
 
 func _ready() -> void:
 	save_data = GameData.save_data
@@ -180,6 +182,7 @@ func _assign_enemies_to_cells() -> void:
 		enemy.connect("started_moving", self, "_on_Unit_picked_up")
 		enemy.connect("use_skill", self, "_on_Enemy_use_skill")
 		enemy.connect("released", self, "_on_Unit_released")
+		enemy.connect("selected_for_view", self, "_on_Unit_selected_for_view")
 		
 		if enemy.is_controlled_by_player:
 			enemy.connect("picked_up", self, "_on_Unit_picked_up")
@@ -194,6 +197,7 @@ func _assign_units_to_cells() -> void:
 		var _error = unit.connect("picked_up", self, "_on_Unit_picked_up")
 		_error = unit.connect("released", self, "_on_Unit_released")
 		_error = unit.connect("snapped_to_grid", self, "_on_Unit_snapped_to_grid")
+		_error = unit.connect("selected_for_view", self, "_on_Unit_selected_for_view")
 		
 		unit.faction = Unit.PLAYER_FACTION
 
@@ -408,6 +412,8 @@ func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 # [-] Unit sometimes dropped but then it can't be swapped
 func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 	cell.modulate = Color.white
+	
+	active_unit.on_exit_cell()
 	
 	if not area.get_unit().is_picked_up():
 		return
@@ -841,6 +847,10 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 			# Do nothing
 			# Has same cell = true
 			_start_player_turn(true)
+
+
+func _on_Unit_selected_for_view(job: Job) -> void:
+	emit_signal("unit_selected_for_view", job)
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:

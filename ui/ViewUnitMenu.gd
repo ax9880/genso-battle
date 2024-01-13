@@ -23,6 +23,8 @@ onready var skills_vbox_container := $MarginContainer/VBoxContainer/MarginContai
 
 # TODO: If an enemy, don't show the activation rate
 func initialize(job: Job, level: int, is_in_battle: bool = false, var can_show_activation_rate: bool = true) -> void:
+	_set_focus()
+	
 	for child in skills_vbox_container.get_children():
 		child.queue_free()
 	
@@ -55,6 +57,10 @@ func on_add_to_tree(data: Object) -> void:
 	var job_reference: JobReference = data as JobReference
 	
 	initialize(job_reference.job, job_reference.level)
+
+
+func _set_focus() -> void:
+	$MarginContainer/VBoxContainer/ReturnButton.grab_focus()
 
 
 func _on_ReturnButton_pressed() -> void:

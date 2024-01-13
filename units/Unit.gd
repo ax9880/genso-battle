@@ -64,6 +64,8 @@ var random := RandomNumberGenerator.new()
 # Array<StatusEffect>
 var status_effects: Array = []
 
+var has_exited_cell: bool = false
+
 
 ## Signals
 
@@ -71,6 +73,7 @@ signal picked_up(unit)
 signal released(unit)
 signal snapped_to_grid(unit)
 signal death_animation_finished(unit)
+signal selected_for_view(job) # TODO: Add skills, status effects
 
 
 func _ready() -> void:
@@ -250,11 +253,16 @@ func _pick_up() -> void:
 		
 		if is2x2():
 			Utils.disable_object($CollisionShape2D)
+		
+		if not is_click_to_drag:
+			$LongPressTimer.start()
 
 
 func release() -> void:
 	if is_picked_up():
 		self.current_state = STATE.IDLE
+		
+		$LongPressTimer.stop()
 		
 		emit_signal("released", self)
 
@@ -308,6 +316,8 @@ func set_current_state(new_state) -> void:
 			_increase_sprite_size()
 			
 			$Sound/PickUpAudio.play()
+			
+			has_exited_cell = false
 		STATE.SNAPPING_TO_GRID:
 			disable_swap_area()
 		STATE.SWAPPING:
@@ -591,13 +601,28 @@ func has_status_effect_of_type(status_effect_type: int) -> bool:
 	return false
 
 
+func on_exit_cell() -> void:
+	has_exited_cell = true
+	
+	$LongPressTimer.stop()
+
+
+func on_select_for_view() -> void:
+	if not has_exited_cell:
+		print("Unit selected!")
+		
+		emit_signal("selected_for_view", $Job.job)
+	
+	if current_state == STATE.PICKED_UP:
+			release()
+
+
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.doubleclick:
-		print("double click!")
-	
-	if event is InputEventMouseButton and event.pressed:
+		on_select_for_view()
+	elif event is InputEventMouseButton and event.pressed:
 		match(current_state):
 			STATE.IDLE:
 				_pick_up()
@@ -627,3 +652,7 @@ func _on_SelectionArea2D_mouse_exited() -> void:
 		#$Sprite/Glow.hide()
 		
 		$Sprite.scale = Vector2(1, 1)
+
+
+func _on_LongPressTimer_timeout() -> void:
+	on_select_for_view()

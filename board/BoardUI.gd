@@ -7,6 +7,9 @@ export(Resource) var chapter_data: Resource
 
 export(float) var enemy_phase_container_fade_time_seconds: float = 0.75
 
+export(PackedScene) var view_unit_menu_packed_scene: PackedScene
+
+export(float) var view_unit_menu_fade_time_seconds: float = 0.5
 
 onready var progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
 onready var tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
@@ -139,3 +142,46 @@ func _on_Board_enemies_appeared() -> void:
 	yield(control_tween, "tween_all_completed")
 	
 	$CanvasLayer/EnemyPhaseCenterContainer.hide()
+
+
+func _on_Board_unit_selected_for_view(job: Job) -> void:
+	var view_unit_menu_tween = $ViewUnitMenuCanvasLayer/Tween
+	
+	if not view_unit_menu_tween.is_active():
+		var view_unit_menu: Control = view_unit_menu_packed_scene.instance()
+		
+		$ViewUnitMenuCanvasLayer.add_child(view_unit_menu)
+		
+		# job, is_in_battle
+		view_unit_menu.initialize(job, true)
+		
+		view_unit_menu.connect("go_back", self, "_on_ViewUnitMenu_go_back", [view_unit_menu])
+		
+		view_unit_menu.modulate = Color.transparent
+		
+		view_unit_menu_tween.interpolate_property(view_unit_menu,
+			"modulate",
+			Color.transparent,
+			Color.white,
+			view_unit_menu_fade_time_seconds,
+			Tween.TRANS_SINE)
+		
+		view_unit_menu_tween.start()
+
+
+func _on_ViewUnitMenu_go_back(view_unit_menu: Control) -> void:
+	var view_unit_menu_tween = $ViewUnitMenuCanvasLayer/Tween
+	
+	view_unit_menu_tween.interpolate_property(view_unit_menu,
+		"modulate",
+		view_unit_menu.modulate,
+		Color.transparent,
+		view_unit_menu_fade_time_seconds,
+		Tween.TRANS_SINE)
+	
+	view_unit_menu_tween.start()
+	
+	yield(view_unit_menu_tween, "tween_all_completed")
+	
+	view_unit_menu.queue_free()
+

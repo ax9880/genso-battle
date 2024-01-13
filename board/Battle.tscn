@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://board/Cell.tscn" type="PackedScene" id=2]
@@ -27,6 +27,7 @@
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=25]
 [ext_resource path="res://ui/DefeatScreen.tscn" type="PackedScene" id=26]
 [ext_resource path="res://ui/VictoryScreen.tscn" type="PackedScene" id=27]
+[ext_resource path="res://ui/ViewUnitMenu.tscn" type="PackedScene" id=28]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 324, 8 )
@@ -46,6 +47,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 next_scene = "res://ui/cutscenes/PostBattleScriptCutscene.tscn"
+view_unit_menu_packed_scene = ExtResource( 28 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_right = 720.0
@@ -471,6 +473,10 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="ViewUnitMenuCanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Tween" type="Tween" parent="ViewUnitMenuCanvasLayer"]
+
 [node name="BattleTheme" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 21 )
 volume_db = 1.0
@@ -484,6 +490,7 @@ bus = "Music"
 [connection signal="enemy_phase_started" from="Board" to="." method="_on_Board_enemy_phase_started"]
 [connection signal="player_turn_started" from="Board" to="." method="_on_Board_player_turn_started"]
 [connection signal="tree_exiting" from="Board" to="Board" method="_on_Board_tree_exiting"]
+[connection signal="unit_selected_for_view" from="Board" to="." method="_on_Board_unit_selected_for_view"]
 [connection signal="victory" from="Board" to="." method="_on_Board_victory"]
 [connection signal="timeout" from="Board/DragTimer" to="Board" method="_on_DragTimer_timeout"]
 [connection signal="tree_exiting" from="Board/PincerExecutor" to="Board/PincerExecutor" method="_on_PincerExecutor_tree_exiting"]
