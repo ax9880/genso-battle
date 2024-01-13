@@ -56,7 +56,14 @@ texture_progress = ExtResource( 4 )
 visible = true
 
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
+margin_right = 340.0
 texture = ExtResource( 8 )
+
+[node name="MarginContainer" parent="CanvasLayer/ActivatedSkillMarginContainer" index="2"]
+margin_right = 340.0
+
+[node name="VBoxContainer" parent="CanvasLayer/ActivatedSkillMarginContainer/MarginContainer" index="0"]
+margin_right = 325.0
 
 [node name="UnitName" parent="CanvasLayer" index="1"]
 modulate = Color( 1, 1, 1, 1 )

@@ -37,8 +37,6 @@ func _set_focus() -> void:
 
 
 func _on_StartButton_pressed() -> void:
-	var save_data: SaveData = GameData.save_data
-	
 	change_scene("res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn")
 
 

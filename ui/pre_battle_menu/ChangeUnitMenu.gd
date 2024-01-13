@@ -62,10 +62,6 @@ func on_add_to_tree(data: Object) -> void:
 func on_load() -> void:
 	.on_load()
 	
-	# TODO: Hide RemoveButton if active job_reference is null, or move that to SquadMenu
-	# TODO: Pass data when node is added to tree so that it has time to
-	# set up the UI before the fade out finishes
-	
 	$MarginContainer/VBoxContainer/ReturnButton.grab_focus()
 
 

@@ -44,7 +44,6 @@ func _show_active_units() -> void:
 	
 	for index in save_data.active_units:
 		var job_reference: JobReference = save_data.job_references[index]
-		var job: Job = job_reference.job
 		
 		var unit_item: Control = unit_item_packed_scene.instance()
 		

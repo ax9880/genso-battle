@@ -42,13 +42,6 @@ export(Array, Enums.StatusEffectType) var cured_status_effects: Array = []
 export(PackedScene) var effect_scene: PackedScene = null
 
 
-func get_description() -> String:
-	# TODO: Generate description based on attributes
-	# Skill name, activation rate, area
-	# ...
-	return ""
-
-
 func is_physical() -> bool:
 	return primary_weapon_type != Enums.WeaponType.STAFF
 

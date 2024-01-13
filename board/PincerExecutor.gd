@@ -77,12 +77,6 @@ func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies:
 func _activate_next_skill() -> void:
 	var unit: Unit = unit_queue.pop_front()
 	
-	# TODO
-	#var activated_skills: Array = unit.activate_skills()
-	#while(unit != null and not activated_skills.empty()):
-		#unit = unit_queue.pop_front()
-		#activated_skills = unit.activate_skills()
-	
 	if unit != null:
 		var activated_skills: Array = unit.activate_skills()
 		

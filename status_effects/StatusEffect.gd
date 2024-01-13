@@ -28,20 +28,6 @@ func initialize(inflicting_unit_stats: StartingStats) -> void:
 	calculate_base_damage(inflicting_unit_stats)
 
 
-# TODO: Delete, unused
-func can_stack(_other: StatusEffect) -> bool:
-	return true
-
-
-func can_replace(_other: StatusEffect) -> bool:
-	return false
-
-
-# Add damage, reset turn counter, etc
-func stack(_other: StatusEffect) -> void:
-	pass
-
-
 func calculate_damage(_affected_unit_stats: StartingStats) -> int:
 	return 0
 
@@ -57,17 +43,3 @@ func is_done() -> bool:
 func calculate_base_damage(_inflicting_unit_stats: StartingStats) -> void:
 	printerr("Implement me")
 
-
-# If status effect causes damage
-# Which is different from a buff or debuff...
-# Pass unit to call inflict_damage() and get how much damage...? But
-# then I get a circular reference Unit > Status Effect > Unit
-# Return how much damage so unit can do that?
-func inflict(stats: StartingStats) -> void:
-	# inflict damage if poison
-	# heal if regeneration
-	# show effect. Reuse skill effect? But this resource shouldn't do that
-	# This resource should only have the logic to heal or inflict damage
-	# Regenerate -> RegenerationStatusEffectSkill
-	# Poison -> PoisonStatusEffectSkill
-	pass

@@ -19,4 +19,5 @@ func remove(status_effect_type: int) -> void:
 	if effect != null:
 		effect.stop()
 		
-		status_effects.erase(status_effect_type)
+		if not status_effects.erase(status_effect_type):
+			print("Tried to erase unexisting status effect")

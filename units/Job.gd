@@ -21,8 +21,7 @@ func _ready() -> void:
 
 
 func get_unlocked_skills() -> Array:
-	# TODO: Convert job level to "max skills" count
-	return skills.slice(0, level - 1)
+	return job.get_unlocked_skills(level)
 
 
 func set_job_reference(job_reference: JobReference) -> void:
