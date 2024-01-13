@@ -97,7 +97,7 @@ func _physics_process(_delta: float) -> void:
 						release()
 
 
-func appear() -> void: 
+func appear() -> void:
 	disable_selection_area()
 	
 	disable_swap_area()
@@ -136,7 +136,8 @@ func play_scale_up_and_down_animation() -> void:
 
 
 func stop_scale_and_and_down_animation() -> void:
-	assert($AnimationPlayer.current_animation == "scale up and down")
+	# FIXME
+	#assert($AnimationPlayer.current_animation == "scale up and down")
 	
 	$AnimationPlayer.stop(true)
 	
@@ -401,6 +402,8 @@ func activate_skills() -> Array:
 func play_skill_activation_animation(activated_skills: Array, layer_z_index: int) -> void:
 	$CanvasLayer/ActivatedSkillMarginContainer.play(activated_skills)
 	$CanvasLayer.z_index = layer_z_index
+	
+	$Sound/SkillActivationAudio.play()
 
 
 # TODO: Move this somewhere else?

@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
@@ -23,6 +23,7 @@
 [ext_resource path="res://units/StatusEffects.gd" type="Script" id=21]
 [ext_resource path="res://assets/ui/sword.png" type="Texture" id=22]
 [ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=23]
+[ext_resource path="res://assets/sfx/casino/place10.wav" type="AudioStream" id=24]
 
 [sub_resource type="Animation" id=7]
 length = 0.001
@@ -482,6 +483,10 @@ bus = "Sound effects"
 [node name="SnapAudio" type="AudioStreamPlayer" parent="Sound"]
 stream = SubResource( 10 )
 volume_db = 6.0
+bus = "Sound effects"
+
+[node name="SkillActivationAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 24 )
 bus = "Sound effects"
 
 [connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
