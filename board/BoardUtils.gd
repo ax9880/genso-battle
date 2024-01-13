@@ -236,6 +236,25 @@ static func _find_area_of_effect(var cell: Cell, # Start cell from which skill i
 			all_units.append_array(enemies)
 			
 			return _units_to_cells(grid, all_units)
+		Enums.AreaOfEffect.REMOTE:
+			# FIXME: The chosen cells change every time this method is called
+			# So when an enemy evaluates a certain skill, the target will change
+			# by the time they actually use it
+			var shuffled_enemies: Array = enemies.duplicate()
+			shuffled_enemies.shuffle()
+			
+			assert(skill.area_of_effect_size >= 1)
+			
+			return _units_to_cells(grid, shuffled_enemies.slice(0, skill.area_of_effect_size - 1))
+		Enums.AreaOfEffect.RANDOM:
+			var shuffled_cells: Array = grid.get_all_cells()
+			
+			# Note: This can point to same cell as current one
+			shuffled_cells.shuffle()
+			
+			assert(skill.area_of_effect_size >= 1)
+			
+			return shuffled_cells.slice(0, skill.area_of_effect_size - 1)
 		_:
 			printerr("Area of effect is not implemented, can't find area: ", skill.area_of_effect)
 			return []
@@ -286,7 +305,7 @@ static func _find_vertical_x_cells(grid: Grid, start_cell: Cell, area_of_effect_
 	return targets
 
 
-static func _units_to_cells(grid, units: Array) -> Array:
+static func _units_to_cells(grid: Grid, units: Array) -> Array:
 	var cells := []
 	
 	# If a unit is 2x2 then add all the cells that it occupies

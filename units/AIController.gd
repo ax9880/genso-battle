@@ -66,7 +66,13 @@ func get_next_behavior() -> int:
 	return behavior
 
 
-func evaluate_skill(unit: Unit, skill: Skill, grid: Grid, navigation_graph: Dictionary, var can_yield := false) -> Array:
+func evaluate_skill(unit: Unit,
+					skill: Skill,
+					grid: Grid,
+					navigation_graph: Dictionary,
+					allies: Array,
+					enemies: Array,
+					var can_yield := false) -> Array:
 	var skill_evaluation_results: Array = []
 	
 	# For each cell you can travel to:
@@ -75,9 +81,7 @@ func evaluate_skill(unit: Unit, skill: Skill, grid: Grid, navigation_graph: Dict
 		
 		skill_evaluation_result.cell = cell
 		
-		# FIXME: If skill targets all then I have to pass in allies and enemies because the
-		# board won't find it by itself
-		var targeted_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, cell.position, skill, grid)
+		var targeted_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, cell.position, skill, grid, [], [], allies, enemies)
 		
 		for targeted_cell in targeted_cells:
 			var targeted_unit: Unit = targeted_cell.unit

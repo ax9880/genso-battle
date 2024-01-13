@@ -21,6 +21,15 @@ func _ready() -> void:
 	_initialize_grid()
 
 
+func get_all_cells() -> Array:
+	var cells: Array = []
+	
+	for row in grid:
+		cells.append_array(row)
+	
+	return cells
+
+
 # Create the grid matrix and populate it with cell objects.
 # Connect body enter and exit signals.
 func _initialize_grid() -> void:

@@ -98,7 +98,13 @@ enum AreaOfEffect {
 	# Affects units in the chain
 	CHAIN,
 	
-	ALL
+	ALL,
+	
+	# Random unit(s) at any distance
+	REMOTE,
+	
+	# Random cells (whether allies or enemies)
+	RANDOM,
 	
 	# Border, outer columns/rows, corners, diamond
 }

@@ -7,7 +7,7 @@ export(String) var skill_name: String = ""
 export(Enums.SkillType) var skill_type = Enums.SkillType.ATTACK
 
 export(Enums.AreaOfEffect) var area_of_effect = Enums.AreaOfEffect.NONE
-export(int, 0, 10, 1) var area_of_effect_size: int = 1
+export(int, 1, 10, 1) var area_of_effect_size: int = 1
 export(float, 0, 1, 0.1) var activation_rate: float = 0.3
 
 # True if the skill pushes away affected enemies

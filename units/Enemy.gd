@@ -63,7 +63,7 @@ func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, e
 	selected_skill = $Job.skills[random.randi_range(0, $Job.skills.size() - 1)]
 	
 	# Evaluate positions (requires having the whole graph)
-	var results: Array = $AIController.evaluate_skill(self, selected_skill, grid, navigation_graph)
+	var results: Array = $AIController.evaluate_skill(self, selected_skill, grid, navigation_graph, allies, enemies)
 	
 	var top_result = results.front()
 	

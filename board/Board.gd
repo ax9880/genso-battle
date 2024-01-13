@@ -760,7 +760,7 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	
 	$PincerExecutor/BeforeSkillActivationPhaseFinishesTimer.stop()
 	
-	var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, unit.position, skill, grid)
+	var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, unit.position, skill, grid, [], [], enemy_units_node.get_children(), player_units_node.get_children())
 	
 	var skill_effect: Node2D = skill.effect_scene.instance()
 	add_child(skill_effect)

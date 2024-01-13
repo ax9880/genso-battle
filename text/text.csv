@@ -66,6 +66,8 @@ ROWS_X,Rows,Filas
 COLUMNS_X,Columns,Columnas
 CHAIN,Chain,Cadena
 ALL,All,Todo/as
+REMOTE,Remoto,Remoto
+RANDOM,Random,Aleatorio
 CHOMP,Chomp,Engullir
 HEAL,Heal,Curar
 PUNCH,Punch,Puño
