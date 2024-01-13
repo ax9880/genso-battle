@@ -36,6 +36,14 @@ func set_change_button_as_choose_button() -> void:
 	$ChangeButton.text = tr("CHOOSE")
 
 
+func highlight() -> void:
+	if $AnimationPlayer.current_animation.empty():
+		$AnimationPlayer.play("highlight")
+		
+		$HighlightAudio.play()
+
+
+# This method is untyped because it returns a Variant
 func get_drag_data(_position: Vector2):
 	if is_draggable:
 		set_drag_preview(_build_drag_preview())
@@ -58,6 +66,8 @@ func drop_data(_position: Vector2, data) -> void:
 
 # Builds a drag preview using the unit's icon
 func _build_drag_preview() -> Control:
+	$UnitIcon/TextureRect2.hide()
+	
 	var nine_patch_rect = $UnitIcon.duplicate()
 	
 	nine_patch_rect.modulate.a = 0.75

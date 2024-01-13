@@ -1,9 +1,50 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/pre_battle_menu/UnitItemContainer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui/pre_battle_menu/SquadMenu.gd" type="Script" id=3]
 [ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/ui/red_panel_border.png" type="Texture" id=5]
+
+[sub_resource type="Animation" id=1]
+resource_name = "highlight"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("TextureRect2:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("TextureRect2:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("TextureRect2:rect_scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
+}
 
 [node name="SquadMenu" type="Control"]
 anchor_right = 1.0
@@ -111,6 +152,30 @@ text = "RETURN"
 stream = ExtResource( 4 )
 volume_db = -3.0
 bus = "Sound effects"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer"]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -50.0
+margin_top = -50.0
+margin_right = 50.0
+margin_bottom = 50.0
+rect_pivot_offset = Vector2( 50, 50 )
+mouse_filter = 2
+texture = ExtResource( 5 )
+stretch_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/TextureRect2"]
+root_node = NodePath("../..")
+anims/highlight = SubResource( 1 )
+
+[node name="HighlightAudio" type="AudioStreamPlayer" parent="CanvasLayer/TextureRect2"]
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/AddUnitButton" to="." method="_on_AddUnitButton_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton" to="." method="_on_ReturnButton_pressed"]
