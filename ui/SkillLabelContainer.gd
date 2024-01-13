@@ -2,8 +2,10 @@ extends HBoxContainer
 
 const COMMA_AND_SPACE: String = ", "
 
+export(Color) var locked_color: Color
 
-func initialize(skill: Skill, can_show_full_data: bool = false, can_include_activation_rate: bool = true) -> void:
+
+func initialize(skill: Skill, can_show_full_data: bool = false, is_locked: bool = false, can_include_activation_rate: bool = true) -> void:
 	$TextureRect.texture = load(Enums.WEAPON_TYPE_TEXTURES[skill.primary_weapon_type])
 	
 	# The translation keys are the names of the enum values
@@ -52,3 +54,5 @@ func initialize(skill: Skill, can_show_full_data: bool = false, can_include_acti
 	
 	$Label.text = skill_description
 	
+	if is_locked:
+		$Label.add_color_override("font_color", locked_color)

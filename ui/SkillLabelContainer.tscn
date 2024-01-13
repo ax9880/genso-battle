@@ -9,6 +9,7 @@ margin_right = 310.0
 margin_bottom = 32.0
 theme = ExtResource( 1 )
 script = ExtResource( 3 )
+locked_color = Color( 1, 1, 1, 0.752941 )
 
 [node name="TextureRect" type="TextureRect" parent="."]
 margin_right = 32.0
