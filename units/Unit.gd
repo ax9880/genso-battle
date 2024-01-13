@@ -422,24 +422,29 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 		
 		inflict_damage(damage)
 	
+	# TODO:
 	# If it's buff or debuff, try to apply it
 	# After applying buff or debuff, recalculate the current stats
 	
 	# If it has status effect, try to apply it
 	# Skill can cause damage AND inflict status effect, so it can't be if-else
-	if skill.has_status_effects():
+	if skill.has_status_effects() and _can_inflict_status_effects(skill):
 		for status_effect_resource in skill.status_effects:
 			var status_effect: StatusEffect = status_effect_resource.duplicate()
 			
-			# TODO: Check vulnerabilities to know if you can inflict it
-			status_effect.initialize(unit.get_stats())
-			
-			# TODO: Update status effect icons
-			status_effects.append(status_effect)
-			
-			print("Inflicted %s on enemy %s" % [status_effect.status_effect_type, name])
-			
-			$Sprite/StatusEffects.add(status_effect.status_effect_type, status_effect.effect_scene)
+			if _can_apply_status_effect(status_effect):
+				status_effect.initialize(unit.get_stats())
+				
+				# TODO: Update status effect icons
+				status_effects.append(status_effect)
+				
+				print("Inflicted %s on enemy %s" % [status_effect.status_effect_type, name])
+				
+				$Sprite/StatusEffects.add(status_effect.status_effect_type, status_effect.effect_scene)
+			else:
+				print("%s resisted %s" % [name, status_effect.status_effect_type])
+	else:
+		print("Did not pass status effect infliction check")
 	
 	if skill.cures_status_effects():
 		for status_effect_type in skill.cured_status_effects:
@@ -498,12 +503,17 @@ func get_attribute_resistance(defender_stats: StartingStats, attacker_attribute,
 			return 0.0
 
 
+func _can_inflict_status_effects(skill: Skill) -> bool:
+	return random.randf() > skill.status_effect_infliction_rate
+
+
 func _can_apply_status_effect(status_effect: StatusEffect) -> bool:
 	var vulnerability: float = 1.0
 	
-	# TODO: Convert type enum to string and then search it
-	if $Job.current_stats.status_ailment_vulnerabilities.has(status_effect.status_effect_type):
-		vulnerability = $Job.current_stats.status_ailment_vulnerabilities.get(status_effect.status_effect_type)
+	var status_effect_type: String = Enums.StatusEffectType.keys()[status_effect.status_effect_type]
+	
+	if $Job.current_stats.status_ailment_vulnerabilities.has(status_effect_type):
+		vulnerability = $Job.current_stats.status_ailment_vulnerabilities.get(status_effect_type)
 	else:
 		vulnerability = $Job.current_stats.status_ailment_vulnerability
 	

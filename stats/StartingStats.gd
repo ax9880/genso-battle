@@ -12,8 +12,9 @@ export var spiritual_defense: int = 0
 
 # General status ailment vulnerability. The greater it is the
 # more vulnerable to status ailments. If it's zero then the unit
-# is immune (besides exceptions in status_ailment_vulnerabilities)
-export(float, 0, 5, 0.1) var status_ailment_vulnerability: float = 0.0
+# is immune (besides exceptions in status_ailment_vulnerabilities).
+# If it's greater than 1 then that status effect should cause extra damage
+export(float, 0, 5, 0.1) var status_ailment_vulnerability: float = 1.0
 
 # Dictionary<StatusAilmentType (String), float>
 # Vulnerabilities to specific status ailments

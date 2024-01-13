@@ -33,6 +33,8 @@ export(int, 0, 9000, 100) var max_heal: int = 700
 # Status effects that this skill inflicts on the enemy
 export(Array, Resource) var status_effects: Array = []
 
+export(float, 0, 1, 0.1) var status_effect_infliction_rate: float = 0.3
+
 # Status effects that this skill removes or cures
 export(Array, Enums.StatusEffectType) var cured_status_effects: Array = []
 

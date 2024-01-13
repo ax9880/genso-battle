@@ -47,10 +47,19 @@ func initialize(skill: Skill, can_show_full_data: bool = false, is_locked: bool 
 			skill_description += " " + tr("MAX_HEAL_DESCRIPTION").to_lower() % skill.max_heal
 		
 		if skill.has_status_effects():
-			for status_effect in skill.status_effects:
+			skill_description += COMMA_AND_SPACE + tr("STATUS_EFFECT_CHANCE_DESCRIPTION") % (skill.status_effect_infliction_rate * 100.0)
+			
+			for i in range(skill.status_effects.size()):
+				var status_effect: StatusEffect = skill.status_effects[i]
+				
 				var status_effect_type_translation_key: String = Enums.StatusEffectType.keys()[status_effect.status_effect_type]
 				
-				skill_description += COMMA_AND_SPACE + tr("STATUS_EFFECT_DESCRIPTION") % [tr(status_effect_type_translation_key).to_lower(), status_effect.duration_turns]
+				if i == 0:
+					skill_description += " "
+				else:
+					skill_description += COMMA_AND_SPACE
+				
+				skill_description += tr("STATUS_EFFECT_DESCRIPTION") % [tr(status_effect_type_translation_key).to_lower(), status_effect.duration_turns]
 	
 	$Label.text = skill_description
 	

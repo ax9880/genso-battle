@@ -9,7 +9,7 @@ attack = 65
 spiritual_attack = 57
 defense = 43
 spiritual_defense = 33
-status_ailment_vulnerability = 0.3
+status_ailment_vulnerability = 1.0
 status_ailment_vulnerabilities = {
 }
 same_attribute_resistance = 0.0
