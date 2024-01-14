@@ -32,6 +32,13 @@ func calculate_damage(_affected_unit_stats: StartingStats) -> int:
 	return 0
 
 
+# Implement this method to modify stats. This is used for special cases
+# so that units can be immune to certain status effects that modify stats. For
+# general stat buffs/debuffs see StatsModifier.
+func modify_stats(_base_stats: StartingStats, _modified_stats: StartingStats) -> void:
+	print("No stats modified")
+
+
 func update() -> void:
 	_turn_count -= 1
 

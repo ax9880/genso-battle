@@ -130,6 +130,11 @@ _global_script_classes=[ {
 "path": "res://stats/StartingStats.gd"
 }, {
 "base": "Resource",
+"class": "StatsModifier",
+"language": "GDScript",
+"path": "res://stats_modifiers/StatsModifier.gd"
+}, {
+"base": "Resource",
 "class": "StatusEffect",
 "language": "GDScript",
 "path": "res://status_effects/StatusEffect.gd"
@@ -179,6 +184,7 @@ _global_script_class_icons={
 "SkillEffect": "",
 "StackBasedMenuScreen": "",
 "StartingStats": "",
+"StatsModifier": "",
 "StatusEffect": "",
 "SupportDialogueData": "",
 "Trap": "",
@@ -189,7 +195,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Genso Battle"
-run/main_scene="res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
+run/main_scene="res://battles/TestBattle1.tscn"
 boot_splash/image="res://assets/ui/splash_screen.png"
 config/icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"
