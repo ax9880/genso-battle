@@ -23,4 +23,6 @@ max_heal = 700
 status_effects = [ ExtResource( 3 ) ]
 status_effect_infliction_rate = 0.3
 cured_status_effects = [  ]
+stats_modifiers = [  ]
+stats_modifiers_infliction_rate = 1.0
 effect_scene = ExtResource( 2 )
