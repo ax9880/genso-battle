@@ -5,6 +5,7 @@ class_name StatsModifier
 export(Enums.StatsType) var modified_stat: int = Enums.StatsType.NONE
 
 # How much the stat is modified
+# For skill activation rate this value is added to the stat, not multiplied
 export(float, -1, 1, 0.1) var modified_stat_percentage: float
 
 # Modified status effect; which status effect this class
@@ -37,10 +38,7 @@ func modify_stats(base_stats: StartingStats, modified_stats: StartingStats) -> v
 			modified_stats.spiritual_defense += base_stats.spiritual_defense * (1 + modified_stat_percentage)
 		
 		Enums.StatsType.SKILL_ACTIVATION_RATE_MODIFIER:
-			# TODO: Add this stat, default value 1
-			# TODO: Include this stat when checking skill activation
-			#modified_stats.skill_activation_rate_modifier += base_stats.skill_activation_rate_modifier * (1 + modified_stat_percentage)
-			pass
+			modified_stats.skill_activation_rate_modifier += modified_stat_percentage
 		
 		Enums.StatsType.STATUS_EFFECT_VULNERABILITY:
 			var status_effect_str: String = Enums.StatusEffectType.keys()[modified_status_effect]
