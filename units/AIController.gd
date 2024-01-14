@@ -170,7 +170,7 @@ func _find_possible_pincer(cell: Cell, faction: int, direction: int) -> Possible
 
 # Returns Array<Cell>
 # Finds free cells that neighbor enemies.
-func find_cells_close_to_enemies(unit: Unit, grid: Grid, faction: int, enemies: Array) -> Array:
+func find_cells_close_to_enemies(grid: Grid, enemies: Array) -> Array:
 	var directions := [Cell.DIRECTION.RIGHT, Cell.DIRECTION.LEFT, Cell.DIRECTION.UP, Cell.DIRECTION.DOWN]
 	var candidate_cells := []
 	

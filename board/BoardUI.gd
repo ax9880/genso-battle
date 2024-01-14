@@ -153,9 +153,13 @@ func _on_Board_unit_selected_for_view(job: Job) -> void:
 		$ViewUnitMenuCanvasLayer.add_child(view_unit_menu)
 		
 		# job, TODO: get level, is_in_battle
+		# - Receive level
+		# - Receive skills
+		# - Receive current/modified status
+		# - Receive status effects
 		view_unit_menu.initialize(job, 1, true)
 		
-		view_unit_menu.connect("go_back", self, "_on_ViewUnitMenu_go_back", [view_unit_menu])
+		var _error = view_unit_menu.connect("go_back", self, "_on_ViewUnitMenu_go_back", [view_unit_menu])
 		
 		view_unit_menu.modulate = Color.transparent
 		
