@@ -152,8 +152,8 @@ func _on_Board_unit_selected_for_view(job: Job) -> void:
 		
 		$ViewUnitMenuCanvasLayer.add_child(view_unit_menu)
 		
-		# job, is_in_battle
-		view_unit_menu.initialize(job, true)
+		# job, TODO: get level, is_in_battle
+		view_unit_menu.initialize(job, 1, true)
 		
 		view_unit_menu.connect("go_back", self, "_on_ViewUnitMenu_go_back", [view_unit_menu])
 		

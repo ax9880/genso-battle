@@ -37,7 +37,8 @@ func initialize(job: Job, level: int, is_in_battle: bool = false, var can_show_a
 	var can_show_remaining_health: bool = is_in_battle
 	
 	# Don't compare with other job
-	unit_stats_container.initialize(job, null, can_show_remaining_health)
+	# TODO: Pass current stats
+	unit_stats_container.initialize(job, null, can_show_remaining_health, job.stats)
 	
 	var unlocked_skills: Array = job.get_unlocked_skills(level)
 	
