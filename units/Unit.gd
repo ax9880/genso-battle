@@ -401,7 +401,7 @@ func activate_skills() -> Array:
 		if skill.area_of_effect == Enums.AreaOfEffect.EQUIP:
 			continue
 		
-		var activation: float = random.randf()
+		var activation: float = random.randf() + $Job.current_stats.skill_activation_rate_modifier
 		
 		if activation < skill.activation_rate:
 			activated_skills.push_back(skill)

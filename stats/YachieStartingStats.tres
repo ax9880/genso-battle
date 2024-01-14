@@ -17,3 +17,4 @@ attribute = 0
 weapon_type = 0
 max_turn_counter = 3
 movement_range = 5
+skill_activation_rate_modifier = 0.0

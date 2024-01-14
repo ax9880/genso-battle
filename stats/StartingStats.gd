@@ -37,6 +37,12 @@ export(int, 0, 10, 1) var max_turn_counter: int = 3
 # How many cells this unit can move (only applies to AI-controlled characters)
 export(int, 0, 15, 1) var movement_range: int = 5
 
+# Skill activation rate modifier, used to change activation rate of all
+# skills used by a unit, additively.
+# -1 -> skills are never activated
+# 0 -> no effect
+# > 0 -> skills are activated more often
+export(float, -1, 1, 0.1) var skill_activation_rate_modifier: float = 0.0
 
 func is_physical() -> bool:
 	return weapon_type != Enums.WeaponType.STAFF
