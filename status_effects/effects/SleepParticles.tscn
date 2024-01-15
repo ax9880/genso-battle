@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://status_effects/effects/PoisonParticles.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/letter_z.png" type="Texture" id=2]
 
 [sub_resource type="Curve" id=3]
-_data = [ Vector2( 0, 0.197348 ), 0.0, 5.70275, 0, 0, Vector2( 0.651297, 0 ), -4.58843, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.197348 ), 0.0, 5.70275, 0, 0, Vector2( 0.256484, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0.280864, 0.469136 )
+colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 0 )
 
 [node name="SleepParticles" type="CPUParticles2D"]
 position = Vector2( 1, 0 )
@@ -21,6 +25,7 @@ angular_velocity = -20.0
 angular_velocity_random = 0.5
 scale_amount = 0.5
 scale_amount_curve = SubResource( 3 )
+color_ramp = SubResource( 4 )
 script = ExtResource( 1 )
 
 [node name="Timer" type="Timer" parent="."]
