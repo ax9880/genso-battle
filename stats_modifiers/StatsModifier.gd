@@ -26,16 +26,16 @@ export(Texture) var icon = null
 func modify_stats(base_stats: StartingStats, modified_stats: StartingStats) -> void:
 	match(modified_stat):
 		Enums.StatsType.ATTACK:
-			modified_stats.attack += base_stats.attack * (1 + modified_stat_percentage)
+			modified_stats.attack += base_stats.attack * modified_stat_percentage
 			
 		Enums.StatsType.DEFENSE:
-			modified_stats.defense += base_stats.defense * (1 + modified_stat_percentage)
+			modified_stats.defense += base_stats.defense * modified_stat_percentage
 		
 		Enums.StatsType.SPIRITUAL_ATTACK:
-			modified_stats.spiritual_attack += base_stats.spiritual_attack * (1 + modified_stat_percentage)
+			modified_stats.spiritual_attack += base_stats.spiritual_attack * modified_stat_percentage
 		
 		Enums.StatsType.SPIRITUAL_DEFENSE:
-			modified_stats.spiritual_defense += base_stats.spiritual_defense * (1 + modified_stat_percentage)
+			modified_stats.spiritual_defense += base_stats.spiritual_defense * modified_stat_percentage
 		
 		Enums.StatsType.SKILL_ACTIVATION_RATE_MODIFIER:
 			modified_stats.skill_activation_rate_modifier += modified_stat_percentage
@@ -60,6 +60,10 @@ func modify_stats(base_stats: StartingStats, modified_stats: StartingStats) -> v
 					modified_stats.status_ailment_vulnerabilities[status_effect_str] = base_vulnerability + modified_status_effect_vulnerability
 				else:
 					modified_stats.status_ailment_vulnerabilities[status_effect_str] = vulnerability + modified_status_effect_vulnerability
+
+
+func is_buff() -> bool:
+	return modified_stat_percentage > 0 or modified_status_effect_vulnerability < 0
 
 
 # TODO: Move to class shared with StatusEffect?

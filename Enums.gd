@@ -174,4 +174,6 @@ enum StatsType {
 	SKILL_ACTIVATION_RATE_MODIFIER,
 	
 	STATUS_EFFECT_VULNERABILITY
+	
+	# HP, weapon triangle vulnerability
 }
