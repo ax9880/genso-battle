@@ -1,6 +1,7 @@
 extends CPUParticles2D
 
 
+# TODO: Make particles scenes inherit from one scene
 func stop() -> void:
 	emitting = false
 	

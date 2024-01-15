@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://status_effects/effects/PoisonParticles.gd" type="Script" id=1]
+[ext_resource path="res://status_effects/effects/StatusEffectParticles.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/letter_z.png" type="Texture" id=2]
 
 [sub_resource type="Curve" id=3]

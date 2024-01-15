@@ -10,6 +10,8 @@ class_name StatusEffect
 # Status effect type: poison, sleep, paralyze, confuse, demoralize
 export(Enums.StatusEffectType) var status_effect_type: int = Enums.StatusEffectType.NONE
 
+# Effect scene must have a stop() method that stops the effect
+# and automatically frees the node
 export(PackedScene) var effect_scene: PackedScene = null
 
 # How much damage this status effect inflicts or heals per turn. It depends on
