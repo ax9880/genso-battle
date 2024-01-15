@@ -26,40 +26,32 @@ export(Texture) var icon = null
 func modify_stats(base_stats: StartingStats, modified_stats: StartingStats) -> void:
 	match(modified_stat):
 		Enums.StatsType.ATTACK:
-			modified_stats.attack += base_stats.attack * modified_stat_percentage
+			modified_stats.attack += int(base_stats.attack * modified_stat_percentage)
 			
 		Enums.StatsType.DEFENSE:
-			modified_stats.defense += base_stats.defense * modified_stat_percentage
+			modified_stats.defense += int(base_stats.defense * modified_stat_percentage)
 		
 		Enums.StatsType.SPIRITUAL_ATTACK:
-			modified_stats.spiritual_attack += base_stats.spiritual_attack * modified_stat_percentage
+			modified_stats.spiritual_attack += int(base_stats.spiritual_attack * modified_stat_percentage)
 		
 		Enums.StatsType.SPIRITUAL_DEFENSE:
-			modified_stats.spiritual_defense += base_stats.spiritual_defense * modified_stat_percentage
+			modified_stats.spiritual_defense += int(base_stats.spiritual_defense * modified_stat_percentage)
 		
 		Enums.StatsType.SKILL_ACTIVATION_RATE_MODIFIER:
 			modified_stats.skill_activation_rate_modifier += modified_stat_percentage
 		
 		Enums.StatsType.STATUS_EFFECT_VULNERABILITY:
-			var status_effect_str: String = Enums.StatusEffectType.keys()[modified_status_effect]
+			var vulnerability: float = modified_stats.get_vulnerability(modified_status_effect)
 			
-			# Check modified status, in case a previous stats modifier added
-			# a status effect vulnerability
-			var vulnerability: float = modified_stats.status_ailment_vulnerabilities.get(status_effect_str, null)
+			# TODO: Stats modifier should not be inflicted if unit is immune to
+			# modified status effect. Check this when applying it in Unit.gd
 			
 			# If vulnerability is zero then unit is immune and the stat
 			# is not modified
-			# TODO: Stats modifier should not be inflicted if unit is immune to
-			# modified status effect. Check this when applying it in Unit.gd
 			if not is_zero_approx(vulnerability):
-				if vulnerability == null:
-					# Unit does not have vulnerability to modified status effect
-					# Add the modifier to the general/base vulnerability
-					var base_vulnerability: float = base_stats.status_ailment_vulnerability
-					
-					modified_stats.status_ailment_vulnerabilities[status_effect_str] = base_vulnerability + modified_status_effect_vulnerability
-				else:
-					modified_stats.status_ailment_vulnerabilities[status_effect_str] = vulnerability + modified_status_effect_vulnerability
+				var status_effect_str: String = Enums.status_effect_type_to_string(modified_status_effect)
+				
+				modified_stats.status_ailment_vulnerabilities[status_effect_str] = vulnerability + modified_status_effect_vulnerability
 
 
 func is_buff() -> bool:
