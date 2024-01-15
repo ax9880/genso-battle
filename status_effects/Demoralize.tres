@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://status_effects/Demoralize.gd" type="Script" id=1]
+[ext_resource path="res://status_effects/effects/SleepParticles.tscn" type="PackedScene" id=2]
+
+[resource]
+script = ExtResource( 1 )
+duration_turns = 3
+status_effect_type = 5
+effect_scene = ExtResource( 2 )

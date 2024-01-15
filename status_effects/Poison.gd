@@ -1,7 +1,5 @@
 extends StatusEffect
 
-class_name Poison
-
 
 var random := RandomNumberGenerator.new()
 
