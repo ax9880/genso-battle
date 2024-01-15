@@ -52,9 +52,9 @@ func is_physical() -> bool:
 # Gets the vulnerability of the given status effect, or the general vulnerability
 # if there is no value associated to the given status effect
 func get_vulnerability(status_effect_type: int) -> float:
-	var vulnerability: float = status_ailment_vulnerabilities.get(status_effect_type, null)
+	var status_effect_type_str: String = Enums.status_effect_type_to_string(status_effect_type)
 	
-	if vulnerability != null:
-		return vulnerability
+	if status_ailment_vulnerabilities.has(status_effect_type_str):
+		return status_ailment_vulnerabilities[status_effect_type_str]
 	else:
 		return status_ailment_vulnerability
