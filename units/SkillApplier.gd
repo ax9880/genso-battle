@@ -23,7 +23,7 @@ func apply_skill(unit: Unit,
 		on_damage_absorbed_callback: FuncRef,
 		status_effects: Array,
 		stats_modifiers: Array) -> void:
-	if skill.is_attack() or skill.is_healing():
+	if (skill.is_attack() or skill.is_healing()) and skill.primary_power > 0:
 		var damage := calculate_damage(unit.get_stats(), target_unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
 		
 		damage = int(damage * random.randf_range(0.9, 1.1))
@@ -110,7 +110,7 @@ func inflict(status_effect_type: int, status_effects: Array) -> void:
 	var status_effects_to_remove := []
 	
 	for status_effect in status_effects:
-		if status_effect.is_done():
+		if status_effect.status_effect_type == status_effect_type and status_effect.is_done():
 			status_effects_to_remove.append(status_effect)
 	
 	for status_effect in status_effects_to_remove:
