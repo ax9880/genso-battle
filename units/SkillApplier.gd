@@ -55,7 +55,7 @@ func apply_skill(unit: Unit,
 		for status_effect_resource in skill.status_effects:
 			var status_effect: StatusEffect = status_effect_resource.duplicate()
 			
-			if _can_apply_status_effect(status_effect):
+			if _can_apply_status_effect(target_unit.get_stats(), status_effect):
 				status_effect.initialize(unit.get_stats())
 				
 				# TODO: Update status effect icons
@@ -101,7 +101,7 @@ func inflict(status_effect_type: int, status_effects: Array) -> void:
 	
 	for status_effect in status_effects:
 		if status_effect.status_effect_type == status_effect_type:
-			accumulated_damage += status_effect.calculate_damage($Job.current_stats)
+			accumulated_damage += status_effect.calculate_damage(target_unit.get_stats())
 			
 			status_effect.update()
 	
@@ -148,11 +148,11 @@ func _get_attribute_resistance(defender_stats: StartingStats, attacker_attribute
 
 
 func _can_inflict_status_effects(skill: Skill) -> bool:
-	return random.randf() > skill.status_effect_infliction_rate
+	return random.randf() < skill.status_effect_infliction_rate
 
 
-func _can_apply_status_effect(status_effect: StatusEffect) -> bool:
-	var vulnerability: float =  $Job.current_stats.get_vulnerability(status_effect.status_effect_type)
+func _can_apply_status_effect(stats: StartingStats, status_effect: StatusEffect) -> bool:
+	var vulnerability: float = stats.get_vulnerability(status_effect.status_effect_type)
 	
 	return random.randf() < vulnerability
 
