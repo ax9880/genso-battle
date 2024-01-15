@@ -51,7 +51,7 @@ const WEAPON_TYPE_TEXTURES: Dictionary = {
 enum StatusEffectType {
 	NONE,
 	
-	# Inflicts damage over time.
+	# Inflicts damage over time
 	POISON,
 	
 	# Causes the unit to sleep, unless woken up by an attack. A sleeping unit
@@ -67,7 +67,10 @@ enum StatusEffectType {
 	CONFUSE,
 	
 	# Reduces attack and spiritual attack to zero, and unit can't use skills
-	DEMORALIZE
+	DEMORALIZE,
+	
+	# Heal HP over time
+	REGENERATE
 }
 
 # https://terrabattle.fandom.com/wiki/Skills
