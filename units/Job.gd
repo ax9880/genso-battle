@@ -17,7 +17,7 @@ signal health_changed(current_health, max_health)
 
 
 func _ready() -> void:
-	reset_stats()
+	_set_stats()
 
 
 func get_unlocked_skills() -> Array:
@@ -28,10 +28,18 @@ func set_job_reference(job_reference: JobReference) -> void:
 	job = job_reference.job
 	level = job_reference.level
 	
-	reset_stats()
+	_set_stats()
 
 
 func reset_stats() -> void:
+	var current_health: int = current_stats.health
+	
+	_set_stats()
+	
+	current_stats.health = int(min(base_stats.health, current_health))
+
+
+func _set_stats() -> void:
 	base_stats = job.stats.duplicate()
 	
 	current_stats = base_stats.duplicate()
