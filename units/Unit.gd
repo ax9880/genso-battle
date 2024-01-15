@@ -23,9 +23,6 @@ const INVALID_FACTION: int = -1
 const PLAYER_FACTION: int = 1
 const ENEMY_FACTION: int = 2
 
-const WEAPON_ADVANTAGE: float = 3.0
-const WEAPON_DISADVANTAGE: float = 1.0
-
 ## Exports
 
 export(PackedScene) var damage_numbers_packed_scene: PackedScene
@@ -63,6 +60,9 @@ var random := RandomNumberGenerator.new()
 
 # Array<StatusEffect>
 var status_effects: Array = []
+
+# Array<StatsModifiers>
+var stats_modifiers: Array = []
 
 var has_exited_cell: bool = false
 
@@ -416,55 +416,8 @@ func play_skill_activation_animation(activated_skills: Array, layer_z_index: int
 	$Sound/SkillActivationAudio.play()
 
 
-# TODO: Move this somewhere else?
 func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef) -> void:
-	if skill.is_attack() or skill.is_healing():
-		var damage := calculate_damage(unit.get_stats(), get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
-		
-		damage = int(damage * random.randf_range(0.9, 1.1))
-		
-		if skill.is_healing():
-			damage = -damage * 3
-		
-		var absorbed_damage = int(skill.absorb_rate * damage)
-		
-		on_damage_absorbed_callback.call_func(absorbed_damage)
-		
-		inflict_damage(damage)
-	
-	# TODO:
-	# If it's buff or debuff, try to apply it
-	# After applying buff or debuff, recalculate the current stats
-	
-	# If it has status effect, try to apply it
-	# Skill can cause damage AND inflict status effect, so it can't be if-else
-	if skill.has_status_effects() and _can_inflict_status_effects(skill):
-		for status_effect_resource in skill.status_effects:
-			var status_effect: StatusEffect = status_effect_resource.duplicate()
-			
-			if _can_apply_status_effect(status_effect):
-				status_effect.initialize(unit.get_stats())
-				
-				# TODO: Update status effect icons
-				status_effects.append(status_effect)
-				
-				print("Inflicted %s on enemy %s" % [status_effect.status_effect_type, name])
-				
-				$Sprite/StatusEffects.add(status_effect.status_effect_type, status_effect.effect_scene)
-			else:
-				print("%s resisted %s" % [name, status_effect.status_effect_type])
-	
-	if skill.cures_status_effects():
-		for status_effect_type in skill.cured_status_effects:
-			var remaining_status_effects := []
-			
-			for status_effect in status_effects:
-				if not status_effect.status_effect_type in skill.cured_status_effects:
-					remaining_status_effects.append(status_effect)
-			
-			status_effects = remaining_status_effects
-			
-			$Sprite/StatusEffects.remove(status_effect_type)
+	$SkillApplier.apply_skill(unit, skill, on_damage_absorbed_callback, status_effects, stats_modifiers)
 
 
 func calculate_damage(attacker_stats: StartingStats,
@@ -472,60 +425,17 @@ func calculate_damage(attacker_stats: StartingStats,
 			power: float,
 			weapon_type: int,
 			attribute: int) -> int:
-	var damage: float = 0
+	return $SkillApplier.calculate_damage(attacker_stats, defender_stats, power, weapon_type, attribute)
+
+
+func recalculate_stats() -> void:
+	$Job.reset_stats()
 	
-	if weapon_type == Enums.WeaponType.STAFF:
-		damage = 1.8 * power * attacker_stats.attack * attacker_stats.attack / float(defender_stats.defense)
-		
-		damage = damage * (1 - get_attribute_resistance(defender_stats, attribute, defender_stats.attribute))
-	else:
-		damage = 1.57 * power * attacker_stats.attack * attacker_stats.attack / float(defender_stats.defense)
-		
-		damage = damage * get_weapon_type_advantage(weapon_type, defender_stats.weapon_type)
+	for status_effect in status_effects:
+		status_effect.modify_stats($Job.base_stats, $Job.current_stats)
 	
-	return int(damage)
-
-
-func get_weapon_type_advantage(attacker_weapon_type: int, defender_weapon_type: int) -> float:
-	var disadvantaged_weapon_type = Enums.WEAPON_RELATIONSHIPS.get(attacker_weapon_type)
-	
-	if disadvantaged_weapon_type == defender_weapon_type:
-		return WEAPON_ADVANTAGE
-	else:
-		return WEAPON_DISADVANTAGE
-
-
-func get_attribute_resistance(defender_stats: StartingStats, attacker_attribute, defender_attribute) -> float:
-	if attacker_attribute == defender_attribute:
-		return defender_stats.same_attribute_resistance
-	else:
-		var disadvantaged_attribute = Enums.ATTRIBUTE_RELATIONSHIPS.get(attacker_attribute)
-		
-		if disadvantaged_attribute != null and disadvantaged_attribute == defender_attribute:
-			# Vulnerable
-			return -1.0
-		else:
-			# TODO: Use elemental resistance dictionary
-			
-			# No resistance
-			return 0.0
-
-
-func _can_inflict_status_effects(skill: Skill) -> bool:
-	return random.randf() > skill.status_effect_infliction_rate
-
-
-func _can_apply_status_effect(status_effect: StatusEffect) -> bool:
-	var vulnerability: float = 1.0
-	
-	var status_effect_type: String = Enums.StatusEffectType.keys()[status_effect.status_effect_type]
-	
-	if $Job.current_stats.status_ailment_vulnerabilities.has(status_effect_type):
-		vulnerability = $Job.current_stats.status_ailment_vulnerabilities.get(status_effect_type)
-	else:
-		vulnerability = $Job.current_stats.status_ailment_vulnerability
-	
-	return random.randf() < vulnerability
+	for stats_modifier in stats_modifiers:
+		stats_modifier.modify_stats($Job.base_stats, $Job.current_stats)
 
 
 func is_dead() -> bool:
@@ -570,27 +480,25 @@ func _on_snap_to_grid() -> void:
 
 
 func inflict(status_effect_type: int) -> void:
-	var accumulated_damage: int = 0
+	$SkillApplier.inflict(status_effect_type, status_effects)
+
+
+func update_stats_modifiers() -> void:
+	var active_stats_modifiers := []
 	
-	for status_effect in status_effects:
-		if status_effect.status_effect_type == status_effect_type:
-			accumulated_damage += status_effect.calculate_damage($Job.current_stats)
-			
-			status_effect.update()
+	for stats_modifier in stats_modifiers:
+		stats_modifier.update()
 	
-	inflict_damage(accumulated_damage)
-	
-	var active_status_effects := []
-	
-	for status_effect in status_effects:
-		if not status_effect.is_done():
-			active_status_effects.append(status_effect)
+		if not stats_modifier.is_done():
+			active_stats_modifiers.append(stats_modifier)
 		else:
-			$Sprite/StatusEffects.remove(status_effect.status_effect_type)
+			# TODO: Remove icon
+			pass
 	
-	status_effects = active_status_effects
-	
-	print("Active status effects: " + str(status_effects))
+	if active_stats_modifiers.size() != stats_modifiers.size():
+		stats_modifiers = active_stats_modifiers
+		
+		recalculate_stats()
 
 
 func has_status_effect_of_type(status_effect_type: int) -> bool:

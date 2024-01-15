@@ -44,5 +44,17 @@ export(int, 0, 15, 1) var movement_range: int = 5
 # > 0 -> skills are activated more often
 export(float, -1, 1, 0.1) var skill_activation_rate_modifier: float = 0.0
 
+
 func is_physical() -> bool:
 	return weapon_type != Enums.WeaponType.STAFF
+
+
+# Gets the vulnerability of the given status effect, or the general vulnerability
+# if there is no value associated to the given status effect
+func get_vulnerability(status_effect_type: int) -> float:
+	var status_effect_type_str: String = Enums.StatusEffectType.keys()[status_effect_type]
+	
+	if status_ailment_vulnerabilities.has(status_effect_type):
+		return status_ailment_vulnerabilities.get(status_effect_type)
+	else:
+		return status_ailment_vulnerability

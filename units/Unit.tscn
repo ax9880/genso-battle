@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
@@ -24,6 +24,7 @@
 [ext_resource path="res://assets/ui/sword.png" type="Texture" id=22]
 [ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=23]
 [ext_resource path="res://assets/sfx/casino/place10.wav" type="AudioStream" id=24]
+[ext_resource path="res://units/SkillApplier.gd" type="Script" id=25]
 
 [sub_resource type="Animation" id=7]
 length = 0.001
@@ -280,6 +281,11 @@ anims/shake = SubResource( 9 )
 [node name="Job" type="Node" parent="."]
 script = ExtResource( 4 )
 job = ExtResource( 5 )
+
+[node name="SkillApplier" type="Node" parent="."]
+script = ExtResource( 25 )
+target_unit_path = NodePath("..")
+status_effect_node2d_path = NodePath("../Sprite/StatusEffects")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 3 )

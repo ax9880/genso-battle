@@ -72,6 +72,10 @@ func cures_status_effects() -> bool:
 	return not cured_status_effects.empty()
 
 
+func has_stats_modifiers() -> bool:
+	return not stats_modifiers.empty()
+
+
 func is_enemy_targeted() -> bool:
 	return is_attack() or skill_type == Enums.SkillType.DEBUFF or skill_type == Enums.SkillType.COUNTER
 

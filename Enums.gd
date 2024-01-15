@@ -177,3 +177,8 @@ enum StatsType {
 	
 	# HP, weapon triangle vulnerability
 }
+
+
+static func status_effect_type_to_string(status_effect_type: int) -> String:
+	return StatusEffectType.keys()[status_effect_type]
+
