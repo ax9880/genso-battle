@@ -313,19 +313,25 @@ func start_status_effect_phase() -> void:
 			for enemy in enemies:
 				enemy.inflict(status_effect_type)
 			
-			$StatusEffectTimer.start()
+			_play_status_effect_sound(status_effect_type)
 			
-			yield($StatusEffectTimer, "timeout")
+			if _status_effect_has_delay(status_effect_type):
+				$StatusEffectTimer.start()
+				
+				yield($StatusEffectTimer, "timeout")
 		
-		var player_units_with_poison := get_units_with_status_effect(allies, status_effect_type)
+		var player_units_status_effect := get_units_with_status_effect(allies, status_effect_type)
 		
-		if not player_units_with_poison.empty():
-			for unit in player_units_with_poison:
+		if not player_units_status_effect.empty():
+			for unit in player_units_status_effect:
 				unit.inflict(status_effect_type)
 			
-			$StatusEffectTimer.start()
+			_play_status_effect_sound(status_effect_type)
 			
-			yield($StatusEffectTimer, "timeout")
+			if _status_effect_has_delay(status_effect_type):
+				$StatusEffectTimer.start()
+				
+				yield($StatusEffectTimer, "timeout")
 	
 	_emit_deferred("status_effect_phase_finished")
 
@@ -338,6 +344,18 @@ func get_units_with_status_effect(target_units: Array, status_effect_type: int) 
 			units_with_status_effect.append(unit)
 	
 	return units_with_status_effect
+
+
+func _status_effect_has_delay(status_effect_type: int) -> bool:
+	return status_effect_type == Enums.StatusEffectType.POISON or \
+		status_effect_type == Enums.StatusEffectType.REGENERATE
+
+
+func _play_status_effect_sound(status_effect_type: int) -> void:
+	if status_effect_type == Enums.StatusEffectType.POISON:
+		$PoisonAudio.play()
+	elif status_effect_type == Enums.StatusEffectType.REGENERATE:
+		$RegenerateAudio.play()
 
 
 func _on_SkillEffect_effect_finished(skill_queue: Array, finish_signal: String) -> void:
