@@ -11,7 +11,7 @@ export(int, 0, 5, 1) var duration_turns: int = 0
 export(Texture) var icon = null
 
 
-var turn_count: int = duration_turns
+var turn_count: int = -1
 
 
 func initialize(_inflicting_unit_stats: StartingStats) -> void:
@@ -26,6 +26,9 @@ func modify_stats(_base_stats: StartingStats, _modified_stats: StartingStats) ->
 
 
 func update() -> void:
+	if turn_count == -1:
+		turn_count = duration_turns
+	
 	turn_count -= 1
 
 
