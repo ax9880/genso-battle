@@ -312,6 +312,7 @@ texture = ExtResource( 23 )
 texture = ExtResource( 2 )
 
 [node name="StatusEffects" type="Node2D" parent="Sprite"]
+z_index = 10
 script = ExtResource( 21 )
 
 [node name="FullSprite" type="Sprite" parent="."]

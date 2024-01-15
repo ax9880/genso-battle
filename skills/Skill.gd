@@ -20,6 +20,7 @@ export(Enums.WeaponType) var primary_weapon_type: int = Enums.WeaponType.SWORD
 # Primary attribute, only used if weapon type is staff (elemental / magic)
 export(Enums.Attribute) var primary_attribute: int = Enums.Attribute.NONE
 
+# Note: Unused
 export(float, 0, 3, 0.5) var secondary_power: float = 0.0
 export(Enums.WeaponType) var secondary_weapon_type: int = Enums.WeaponType.GUN
 export(Enums.Attribute) var secondary_attribute: int = Enums.Attribute.NONE
