@@ -1,6 +1,7 @@
-extends Resource
+extends Modifier
 
 class_name StatsModifier
+
 
 export(Enums.StatsType) var modified_stat: int = Enums.StatsType.NONE
 
@@ -16,11 +17,6 @@ export(Enums.StatusEffectType) var modified_status_effect: int = Enums.StatusEff
 # < 0 -> grant resistance
 # > 0 -> grant vulnerability
 export(float, -1, 1, 0.1) var modified_status_effect_vulnerability: float
-
-# Max duration in turns
-export(int, 0, 5, 1) var duration_turns: int = 0
-
-export(Texture) var icon = null
 
 
 func modify_stats(base_stats: StartingStats, modified_stats: StartingStats) -> void:
