@@ -302,43 +302,42 @@ func start_heal_phase() -> void:
 
 
 func start_status_effect_phase() -> void:
-	var enemies_with_poison := get_units_with_poison(enemies)
+	var status_effects: Array = Enums.StatusEffectType.values()
 	
-	# TODO: Make function, reuse code
-	if not enemies_with_poison.empty():
-		inflict_poison(enemies_with_poison)
+	for status_effect_type in status_effects:
+		# TODO: Instance scene and play animation and sound
 		
-		$StatusEffectTimer.start()
+		var enemies_with_status_effect := get_units_with_status_effect(enemies, status_effect_type)
 		
-		yield($StatusEffectTimer, "timeout")
-	
-	var player_units_with_poison := get_units_with_poison(allies)
-	
-	if not player_units_with_poison.empty():
-		inflict_poison(player_units_with_poison)
+		if not enemies_with_status_effect.empty():
+			for enemy in enemies:
+				enemy.inflict(status_effect_type)
+			
+			$StatusEffectTimer.start()
+			
+			yield($StatusEffectTimer, "timeout")
 		
-		$StatusEffectTimer.start()
+		var player_units_with_poison := get_units_with_status_effect(allies, status_effect_type)
 		
-		yield($StatusEffectTimer, "timeout")
+		if not player_units_with_poison.empty():
+			for unit in player_units_with_poison:
+				unit.inflict(status_effect_type)
+			
+			$StatusEffectTimer.start()
+			
+			yield($StatusEffectTimer, "timeout")
 	
 	_emit_deferred("status_effect_phase_finished")
 
 
-func get_units_with_poison(target_units: Array) -> Array:
-	var units_with_poison: Array = []
+func get_units_with_status_effect(target_units: Array, status_effect_type: int) -> Array:
+	var units_with_status_effect: Array = []
 	
 	for unit in target_units:
-		if unit.is_alive() and unit.has_status_effect_of_type(Enums.StatusEffectType.POISON):
-			units_with_poison.append(unit)
+		if unit.is_alive() and unit.has_status_effect_of_type(status_effect_type):
+			units_with_status_effect.append(unit)
 	
-	return units_with_poison
-
-
-func inflict_poison(units: Array) -> void:
-	for unit in units:
-		unit.inflict(Enums.StatusEffectType.POISON)
-		
-		# TODO: Instance scene and play animation and sound
+	return units_with_status_effect
 
 
 func _on_SkillEffect_effect_finished(skill_queue: Array, finish_signal: String) -> void:
