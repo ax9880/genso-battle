@@ -143,11 +143,11 @@ func _find_corner_pincer(corner: Cell, faction: int, pincer_orientation: int) ->
 	
 	var pincer: Pincer = Pincer.new()
 	
-	var is_pincer = false
+	var is_pincer: bool = false
 	
 	if corner.unit != null and corner.unit.is_enemy(faction):
 		for neighbor in neighbors:
-			if neighbor.unit != null and neighbor.unit.is_ally(faction):
+			if neighbor.unit != null and neighbor.unit.is_ally(faction) and neighbor.unit.can_act():
 				# This _will_ set the flag to true prematurely, before the other
 				# neighbor is evaluated, but that's why the flag is set to false
 				# in the other branch
@@ -194,7 +194,7 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 	# Flag enabled if a pincer is detected
 	var is_pincer := false
 	
-	if unit != null and unit.is_ally(faction):
+	if unit != null and unit.can_act() and unit.is_ally(faction):
 		# Start unit
 		pincer.pincering_units.push_back(unit)
 		
@@ -218,7 +218,7 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 			else:
 				# Is an ally
 				# Last unit added to list was an enemy
-				if not pincer.pincered_units.empty() and pincer.pincered_units.back().is_enemy(faction):
+				if (not pincer.pincered_units.empty()) and pincer.pincered_units.back().is_enemy(faction) and next_unit.can_act():
 					print("Found pincer!")
 					
 					is_pincer = true
@@ -275,7 +275,7 @@ func _find_chain(cell: Cell, direction: int, chain_families: Dictionary, faction
 		var chained_unit: Unit = neighbor.unit
 		
 		if chained_unit != null:
-			if chained_unit.is_ally(faction):
+			if chained_unit.is_ally(faction) and chained_unit.can_act():
 				var chains: Array = chain_families[cell.unit]
 				
 				if chains.size() < chain_level + 1:

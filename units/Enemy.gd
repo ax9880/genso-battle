@@ -22,7 +22,7 @@ func _ready() -> void:
 
 
 func act(grid: Grid, allies: Array, enemies: Array) -> void:
-	if is_dead() or has_status_effect_of_type(Enums.StatusEffectType.SLEEP):
+	if not can_act():
 		emit_signal("action_done", self)
 	else:
 		if is_controlled_by_player:

@@ -114,7 +114,7 @@ func find_possible_pincers(unit: Unit, grid: Grid, faction: int, allies: Array) 
 	var directions := [Cell.DIRECTION.RIGHT, Cell.DIRECTION.LEFT, Cell.DIRECTION.UP, Cell.DIRECTION.DOWN]
 	
 	for ally in allies:
-		if ally != unit:
+		if ally != unit and ally.can_act():
 			var cell: Cell = grid.get_cell_from_position(ally.position)
 			
 			for direction in directions:
@@ -148,7 +148,7 @@ func _find_possible_pincer(cell: Cell, faction: int, direction: int) -> Possible
 				candidate_cell = neighbor
 			
 			break
-		elif next_unit.is_enemy(faction):
+		elif next_unit.is_enemy(faction) and next_unit.can_act():
 			last_unit = next_unit
 			units_pincered_count += 1
 			

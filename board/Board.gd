@@ -286,11 +286,11 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 	$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
 	pincer_queue = []
 	
-	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or has_less_than_min_squad_size_alive(player_units_node.get_children()):
+	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or _has_less_than_min_squad_size_alive(player_units_node.get_children()):
 		print("Defeat!")
 		
 		emit_signal("defeat")
-	elif is_all_units_dead(enemy_units_node.get_children()):
+	elif _is_all_units_dead(enemy_units_node.get_children()):
 		_load_next_enemy_phase()
 		
 		if current_enemy_phase <= enemy_phase_count:
@@ -305,7 +305,7 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		
 		if not has_same_cell:
 			emit_signal("player_turn_started")
-	else:
+	elif can_any_unit_act(player_units_node.get_children()):
 		current_turn = Turn.PLAYER
 		
 		for enemy in enemy_units_node.get_children():
@@ -318,9 +318,11 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		
 		if not has_same_cell:
 			emit_signal("player_turn_started")
+	else:
+		_start_enemy_turn()
 
 
-func has_less_than_min_squad_size_alive(units: Array) -> bool:
+func _has_less_than_min_squad_size_alive(units: Array) -> bool:
 	var alive_counter := 0
 	
 	for unit in units:
@@ -330,13 +332,21 @@ func has_less_than_min_squad_size_alive(units: Array) -> bool:
 	return alive_counter < SaveData.MIN_SQUAD_SIZE
 
 
-func is_all_units_dead(units: Array) -> bool:
+func _is_all_units_dead(units: Array) -> bool:
 	var is_all_dead := true
 	
 	for unit in units:
 		is_all_dead = is_all_dead and unit.is_dead()
 	
 	return is_all_dead
+
+
+func can_any_unit_act(units: Array) -> bool:
+	for unit in units:
+		if unit.can_act():
+			return true
+	
+	return false
 
 
 # Use global signal?
@@ -627,6 +637,8 @@ func _execute_pincers(unit: Unit) -> void:
 
 func _update_status_effects() -> void:
 	# TODO: Apply trap damage to units standing inside traps
+	
+	# TODO: Move confused units if confusion is implemented
 	
 	$PincerExecutor.start_status_effect_phase()
 	

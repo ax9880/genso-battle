@@ -194,9 +194,10 @@ func disable_swap_area() -> void:
 
 
 func enable_selection_area() -> void:
-	Utils.enable_object($SelectionArea2D/CollisionShape2D)
-	
-	$SelectionArea2D.monitorable = true
+	if can_act():
+		Utils.enable_object($SelectionArea2D/CollisionShape2D)
+		
+		$SelectionArea2D.monitorable = true
 
 
 func disable_selection_area() -> void:
@@ -539,6 +540,16 @@ func on_select_for_view() -> void:
 	
 	if current_state == STATE.PICKED_UP:
 			release()
+
+
+func can_act() -> bool:
+	return not (is_dead() or _has_blocking_status_effect())
+
+
+func _has_blocking_status_effect() -> bool:
+	return has_status_effect_of_type(Enums.StatusEffectType.SLEEP) or \
+			has_status_effect_of_type(Enums.StatusEffectType.PARALYZE) or \
+			has_status_effect_of_type(Enums.StatusEffectType.CONFUSE)
 
 
 ## Signals
