@@ -28,7 +28,7 @@ REMOVE,Remove,Quitar
 VIEW,View,Ver
 TRY_AGAIN,Try again,Intentar de nuevo
 TOTAL_DRAG_TIME,Total drag time: {time} s,Tiempo de arrastre: {time} s
-TURN_COUNT,Turns: {count}, Turnos: {count}
+TURN_COUNT,Turns: {count},Turnos: {count}
 CHANGE,Change,Cambiar
 CHOOSE,Choose,Elegir
 GIVE_UP,Give up,Rendirse
@@ -79,7 +79,7 @@ SLASH,Slash,Corte
 WIDE_BITE,Wide bite,Mordida ancha
 VERTICAL_STAB,Vertical stab,Puñalada vertical
 CIRCLE_SLASH,Circle slash,Corte circular
-POISONED_DAGGER,Poisoned dagger,Daga envenenada,
+POISONED_DAGGER,Poisoned dagger,Daga envenenada
 REGENERATE,Regenerate,Regenerar
 HANIWA_WARRIOR,Haniwa Warrior,Guerrero Haniwa
 HANIWA_ORBLING,Haniwa Orbling,Orbe Haniwa
