@@ -15,9 +15,14 @@ var change_unit_menu: Control
 var changed_job_reference: JobReference = null
 var index_of_changed_job_reference: int = -1
 var unit_item_to_highlight: Control = null
+var number_of_units_before_change: int = -1
 
 
 func _ready() -> void:
+	var save_data: SaveData = GameData.save_data
+	
+	number_of_units_before_change = save_data.active_units.size()
+	
 	_show_active_units()
 
 
@@ -26,7 +31,7 @@ func on_load() -> void:
 	
 	return_button.grab_focus()
 	
-	highlight_changed_unit()
+	_highlight_changed_unit()
 
 
 func on_add_to_tree(data: Object) -> void:
@@ -89,6 +94,10 @@ func _on_UnitItem_change_button_clicked(job_reference: JobReference, container_i
 	changed_job_reference = job_reference
 	index_of_changed_job_reference = container_index
 	
+	var save_data: SaveData = GameData.save_data
+
+	number_of_units_before_change = save_data.active_units.size()
+	
 	navigate(change_unit_item_menu_scene, job_reference)
 
 
@@ -121,15 +130,28 @@ func _get_index_of_child(parent_node: Node, child_node: Node) -> int:
 	return -1
 
 
-func highlight_changed_unit() -> void:
+func _highlight_changed_unit() -> void:
+	var save_data: SaveData = GameData.save_data
+	
+	var number_of_units_after_change: int = save_data.active_units.size()
+	
 	if unit_item_to_highlight != null:
-		unit_item_to_highlight.highlight()
+		if number_of_units_before_change > number_of_units_after_change:
+			print("Unit removed")
+		else:
+			unit_item_to_highlight.highlight()
 		
 		unit_item_to_highlight = null
 		
 		changed_job_reference = null
 		index_of_changed_job_reference = -1
-
+		number_of_units_before_change = number_of_units_after_change
+	else:
+		# If a unit was added, highlight the last child
+		if number_of_units_before_change < number_of_units_after_change:
+			assert(list_container.get_child_count() > 0)
+			
+			list_container.get_child(list_container.get_child_count() - 1).highlight()
 
 
 func _on_ReturnButton_pressed() -> void:
