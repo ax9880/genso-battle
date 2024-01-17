@@ -392,7 +392,7 @@ func _update_enemy() -> void:
 		
 		enemy.act(grid, enemy_units_node.get_children(), player_units_node.get_children())
 	else:
-		_start_player_turn()
+		_update_status_effects()
 
 
 # Move to UnitMonitor/GridMonitor/CellMonitor ?
@@ -620,17 +620,23 @@ func _execute_pincers(unit: Unit) -> void:
 	$PincerExecutor.clear_chain_previews()
 	
 	if current_turn == Turn.PLAYER:
-		$PincerExecutor.start_status_effect_phase()
-		
-		yield($PincerExecutor, "status_effect_phase_finished")
-		
-		$PincerExecutor.check_dead_units()
-		
-		yield($PincerExecutor, "finished_checking_for_dead_units")
-		
 		_start_enemy_turn()
 	else:
 		_update_enemy()
+
+
+func _update_status_effects() -> void:
+	# TODO: Apply trap damage to units standing inside traps
+	
+	$PincerExecutor.start_status_effect_phase()
+	
+	yield($PincerExecutor, "status_effect_phase_finished")
+	
+	$PincerExecutor.check_dead_units()
+	
+	yield($PincerExecutor, "finished_checking_for_dead_units")
+	
+	_start_player_turn()
 
 
 func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
