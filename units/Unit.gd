@@ -428,6 +428,11 @@ func calculate_damage(attacker_stats: StartingStats,
 	return $SkillApplier.calculate_damage(attacker_stats, defender_stats, power, weapon_type, attribute)
 
 
+# Remove Sleep status effects when unit is pincered
+func on_attacked() -> void:
+	_remove_all_status_effects_of_type(Enums.StatusEffectType.SLEEP)
+
+
 func recalculate_stats() -> void:
 	$Job.reset_stats()
 	
@@ -458,6 +463,17 @@ func add_child_at_offset(node: Node2D) -> void:
 	add_child(node)
 	
 	node.position = sprite.position
+
+
+func _remove_all_status_effects_of_type(var status_effect_type: int) -> void:
+	if has_status_effect_of_type(status_effect_type):
+		var status_effects_to_remove: Array = status_effects.duplicate()
+		
+		for status_effect in status_effects_to_remove:
+			if status_effect.status_effect_type == status_effect_type:
+				$SkillApplier.remove_status_effect(status_effects, status_effect)
+		
+		recalculate_stats()
 
 
 ## Animation playback

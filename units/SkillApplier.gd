@@ -71,7 +71,7 @@ func apply_skill(unit: Unit,
 		has_modified_stats = true
 		
 		for status_effect in skill.cured_status_effects:
-			_remove_status_effect(status_effects, status_effect)
+			remove_status_effect(status_effects, status_effect)
 	
 	if has_modified_stats:
 		target_unit.recalculate_stats()
@@ -114,12 +114,21 @@ func inflict(status_effect_type: int, status_effects: Array) -> void:
 			status_effects_to_remove.append(status_effect)
 	
 	for status_effect in status_effects_to_remove:
-		_remove_status_effect(status_effects, status_effect)
+		remove_status_effect(status_effects, status_effect)
 	
 	if not status_effects_to_remove.empty():
 		target_unit.recalculate_stats()
 	
 	print("Active status effects: " + str(status_effects))
+
+
+func remove_status_effect(status_effects: Array, status_effect: StatusEffect) -> void:
+	var index: int = status_effects.find(status_effect)
+	
+	if index != -1:
+		status_effects.remove(index)
+		
+		status_effect_node2d.remove(status_effect.status_effect_type)
 
 
 func _get_weapon_type_advantage(attacker_weapon_type: int, defender_weapon_type: int) -> float:
@@ -156,11 +165,3 @@ func _can_apply_status_effect(stats: StartingStats, status_effect: StatusEffect)
 	
 	return random.randf() < vulnerability
 
-
-func _remove_status_effect(status_effects: Array, status_effect: StatusEffect) -> void:
-	var index: int = status_effects.find(status_effect)
-	
-	if index != -1:
-		status_effects.remove(index)
-		
-		status_effect_node2d.remove(status_effect.status_effect_type)

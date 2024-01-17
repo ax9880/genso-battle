@@ -22,14 +22,11 @@ func _ready() -> void:
 
 
 func act(grid: Grid, allies: Array, enemies: Array) -> void:
-	if is_dead():
+	if is_dead() or has_status_effect_of_type(Enums.StatusEffectType.SLEEP):
 		emit_signal("action_done", self)
 	else:
 		if is_controlled_by_player:
-			enable_selection_area()
-			
-			$CanvasLayer/UnitName.show()
-			$CanvasLayer/UnitName.modulate = Color.white
+			_enable_player_control()
 		else:
 			if turn_counter > 0:
 				self.turn_counter = turn_counter - 1
@@ -41,6 +38,13 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 				_find_next_move(grid, allies, enemies)
 			else:
 				emit_signal("action_done", self)
+
+
+func _enable_player_control() -> void:
+	enable_selection_area()
+	
+	$CanvasLayer/UnitName.show()
+	$CanvasLayer/UnitName.modulate = Color.white
 
 
 func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:

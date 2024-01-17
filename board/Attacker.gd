@@ -61,6 +61,8 @@ func _execute_attack(attack: Attack) -> void:
 		attack_effect.position = targeted_unit.get_offset_origin()
 		
 		targeted_unit.inflict_damage(damage)
+		
+		targeted_unit.on_attacked()
 
 
 func _play_sound(weapon_type: int) -> void:
