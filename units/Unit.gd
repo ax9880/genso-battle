@@ -83,7 +83,7 @@ func _ready() -> void:
 	
 	_load_job_textures()
 	
-	if not is_controlled_by_player or not is_click_to_drag:
+	if not is_click_to_drag:
 		set_process_input(false)
 
 
@@ -94,10 +94,12 @@ func _physics_process(_delta: float) -> void:
 		STATE.PICKED_UP:
 			if is_controlled_by_player:
 				_move_towards_mouse()
+			
+			if is_click_to_drag and Input.is_action_just_released("ui_accept"):
+				if is_controlled_by_player:
+					release()
 				
-				if is_click_to_drag:
-					if Input.is_action_just_released("ui_accept"):
-						release()
+				$LongPressTimer.stop()
 
 
 func appear() -> void:
@@ -218,9 +220,8 @@ func _input(event: InputEvent):
 	if not is_click_to_drag:
 		if event.is_action_released("ui_select"):
 			release()
-		elif event is InputEventScreenTouch:
-			if not event.pressed:
-				release()
+		elif event is InputEventScreenTouch and not event.pressed:
+			release()
 
 
 func snap_to_grid(cell_origin: Vector2) -> void:
@@ -254,16 +255,13 @@ func _pick_up() -> void:
 		
 		if is2x2():
 			Utils.disable_object($CollisionShape2D)
-		
-		if not is_click_to_drag:
-			$LongPressTimer.start()
 
 
 func release() -> void:
 	if is_picked_up():
-		self.current_state = STATE.IDLE
-		
 		$LongPressTimer.stop()
+		
+		self.current_state = STATE.IDLE
 		
 		emit_signal("released", self)
 
@@ -429,7 +427,7 @@ func calculate_damage(attacker_stats: StartingStats,
 	return $SkillApplier.calculate_damage(attacker_stats, defender_stats, power, weapon_type, attribute)
 
 
-# Remove Sleep status effects when unit is pincered
+# Removes Sleep status effects when unit is pincered
 func on_attacked() -> void:
 	_remove_all_status_effects_of_type(Enums.StatusEffectType.SLEEP)
 
@@ -526,7 +524,7 @@ func has_status_effect_of_type(status_effect_type: int) -> bool:
 	return false
 
 
-func on_exit_cell() -> void:
+func on_enter_cell() -> void:
 	has_exited_cell = true
 	
 	$LongPressTimer.stop()
@@ -538,8 +536,8 @@ func on_select_for_view() -> void:
 		
 		emit_signal("selected_for_view", $Job.job)
 	
-	if current_state == STATE.PICKED_UP:
-			release()
+	if is_controlled_by_player and current_state == STATE.PICKED_UP:
+		release()
 
 
 func can_act() -> bool:
@@ -555,14 +553,18 @@ func _has_blocking_status_effect() -> bool:
 ## Signals
 
 func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.doubleclick:
+	if event is InputEventMouseButton and event.doubleclick and is_click_to_drag:
 		on_select_for_view()
 	elif event is InputEventMouseButton and event.pressed:
-		match(current_state):
-			STATE.IDLE:
-				_pick_up()
-			STATE.PICKED_UP:
-				release()
+		if not is_click_to_drag:
+			$LongPressTimer.start()
+		
+		if is_controlled_by_player:
+			match(current_state):
+				STATE.IDLE:
+					_pick_up()
+				STATE.PICKED_UP:
+					release()
 
 
 func _on_Tween_tween_completed(_object: Object, key: String) -> void:
@@ -576,14 +578,14 @@ func _on_Tween_tween_completed(_object: Object, key: String) -> void:
 
 
 func _on_SelectionArea2D_mouse_entered() -> void:
-	if current_state == STATE.IDLE:
+	if is_controlled_by_player and current_state == STATE.IDLE:
 		$Sprite/Glow.show()
 		
 		$Sprite.scale = Vector2(1.1, 1.1)
 
 
 func _on_SelectionArea2D_mouse_exited() -> void:
-	if current_state == STATE.IDLE:
+	if is_controlled_by_player and current_state == STATE.IDLE:
 		#$Sprite/Glow.hide()
 		
 		$Sprite.scale = Vector2(1, 1)

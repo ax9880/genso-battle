@@ -84,7 +84,7 @@ func _ready() -> void:
 	_load_next_enemy_phase()
 	_assign_units_to_cells()
 	
-	_disable_player_units()
+	_disable_unit_selection()
 	
 	_make_enemies_appear(enemy_units_node.get_children())
 	
@@ -298,8 +298,7 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		
 		current_turn = Turn.PLAYER
 		
-		for unit in player_units_node.get_children():
-			unit.enable_selection_area()
+		_enable_unit_selection()
 		
 		emit_signal("drag_timer_reset")
 		
@@ -311,8 +310,7 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		for enemy in enemy_units_node.get_children():
 			enemy.reset_turn_counter()
 		
-		for unit in player_units_node.get_children():
-			unit.enable_selection_area()
+		_enable_unit_selection()
 		
 		emit_signal("drag_timer_reset")
 		
@@ -365,11 +363,28 @@ func _can_any_unit_act(units: Array) -> bool:
 func update_drag_mode(drag_mode: int) -> void:
 	for unit in player_units_node.get_children():
 		unit.set_drag_mode(drag_mode)
+	
+	for unit in enemy_units_node.get_children():
+		unit.set_drag_mode(drag_mode)
 
 
-# Use global signal?
-func _disable_player_units() -> void:
-	for unit in player_units_node.get_children():
+func _enable_unit_selection() -> void:
+	_enable_units(player_units_node.get_children())
+	_enable_units(enemy_units_node.get_children())
+
+
+func _disable_unit_selection() -> void:
+	_disable_units(player_units_node.get_children())
+	_disable_units(enemy_units_node.get_children())
+
+
+func _enable_units(units: Array) -> void:
+	for unit in units:
+		unit.enable_selection_area()
+
+
+func _disable_units(units: Array) -> void:
+	for unit in units:
 		unit.disable_selection_area()
 
 
@@ -378,7 +393,7 @@ func _start_enemy_turn() -> void:
 	
 	current_turn = Turn.ENEMY
 	
-	_disable_player_units()
+	_disable_unit_selection()
 	
 	enemy_queue.clear()
 	
@@ -402,7 +417,6 @@ func _start_enemy_turn() -> void:
 		for enemy in enemy_units_node.get_children():
 			enemy_queue.push_back(enemy)
 	
-	# TODO: Only do this inside else above?
 	_update_enemy()
 
 
@@ -422,6 +436,11 @@ func _update_enemy() -> void:
 # Move to UnitMonitor/GridMonitor/CellMonitor ?
 # UnitMovementMonitor
 func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
+	assert(active_unit != null)
+	
+	if cell != active_unit_current_cell:
+		active_unit.on_enter_cell()
+	
 	if active_unit.is2x2():
 		_update_2x2_unit_cells(active_unit, cell)
 	else:
@@ -436,8 +455,6 @@ func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 # [-] Unit sometimes dropped but then it can't be swapped
 func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 	cell.modulate = Color.white
-	
-	active_unit.on_exit_cell()
 	
 	if not area.get_unit().is_picked_up():
 		return
@@ -876,7 +893,7 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 		if has_active_unit_exited_cell:
 			_clear_active_cells()
 			
-			_disable_player_units()
+			_disable_unit_selection()
 			
 			_execute_pincers(unit)
 		else:
