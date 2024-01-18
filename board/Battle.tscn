@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://board/Cell.tscn" type="PackedScene" id=2]
@@ -30,6 +30,7 @@
 [ext_resource path="res://ui/ViewUnitMenu.tscn" type="PackedScene" id=28]
 [ext_resource path="res://assets/sfx/bells.wav" type="AudioStream" id=29]
 [ext_resource path="res://assets/sfx/spell_1.wav" type="AudioStream" id=30]
+[ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=31]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 324, 8 )
@@ -319,13 +320,13 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer"]
-margin_right = 348.0
+margin_right = 250.0
 margin_bottom = 80.0
+rect_min_size = Vector2( 250, 80 )
 mouse_filter = 2
-size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer"]
-margin_right = 348.0
+margin_right = 250.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 
@@ -358,17 +359,9 @@ stretch_margin_bottom = 8
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer"]
 margin_top = 40.0
-margin_right = 348.0
+margin_right = 250.0
 margin_bottom = 72.0
 custom_constants/separation = -4
-
-[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-visible = false
-margin_top = 1.0
-margin_right = 200.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 200, 0 )
-text = "Battle 1/ 5"
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
 margin_right = 32.0
@@ -425,8 +418,33 @@ rect_min_size = Vector2( 32, 32 )
 texture = ExtResource( 10 )
 expand = true
 
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer"]
+margin_top = 80.0
+margin_right = 250.0
+margin_bottom = 80.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer"]
+margin_left = 266.0
+margin_right = 474.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+custom_constants/separation = -12
+
+[node name="TurnLabel" type="Label" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2"]
+margin_right = 208.0
+margin_bottom = 29.0
+text = "Turn"
+
+[node name="TurnCountLabel" type="Label" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 21.0
+margin_right = 208.0
+margin_bottom = 76.0
+size_flags_vertical = 6
+custom_fonts/font = ExtResource( 31 )
+text = "1"
+
 [node name="DragModeOptionButton" parent="CanvasLayer/MarginContainer/HBoxContainer" instance=ExtResource( 23 )]
-margin_left = 364.0
+margin_left = 490.0
 margin_right = 564.0
 
 [node name="GiveUpButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer"]

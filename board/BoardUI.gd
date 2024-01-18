@@ -39,6 +39,9 @@ func on_instance(data: Object) -> void:
 	chapter_data = data
 
 
+func _update_turn_count() -> void:
+	$CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2/TurnCountLabel.text = "%d" % player_turn_count
+
 func _on_Board_drag_timer_started(_timer: Timer) -> void:
 	timer = _timer
 	
@@ -67,6 +70,8 @@ func _on_Board_drag_timer_reset() -> void:
 
 func _on_Board_player_turn_started() -> void:
 	player_turn_count += 1
+	
+	_update_turn_count()
 
 
 func _on_Board_victory() -> void:
