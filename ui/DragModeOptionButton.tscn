@@ -6,12 +6,12 @@
 [ext_resource path="res://theme.tres" type="Theme" id=4]
 
 [node name="DragModeOptionButton" type="OptionButton"]
-margin_right = 200.0
+margin_right = 74.0
 margin_bottom = 80.0
-rect_min_size = Vector2( 200, 0 )
 theme = ExtResource( 4 )
 text = "CLICK"
 icon = ExtResource( 1 )
+clip_text = true
 items = [ "CLICK", ExtResource( 1 ), false, 0, null, "HOLD", ExtResource( 2 ), false, 1, null ]
 selected = 0
 script = ExtResource( 3 )
