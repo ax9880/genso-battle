@@ -118,8 +118,6 @@ func inflict(status_effect_type: int, status_effects: Array) -> void:
 	
 	if not status_effects_to_remove.empty():
 		target_unit.recalculate_stats()
-	
-	print("Active status effects: " + str(status_effects))
 
 
 func remove_status_effect(status_effects: Array, status_effect: StatusEffect) -> void:

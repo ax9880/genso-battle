@@ -305,7 +305,7 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		
 		if not has_same_cell:
 			emit_signal("player_turn_started")
-	elif can_any_unit_act(player_units_node.get_children()):
+	elif _can_any_unit_act(player_units_node.get_children()):
 		current_turn = Turn.PLAYER
 		
 		for enemy in enemy_units_node.get_children():
@@ -319,6 +319,16 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		if not has_same_cell:
 			emit_signal("player_turn_started")
 	else:
+		for enemy in enemy_units_node.get_children():
+			enemy.reset_turn_counter()
+		
+		emit_signal("drag_timer_reset")
+		emit_signal("player_turn_started")
+		
+		$PlayerSkipTurnTimer.start()
+		
+		yield($PlayerSkipTurnTimer, "timeout")
+		
 		_start_enemy_turn()
 
 
@@ -341,7 +351,7 @@ func _is_all_units_dead(units: Array) -> bool:
 	return is_all_dead
 
 
-func can_any_unit_act(units: Array) -> bool:
+func _can_any_unit_act(units: Array) -> bool:
 	for unit in units:
 		if unit.can_act():
 			return true
@@ -411,6 +421,7 @@ func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 	if active_unit.is2x2():
 		_update_2x2_unit_cells(active_unit, cell)
 	else:
+		print("entered a cell")
 		active_unit_entered_cells[cell] = cell
 		
 		cell.modulate = Color.red
