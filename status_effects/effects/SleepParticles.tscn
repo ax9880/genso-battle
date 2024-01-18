@@ -1,7 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://status_effects/effects/StatusEffectParticles.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/letter_z.png" type="Texture" id=2]
+
+[sub_resource type="Curve" id=5]
+max_value = 100.0
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.873199, 0 ), 0.0, 0.0, 0, 0, Vector2( 1, 92.0455 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="Curve" id=3]
 _data = [ Vector2( 0, 0.197348 ), 0.0, 5.70275, 0, 0, Vector2( 0.256484, 1 ), 0.0, 0.0, 0, 0 ]
@@ -12,10 +16,8 @@ colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 0 )
 
 [node name="SleepParticles" type="CPUParticles2D"]
 position = Vector2( 1, 0 )
-amount = 4
+amount = 6
 lifetime = 3.0
-explosiveness = 0.1
-lifetime_randomness = 0.1
 texture = ExtResource( 2 )
 emission_shape = 3
 emission_points = PoolVector2Array( 30, -30 )
@@ -23,6 +25,7 @@ emission_colors = PoolColorArray(  )
 gravity = Vector2( 25, -35 )
 angular_velocity = -20.0
 angular_velocity_random = 0.5
+damping_curve = SubResource( 5 )
 scale_amount = 0.5
 scale_amount_curve = SubResource( 3 )
 color_ramp = SubResource( 4 )
