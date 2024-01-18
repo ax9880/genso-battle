@@ -23,7 +23,9 @@ func _ready() -> void:
 
 func act(grid: Grid, allies: Array, enemies: Array) -> void:
 	if not can_act():
-		emit_signal("action_done", self)
+		print("Enemy %s can not act", name)
+		
+		_emit_action_done()
 	else:
 		if is_controlled_by_player:
 			_enable_player_control()
@@ -37,7 +39,9 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 			if turn_counter == 0:
 				_find_next_move(grid, allies, enemies)
 			else:
-				emit_signal("action_done", self)
+				print("Enemy %s can't act yet" % name)
+				
+				_emit_action_done()
 
 
 func _enable_player_control() -> void:
@@ -60,7 +64,7 @@ func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
 		AIController.Behavior.PINCER:
 			_find_pincer(grid, navigation_graph, allies, enemies)
 		_:
-			emit_signal("action_done", self)
+			_emit_action_done()
 
 
 func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
@@ -76,7 +80,7 @@ func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, e
 	if results.size() > 3 and random.randf() < 0.4:
 		top_result = results[random.randi_range(0, 3)]
 	
-	if top_result.damage_dealt == 0:
+	if top_result.damage_dealt == 9999:
 		_find_cell_close_to_enemy(grid, navigation_graph, enemies)
 	else:
 		path = BoardUtils.find_path(grid, navigation_graph, position, top_result.cell)
@@ -94,7 +98,8 @@ func _use_skill(skill: Skill) -> void:
 	if skill != null:
 		emit_signal("use_skill", self, skill)
 	else:
-		emit_signal("action_done", self)
+		print("skill is null")
+		_emit_action_done()
 
 
 func _move_to_cell_or_enemy(grid: Grid, navigation_graph: Dictionary, enemies: Array) -> void:
@@ -166,8 +171,7 @@ func _start_moving() -> void:
 	
 	if path.size() <= 1:
 		# Path points to current cell
-		
-		emit_signal("action_done", self)
+		_emit_action_done()
 	else:
 		is_moving = true
 		
@@ -193,14 +197,14 @@ func _move() -> void:
 	else:
 		release()
 		
-		path = []
+		path.clear()
 
 
 func _execute_after_move() -> void:
 	if can_use_skill_after_moving:
 		_use_skill(selected_skill)
 	else:
-		emit_signal("action_done", self)
+		_emit_action_done()
 
 
 func reset_turn_counter() -> void:
@@ -226,6 +230,15 @@ func set_turn_counter(value: int) -> void:
 	$Control/Container/TurnCount.text = str(turn_counter)
 
 
+func _emit_action_done() -> void:
+	emit_signal("action_done", self)
+	
+	can_use_skill_after_moving = false
+	is_moving = false
+	selected_skill = null
+	path.clear()
+
+
 func _on_snap_to_grid() -> void:
 	._on_snap_to_grid()
 	
@@ -233,7 +246,10 @@ func _on_snap_to_grid() -> void:
 		_execute_after_move()
 	else:
 		# Called when unit is controlled by player?
-		emit_signal("action_done", self)
+		
+		print("Enemy action done")
+		
+		_emit_action_done()
 
 
 func _on_Tween_tween_completed(_object: Object, key: String) -> void:

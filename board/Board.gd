@@ -319,6 +319,8 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		if not has_same_cell:
 			emit_signal("player_turn_started")
 	else:
+		print("Skipped player turn")
+		
 		for enemy in enemy_units_node.get_children():
 			enemy.reset_turn_counter()
 		
@@ -410,6 +412,8 @@ func _update_enemy() -> void:
 	if not enemy_queue.empty():
 		var enemy: Unit = enemy_queue.pop_front()
 		
+		print("Active enemy is %s" % enemy.name)
+		
 		enemy.act(grid, enemy_units_node.get_children(), player_units_node.get_children())
 	else:
 		_update_status_effects()
@@ -421,7 +425,6 @@ func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 	if active_unit.is2x2():
 		_update_2x2_unit_cells(active_unit, cell)
 	else:
-		print("entered a cell")
 		active_unit_entered_cells[cell] = cell
 		
 		cell.modulate = Color.red
@@ -812,6 +815,8 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 
 
 func _on_Unit_released(unit: Unit) -> void:
+	print("Unit %s released" % unit.name)
+	
 	_stop_drag_timer()
 	
 	_stop_possible_chained_units_animations()
@@ -859,6 +864,8 @@ func _on_Unit_released(unit: Unit) -> void:
 
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
+	print("Unit %s snapped to grid" % unit.name)
+	
 	$ChainPreviewer.clear()
 	
 	if current_turn == Turn.PLAYER:
@@ -883,6 +890,8 @@ func _on_Unit_selected_for_view(job: Job) -> void:
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:
+	print("Enemy %s action done" % unit.name)
+	
 	_stop_possible_chained_units_animations()
 	
 	_clear_active_trail()
