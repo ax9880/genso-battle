@@ -902,8 +902,8 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 			_start_player_turn(true)
 
 
-func _on_Unit_selected_for_view(job: Job) -> void:
-	emit_signal("unit_selected_for_view", job)
+func _on_Unit_selected_for_view(unit: Unit) -> void:
+	emit_signal("unit_selected_for_view", unit)
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:

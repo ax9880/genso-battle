@@ -21,31 +21,36 @@ onready var skills_vbox_container := $MarginContainer/VBoxContainer/MarginContai
 # onready var status_effects_vbox_container := $...
 
 
-# TODO: If an enemy, don't show the activation rate
-func initialize(job: Job, level: int, is_in_battle: bool = false, var can_show_activation_rate: bool = true) -> void:
+# Called from squad menu
+func initialize(job: Job, level: int) -> void:
+	# Show activation rate, is not in battle, don't ignore locked skills
+	initialize_from_data(job, null, level, job.skills, [], true, false, false)
+
+
+func initialize_from_data(job: Job, current_stats: StartingStats, level: int, skills: Array, status_effects: Array, var can_show_activation_rate: bool, var is_in_battle: bool, var can_ignore_locked_skills: bool) -> void:
 	_set_focus()
 	
 	for child in skills_vbox_container.get_children():
 		child.queue_free()
 	
 	full_name_label.text = job.job_name
-	
 	full_portrait_texture_rect.texture = job.full_portrait
 	
 	unit_icon.initialize(job)
 	
 	var can_show_remaining_health: bool = is_in_battle
 	
-	# Don't compare with other job
-	# TODO: Pass current stats
-	unit_stats_container.initialize(job, null, can_show_remaining_health, job.stats)
+	unit_stats_container.initialize(job.stats, current_stats, can_show_remaining_health)
 	
 	var unlocked_skills: Array = job.get_unlocked_skills(level)
 	
-	for skill in job.skills:
+	for skill in skills:
 		var skill_label_container: HBoxContainer = skill_label_container_packed_scene.instance()
 		
-		var is_skill_locked = not skill in unlocked_skills
+		var is_skill_locked: bool = false
+		
+		if not can_ignore_locked_skills:
+			is_skill_locked = not skill in unlocked_skills
 		
 		skill_label_container.initialize(skill, true, is_skill_locked, can_show_activation_rate)
 		

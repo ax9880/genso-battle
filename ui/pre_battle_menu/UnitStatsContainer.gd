@@ -1,32 +1,33 @@
 extends VBoxContainer
 
 
-# TODO: Pass current stats OR show when a stat is buffed or debuffed...?
+# TODO: Pass current base_stats OR show when a stat is buffed or debuffed...?
 # If the stat is buffed, show it blue with an arrow pointing up next to it
 # If the stat is debuffed, show it purple with an arrow pointing down 
 # i.e. if current stat greater or less than base stat
-func initialize(job: Job, compare_job: Job, can_show_remaining_health: bool = false, current_stats: StartingStats = null) -> void:
+func initialize(base_stats: StartingStats, compare_stats: StartingStats, can_show_remaining_health: bool = false) -> void:
 	# TODO: Add label translations
 	
-	if compare_job != null:
-		_show_compared_number($HBoxContainer3/HealthNumber, job.stats.health, compare_job.stats.health)
+	if compare_stats != null:
+		if not can_show_remaining_health:
+			_show_compared_number($HBoxContainer3/HealthNumber, base_stats.health, compare_stats.health)
 		
-		_show_compared_number($HBoxContainer/AttackNumber, job.stats.attack, compare_job.stats.attack)
-		_show_compared_number($HBoxContainer/DefenseNumber, job.stats.defense, compare_job.stats.defense)
+		_show_compared_number($HBoxContainer/AttackNumber, base_stats.attack, compare_stats.attack)
+		_show_compared_number($HBoxContainer/DefenseNumber, base_stats.defense, compare_stats.defense)
 		
-		_show_compared_number($HBoxContainer2/SpiritualAttackNumber, job.stats.spiritual_attack, compare_job.stats.spiritual_attack)
-		_show_compared_number($HBoxContainer2/SpiritualDefenseNumber, job.stats.spiritual_defense, compare_job.stats.spiritual_defense)
+		_show_compared_number($HBoxContainer2/SpiritualAttackNumber, base_stats.spiritual_attack, compare_stats.spiritual_attack)
+		_show_compared_number($HBoxContainer2/SpiritualDefenseNumber, base_stats.spiritual_defense, compare_stats.spiritual_defense)
 	else:
-		_show_number($HBoxContainer3/HealthNumber, job.stats.health)
+		_show_number($HBoxContainer3/HealthNumber, base_stats.health)
 		
-		_show_number($HBoxContainer/AttackNumber, job.stats.attack)
-		_show_number($HBoxContainer/DefenseNumber, job.stats.defense)
+		_show_number($HBoxContainer/AttackNumber, base_stats.attack)
+		_show_number($HBoxContainer/DefenseNumber, base_stats.defense)
 		
-		_show_number($HBoxContainer2/SpiritualAttackNumber, job.stats.spiritual_attack)
-		_show_number($HBoxContainer2/SpiritualDefenseNumber, job.stats.spiritual_defense)
+		_show_number($HBoxContainer2/SpiritualAttackNumber, base_stats.spiritual_attack)
+		_show_number($HBoxContainer2/SpiritualDefenseNumber, base_stats.spiritual_defense)
 	
-	if can_show_remaining_health:
-		_show_remaining_health(job.stats, current_stats)
+	if can_show_remaining_health and compare_stats != null:
+		_show_remaining_health(base_stats, compare_stats)
 
 
 func _show_number(label: Label, job_stat: int) -> void:

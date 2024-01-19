@@ -149,7 +149,7 @@ func _on_Board_enemies_appeared() -> void:
 	$CanvasLayer/EnemyPhaseCenterContainer.hide()
 
 
-func _on_Board_unit_selected_for_view(job: Job) -> void:
+func _on_Board_unit_selected_for_view(unit: Unit) -> void:
 	var view_unit_menu_tween = $ViewUnitMenuCanvasLayer/Tween
 	
 	if not view_unit_menu_tween.is_active():
@@ -157,12 +157,7 @@ func _on_Board_unit_selected_for_view(job: Job) -> void:
 		
 		$ViewUnitMenuCanvasLayer.add_child(view_unit_menu)
 		
-		# job, TODO: get level, is_in_battle
-		# - Receive level
-		# - Receive skills
-		# - Receive current/modified status
-		# - Receive status effects
-		view_unit_menu.initialize(job, 1, true)
+		view_unit_menu.initialize_from_data(unit.get_job(), unit.get_stats(), unit.get_level(), unit.get_skills(), unit.get_status_effects(), unit.faction == Unit.PLAYER_FACTION, true, unit.faction == Unit.ENEMY_FACTION)
 		
 		var _error = view_unit_menu.connect("go_back", self, "_on_ViewUnitMenu_go_back", [view_unit_menu])
 		

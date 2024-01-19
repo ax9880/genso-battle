@@ -24,12 +24,12 @@ func initialize(_job_reference: JobReference, _is_draggable: bool = false, _comp
 	
 	$UnitIcon.initialize(job_reference.job, is_draggable)
 	
-	var compare_job: Job = null
+	var compare_job_stats: StartingStats = null
 	
 	if compare_job_reference != null:
-		compare_job = compare_job_reference.job
+		compare_job_stats = compare_job_reference.job.stats
 	
-	$VBoxContainer/UnitStatsContainer.initialize(job_reference.job, compare_job)
+	$VBoxContainer/UnitStatsContainer.initialize(job_reference.job.stats, compare_job_stats)
 
 
 func set_change_button_as_choose_button() -> void:

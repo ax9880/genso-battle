@@ -22,10 +22,10 @@ is_controlled_by_player = false
 turn_counter = 1
 chance_to_move_to_enemy_during_move_behavior = 0.8
 
-[node name="CollisionShape2D" parent="." index="3"]
+[node name="CollisionShape2D" parent="." index="4"]
 visible = false
 
-[node name="Sprite" parent="." index="4"]
+[node name="Sprite" parent="." index="5"]
 texture = ExtResource( 6 )
 
 [node name="Glow" parent="Sprite" index="0"]
@@ -40,13 +40,13 @@ texture = ExtResource( 5 )
 [node name="CollisionShape2D" parent="SwapArea2D" index="0"]
 visible = true
 
-[node name="SelectionArea2D" parent="." index="7"]
+[node name="SelectionArea2D" parent="." index="8"]
 monitorable = false
 
 [node name="CollisionShape2D" parent="SelectionArea2D" index="0"]
 disabled = true
 
-[node name="Control" parent="." index="8"]
+[node name="Control" parent="." index="9"]
 theme = ExtResource( 10 )
 
 [node name="HpBar" parent="Control" index="0"]
@@ -75,6 +75,10 @@ show_behind_parent = true
 position = Vector2( 49, 21.5 )
 texture = ExtResource( 11 )
 
+[node name="AIController" type="Node" parent="." index="11"]
+script = ExtResource( 9 )
+behaviors = [ 1, 1, 1 ]
+
 [node name="AppearAudio" parent="Sound" index="0"]
 stream = ExtResource( 3 )
 volume_db = 8.0
@@ -84,9 +88,5 @@ stream = ExtResource( 12 )
 
 [node name="PickUpAudio" parent="Sound" index="2"]
 stream = ExtResource( 3 )
-
-[node name="AIController" type="Node" parent="." index="11"]
-script = ExtResource( 9 )
-behaviors = [ 1, 1, 1 ]
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]

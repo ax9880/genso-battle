@@ -64,7 +64,7 @@ var status_effects: Array = []
 # Array<StatsModifiers>
 var stats_modifiers: Array = []
 
-var has_exited_cell: bool = false
+var has_entered_cell: bool = false
 
 
 ## Signals
@@ -73,7 +73,7 @@ signal picked_up(unit)
 signal released(unit)
 signal snapped_to_grid(unit)
 signal death_animation_finished(unit)
-signal selected_for_view(job) # TODO: Add skills, status effects
+signal selected_for_view(unit)
 
 
 func _ready() -> void:
@@ -196,6 +196,8 @@ func disable_swap_area() -> void:
 
 
 func enable_selection_area() -> void:
+	has_entered_cell = false
+	
 	if can_act():
 		Utils.enable_object($SelectionArea2D/CollisionShape2D)
 		
@@ -316,7 +318,7 @@ func set_current_state(new_state) -> void:
 			
 			$Sound/PickUpAudio.play()
 			
-			has_exited_cell = false
+			has_entered_cell = false
 		STATE.SNAPPING_TO_GRID:
 			disable_swap_area()
 		STATE.SWAPPING:
@@ -365,6 +367,22 @@ func get_stats() -> StartingStats:
 
 func get_max_health() -> int:
 	return $Job.base_stats.health
+
+
+func get_job() -> Job:
+	return $Job.job
+
+
+func get_level() -> int:
+	return $Job.level
+
+
+func get_skills() -> Array:
+	return $Job.skills
+
+
+func get_status_effects() -> Array:
+	return status_effects
 
 
 func calculate_attack_damage(attacker_stats: StartingStats, pincering_unit_stats: StartingStats = null) -> int:
@@ -525,16 +543,16 @@ func has_status_effect_of_type(status_effect_type: int) -> bool:
 
 
 func on_enter_cell() -> void:
-	has_exited_cell = true
+	has_entered_cell = true
 	
 	$LongPressTimer.stop()
 
 
 func on_select_for_view() -> void:
-	if not has_exited_cell:
+	if not has_entered_cell:
 		print("Unit selected!")
 		
-		emit_signal("selected_for_view", $Job.job)
+		emit_signal("selected_for_view", self)
 	
 	if is_controlled_by_player and current_state == STATE.PICKED_UP:
 		release()
