@@ -198,10 +198,9 @@ func disable_swap_area() -> void:
 func enable_selection_area() -> void:
 	has_entered_cell = false
 	
-	if can_act():
-		Utils.enable_object($SelectionArea2D/CollisionShape2D)
-		
-		$SelectionArea2D.monitorable = true
+	Utils.enable_object($SelectionArea2D/CollisionShape2D)
+	
+	$SelectionArea2D.monitorable = true
 
 
 func disable_selection_area() -> void:
@@ -577,7 +576,7 @@ func _on_SelectionArea2D_input_event(_viewport: Node, event: InputEvent, _shape_
 		if not is_click_to_drag:
 			$LongPressTimer.start()
 		
-		if is_controlled_by_player:
+		if is_controlled_by_player and can_act():
 			match(current_state):
 				STATE.IDLE:
 					_pick_up()
@@ -596,14 +595,14 @@ func _on_Tween_tween_completed(_object: Object, key: String) -> void:
 
 
 func _on_SelectionArea2D_mouse_entered() -> void:
-	if is_controlled_by_player and current_state == STATE.IDLE:
+	if is_controlled_by_player and current_state == STATE.IDLE and can_act():
 		$Sprite/Glow.show()
 		
 		$Sprite.scale = Vector2(1.1, 1.1)
 
 
 func _on_SelectionArea2D_mouse_exited() -> void:
-	if is_controlled_by_player and current_state == STATE.IDLE:
+	if is_controlled_by_player and current_state == STATE.IDLE and can_act():
 		#$Sprite/Glow.hide()
 		
 		$Sprite.scale = Vector2(1, 1)
