@@ -42,6 +42,7 @@ func on_instance(data: Object) -> void:
 func _update_turn_count() -> void:
 	$CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2/TurnCountLabel.text = "%d" % player_turn_count
 
+
 func _on_Board_drag_timer_started(_timer: Timer) -> void:
 	timer = _timer
 	
@@ -50,7 +51,7 @@ func _on_Board_drag_timer_started(_timer: Timer) -> void:
 	set_process(true)
 
 
-func _on_Board_drag_timer_stopped(time_left_seconds: float):
+func _on_Board_drag_timer_stopped(time_left_seconds: float) -> void:
 	set_process(false)
 	
 	if timer != null:
@@ -80,7 +81,7 @@ func _on_Board_victory() -> void:
 	$CanvasLayer/VictoryScreen.show()
 
 
-func _on_Board_defeat():
+func _on_Board_defeat() -> void:
 	$CanvasLayer/DefeatScreen.show()
 	
 	$BattleTheme.stop()

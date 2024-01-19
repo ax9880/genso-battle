@@ -20,7 +20,7 @@ var active_unit_current_cell: Cell = null
 var active_unit_last_valid_cell: Cell = null
 var active_trail: Node2D = null
 
-# Dictionary<Cell, bool>
+# Dictionary<Cell, Cell>
 var active_unit_entered_cells := {}
 var has_active_unit_exited_cell: bool = false
 
@@ -442,7 +442,13 @@ func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 		active_unit.on_enter_cell()
 	
 	if active_unit.is2x2():
+		var previously_entered_cells: Dictionary = active_unit_entered_cells.duplicate()
+		
 		_update_2x2_unit_cells(active_unit, cell)
+		
+		for cell in active_unit_entered_cells:
+			if not cell in previously_entered_cells:
+				_activate_trap(cell, active_unit)
 	else:
 		active_unit_entered_cells[cell] = cell
 		
@@ -490,8 +496,8 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 			$ChainPreviewer.update_preview(active_unit, selected_cell)
 			
 			var _is_present: bool = active_unit_entered_cells.erase(cell)
-		
-		_activate_trap(selected_cell, active_unit)
+			
+			_activate_trap(selected_cell, active_unit)
 		
 		_update_trail(selected_cell)
 
@@ -782,7 +788,8 @@ func _stop_possible_chained_units_animations() -> void:
 
 
 func _update_trail(cell: Cell) -> void:
-	active_trail.add(cell.position)
+	if active_trail != null:
+		active_trail.add(cell.position)
 
 
 func _clear_active_trail() -> void:
@@ -854,12 +861,14 @@ func _on_Unit_released(unit: Unit) -> void:
 	if active_unit_last_valid_cell == null and selected_cell != active_unit_current_cell:
 		has_active_unit_exited_cell = true
 	
-	# TODO: If ally, then swap, else, pick the last valid cell
 	# FIXME: May not work always
 	if active_unit_last_valid_cell != null:
 		has_active_unit_exited_cell = true
 		
 		print("Unit %s exited a cell" % unit.name)
+	
+	if active_unit_current_cell != selected_cell:
+		_activate_trap(selected_cell, unit)
 	
 	if unit.is2x2():
 		_update_2x2_unit_cells(unit, selected_cell)
@@ -868,6 +877,7 @@ func _on_Unit_released(unit: Unit) -> void:
 			if cell.unit == unit:
 				cell.modulate = Color.white
 	else:
+		# If there is a unit in the selected cell swap with it
 		_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
 	
 	unit.snap_to_grid(selected_cell.position)
