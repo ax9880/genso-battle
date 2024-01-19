@@ -28,6 +28,9 @@ var can_fade_out: bool = false
 
 onready var loading_screen = preload("res://ui/LoadingScreen.tscn")
 
+# Emitted when change_scene() is called and a new scene is going to be loaded
+signal scene_changed()
+
 
 func _ready() -> void:
 	var root: Node = get_tree().get_root()
@@ -96,7 +99,7 @@ func change_scene(path: String, _data = null) -> int:
 		else:
 			call_deferred("_play_loading_animation")
 		
-		#Events.emit_signal("scene_changed")
+		emit_signal("scene_changed")
 		
 		return OK
 
