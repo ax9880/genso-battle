@@ -26,7 +26,13 @@ class Pincer extends Reference:
 	
 	# Size of the pincer (amount of units involved, including pincering and pincered units)
 	func size() -> int:
-		return pincering_units.size() + pincered_units.size()
+		var size_modifier: int = 0
+		
+		for unit in pincered_units:
+			if unit.is2x2():
+				size_modifier += 1
+		
+		return pincering_units.size() + pincered_units.size() + size_modifier
 	
 	
 	# A pincer is valid if at least one pincered unit is alive, and all the
