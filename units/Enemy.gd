@@ -95,7 +95,7 @@ func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, e
 
 
 func _use_skill(skill: Skill) -> void:
-	if skill != null:
+	if skill != null and can_act():
 		emit_signal("use_skill", self, skill)
 	else:
 		print("skill is null")
