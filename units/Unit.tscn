@@ -255,7 +255,7 @@ extents = Vector2( 49, 49 )
 [sub_resource type="Animation" id=14]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("ModifierIcon:rect_position")
+tracks/0/path = NodePath("Icon:rect_position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -270,7 +270,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=15]
 resource_name = "show icon and fade"
 tracks/0/type = "value"
-tracks/0/path = NodePath("ModifierIcon:modulate")
+tracks/0/path = NodePath("Icon:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -282,7 +282,7 @@ tracks/0/keys = {
 "values": [ Color( 0, 0, 0, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 0, 0, 0, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("ModifierIcon:visible")
+tracks/1/path = NodePath("Icon:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -294,7 +294,7 @@ tracks/1/keys = {
 "values": [ true, false ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("ModifierIcon:rect_position")
+tracks/2/path = NodePath("Icon:rect_position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -493,7 +493,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Modifiers" type="Control" parent="Control"]
+[node name="StatusEffectsIcons" type="Control" parent="Control"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -501,7 +501,7 @@ anchor_bottom = 1.0
 margin_left = -32.0
 margin_top = -32.0
 
-[node name="ModifierIcon" type="TextureRect" parent="Control/Modifiers"]
+[node name="Icon" type="TextureRect" parent="Control/StatusEffectsIcons"]
 visible = false
 modulate = Color( 0, 0, 0, 0 )
 anchor_left = 0.5
@@ -516,7 +516,7 @@ texture = ExtResource( 26 )
 expand = true
 stretch_mode = 4
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Control/Modifiers"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Control/StatusEffectsIcons"]
 anims/RESET = SubResource( 14 )
 "anims/show icon and fade" = SubResource( 15 )
 

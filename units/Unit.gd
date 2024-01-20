@@ -61,9 +61,6 @@ var random := RandomNumberGenerator.new()
 # Array<StatusEffect>
 var status_effects: Array = []
 
-# Array<StatsModifiers>
-var stats_modifiers: Array = []
-
 var has_entered_cell: bool = false
 
 
@@ -275,6 +272,8 @@ func _load_job_textures() -> void:
 	$Sprite/Icon.texture = $Job.job.portrait
 	
 	$CanvasLayer/UnitName.text = tr($Job.job.job_name)
+	
+	$Control/StatusEffectsIcons/AnimationPlayer.play("show icon and fade")
 
 
 ## Setters
@@ -436,7 +435,7 @@ func play_skill_activation_animation(activated_skills: Array, layer_z_index: int
 
 
 func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef) -> void:
-	$SkillApplier.apply_skill(unit, skill, on_damage_absorbed_callback, status_effects, stats_modifiers)
+	$SkillApplier.apply_skill(unit, skill, on_damage_absorbed_callback, status_effects)
 
 
 func calculate_damage(attacker_stats: StartingStats,
@@ -457,9 +456,6 @@ func recalculate_stats() -> void:
 	
 	for status_effect in status_effects:
 		status_effect.modify_stats($Job.base_stats, $Job.current_stats)
-	
-	for stats_modifier in stats_modifiers:
-		stats_modifier.modify_stats($Job.base_stats, $Job.current_stats)
 
 
 func is_dead() -> bool:
@@ -516,24 +512,6 @@ func _on_snap_to_grid() -> void:
 
 func inflict(status_effect_type: int) -> void:
 	$SkillApplier.inflict(status_effect_type, status_effects)
-
-
-func update_stats_modifiers() -> void:
-	var active_stats_modifiers := []
-	
-	for stats_modifier in stats_modifiers:
-		stats_modifier.update()
-	
-		if not stats_modifier.is_done():
-			active_stats_modifiers.append(stats_modifier)
-		else:
-			# TODO: Remove icon
-			pass
-	
-	if active_stats_modifiers.size() != stats_modifiers.size():
-		stats_modifiers = active_stats_modifiers
-		
-		recalculate_stats()
 
 
 func has_status_effect_of_type(status_effect_type: int) -> bool:

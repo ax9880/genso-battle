@@ -21,8 +21,7 @@ func _ready() -> void:
 func apply_skill(unit: Unit,
 		skill: Skill,
 		on_damage_absorbed_callback: FuncRef,
-		status_effects: Array,
-		stats_modifiers: Array) -> void:
+		status_effects: Array) -> void:
 	if (skill.is_attack() or skill.is_healing()) and skill.primary_power > 0:
 		var damage := calculate_damage(unit.get_stats(), target_unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
 		
@@ -39,39 +38,38 @@ func apply_skill(unit: Unit,
 	
 	var has_modified_stats: bool = false
 	
-	if skill.has_stats_modifiers() and _can_inflict_status_effects(skill):
-		has_modified_stats = true
-		
-		for stats_modifier_resource in skill.stats_modifiers:
-			var stats_modifier: StatsModifier = stats_modifier_resource.duplicate()
-			
-			stats_modifiers.append(stats_modifier)
-	
 	# If it has status effect, try to apply it
 	# Skill can cause damage AND inflict status effect, so it can't be if-else
 	if skill.has_status_effects() and _can_inflict_status_effects(skill):
-		has_modified_stats = true
-		
 		for status_effect_resource in skill.status_effects:
 			var status_effect: StatusEffect = status_effect_resource.duplicate()
 			
-			if _can_apply_status_effect(target_unit.get_stats(), status_effect):
+			if status_effect.is_buff() or _can_apply_status_effect(target_unit.get_stats(), status_effect):
+				has_modified_stats = true
+				
 				status_effect.initialize(unit.get_stats())
 				
 				# TODO: Update status effect icons
 				status_effects.append(status_effect)
 				
-				print("Inflicted %s on enemy %s" % [status_effect.status_effect_type, name])
+				print("Applied %s to %s" % [status_effect.status_effect_type, name])
 				
 				status_effect_node2d.add(status_effect.status_effect_type, status_effect.effect_scene)
 			else:
 				print("%s resisted %s" % [name, status_effect.status_effect_type])
 	
-	if skill.cures_status_effects():
-		has_modified_stats = true
+	if skill.can_cure_status_effects():
+		var status_effects_to_remove := []
 		
-		for status_effect in skill.cured_status_effects:
+		for status_effect in status_effects:
+			if status_effect.status_effect_type in skill.cured_status_effects:
+				status_effects_to_remove.append(status_effect)
+		
+		for status_effect in status_effects_to_remove:
 			remove_status_effect(status_effects, status_effect)
+		
+		if not status_effects_to_remove.empty():
+			has_modified_stats = true
 	
 	if has_modified_stats:
 		target_unit.recalculate_stats()
@@ -159,6 +157,9 @@ func _can_inflict_status_effects(skill: Skill) -> bool:
 
 
 func _can_apply_status_effect(stats: StartingStats, status_effect: StatusEffect) -> bool:
+	assert(not status_effect.status_effect_type == Enums.StatusEffectType.BUFF)
+	assert(not status_effect.status_effect_type == Enums.StatusEffectType.REGENERATE)
+	
 	var vulnerability: float = stats.get_vulnerability(status_effect.status_effect_type)
 	
 	return random.randf() < vulnerability

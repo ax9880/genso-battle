@@ -70,7 +70,13 @@ enum StatusEffectType {
 	DEMORALIZE,
 	
 	# Heal HP over time
-	REGENERATE
+	REGENERATE,
+	
+	# Any stats buff
+	BUFF,
+	
+	# Any stats debuff
+	DEBUFF
 }
 
 # https://terrabattle.fandom.com/wiki/Skills

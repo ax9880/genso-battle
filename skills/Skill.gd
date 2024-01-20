@@ -31,20 +31,16 @@ export(float, 0, 1, 0.1) var absorb_rate: float = 0
 # Max HP healed. Also applies to absorbed HP
 export(int, 0, 9000, 100) var max_heal: int = 700
 
-# Status effects that this skill inflicts on the enemy
+# Status effects that this skill applies on allies or
+# inflicts on the enemy
 # Array<StatusEffect>
 export(Array, Resource) var status_effects: Array = []
 
+# Not applied to buffs.
 export(float, 0, 1, 0.1) var status_effect_infliction_rate: float = 0.3
 
 # Status effects that this skill removes or cures
 export(Array, Enums.StatusEffectType) var cured_status_effects: Array = []
-
-# Stats modifiers applied on allies or enemies
-# Array <StatsModifiers>
-export(Array, Resource) var stats_modifiers: Array = []
-
-export(float, 0, 1, 0.1) var stats_modifiers_infliction_rate: float = 1.0
 
 export(PackedScene) var effect_scene: PackedScene = null
 
@@ -73,12 +69,8 @@ func has_status_effects() -> bool:
 	return not status_effects.empty()
 
 
-func cures_status_effects() -> bool:
+func can_cure_status_effects() -> bool:
 	return not cured_status_effects.empty()
-
-
-func has_stats_modifiers() -> bool:
-	return not stats_modifiers.empty()
 
 
 func is_enemy_targeted() -> bool:

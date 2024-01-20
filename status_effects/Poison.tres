@@ -6,6 +6,6 @@
 [resource]
 resource_local_to_scene = true
 script = ExtResource( 1 )
-duration_turns = 3
 status_effect_type = 1
+duration_turns = 3
 effect_scene = ExtResource( 2 )

@@ -94,11 +94,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://save_data/JobReference.gd"
 }, {
-"base": "Resource",
-"class": "Modifier",
-"language": "GDScript",
-"path": "res://status_effects/Modifier.gd"
-}, {
 "base": "Node",
 "class": "Pincerer",
 "language": "GDScript",
@@ -134,12 +129,12 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://stats/StartingStats.gd"
 }, {
-"base": "Modifier",
+"base": "StatusEffect",
 "class": "StatsModifier",
 "language": "GDScript",
-"path": "res://stats_modifiers/StatsModifier.gd"
+"path": "res://status_effects/stats_modifiers/StatsModifier.gd"
 }, {
-"base": "Modifier",
+"base": "Resource",
 "class": "StatusEffect",
 "language": "GDScript",
 "path": "res://status_effects/StatusEffect.gd"
@@ -182,7 +177,6 @@ _global_script_class_icons={
 "Grid": "",
 "Job": "",
 "JobReference": "",
-"Modifier": "",
 "Pincerer": "",
 "Pusher": "",
 "SaveData": "",
