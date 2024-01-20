@@ -48,6 +48,10 @@ export(float, 0, 1, 0.1) var stats_modifiers_infliction_rate: float = 1.0
 
 export(PackedScene) var effect_scene: PackedScene = null
 
+# Delayed skills are charged in one turn and activated in the next turn.
+# Used only by enemies
+export(bool) var is_delayed: bool = false
+
 
 func is_physical() -> bool:
 	return primary_weapon_type != Enums.WeaponType.STAFF
@@ -83,3 +87,4 @@ func is_enemy_targeted() -> bool:
 
 func is_targeted_individually() -> bool:
 	return area_of_effect in Enums.AREAS_OF_EFFECT_WITH_INDIVIDUAL_TARGETING
+

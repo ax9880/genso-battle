@@ -113,8 +113,9 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 	return path
 
 
-# Returns Array<Cell>, filtered (meaning cells with null units or with targeted
-# units that are either allies or enemies depending on the skill type)
+# Returns Array<Cell>
+# By default cells are filtered (meaning without cells with null units or with
+# targeted units that are either allies or enemies depending on the skill type)
 static func find_area_of_effect_target_cells(var unit: Unit,
 		var start_position: Vector2,
 		var skill: Skill,
@@ -122,10 +123,13 @@ static func find_area_of_effect_target_cells(var unit: Unit,
 		var pincered_units: Array = [], # Array<Unit>
 		var chain: Array = [], # Array<Unit>, including the pincering unit that started the chain
 		var allies: Array = [], # Array<Unit>
-		var enemies: Array = [] # Array<Unit>
+		var enemies: Array = [], # Array<Unit>
+		var can_filter_cells: bool = true
 	) -> Array:
 	
 	var cell: Cell = grid.get_cell_from_position(start_position)
+	
+	var target_cells := []
 	
 	# For 2x2 units and skills that target areas, the final area is the union of all
 	# the targeted cells starting from each cell occupied by the 2x2 unit. If the
@@ -135,14 +139,15 @@ static func find_area_of_effect_target_cells(var unit: Unit,
 	if unit.is2x2() and not skill.is_targeted_individually():
 		var cells: Array = cell.get_cells_in_area()
 		
-		var targeted_cells := []
-		
 		for area_cell in cells:
-			targeted_cells.append_array(_find_area_of_effect(area_cell, skill, grid, pincered_units, chain, allies, enemies))
-		
-		return filter_cells(unit, skill, targeted_cells)
+			target_cells.append_array(_find_area_of_effect(area_cell, skill, grid, pincered_units, chain, allies, enemies))
 	else:
-		return filter_cells(unit, skill, _find_area_of_effect(cell, skill, grid, pincered_units, chain, allies, enemies))
+		target_cells = _find_area_of_effect(cell, skill, grid, pincered_units, chain, allies, enemies)
+	
+	if can_filter_cells:
+		return filter_cells(unit, skill, target_cells)
+	else:
+		return target_cells
 
 
 static func _find_area_of_effect(var cell: Cell, # Start cell from which skill is called
@@ -263,17 +268,17 @@ static func _find_area_of_effect(var cell: Cell, # Start cell from which skill i
 # Filter cells to leave only the ones with null units or with targeted units that are
 # either allies or enemies depending on the skill type
 # Note: If the unit is 2x2 it will be in more than one cell
-static func filter_cells(unit: Unit, skill: Skill, targeted_cells: Array) -> Array:
+static func filter_cells(unit: Unit, skill: Skill, target_cells: Array) -> Array:
 	# Array<Cell>
 	var filtered_cells := []
 	
 	if skill.is_enemy_targeted():
-		for cell in targeted_cells:
+		for cell in target_cells:
 			if cell.unit == null or cell.unit.is_enemy(unit.faction):
 				if filtered_cells.find(cell) == -1:
 					filtered_cells.push_back(cell)
 	else:
-		for cell in targeted_cells:
+		for cell in target_cells:
 			if cell.unit == null or cell.unit.is_ally(unit.faction):
 				if filtered_cells.find(cell) == -1:
 					filtered_cells.push_back(cell)

@@ -21,6 +21,7 @@ class SkillEvaluationResult extends Reference:
 	var damage_dealt: int = 0
 	var units_affected: int = 0
 	var units_killed: int = 0
+	var target_cells: Array = []
 
 
 class PossiblePincer extends Reference:
@@ -81,17 +82,27 @@ func evaluate_skill(unit: Unit,
 		
 		skill_evaluation_result.cell = cell
 		
-		var targeted_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, cell.position, skill, grid, [], [], allies, enemies)
+		# If skill is delayed then don't filter cells, otherwise cells
+		# occupied by allies (including this unit) would be ignored, but in the
+		# next turn a player unit could be in that cell
+		var can_filter_cells: bool = not skill.is_delayed
 		
-		for targeted_cell in targeted_cells:
+		var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, cell.position, skill, grid, [], [], allies, enemies, can_filter_cells)
+		skill_evaluation_result.target_cells = target_cells
+		
+		for targeted_cell in target_cells:
 			var targeted_unit: Unit = targeted_cell.unit
 			
 			if targeted_unit != null:
 				var estimated_damage: int = targeted_unit.calculate_damage(targeted_unit.get_stats(), unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
 				
-				if skill.is_attack():
+				# Check if units are enemies or allies in case cells are not filtered
+				if targeted_unit.is_enemy(unit.faction) and skill.is_attack():
 					if unit.get_stats().health - estimated_damage <= 0:
 						skill_evaluation_result.units_killed += 1
+				elif targeted_unit.is_ally(unit.faction) and skill.is_healing():
+					# If skill heals, damage is negative
+					estimated_damage = int(abs(estimated_damage))
 				
 				skill_evaluation_result.units_affected += 1
 				skill_evaluation_result.damage_dealt += estimated_damage

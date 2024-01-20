@@ -181,8 +181,10 @@ func _assign_enemies_to_cells() -> void:
 		enemy.connect("action_done", self, "_on_Enemy_action_done")
 		enemy.connect("started_moving", self, "_on_Unit_picked_up")
 		enemy.connect("use_skill", self, "_on_Enemy_use_skill")
+		enemy.connect("use_delayed_skill", self, "_on_Enemy_use_delayed_skill")
 		enemy.connect("released", self, "_on_Unit_released")
 		enemy.connect("selected_for_view", self, "_on_Unit_selected_for_view")
+		enemy.connect("dead", self, "_on_Enemy_dead")
 		
 		if enemy.is_controlled_by_player:
 			enemy.connect("picked_up", self, "_on_Unit_picked_up")
@@ -611,6 +613,8 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 		assert(!unit_to_swap.is2x2())
 		
 		unit_to_swap.move_to_new_cell(last_valid_cell.position)
+		
+		_activate_trap(last_valid_cell, unit_to_swap)
 
 
 # Move to cell?
@@ -798,16 +802,12 @@ func _clear_active_trail() -> void:
 		active_trail = null
 
 
-func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
+func _on_Enemy_use_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
 	
-	$ChainPreviewer.clear()
+	$DelayedSkillHighlighter.remove(unit, skill)
 	
-	_stop_possible_chained_units_animations()
-	
-	_clear_active_trail()
-	
-	unit.play_skill_activation_animation([skill], 1)
+	_play_skill_activation_animation(unit, skill)
 	
 	# Wait for it to finish
 	$PincerExecutor/BeforeSkillActivationPhaseFinishesTimer.start()
@@ -816,14 +816,15 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	
 	$PincerExecutor/BeforeSkillActivationPhaseFinishesTimer.stop()
 	
-	var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, unit.position, skill, grid, [], [], enemy_units_node.get_children(), player_units_node.get_children())
-	
 	var skill_effect: Node2D = skill.effect_scene.instance()
 	add_child(skill_effect)
 	
 	var start_cell: Cell = grid.get_cell_from_position(unit.position)
 	
 	assert(start_cell != null)
+	
+	if skill.is_delayed:
+		target_cells = BoardUtils.filter_cells(unit, skill, target_cells)
 	
 	skill_effect.start(unit, skill, target_cells, start_cell, $Pusher)
 	
@@ -836,6 +837,33 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill) -> void:
 	yield($PincerExecutor, "finished_checking_for_dead_units")
 	
 	_update_enemy()
+
+
+func _on_Enemy_use_delayed_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
+	print("Enemy %s is preparing to use skill %s" %[unit.name, skill.skill_name])
+	
+	$DelayedSkillHighlighter.highlight(unit, skill, target_cells)
+	
+	_play_skill_activation_animation(unit, skill)
+	
+	# Wait for it to finish
+	$PincerExecutor/BeforeSkillActivationPhaseFinishesTimer.start()
+	
+	yield($PincerExecutor/BeforeSkillActivationPhaseFinishesTimer, "timeout")
+	
+	$PincerExecutor/BeforeSkillActivationPhaseFinishesTimer.stop()
+	
+	_update_enemy()
+
+
+func _play_skill_activation_animation(unit: Unit, skill: Skill) -> void:
+	$ChainPreviewer.clear()
+	
+	_stop_possible_chained_units_animations()
+	
+	_clear_active_trail()
+	
+	unit.play_skill_activation_animation([skill], 2)
 
 
 func _on_Unit_released(unit: Unit) -> void:
@@ -914,6 +942,10 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 
 func _on_Unit_selected_for_view(unit: Unit) -> void:
 	emit_signal("unit_selected_for_view", unit)
+
+
+func _on_Enemy_dead(unit: Unit) -> void:
+	$DelayedSkillHighlighter.remove_all(unit)
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:

@@ -5,16 +5,21 @@ export var chance_to_move_to_enemy_during_move_behavior: float = 0.8
 
 var turn_counter_max_value: int
 
-signal action_done
-signal started_moving(unit)
-signal use_skill(unit, skill)
-
 var can_use_skill_after_moving := false
 var is_moving := false
 var selected_skill: Skill
+var selected_skill_target_cells: Array
+var has_active_delayed_skill: bool = false
 
 # Array of Vector2
 var path := []
+
+signal action_done
+signal started_moving(unit)
+signal use_skill(unit, skill, target_cells)
+
+# Unit, Skill, Array
+signal use_delayed_skill(unit, skill, target_cells)
 
 
 func _ready() -> void:
@@ -52,23 +57,37 @@ func _enable_player_control() -> void:
 
 
 func _find_next_move(grid: Grid, allies: Array, enemies: Array) -> void:
-	var next_behavior: int = $AIController.get_next_behavior()
-	
-	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
-	
-	match(next_behavior):
-		AIController.Behavior.USE_SKILL:
-			_find_skill_move(grid, navigation_graph, allies, enemies)
-		AIController.Behavior.MOVE:
-			_move_to_cell_or_enemy(grid, navigation_graph, enemies)
-		AIController.Behavior.PINCER:
-			_find_pincer(grid, navigation_graph, allies, enemies)
-		_:
-			_emit_action_done()
+	if has_active_delayed_skill:
+		_use_skill()
+		
+		has_active_delayed_skill = false
+	else:
+		var next_behavior: int = $AIController.get_next_behavior()
+		
+		var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, position, faction, get_stats().movement_range)
+		
+		match(next_behavior):
+			AIController.Behavior.USE_SKILL:
+				_find_skill_move(grid, navigation_graph, allies, enemies)
+			AIController.Behavior.MOVE:
+				_move_to_cell_or_enemy(grid, navigation_graph, enemies)
+			AIController.Behavior.PINCER:
+				_find_pincer(grid, navigation_graph, allies, enemies)
+			_:
+				_emit_action_done()
 
 
 func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
-	selected_skill = $Job.skills[random.randi_range(0, $Job.skills.size() - 1)]
+	var skill: Skill = _get_random_skill()
+	
+	# This shouldn't happen because enemy should use delayed skill
+	# before it tries to find other moves
+	while(skill.is_delayed and has_active_delayed_skill):
+		push_error("Trying to use another skill while there is an active delayed skill")
+		
+		skill = _get_random_skill()
+	
+	selected_skill = skill
 	
 	# Evaluate positions (requires having the whole graph)
 	var results: Array = $AIController.evaluate_skill(self, selected_skill, grid, navigation_graph, allies, enemies)
@@ -80,7 +99,9 @@ func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, e
 	if results.size() > 3 and random.randf() < 0.4:
 		top_result = results[random.randi_range(0, 3)]
 	
-	if top_result.damage_dealt == 9999:
+	selected_skill_target_cells = top_result.target_cells
+	
+	if top_result.damage_dealt == 0:
 		_find_cell_close_to_enemy(grid, navigation_graph, enemies)
 	else:
 		path = BoardUtils.find_path(grid, navigation_graph, position, top_result.cell)
@@ -91,14 +112,23 @@ func _find_skill_move(grid: Grid, navigation_graph: Dictionary, allies: Array, e
 			
 			_start_moving()
 		else:
-			_use_skill(selected_skill)
+			_use_skill()
 
 
-func _use_skill(skill: Skill) -> void:
-	if skill != null and can_act():
-		emit_signal("use_skill", self, skill)
+func _get_random_skill() -> Skill:
+	return $Job.skills[random.randi_range(0, $Job.skills.size() - 1)]
+
+
+# Before calling this method set selected_skill and selected_skill_target_cells
+func _use_skill() -> void:
+	if selected_skill != null and can_act():
+		if selected_skill.is_delayed and not has_active_delayed_skill:
+			has_active_delayed_skill = true
+			
+			emit_signal("use_delayed_skill", self, selected_skill, selected_skill_target_cells)
+		else:
+			emit_signal("use_skill", self, selected_skill, selected_skill_target_cells)
 	else:
-		print("skill is null")
 		_emit_action_done()
 
 
@@ -202,7 +232,7 @@ func _move() -> void:
 
 func _execute_after_move() -> void:
 	if can_use_skill_after_moving:
-		_use_skill(selected_skill)
+		_use_skill()
 	else:
 		_emit_action_done()
 
@@ -234,6 +264,9 @@ func _emit_action_done() -> void:
 	can_use_skill_after_moving = false
 	is_moving = false
 	selected_skill = null
+	selected_skill_target_cells.clear()
+	has_active_delayed_skill = false
+	
 	path.clear()
 
 

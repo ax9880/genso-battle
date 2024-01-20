@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://board/Cell.tscn" type="PackedScene" id=2]
@@ -31,6 +31,7 @@
 [ext_resource path="res://assets/sfx/bells.wav" type="AudioStream" id=29]
 [ext_resource path="res://assets/sfx/spell_1.wav" type="AudioStream" id=30]
 [ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=31]
+[ext_resource path="res://board/DelayedSkillHighlighter.tscn" type="PackedScene" id=32]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 324, 8 )
@@ -252,6 +253,10 @@ z_index = 1
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="DelayedSkillHighlighter" parent="Board" instance=ExtResource( 32 )]
+z_index = 2
+cell_highlight_color = Color( 0.780392, 0.968627, 0.94902, 0.752941 )
 
 [node name="Attacker" parent="Board" instance=ExtResource( 24 )]
 z_index = 1
