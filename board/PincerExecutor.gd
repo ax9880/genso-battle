@@ -254,6 +254,19 @@ func check_dead_units() -> void:
 	$DeathAnimationTimer.start()
 
 
+func update_dead_unit_on_swap(unit: Unit, cell_to_swap_to: Cell) -> void:
+	assert(not unit.is2x2())
+	
+	if not unit.is_death_animation_playing():
+		var _error = unit.connect("death_animation_finished", self, "_on_Unit_death_animation_finished")
+		
+		unit.call_deferred("play_death_animation")
+		
+		assert(cell_to_swap_to.unit == unit)
+		
+		cell_to_swap_to.unit = null
+
+
 func _check_next_dead_unit() -> void:
 	var unit: Unit = dead_units.pop_front()
 	

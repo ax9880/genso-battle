@@ -491,7 +491,11 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 		if active_unit.is2x2():
 			_update_2x2_unit_cells(active_unit, selected_cell)
 		else:
+			var unit_to_swap: Unit = selected_cell.unit
+			
 			_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
+			
+			_activate_trap(selected_cell, active_unit)
 			
 			_highlight_possible_chains(active_unit)
 			
@@ -499,7 +503,8 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 			
 			var _is_present: bool = active_unit_entered_cells.erase(cell)
 			
-			_activate_trap(selected_cell, active_unit)
+			if unit_to_swap != null and unit_to_swap.is_dead():
+				$PincerExecutor.update_dead_unit_on_swap(unit_to_swap, active_unit_last_valid_cell)
 		
 		_update_trail(selected_cell)
 
