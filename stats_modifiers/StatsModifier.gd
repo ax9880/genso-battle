@@ -52,15 +52,3 @@ func modify_stats(base_stats: StartingStats, modified_stats: StartingStats) -> v
 
 func is_buff() -> bool:
 	return modified_stat_percentage > 0 or modified_status_effect_vulnerability < 0
-
-
-# TODO: Move to class shared with StatusEffect?
-var _turn_count: int = duration_turns
-
-
-func update() -> void:
-	_turn_count -= 1
-
-
-func is_done() -> bool:
-	return _turn_count <= 0
