@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://assets/fonts/Exo2-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://assets/vfx/spotlight_4.png" type="Texture" id=3]
 [ext_resource path="res://ui/VictoryScreen.gd" type="Script" id=4]
+[ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CanvasItemMaterial" id=2]
 blend_mode = 1
@@ -65,29 +66,26 @@ align = 1
 valign = 1
 
 [node name="DragTimeLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-margin_top = 404.0
+margin_top = 408.0
 margin_right = 620.0
-margin_bottom = 433.0
+margin_bottom = 437.0
 size_flags_vertical = 5
 text = "Total drag time: 32.4 s"
 align = 1
 
 [node name="TurnCountLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-margin_top = 437.0
+margin_top = 445.0
 margin_right = 620.0
-margin_bottom = 779.0
+margin_bottom = 775.0
 size_flags_vertical = 3
 text = "Turns: 4"
 align = 1
 
-[node name="ContinueButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ContinueButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 5 )]
 margin_left = 190.0
 margin_top = 783.0
 margin_right = 430.0
 margin_bottom = 860.0
-rect_min_size = Vector2( 240, 0 )
-size_flags_horizontal = 4
 text = "CONTINUE"
 
 [connection signal="visibility_changed" from="." to="." method="_on_VictoryScreen_visibility_changed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ContinueButton" to="." method="_on_ContinueButton_pressed"]

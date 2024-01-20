@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/cutscenes/DialogueMessageContainer.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://save_data/chapter_data/ToOldHell.tres" type="Resource" id=4]
 [ext_resource path="res://ui/AutoFadingAudioStreamPlayer.tscn" type="PackedScene" id=5]
 [ext_resource path="res://assets/music/Unlocated_Hell.mp3" type="AudioStream" id=6]
+[ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=7]
 
 [sub_resource type="StyleBoxEmpty" id=2]
 
@@ -88,13 +89,12 @@ anchor_right = 0.0
 margin_right = 620.0
 margin_bottom = 170.0
 
-[node name="SkipButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="SkipButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 7 )]
 margin_left = 380.0
 margin_top = 783.0
 margin_right = 620.0
 margin_bottom = 860.0
 grow_horizontal = 0
-rect_min_size = Vector2( 240, 0 )
 size_flags_horizontal = 8
 text = "SKIP"
 

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ui/main_menu/SettingsMenu.gd" type="Script" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
 [ext_resource path="res://ui/LanguageOptionButton.gd" type="Script" id=3]
 [ext_resource path="res://ui/main_menu/VolumeSlider.tscn" type="PackedScene" id=4]
+[ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=5]
 
 [node name="SettingsMenu" type="Control"]
 anchor_right = 1.0
@@ -113,12 +114,11 @@ margin_right = 620.0
 margin_bottom = -1.0
 text = "CLICK_ONCE"
 
-[node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ReturnButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 5 )]
 margin_left = 190.0
 margin_top = 783.0
 margin_right = 430.0
 margin_bottom = 860.0
-rect_min_size = Vector2( 240, 0 )
 size_flags_horizontal = 4
 text = "RETURN"
 

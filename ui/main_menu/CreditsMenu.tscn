@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/main_menu/CreditsMenu.gd" type="Script" id=2]
+[ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=3]
 
 [node name="CreditsMenu" type="Control"]
 anchor_right = 1.0
@@ -54,12 +55,11 @@ Mistwalker team (unofficially, of course)
 align = 1
 autowrap = true
 
-[node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ReturnButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 3 )]
 margin_left = 190.0
 margin_top = 783.0
 margin_right = 430.0
 margin_bottom = 860.0
-rect_min_size = Vector2( 240, 0 )
 size_flags_horizontal = 4
 text = "RETURN"
 

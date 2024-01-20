@@ -172,6 +172,8 @@ func _on_Board_unit_selected_for_view(unit: Unit) -> void:
 			Tween.TRANS_SINE)
 		
 		view_unit_menu_tween.start()
+		
+		$ViewUnitMenuCanvasLayer/SelectUnitAudio.play()
 
 
 func _on_ViewUnitMenu_go_back(view_unit_menu: Control) -> void:

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/pre_battle_menu/UnitItemContainer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui/pre_battle_menu/SquadMenu.gd" type="Script" id=3]
 [ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=4]
+[ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=5]
 
 [node name="SquadMenu" type="Control"]
 anchor_right = 1.0
@@ -89,22 +90,18 @@ size_flags_horizontal = 3
 anchor_right = 0.0
 margin_right = 588.0
 
-[node name="AddUnitButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="AddUnitButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 5 )]
 margin_left = 190.0
 margin_top = 690.0
 margin_right = 430.0
 margin_bottom = 767.0
-rect_min_size = Vector2( 240, 0 )
-size_flags_horizontal = 4
 text = "ADD_UNIT"
 
-[node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ReturnButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 5 )]
 margin_left = 190.0
 margin_top = 783.0
 margin_right = 430.0
 margin_bottom = 860.0
-rect_min_size = Vector2( 240, 0 )
-size_flags_horizontal = 4
 text = "RETURN"
 
 [node name="PlaceSound" type="AudioStreamPlayer" parent="."]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://board/Cell.tscn" type="PackedScene" id=2]
@@ -32,6 +32,8 @@
 [ext_resource path="res://assets/sfx/spell_1.wav" type="AudioStream" id=30]
 [ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=31]
 [ext_resource path="res://board/DelayedSkillHighlighter.tscn" type="PackedScene" id=32]
+[ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=33]
+[ext_resource path="res://assets/sfx/chess_place_2.wav" type="AudioStream" id=34]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 324, 8 )
@@ -452,10 +454,11 @@ text = "1"
 margin_left = 490.0
 margin_right = 564.0
 
-[node name="GiveUpButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer"]
+[node name="GiveUpButton" parent="CanvasLayer/MarginContainer/HBoxContainer" instance=ExtResource( 33 )]
 margin_left = 580.0
 margin_right = 680.0
 margin_bottom = 80.0
+rect_min_size = Vector2( 100, 0 )
 text = "GIVE_UP"
 
 [node name="EnemyPhaseCenterContainer" type="CenterContainer" parent="CanvasLayer"]
@@ -512,6 +515,9 @@ __meta__ = {
 [node name="ViewUnitMenuCanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Tween" type="Tween" parent="ViewUnitMenuCanvasLayer"]
+
+[node name="SelectUnitAudio" type="AudioStreamPlayer" parent="ViewUnitMenuCanvasLayer"]
+stream = ExtResource( 34 )
 
 [node name="BattleTheme" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 21 )
