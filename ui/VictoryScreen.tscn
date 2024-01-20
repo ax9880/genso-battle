@@ -89,3 +89,4 @@ margin_bottom = 860.0
 text = "CONTINUE"
 
 [connection signal="visibility_changed" from="." to="." method="_on_VictoryScreen_visibility_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ContinueButton" to="." method="_on_ContinueButton_pressed"]

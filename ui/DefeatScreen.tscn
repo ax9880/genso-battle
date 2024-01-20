@@ -61,3 +61,4 @@ margin_bottom = 860.0
 text = "QUIT"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/TryAgainButton" to="." method="_on_TryAgainButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
