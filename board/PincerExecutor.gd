@@ -262,17 +262,22 @@ func _check_next_dead_unit() -> void:
 		
 		unit.play_death_animation()
 		
-		# If 2x2, check neighbor cells
 		var cell: Cell = grid.get_cell_from_position(unit.position)
 		
 		if cell.unit != null:
 			assert(cell.unit == unit)
 		else:
 			printerr("Unit %s died but cell unit is null" % unit.name)
+			
+			_clean_up_all_cells(unit)
 		
+		# If 2x2, check neighbor cells
 		if unit.is2x2():
 			for area_cell in cell.get_cells_in_area():
-				assert(area_cell.unit == unit)
+				if area_cell.unit != unit:
+					printerr("2x2 unit not in area cells")
+					
+					_clean_up_all_cells(unit)
 				
 				area_cell.unit = null
 		else:
@@ -356,6 +361,15 @@ func _play_status_effect_sound(status_effect_type: int) -> void:
 		$PoisonAudio.play()
 	elif status_effect_type == Enums.StatusEffectType.REGENERATE:
 		$RegenerateAudio.play()
+
+
+# Sets all cells with the given unit to null
+# Used only in error cases when a unit dies but there is a mismatch with
+# its current cell
+func _clean_up_all_cells(unit: Unit) -> void:
+	for cell in grid.get_all_cells():
+		if cell.unit == unit:
+			cell.unit = null
 
 
 func _on_SkillEffect_effect_finished(skill_queue: Array, finish_signal: String) -> void:
