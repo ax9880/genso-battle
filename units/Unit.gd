@@ -72,6 +72,7 @@ var has_entered_cell: bool = false
 signal picked_up(unit)
 signal released(unit)
 signal snapped_to_grid(unit)
+signal dead(unit)
 signal death_animation_finished(unit)
 signal selected_for_view(unit)
 
@@ -128,6 +129,8 @@ func play_death_animation() -> void:
 	disable_selection_area()
 	disable_swap_area()
 	Utils.disable_object($CollisionShape2D)
+	
+	emit_signal("dead", self)
 
 
 func is_death_animation_playing() -> bool:
