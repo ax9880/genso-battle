@@ -52,7 +52,7 @@ func apply_skill(unit: Unit,
 				# TODO: Update status effect icons
 				status_effects.append(status_effect)
 				
-				print("Applied %s to %s" % [status_effect.status_effect_type, name])
+				print("Applied %s to %s" % [status_effect.status_effect_type, unit.name])
 				
 				status_effect_node2d.add(status_effect.status_effect_type, status_effect.effect_scene)
 			else:
