@@ -480,6 +480,10 @@ func add_child_at_offset(node: Node2D) -> void:
 	node.position = sprite.position
 
 
+func update_status_effects_icons() -> void:
+	$Control/StatusEffectsIcons.update_icon(status_effects)
+
+
 func _remove_all_status_effects_of_type(var status_effect_type: int) -> void:
 	if has_status_effect_of_type(status_effect_type):
 		var status_effects_to_remove: Array = status_effects.duplicate()

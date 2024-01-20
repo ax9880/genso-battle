@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
@@ -25,7 +25,8 @@
 [ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=23]
 [ext_resource path="res://assets/sfx/casino/place10.wav" type="AudioStream" id=24]
 [ext_resource path="res://units/SkillApplier.gd" type="Script" id=25]
-[ext_resource path="res://assets/ui/staff.png" type="Texture" id=26]
+[ext_resource path="res://assets/ui/letter_z.png" type="Texture" id=26]
+[ext_resource path="res://units/StatusEffectsIcons.gd" type="Script" id=27]
 
 [sub_resource type="Animation" id=7]
 length = 0.001
@@ -500,10 +501,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -32.0
 margin_top = -32.0
+mouse_filter = 2
+script = ExtResource( 27 )
 
 [node name="Icon" type="TextureRect" parent="Control/StatusEffectsIcons"]
-visible = false
-modulate = Color( 0, 0, 0, 0 )
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -512,9 +513,10 @@ margin_left = -16.0
 margin_top = -16.0
 margin_right = 16.0
 margin_bottom = 15.9999
+mouse_filter = 2
 texture = ExtResource( 26 )
 expand = true
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Control/StatusEffectsIcons"]
 anims/RESET = SubResource( 14 )

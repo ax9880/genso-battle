@@ -996,3 +996,12 @@ func _on_Board_tree_exiting() -> void:
 	# Free unused enemy phases
 	for enemy_phase in enemy_phases_queue:
 		enemy_phase.free()
+
+
+func _on_StatusEffectIconAnimationTimer_timeout() -> void:
+	for unit in player_units_node.get_children():
+		unit.update_status_effects_icons()
+	
+	for unit in enemy_units_node.get_children():
+		unit.update_status_effects_icons()
+	

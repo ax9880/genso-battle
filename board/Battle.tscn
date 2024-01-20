@@ -127,6 +127,9 @@ one_shot = true
 [node name="PlayerSkipTurnTimer" type="Timer" parent="Board"]
 one_shot = true
 
+[node name="StatusEffectIconAnimationTimer" type="Timer" parent="Board"]
+autostart = true
+
 [node name="UpperBounds" type="StaticBody2D" parent="Board"]
 position = Vector2( 301, -8 )
 collision_mask = 0
@@ -535,6 +538,7 @@ bus = "Music"
 [connection signal="unit_selected_for_view" from="Board" to="." method="_on_Board_unit_selected_for_view"]
 [connection signal="victory" from="Board" to="." method="_on_Board_victory"]
 [connection signal="timeout" from="Board/DragTimer" to="Board" method="_on_DragTimer_timeout"]
+[connection signal="timeout" from="Board/StatusEffectIconAnimationTimer" to="Board" method="_on_StatusEffectIconAnimationTimer_timeout"]
 [connection signal="tree_exiting" from="Board/PincerExecutor" to="Board/PincerExecutor" method="_on_PincerExecutor_tree_exiting"]
 [connection signal="timeout" from="Board/PincerExecutor/SkillActivationTimer" to="Board/PincerExecutor" method="_on_SkillActivationTimer_timeout"]
 [connection signal="timeout" from="Board/PincerExecutor/DeathAnimationTimer" to="Board/PincerExecutor" method="_on_DeathAnimationTimer_timeout"]
