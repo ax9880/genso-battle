@@ -281,19 +281,21 @@ func _find_chain(cell: Cell, direction: int, chain_families: Dictionary, faction
 		var chained_unit: Unit = neighbor.unit
 		
 		if chained_unit != null:
-			if chained_unit.is_ally(faction) and chained_unit.can_act():
-				var chains: Array = chain_families[cell.unit]
-				
-				if chains.size() < chain_level + 1:
-					chains.push_back([])
-				
-				var chain: Array = chains[chain_level]
-				
-				if not _is_in_any_chain(chained_unit, chain_families):
-					chain_level += 1
+			if chained_unit.is_ally(faction):
+				if chained_unit.can_act():
+					var chains: Array = chain_families[cell.unit]
 					
-					chain.push_back(chained_unit)
+					if chains.size() < chain_level + 1:
+						chains.push_back([])
+					
+					var chain: Array = chains[chain_level]
+					
+					if not _is_in_any_chain(chained_unit, chain_families):
+						chain_level += 1
+						
+						chain.push_back(chained_unit)
 			else:
+				# Found an enemy unit, stop searching
 				break
 		
 		neighbor = neighbor.get_neighbor(direction)

@@ -20,9 +20,11 @@ func update_preview(unit: Unit, cell: Cell) -> void:
 		
 		while neighbor != null:
 			if neighbor.unit != null:
-				if neighbor.unit.is_ally(unit.faction) and neighbor.unit.can_act():
-					last_cell_with_ally = neighbor
+				if neighbor.unit.is_ally(unit.faction):
+					if neighbor.unit.can_act():
+						last_cell_with_ally = neighbor
 				else:
+					# Found an enemy unit, stop searching
 					break
 			
 			neighbor = neighbor.get_neighbor(direction)
