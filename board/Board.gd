@@ -823,8 +823,7 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	
 	assert(start_cell != null)
 	
-	if skill.is_delayed:
-		target_cells = BoardUtils.filter_cells(unit, skill, target_cells)
+	target_cells = BoardUtils.filter_cells(unit, skill, target_cells)
 	
 	skill_effect.start(unit, skill, target_cells, start_cell, $Pusher)
 	
