@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://units/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
@@ -25,6 +25,7 @@
 [ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=23]
 [ext_resource path="res://assets/sfx/casino/place10.wav" type="AudioStream" id=24]
 [ext_resource path="res://units/SkillApplier.gd" type="Script" id=25]
+[ext_resource path="res://assets/ui/staff.png" type="Texture" id=26]
 
 [sub_resource type="Animation" id=7]
 length = 0.001
@@ -251,6 +252,60 @@ extents = Vector2( 32, 32 )
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 49, 49 )
 
+[sub_resource type="Animation" id=14]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("ModifierIcon:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=15]
+resource_name = "show icon and fade"
+tracks/0/type = "value"
+tracks/0/path = NodePath("ModifierIcon:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.5, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 0, 0, 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ModifierIcon:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ModifierIcon:rect_position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ), Vector2( 0, -40 ) ]
+}
+
 [sub_resource type="DynamicFont" id=8]
 font_data = ExtResource( 15 )
 
@@ -438,6 +493,33 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Modifiers" type="Control" parent="Control"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -32.0
+margin_top = -32.0
+
+[node name="ModifierIcon" type="TextureRect" parent="Control/Modifiers"]
+visible = false
+modulate = Color( 0, 0, 0, 0 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -16.0
+margin_top = -16.0
+margin_right = 16.0
+margin_bottom = 15.9999
+texture = ExtResource( 26 )
+expand = true
+stretch_mode = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Control/Modifiers"]
+anims/RESET = SubResource( 14 )
+"anims/show icon and fade" = SubResource( 15 )
+
 [node name="CanvasLayer" type="Node2D" parent="."]
 z_index = 10
 
@@ -466,6 +548,10 @@ text = "HANIWA_WARRIOR"
 align = 1
 valign = 1
 autowrap = true
+
+[node name="LongPressTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
 
 [node name="Sound" type="Node" parent="."]
 
@@ -496,10 +582,6 @@ bus = "Sound effects"
 [node name="SkillActivationAudio" type="AudioStreamPlayer" parent="Sound"]
 stream = ExtResource( 24 )
 bus = "Sound effects"
-
-[node name="LongPressTimer" type="Timer" parent="."]
-wait_time = 0.5
-one_shot = true
 
 [connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
 [connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]
