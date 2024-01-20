@@ -1,9 +1,11 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/cutscenes/DialogueMessageContainer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui/cutscenes/DialogueCutscene.gd" type="Script" id=3]
 [ext_resource path="res://save_data/chapter_data/ToOldHell.tres" type="Resource" id=4]
+[ext_resource path="res://ui/AutoFadingAudioStreamPlayer.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/music/Unlocated_Hell.mp3" type="AudioStream" id=6]
 
 [sub_resource type="StyleBoxEmpty" id=2]
 
@@ -101,6 +103,9 @@ text = "SKIP"
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
+
+[node name="AudioStreamPlayer" parent="." instance=ExtResource( 5 )]
+stream = ExtResource( 6 )
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_SkipButton_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
