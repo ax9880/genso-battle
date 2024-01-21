@@ -493,7 +493,8 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 			
 			_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
 			
-			_activate_trap(selected_cell, active_unit)
+			if selected_cell != active_unit_last_valid_cell:
+				_activate_trap(selected_cell, active_unit)
 			
 			_highlight_possible_chains(active_unit)
 			
@@ -623,6 +624,8 @@ func _swap_units(unit: Unit, unit_to_swap: Unit, next_active_cell: Cell, last_va
 # Move to cell?
 func _activate_trap(cell: Cell, unit: Unit) -> void:
 	if cell.trap != null:
+		print("Trap activated! %s" % unit.name)
+		
 		cell.trap.activate(unit)
 		
 		if unit.is_dead():
@@ -925,6 +928,9 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	$ChainPreviewer.clear()
 	
 	if current_turn == Turn.PLAYER:
+		if unit.is_dead():
+			_stop_possible_chained_units_animations()
+		
 		$PincerExecutor.check_dead_units()
 		
 		yield($PincerExecutor, "finished_checking_for_dead_units")
