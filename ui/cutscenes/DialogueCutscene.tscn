@@ -71,14 +71,14 @@ custom_constants/separation = 48
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 margin_right = 620.0
-margin_bottom = 735.0
+margin_bottom = 739.0
 size_flags_vertical = 3
 theme = SubResource( 1 )
 scroll_horizontal_enabled = false
 
 [node name="MessagesVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
 margin_right = 620.0
-margin_bottom = 735.0
+margin_bottom = 739.0
 rect_clip_content = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -91,7 +91,7 @@ margin_bottom = 170.0
 
 [node name="SkipButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 7 )]
 margin_left = 380.0
-margin_top = 783.0
+margin_top = 787.0
 margin_right = 620.0
 margin_bottom = 860.0
 grow_horizontal = 0

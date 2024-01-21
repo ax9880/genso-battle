@@ -25,6 +25,8 @@ var accumulated_time_seconds: float = 0
 # Array<Array>
 var pages: Array
 
+var is_dialogue_skipped: bool = false
+
 
 func _ready() -> void:
 	_free_container_children()
@@ -32,6 +34,8 @@ func _ready() -> void:
 	_read_pages()
 	
 	if not pages.empty():
+		_set_parameters_from_chapter_data()
+		
 		_show_next_paragraph()
 
 
@@ -115,13 +119,18 @@ func _slowly_make_text_visible(delta: float, label: Label) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_released("ui_select"):
-		_on_press_ui_select()
-	elif event.is_action_released("ui_cancel"):
-		_skip_dialogue()
-	elif event is InputEventScreenTouch:
-		if event.pressed:
+	call_deferred("_evaluate_input", event)
+
+
+func _evaluate_input(event: InputEvent) -> void:
+	if not is_dialogue_skipped:
+		if event.is_action_released("ui_select"):
 			_on_press_ui_select()
+		elif event.is_action_released("ui_cancel"):
+			_skip_dialogue()
+		elif event is InputEventScreenTouch:
+			if event.pressed:
+				_on_press_ui_select()
 
 
 func _on_press_ui_select() -> void:
@@ -165,10 +174,23 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	if Loader.change_scene(dialogue_scene_path, chapter_data) != OK:
-		printerr("Failed to change scene")
+	if not is_dialogue_skipped:
+		is_dialogue_skipped = true
+		
+		if Loader.change_scene(dialogue_scene_path, chapter_data) != OK:
+			printerr("Failed to change scene")
+		
+		set_process(false)
+
+
+func _set_parameters_from_chapter_data() -> void:
+	if chapter_data.dialogue_background != null:
+		$Background.texture = chapter_data.dialogue_background
 	
-	set_process(false)
+	if chapter_data.dialogue_audio_stream != null:
+		$AudioStreamPlayer.stream = chapter_data.dialogue_audio_stream
+		
+		$AudioStreamPlayer.play()
 
 
 func _on_SkipButton_pressed() -> void:
