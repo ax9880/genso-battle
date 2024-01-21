@@ -9,8 +9,6 @@ enum Turn {
 # Set to true to use debug units instead of the player's squad
 export(bool) var can_use_debug_units: bool = false
 
-export(PackedScene) var trail_2d_packed_scene: PackedScene
-
 onready var grid := $Grid
 onready var grid_width: int = grid.width
 onready var grid_height: int = grid.height
@@ -751,9 +749,8 @@ func _on_Unit_picked_up(unit: Unit) -> void:
 	
 	assert(active_trail == null)
 	
-	active_trail = trail_2d_packed_scene.instance()
-	
-	$Trails.add_child(active_trail)
+	if not unit.is2x2():
+		active_trail = $Trails.build_trail(current_turn == Turn.PLAYER)
 	
 	_update_trail(grid.get_cell_from_position(unit.position))
 	

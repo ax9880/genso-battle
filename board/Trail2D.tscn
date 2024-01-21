@@ -25,6 +25,7 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
+points_to_remove_when_adding_a_point = 4
 
 [node name="RemovalStartTimer" type="Timer" parent="."]
 wait_time = 0.75

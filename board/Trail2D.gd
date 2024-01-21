@@ -19,7 +19,7 @@ func _physics_process(_delta: float) -> void:
 	if line_2d.get_point_count() > max_point_count or (line_2d.get_point_count() > 0 and can_remove_faster):
 		line_2d.remove_point(0)
 		
-		free_when_no_points_left()
+		_free_when_no_points_left()
 
 
 func add(point: Vector2) -> void:
@@ -53,10 +53,14 @@ func clear() -> void:
 func queue_clear() -> void:
 	can_free_when_no_points_left = true
 	
-	free_when_no_points_left()
+	_free_when_no_points_left()
 
 
-func free_when_no_points_left() -> void:
+func set_gradient(gradient: Gradient) -> void:
+	$AntialiasedLine2D.gradient = gradient
+
+
+func _free_when_no_points_left() -> void:
 	if line_2d.get_point_count() == 0 and can_free_when_no_points_left:
 		queue_free()
 
