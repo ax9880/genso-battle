@@ -61,3 +61,8 @@ func is_done() -> bool:
 func is_buff() -> bool:
 	return status_effect_type == Enums.StatusEffectType.BUFF or status_effect_type == Enums.StatusEffectType.REGENERATE
 
+
+func get_description() -> String:
+	var turns_left_description: String = tr("TURNS_LEFT") % turn_count
+	
+	return "%s, %s" % [tr(Enums.status_effect_type_to_string(status_effect_type)), turns_left_description]

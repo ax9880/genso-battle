@@ -65,3 +65,10 @@ func initialize(skill: Skill, can_show_full_data: bool = false, is_locked: bool 
 	
 	if is_locked:
 		$Label.add_color_override("font_color", locked_color)
+
+
+func initialize_from_status_effect(status_effect: StatusEffect) -> void:
+	if status_effect.icon != null:
+		$TextureRect.texture = status_effect.icon
+	
+	$Label.text = status_effect.get_description()

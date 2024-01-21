@@ -15,10 +15,11 @@ onready var unit_icon := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContai
 
 onready var unit_stats_container := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/UnitStatsContainer
 
-onready var skills_vbox_container := $MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer
+onready var tab_container := $MarginContainer/VBoxContainer/TabContainer
 
-# TODO:
-# onready var status_effects_vbox_container := $...
+onready var skills_vbox_container := $MarginContainer/VBoxContainer/TabContainer/SkillsTab/MarginContainer/ScrollContainer/SkillsVBoxContainer
+
+onready var status_effects_vbox_container := $MarginContainer/VBoxContainer/TabContainer/StatusEffectsTab/MarginContainer/ScrollContainer/StatusEffectsVBoxContainer
 
 
 # Called from squad menu
@@ -32,6 +33,15 @@ func initialize_from_data(job: Job, current_stats: StartingStats, level: int, sk
 	
 	for child in skills_vbox_container.get_children():
 		child.queue_free()
+	
+	for child in status_effects_vbox_container.get_children():
+		child.queue_free()
+	
+	if not is_in_battle:
+		tab_container.tabs_visible = false
+	else:
+		tab_container.set_tab_title(0, tr("SKILLS_TAB"))
+		tab_container.set_tab_title(1, tr("STATUS_EFFECTS_TAB"))
 	
 	full_name_label.text = job.job_name
 	full_portrait_texture_rect.texture = job.full_portrait
@@ -56,7 +66,13 @@ func initialize_from_data(job: Job, current_stats: StartingStats, level: int, sk
 		
 		skills_vbox_container.add_child(skill_label_container)
 	
-	# TODO: If in battle, show status effects?
+	if is_in_battle:
+		for status_effect in status_effects:
+			var status_effect_label_container: HBoxContainer = skill_label_container_packed_scene.instance()
+			
+			status_effect_label_container.initialize_from_status_effect(status_effect)
+			
+			status_effects_vbox_container.add_child(status_effect_label_container)
 
 
 func on_add_to_tree(data: Object) -> void:
@@ -71,3 +87,7 @@ func _set_focus() -> void:
 
 func _on_ReturnButton_pressed() -> void:
 	go_back()
+
+
+func _on_TabContainer_tab_changed(_tab: int) -> void:
+	$MarginContainer/VBoxContainer/TabContainer/SelectTabAudio.play()

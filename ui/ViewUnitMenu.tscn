@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/player/yachie_full.png" type="Texture" id=1]
 [ext_resource path="res://theme.tres" type="Theme" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://ui/pre_battle_menu/UnitStatsContainer.tscn" type="PackedScene" id=6]
 [ext_resource path="res://ui/ViewUnitMenu.gd" type="Script" id=7]
 [ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=8]
+[ext_resource path="res://assets/sfx/chess_place_2.wav" type="AudioStream" id=9]
 
 [node name="ViewUnitMenu" type="Control"]
 anchor_right = 1.0
@@ -102,72 +103,125 @@ margin_top = 175.0
 margin_right = 312.0
 margin_bottom = 233.0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer"]
 margin_top = 361.0
 margin_right = 620.0
-margin_bottom = 767.0
+margin_bottom = 771.0
+size_flags_vertical = 3
+
+[node name="SkillsTab" type="Tabs" parent="MarginContainer/VBoxContainer/TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 47.0
+margin_right = -2.0
+margin_bottom = -2.0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer/SkillsTab"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/SkillsTab/MarginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 600.0
+margin_bottom = 345.0
+size_flags_horizontal = 3
+scroll_horizontal_enabled = false
+
+[node name="SkillsVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/SkillsTab/MarginContainer/ScrollContainer"]
+margin_right = 584.0
+margin_bottom = 192.0
+size_flags_horizontal = 3
+
+[node name="SkillLabelContainer" parent="MarginContainer/VBoxContainer/TabContainer/SkillsTab/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
+margin_right = 584.0
+
+[node name="SkillLabelContainer2" parent="MarginContainer/VBoxContainer/TabContainer/SkillsTab/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
+margin_top = 40.0
+margin_right = 584.0
+margin_bottom = 72.0
+
+[node name="SkillLabelContainer3" parent="MarginContainer/VBoxContainer/TabContainer/SkillsTab/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
+margin_top = 80.0
+margin_right = 584.0
+margin_bottom = 112.0
+
+[node name="SkillLabelContainer4" parent="MarginContainer/VBoxContainer/TabContainer/SkillsTab/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
+margin_top = 120.0
+margin_right = 584.0
+margin_bottom = 152.0
+
+[node name="SkillLabelContainer5" parent="MarginContainer/VBoxContainer/TabContainer/SkillsTab/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
+margin_top = 160.0
+margin_right = 584.0
+margin_bottom = 192.0
+
+[node name="StatusEffectsTab" type="Tabs" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 45.0
+margin_right = -2.0
+margin_bottom = -2.0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer/StatusEffectsTab"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/StatusEffectsTab/MarginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 600.0
+margin_bottom = 347.0
+size_flags_horizontal = 3
+scroll_horizontal_enabled = false
+
+[node name="StatusEffectsVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/StatusEffectsTab/MarginContainer/ScrollContainer"]
+margin_right = 584.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+
+[node name="SkillLabelContainer" parent="MarginContainer/VBoxContainer/TabContainer/StatusEffectsTab/MarginContainer/ScrollContainer/StatusEffectsVBoxContainer" instance=ExtResource( 4 )]
+margin_right = 584.0
+
+[node name="SelectTabAudio" type="AudioStreamPlayer" parent="MarginContainer/VBoxContainer/TabContainer"]
+stream = ExtResource( 9 )
+bus = "Sound effects"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
+margin_top = 471.0
+margin_right = 620.0
+margin_bottom = 771.0
 rect_pivot_offset = Vector2( -626, -207 )
 size_flags_vertical = 3
 
 [node name="NinePatchRect" type="NinePatchRect" parent="MarginContainer/VBoxContainer/MarginContainer"]
 show_behind_parent = true
 margin_right = 620.0
-margin_bottom = 406.0
+margin_bottom = 300.0
 texture = ExtResource( 5 )
 patch_margin_left = 26
 patch_margin_top = 28
 patch_margin_right = 31
 patch_margin_bottom = 28
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 620.0
-margin_bottom = 406.0
-custom_constants/margin_right = 16
-custom_constants/margin_top = 16
-custom_constants/margin_left = 16
-custom_constants/margin_bottom = 16
-
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 604.0
-margin_bottom = 390.0
-size_flags_horizontal = 3
-scroll_horizontal_enabled = false
-
-[node name="SkillsVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer"]
-margin_right = 588.0
-margin_bottom = 192.0
-size_flags_horizontal = 3
-
-[node name="SkillLabelContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
-margin_right = 588.0
-
-[node name="SkillLabelContainer2" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
-margin_top = 40.0
-margin_right = 588.0
-margin_bottom = 72.0
-
-[node name="SkillLabelContainer3" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
-margin_top = 80.0
-margin_right = 588.0
-margin_bottom = 112.0
-
-[node name="SkillLabelContainer4" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
-margin_top = 120.0
-margin_right = 588.0
-margin_bottom = 152.0
-
-[node name="SkillLabelContainer5" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/ScrollContainer/SkillsVBoxContainer" instance=ExtResource( 4 )]
-margin_top = 160.0
-margin_right = 588.0
-margin_bottom = 192.0
-
 [node name="ReturnButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 8 )]
 margin_left = 190.0
-margin_top = 783.0
+margin_top = 787.0
 margin_right = 430.0
 margin_bottom = 860.0
 text = "RETURN"
 
+[connection signal="tab_changed" from="MarginContainer/VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton" to="." method="_on_ReturnButton_pressed"]
