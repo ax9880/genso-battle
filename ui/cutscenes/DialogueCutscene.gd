@@ -116,9 +116,8 @@ func _evaluate_input(event: InputEvent) -> void:
 			_on_press_ui_select()
 		elif event.is_action_released("ui_cancel"):
 			_skip_dialogue()
-		elif event is InputEventScreenTouch:
-			if event.pressed:
-				_on_press_ui_select()
+		elif event is InputEventScreenTouch and event.pressed:
+			_on_press_ui_select()
 
 
 func _on_press_ui_select() -> void:
