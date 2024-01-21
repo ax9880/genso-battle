@@ -271,7 +271,10 @@ func _check_next_dead_unit() -> void:
 	var unit: Unit = dead_units.pop_front()
 	
 	if unit != null and not unit.is_death_animation_playing():
-		var _error = unit.connect("death_animation_finished", self, "_on_Unit_death_animation_finished")
+		if unit.connect("death_animation_finished", self, "_on_Unit_death_animation_finished") != OK:
+			push_warning("Trying to connect death animation finished signal again to unit %s" % unit.name)
+			
+			return
 		
 		unit.play_death_animation()
 		
