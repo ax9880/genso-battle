@@ -77,8 +77,9 @@ func _execute_action(unit: Unit, grid: Grid, allies: Array, enemies: Array, acti
 		Action.Behavior.USE_SKILL:
 			_use_skill(unit, grid, allies, enemies, action, navigation_graph)
 		Action.Behavior.PINCER:
-			#_find_pincer(grid, navigation_graph, allies, enemies)
-			pass
+			assert(action.skill == null)
+			
+			_find_pincer(unit, grid, allies, enemies, navigation_graph)
 		_:
 			unit.emit_action_done()
 
@@ -187,28 +188,25 @@ func _use_skill(unit: Unit, grid: Grid, allies: Array, enemies: Array, action: A
 			unit.use_skill(action.skill, top_result.target_cells, path)
 
 
-#func _find_pincer(grid: Grid, navigation_graph: Dictionary, allies: Array, enemies: Array) -> void:
-#	var possible_pincers: Array = $AIController.find_possible_pincers(self, grid, faction, allies)
-#
-#	var next_cell: Cell = null
-#
-#	# Finds the best and first cell that it can navigate to (i.e. it is in
-#	# the navigation graph)
-#	for possible_pincer in possible_pincers:
-#		if navigation_graph.has(possible_pincer.cell):
-#			next_cell = possible_pincer.cell
-#
-#			break
-#
-#	if next_cell == null:
-#		# Random chance to use a skill if a pincer is not found
-#		if random.randf() < 0.6:
-#			_find_skill_move(grid, navigation_graph, allies, enemies)
-#		else:
-#			_find_cell_close_to_enemy(grid, navigation_graph, enemies)
-#	else:
-#		path = BoardUtils.find_path(grid, navigation_graph, position, next_cell)
-#
-#		_start_moving()
-#
-#
+func _find_pincer(unit: Unit, grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary) -> void:
+	var possible_pincers: Array = $Evaluator.find_possible_pincers(unit, grid, allies)
+
+	var next_cell: Cell = null
+
+	# Finds the best and first cell that it can navigate to (i.e. it is in
+	# the navigation graph)
+	for possible_pincer in possible_pincers:
+		if navigation_graph.has(possible_pincer.cell):
+			next_cell = possible_pincer.cell
+			
+			break
+	
+	if next_cell == null:
+		# Move to a cell to try to set up a pincer
+		# Possible to use a skill? Not very simple
+		# Maybe add a node path to action so it has a fallback action?
+		_find_cell_close_to_enemy(unit, grid, enemies, navigation_graph)
+	else:
+		var path: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, next_cell)
+		
+		unit.start_moving(path)

@@ -97,3 +97,64 @@ func _sort_by_preference(preference: int, skill_evaluation_results: Array) -> vo
 		_:
 			skill_evaluation_results.sort_custom(UnitsKilledSorter, "sort_descending")
 
+
+# TODO: Find nav graph while marking ally cells as unpassable?
+# Returns Array<PossiblePincer> with possible cells were the unit can navigate
+# to to perform a pincer, ordered by how many units are affected.
+func find_possible_pincers(unit: Unit, grid: Grid, allies: Array) -> Array:
+	var possible_pincers: Array = []
+	var directions := [Cell.DIRECTION.RIGHT, Cell.DIRECTION.LEFT, Cell.DIRECTION.UP, Cell.DIRECTION.DOWN]
+	
+	for ally in allies:
+		if ally != unit and ally.can_act():
+			var cell: Cell = grid.get_cell_from_position(ally.position)
+			
+			for direction in directions:
+				var possible_pincer: PossiblePincer = _find_possible_pincer(cell, unit.faction, direction)
+				
+				if possible_pincer != null:
+					possible_pincers.push_back(possible_pincer)
+	
+	possible_pincers.sort_custom(UnitsPinceredSorter, "sort_descending")
+	
+	return possible_pincers
+
+
+# Returns null if a possible pincer is not found
+func _find_possible_pincer(cell: Cell, faction: int, direction: int) -> PossiblePincer:
+	# Flag enabled if a possible pincer is found
+	var candidate_cell: Cell = null
+	
+	var last_unit: Unit = null
+	var units_pincered_count: int = 0
+	
+	var neighbor: Cell = cell.get_neighbor(direction)
+	
+	while neighbor != null:
+		var next_unit = neighbor.unit
+		
+		# There is an available cell
+		if next_unit == null:
+			# This unit can move to this cell and perform a pincer
+			if last_unit != null and last_unit.is_enemy(faction):
+				candidate_cell = neighbor
+			
+			break
+		elif next_unit.is_enemy(faction):
+			last_unit = next_unit
+			units_pincered_count += 1
+			
+			neighbor = neighbor.get_neighbor(direction)
+		else:
+			# Is an ally, a pincer is not possible
+			break
+	
+	if candidate_cell != null:
+		var possible_pincer := PossiblePincer.new()
+		
+		possible_pincer.cell = candidate_cell
+		possible_pincer.units_pincered_count = units_pincered_count
+		
+		return possible_pincer
+	else:
+		return null
