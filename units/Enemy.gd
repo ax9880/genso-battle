@@ -1,5 +1,8 @@
 extends Unit
 
+class_name Enemy
+
+
 export var turn_counter: int = 1 setget set_turn_counter
 export var chance_to_move_to_enemy_during_move_behavior: float = 0.8
 
