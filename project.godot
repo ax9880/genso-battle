@@ -10,11 +10,6 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "AIController",
-"language": "GDScript",
-"path": "res://units/AIController.gd"
-}, {
-"base": "Node",
 "class": "Action",
 "language": "GDScript",
 "path": "res://units/ai/Action.gd"
@@ -170,7 +165,6 @@ _global_script_classes=[ {
 "path": "res://save_data/UnlockedBattle.gd"
 } ]
 _global_script_class_icons={
-"AIController": "",
 "Action": "",
 "AntialiasedLine2D": "res://addons/antialiased_line2d/antialiased_line2d.svg",
 "AntialiasedPolygon2D": "res://addons/antialiased_line2d/antialiased_polygon2d.svg",
