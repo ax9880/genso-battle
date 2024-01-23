@@ -37,8 +37,6 @@ func _get_next_action(unit: Unit) -> Action:
 	var total_weights: int = 0
 	var current_hp_percentage: float = float(unit.get_stats().health) / float(unit.get_max_health())
 	
-	print("current_hp_percentage: %f" % current_hp_percentage)
-	
 	for action in get_children():
 		if action.has_method("can_activate") and  action.can_activate(current_hp_percentage, current_turn):
 			actions.push_back(action)
