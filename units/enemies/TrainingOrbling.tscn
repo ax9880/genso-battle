@@ -9,7 +9,4 @@ chance_to_move_to_enemy_during_move_behavior = 0.0
 [node name="Job" parent="." index="2"]
 job = ExtResource( 2 )
 
-[node name="AIController" parent="." index="11"]
-behaviors = [ 3 ]
-
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
