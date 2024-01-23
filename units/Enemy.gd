@@ -190,6 +190,12 @@ func _on_snap_to_grid() -> void:
 		emit_action_done()
 
 
+func get_skills() -> Array:
+	return $AIController.get_skills()
+
+
+## Signals
+
 func _on_Tween_tween_completed(_object: Object, key: String) -> void:
 	match(current_state):
 		STATE.PICKED_UP:

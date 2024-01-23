@@ -13,7 +13,15 @@ func _ready() -> void:
 
 
 func get_skills() -> Array:
-	return []
+	var skills: Dictionary = {}
+	
+	for action in get_children():
+		if action is Action and action.skill != null:
+			# Using dictionary as a set to avoid duplicates
+			skills[action.skill] = true
+	
+	# TODO: Sort by name
+	return skills.keys()
 
 
 func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> void:
@@ -38,7 +46,7 @@ func _get_next_action(enemy: Enemy) -> Action:
 	var current_hp_percentage: float = float(enemy.get_stats().health) / float(enemy.get_max_health())
 	
 	for action in get_children():
-		if action.has_method("can_activate") and  action.can_activate(current_hp_percentage, current_turn):
+		if action is Action and action.can_activate(current_hp_percentage, current_turn):
 			actions.push_back(action)
 			
 			total_weights += action.weight
