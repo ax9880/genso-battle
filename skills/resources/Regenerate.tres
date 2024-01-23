@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource( 1 )
-skill_name = ""
+skill_name = "REGENERATE"
 skill_type = 1
 area_of_effect = 10
 area_of_effect_size = 1
