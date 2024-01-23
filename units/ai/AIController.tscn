@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://units/ai/AIController.gd" type="Script" id=1]
+[ext_resource path="res://units/ai/Evaluator.gd" type="Script" id=2]
+
+[node name="AIController" type="Node"]
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "Should have actions as children."
+}
+
+[node name="Evaluator" type="Node" parent="."]
+script = ExtResource( 2 )

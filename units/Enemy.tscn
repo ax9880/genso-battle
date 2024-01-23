@@ -8,7 +8,7 @@
 [ext_resource path="res://assets/enemies/unit_square_bg.png" type="Texture" id=6]
 [ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=7]
 [ext_resource path="res://assets/ui/orange_panel_transparent.png" type="Texture" id=8]
-[ext_resource path="res://units/AIController.gd" type="Script" id=9]
+[ext_resource path="res://units/ai/AIController.tscn" type="PackedScene" id=9]
 [ext_resource path="res://theme.tres" type="Theme" id=10]
 [ext_resource path="res://assets/ui/unit_circle_gradient.png" type="Texture" id=11]
 [ext_resource path="res://assets/sfx/pot_break_2.wav" type="AudioStream" id=12]
@@ -75,10 +75,6 @@ show_behind_parent = true
 position = Vector2( 49, 21.5 )
 texture = ExtResource( 11 )
 
-[node name="AIController" type="Node" parent="." index="11"]
-script = ExtResource( 9 )
-behaviors = [ 1, 1, 1 ]
-
 [node name="AppearAudio" parent="Sound" index="0"]
 stream = ExtResource( 3 )
 volume_db = 8.0
@@ -88,5 +84,8 @@ stream = ExtResource( 12 )
 
 [node name="PickUpAudio" parent="Sound" index="2"]
 stream = ExtResource( 3 )
+
+[node name="AIController" parent="." index="13" instance=ExtResource( 9 )]
+chance_to_move_to_enemy_during_move_behavior = 0.4
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
