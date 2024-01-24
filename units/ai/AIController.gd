@@ -96,7 +96,7 @@ func _get_random_weighted_action(enemy: Enemy, current_hp_percentage: float) -> 
 	var total_weights: int = 0
 	
 	for action in actions:
-		if action is Action and action.can_activate(current_hp_percentage, current_turn):
+		if action.can_activate(current_hp_percentage, current_turn):
 			possible_actions.push_back(action)
 			
 			total_weights += action.weight
