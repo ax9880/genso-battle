@@ -13,7 +13,7 @@ static func build_navigation_graph(grid: Grid, unit_position: Vector2, faction: 
 	
 	queue.push_back(start_cell)
 	
-	# Dictionary<Cell, bool>
+	# Dictionary<Cell, int (distance to start cell)>
 	var discovered_dict := {}
 	
 	# Dictionary<Cell, Array<Cell> (array of cells connected to this cell)>
@@ -22,27 +22,28 @@ static func build_navigation_graph(grid: Grid, unit_position: Vector2, faction: 
 	
 	var unit: Unit = start_cell.unit
 	
+	discovered_dict[start_cell] = 0
+	
 	while not queue.empty():
 		var node: Cell = queue.pop_front()
 		
 		# Initialize adjacency list for the given node
 		navigation_graph[node] = []
 		
-		# Flag as discovered
-		discovered_dict[node] = true
-		
 		for neighbor in node.neighbors:
 			if not discovered_dict.has(neighbor):
+				# Distance to this node is distance to the parent node + 1
+				var distance: int = discovered_dict[node] + 1
+				
+				# Flag as discovered and set the distance
+				discovered_dict[neighbor] = distance
+				
 				var cell_unit: Unit = neighbor.unit
 				
-				if _can_enter_cell(unit, cell_unit, faction):
-					# FIXME: Calculate the distance using the shortest path, and
-					# use that to find out if you can reach that cell
-					if get_distance_to_cell(start_cell, neighbor) <= movement_range:
-						if _can_fit_unit(unit, neighbor):
-							navigation_graph[node].push_back(neighbor)
-							
-							queue.push_back(neighbor)
+				if (distance <= movement_range) and _can_enter_cell(unit, cell_unit, faction) and _can_fit_unit(unit, neighbor):
+					navigation_graph[node].push_back(neighbor)
+					
+					queue.push_back(neighbor)
 	
 	return navigation_graph
 
