@@ -21,14 +21,14 @@ var is_activated: bool = false
 var counter: int = 1
 
 
-func is_true(current_hp_percentage: float, current_turn: int) -> bool:
+func is_true(current_hp_percentage: float, current_turn: int, can_use_turn_counter: bool) -> bool:
 	if current_hp_percentage > hp_percentage:
 		return false
 	
 	if is_one_shot and is_activated:
 		return false
 	
-	if (turn_offset + counter * turn_steps) != current_turn:
+	if can_use_turn_counter and (turn_offset + counter * turn_steps) != current_turn:
 		return false
 	
 	counter += 1

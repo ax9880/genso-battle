@@ -13,6 +13,8 @@ export(Behavior) var behavior: int
 
 export(Resource) var skill: Resource
 
+export(Enums.Preference) var preference: int = Enums.Preference.DEAL_DAMAGE
+
 # Specific cell to move to, if possible
 # x: [0, 5]
 # y: [0, 7]
@@ -33,12 +35,12 @@ export(String) var text: String
 export(bool) var can_ignore_weights: bool = false
 
 
-func can_activate(current_hp_percentage: float, current_turn: int) -> bool:
+func can_activate(current_hp_percentage: float, current_turn: int, can_use_turn_counter: bool = true) -> bool:
 	var is_all_conditions_true: bool = true
 	
 	# If there are no children this is always activated
 	for condition in get_children():
-		is_all_conditions_true = is_all_conditions_true && condition.is_true(current_hp_percentage, current_turn)
+		is_all_conditions_true = is_all_conditions_true && condition.is_true(current_hp_percentage, current_turn, can_use_turn_counter)
 	
 	return is_all_conditions_true
 

@@ -1,10 +1,5 @@
 extends Node
 
-enum Preference {
-	DEAL_DAMAGE,
-	AFFECT_UNITS,
-	KILL_UNITS_find_cells_close_to_enemies
-}
 
 class SkillEvaluationResult extends Reference:
 	var cell: Cell = null
@@ -31,7 +26,10 @@ class UnitsAffectedSorter:
 
 class UnitsKilledSorter:
 	static func sort_descending(a: SkillEvaluationResult, b: SkillEvaluationResult) -> bool:
-		return a.units_killed > b.units_killed
+		if a.units_killed > b.units_killed:
+			return true
+		else:
+			return a.damage_dealt > b.damage_dealt
 
 
 class UnitsPinceredSorter:
@@ -45,7 +43,7 @@ func evaluate_skill(unit: Unit,
 					enemies: Array,
 					navigation_graph: Dictionary,
 					skill: Skill,
-					var can_yield := false) -> Array:
+					var preference: int) -> Array:
 	var skill_evaluation_results: Array = []
 	
 	# For each cell you can travel to:
@@ -62,34 +60,34 @@ func evaluate_skill(unit: Unit,
 			var targeted_unit: Unit = targeted_cell.unit
 			
 			if targeted_unit != null:
-				var estimated_damage: int = targeted_unit.calculate_damage(targeted_unit.get_stats(), unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
+				var estimated_damage: int = targeted_unit.calculate_damage(unit.get_stats(), targeted_unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
 				
 				# Check if units are enemies or allies in case cells are not filtered
 				if targeted_unit.is_enemy(unit.faction) and skill.is_attack():
-					if unit.get_stats().health - estimated_damage <= 0:
+					skill_evaluation_result.units_affected += 1
+					
+					if (targeted_unit.get_stats().health - estimated_damage) <= 0:
 						skill_evaluation_result.units_killed += 1
 				elif targeted_unit.is_ally(unit.faction) and skill.is_healing():
+					skill_evaluation_result.units_affected += 1
+					
 					# If skill heals, damage is negative
 					estimated_damage = int(abs(estimated_damage))
 				
-				skill_evaluation_result.units_affected += 1
 				skill_evaluation_result.damage_dealt += estimated_damage
-				
-				if can_yield:
-					yield(get_tree(), "idle_frame")
 		
 		skill_evaluation_results.push_back(skill_evaluation_result)
 	
-	_sort_by_preference(Preference.DEAL_DAMAGE, skill_evaluation_results)
+	_sort_by_preference(preference, skill_evaluation_results)
 	
 	return skill_evaluation_results
 
 
 func _sort_by_preference(preference: int, skill_evaluation_results: Array) -> void:
 	match(preference):
-		Preference.DEAL_DAMAGE:
+		Enums.Preference.DEAL_DAMAGE:
 			skill_evaluation_results.sort_custom(DamageSorter, "sort_descending")
-		Preference.AFFECT_UNITS:
+		Enums.Preference.AFFECT_UNITS:
 			skill_evaluation_results.sort_custom(UnitsAffectedSorter, "sort_descending")
 		_:
 			skill_evaluation_results.sort_custom(UnitsKilledSorter, "sort_descending")

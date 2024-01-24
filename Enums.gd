@@ -187,6 +187,17 @@ enum StatsType {
 	# HP, weapon triangle vulnerability
 }
 
+# AI preference when evaluating skills
+enum Preference {
+	# Deal or heal damage.
+	DEAL_DAMAGE,
+	
+	# Affect the greatest number of units. Useful for buffs/debuffs.
+	AFFECT_UNITS,
+	
+	# Deal damage but prioritize killing units if possible.
+	KILL_UNITS
+}
 
 static func status_effect_type_to_string(status_effect_type: int) -> String:
 	return StatusEffectType.keys()[status_effect_type]
