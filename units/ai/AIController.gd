@@ -1,15 +1,42 @@
 extends Node
 
 
-export(float, 0, 1, 0.1) var chance_to_move_to_enemy_during_move_behavior: float
+# Action execution mode.
+enum Mode {
+	# Evaluate each condition and choose an action based on a 
+	# random weighted choice.
+	WEIGHT_BASED,
+	
+	# Execute actions in order if their conditions are valid.
+	# If the action has no valid conditions then do nothing.
+	# The conditions ignore turn counters.
+	ORDER_BASED
+}
+
+
+export(Mode) var mode: int = Mode.WEIGHT_BASED
+
+export(float, 0, 1, 0.1) var chance_to_move_to_enemy_during_move_behavior: float = 0.0
+export(float, 0, 1, 0.1) var chance_to_select_random_top_result: float = 0.0
+export(int, 0, 5, 1) var max_number_of_random_top_results: float = 3
 
 
 var current_turn: int = 0
 var random: RandomNumberGenerator = RandomNumberGenerator.new()
 
+var actions: Array
+
+var action_index: int = 0
+
 
 func _ready() -> void:
 	random.randomize()
+	
+	for action in get_children():
+		if action is Action:
+			actions.push_back(action)
+	
+	assert(not actions.empty(), "No actions")
 
 
 func get_skills() -> Array:
@@ -31,7 +58,7 @@ func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> 
 	else:
 		current_turn += 1
 		
-		var action: Action = _get_next_action(enemy)
+		var action: Action = _get_action(enemy)
 		
 		if action == null:
 			enemy.emit_action_done()
@@ -39,16 +66,22 @@ func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> 
 			_execute_action(enemy, grid, allies, enemies, action)
 
 
-func _get_next_action(enemy: Enemy) -> Action:
-	assert(get_child_count() > 0)
-	
-	var actions: Array = []
-	var total_weights: int = 0
+func _get_action(enemy: Enemy) -> Action:
 	var current_hp_percentage: float = float(enemy.get_stats().health) / float(enemy.get_max_health())
 	
-	for action in get_children():
+	if mode == Mode.WEIGHT_BASED:
+		return _get_random_weighted_action(enemy, current_hp_percentage)
+	else:
+		return _get_next_action(enemy, current_hp_percentage)
+
+
+func _get_random_weighted_action(enemy: Enemy, current_hp_percentage: float) -> Action:
+	var possible_actions: Array = []
+	var total_weights: int = 0
+	
+	for action in actions:
 		if action is Action and action.can_activate(current_hp_percentage, current_turn):
-			actions.push_back(action)
+			possible_actions.push_back(action)
 			
 			total_weights += action.weight
 			
@@ -56,21 +89,39 @@ func _get_next_action(enemy: Enemy) -> Action:
 			if action.can_ignore_weights:
 				return action
 	
-	if actions.empty():
+	if possible_actions.empty():
 		return null
 	
 	# Random weighted choice
 	var selection: int = random.randi_range(0, total_weights)
 	
-	for i in range(actions.size()):
-		var weight: int = actions[i].weight
+	for i in range(possible_actions.size()):
+		var weight: int = possible_actions[i].weight
 		
 		selection -= weight
 		
 		if selection <= 0:
-			return actions[i]
+			return possible_actions[i]
 	
-	return actions.back()
+	return possible_actions.back()
+
+
+func _get_next_action(enemy: Enemy, current_hp_percentage: float) -> Action:
+	if actions.empty():
+		return null
+	
+	if action_index >= actions.size():
+		action_index = 0
+	
+	var action: Action = actions[action_index]
+	
+	action_index += 1
+	
+	# Don't use turn counter
+	if action.can_activate(current_hp_percentage, current_turn, false):
+		return action
+	else:
+		return null
 
 
 func _execute_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, action: Action) -> void:
@@ -175,14 +226,13 @@ func _execute_skill_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Arr
 		enemy.use_skill(action.skill, target_cells, path)
 	else:
 		# Evaluate positions (requires having the whole graph)
-		var results: Array = $Evaluator.evaluate_skill(enemy, grid, allies, enemies, navigation_graph, action.skill)
+		var results: Array = $Evaluator.evaluate_skill(enemy, grid, allies, enemies, navigation_graph, action.skill, action.preference)
 		
 		var top_result = results.front()
 		
 		# Pick a random result to make it less predictable
-		# TODO: Add constants / export vars
-		if results.size() > 3 and random.randf() < 0.4:
-			top_result = results[random.randi_range(0, 3)]
+		if results.size() > max_number_of_random_top_results and random.randf() < chance_to_select_random_top_result:
+			top_result = results[random.randi_range(0, max_number_of_random_top_results)]
 		
 		# TODO: Use skill regardless?
 		if top_result.damage_dealt == 0:
