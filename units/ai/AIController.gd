@@ -16,6 +16,12 @@ enum Mode {
 
 export(Mode) var mode: int = Mode.WEIGHT_BASED
 
+# Max turn counter. After turn counter passes this value it is reset to zero,
+# and the turn counter of all conditions is also reset.
+# Oneshot conditions are not reset.
+# If value is -1 then counter is never reset.
+export(int, -1, 99) var max_turn_counter: int = -1
+
 export(float, 0, 1, 0.1) var chance_to_move_to_enemy_during_move_behavior: float = 0.0
 export(float, 0, 1, 0.1) var chance_to_select_random_top_result: float = 0.0
 export(int, 0, 5, 1) var max_number_of_random_top_results: float = 3
@@ -60,10 +66,20 @@ func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> 
 		
 		var action: Action = _get_action(enemy)
 		
+		if max_turn_counter != -1 and current_turn >= max_turn_counter:
+			current_turn = 0
+			
+			_reset_actions_counters()
+		
 		if action == null:
 			enemy.emit_action_done()
 		else:
 			_execute_action(enemy, grid, allies, enemies, action)
+
+
+func _reset_actions_counters() -> void:
+	for action in actions:
+		action.reset_turn_counter()
 
 
 func _get_action(enemy: Enemy) -> Action:

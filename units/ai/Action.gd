@@ -51,6 +51,11 @@ func on_use() -> void:
 			condition.is_activated = true
 
 
+func reset_turn_counter() -> void:
+	for condition in get_children():
+		condition.counter = 1
+
+
 func has_valid_cell() -> bool:
 	return cell_x_to_move_to >= 0 and cell_y_to_move_to >= 0
 
