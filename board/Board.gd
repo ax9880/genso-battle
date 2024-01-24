@@ -427,6 +427,7 @@ func _update_enemy() -> void:
 		var enemy: Unit = enemy_queue.pop_front()
 		
 		print("Active enemy is %s" % enemy.name)
+		active_unit = enemy
 		
 		enemy.act(grid, enemy_units_node.get_children(), player_units_node.get_children())
 	else:
@@ -956,6 +957,11 @@ func _on_Enemy_dead(unit: Unit) -> void:
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:
+	if unit != active_unit:
+		push_warning("Unexpected unit %s action done" % unit.name)
+		
+		return
+	
 	print("Enemy %s action done" % unit.name)
 	
 	_stop_possible_chained_units_animations()
