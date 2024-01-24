@@ -105,7 +105,7 @@ func _move_to_cell_or_enemy(enemy: Enemy, grid: Grid, enemies: Array, action: Ac
 func _move_to_given_cell(enemy: Enemy, grid: Grid, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
 	var cell_position: Vector2 = action.get_cell_position()
 	
-	var next_cell: Cell = grid.get_cell_from_position(cell_position)
+	var next_cell: Cell = grid.get_cell_from_coordinates(cell_position)
 	
 	if grid.get_cell_from_position(enemy.position) == next_cell:
 		enemy.emit_action_done()
@@ -149,7 +149,7 @@ func _find_cells_close_to_enemies(enemy: Enemy, grid: Grid, enemies: Array) -> A
 		for direction in directions:
 			var neighbor: Cell = cell.get_neighbor(direction)
 			
-			if neighbor != null and neighbor.enemy == null:
+			if neighbor != null and neighbor.unit == null:
 				candidate_cells.push_back(neighbor)
 	
 	return candidate_cells
