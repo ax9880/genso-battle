@@ -53,7 +53,7 @@ func on_use() -> void:
 
 func reset_turn_counter() -> void:
 	for condition in get_children():
-		condition.counter = 1
+		condition.reset_turn_counter()
 
 
 func has_valid_cell() -> bool:

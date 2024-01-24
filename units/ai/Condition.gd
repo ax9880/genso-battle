@@ -7,6 +7,10 @@ export(float, 0.1, 1, 0.1) var hp_percentage: float = 1.0
 # Whether this condition should only activate once
 export(bool) var is_one_shot: bool = false
 
+# If true, check turn offset and turn steps, otherwise don't use
+# turns to determine if condition can be activated
+export(bool) var can_check_turn_counter: bool = true
+
 # At which specific enemy turn this condition is true
 export(int) var turn_offset: int = 0
 
@@ -18,7 +22,7 @@ export(int, 0, 20, 1) var turn_steps: int = 1
 # is performed
 var is_activated: bool = false
 
-var counter: int = 1
+var counter: int = 0
 
 
 func is_true(current_hp_percentage: float, current_turn: int, can_use_turn_counter: bool) -> bool:
@@ -28,9 +32,13 @@ func is_true(current_hp_percentage: float, current_turn: int, can_use_turn_count
 	if is_one_shot and is_activated:
 		return false
 	
-	if can_use_turn_counter and (turn_offset + counter * turn_steps) != current_turn:
+	if can_use_turn_counter and can_check_turn_counter and (turn_offset + counter * turn_steps) != current_turn:
 		return false
 	
 	counter += 1
 	
 	return true
+
+
+func reset_turn_counter() -> void:
+	counter = 0
