@@ -25,11 +25,12 @@ func get_skills() -> Array:
 
 
 func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> void:
-	current_turn += 1
-	
 	if enemy.has_active_delayed_skill:
+		# A delayed skill won't increase the turn counter
 		enemy.trigger_delayed_skill()
 	else:
+		current_turn += 1
+		
 		var action: Action = _get_next_action(enemy)
 		
 		if action == null:
@@ -79,18 +80,18 @@ func _execute_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, ac
 	
 	match(action.behavior):
 		Action.Behavior.MOVE:
-			_move_to_cell_or_enemy(enemy, grid, enemies, action, navigation_graph)
+			_execute_move_action(enemy, grid, enemies, action, navigation_graph)
 		Action.Behavior.USE_SKILL:
-			_use_skill(enemy, grid, allies, enemies, action, navigation_graph)
+			_execute_skill_action(enemy, grid, allies, enemies, action, navigation_graph)
 		Action.Behavior.PINCER:
 			assert(action.skill == null)
 			
-			_find_pincer(enemy, grid, allies, enemies, navigation_graph)
+			_execute_pincer_action(enemy, grid, allies, enemies, navigation_graph)
 		_:
 			enemy.emit_action_done()
 
 
-func _move_to_cell_or_enemy(enemy: Enemy, grid: Grid, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
+func _execute_move_action(enemy: Enemy, grid: Grid, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
 	assert(action.skill == null)
 	
 	if action.has_valid_cell():
@@ -99,7 +100,7 @@ func _move_to_cell_or_enemy(enemy: Enemy, grid: Grid, enemies: Array, action: Ac
 		if random.randf() < chance_to_move_to_enemy_during_move_behavior:
 			_find_cell_close_to_enemy(enemy, grid, enemies, navigation_graph)
 		else:
-			_find_cell_to_move_to(enemy, grid, navigation_graph)
+			_find_random_cell_to_move_to(enemy, grid, navigation_graph)
 
 
 func _move_to_given_cell(enemy: Enemy, grid: Grid, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
@@ -115,7 +116,7 @@ func _move_to_given_cell(enemy: Enemy, grid: Grid, enemies: Array, action: Actio
 		if path.size() > 1:
 			enemy.start_moving(path)
 		else:
-			_find_cell_to_move_to(enemy, grid, navigation_graph)
+			_find_random_cell_to_move_to(enemy, grid, navigation_graph)
 
 
 func _find_cell_close_to_enemy(enemy: Enemy, grid: Grid, enemies: Array, navigation_graph: Dictionary) -> void:
@@ -130,7 +131,7 @@ func _find_cell_close_to_enemy(enemy: Enemy, grid: Grid, enemies: Array, navigat
 			break
 	
 	if next_cell == null:
-		_find_cell_to_move_to(enemy, grid, navigation_graph)
+		_find_random_cell_to_move_to(enemy, grid, navigation_graph)
 	else:
 		var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, next_cell)
 		
@@ -156,7 +157,7 @@ func _find_cells_close_to_enemies(enemy: Enemy, grid: Grid, enemies: Array) -> A
 
 
 # Find a random cell to move to
-func _find_cell_to_move_to(enemy: Enemy, grid: Grid, navigation_graph: Dictionary) -> void:
+func _find_random_cell_to_move_to(enemy: Enemy, grid: Grid, navigation_graph: Dictionary) -> void:
 	var next_cell: Cell = navigation_graph.keys()[random.randi_range(0, navigation_graph.size() - 1)]
 
 	var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, next_cell)
@@ -164,19 +165,14 @@ func _find_cell_to_move_to(enemy: Enemy, grid: Grid, navigation_graph: Dictionar
 	enemy.start_moving(path)
 
 
-func _use_skill(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
+func _execute_skill_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
 	assert(action.skill != null)
 	
-	if action.has_valid_cell():
-		if action.can_use_skill_after_moving:
-			# TODO: find path to cell
-			# TODO: Use skill after moving
-			# Or add flag, "can move when using skill", by default set to true
-			# If it's set to false then use the skill without evaluating the
-			# best positions
-			pass
+	if not action.can_move_when_using_skill:
+		var target_cells: Array = $Evaluator.get_target_cells(enemy, enemy.position, action.skill, grid, allies, enemies)
+		var path: Array = []
 		
-		pass
+		enemy.use_skill(action.skill, target_cells, path)
 	else:
 		# Evaluate positions (requires having the whole graph)
 		var results: Array = $Evaluator.evaluate_skill(enemy, grid, allies, enemies, navigation_graph, action.skill)
@@ -197,11 +193,11 @@ func _use_skill(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, action:
 			enemy.use_skill(action.skill, top_result.target_cells, path)
 
 
-func _find_pincer(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary) -> void:
+func _execute_pincer_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary) -> void:
 	var possible_pincers: Array = $Evaluator.find_possible_pincers(enemy, grid, allies)
-
+	
 	var next_cell: Cell = null
-
+	
 	# Finds the best and first cell that it can navigate to (i.e. it is in
 	# the navigation graph)
 	for possible_pincer in possible_pincers:

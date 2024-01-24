@@ -54,11 +54,8 @@ func evaluate_skill(unit: Unit,
 		
 		skill_evaluation_result.cell = cell
 		
-		# Don't filter cells, cells are only filtered when the skill will actually
-		# be applied
-		var can_filter_cells: bool = false
+		var target_cells: Array = get_target_cells(unit, cell.position, skill, grid, allies, enemies)
 		
-		var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(unit, cell.position, skill, grid, [], [], allies, enemies, can_filter_cells)
 		skill_evaluation_result.target_cells = target_cells
 		
 		for targeted_cell in target_cells:
@@ -96,6 +93,19 @@ func _sort_by_preference(preference: int, skill_evaluation_results: Array) -> vo
 			skill_evaluation_results.sort_custom(UnitsAffectedSorter, "sort_descending")
 		_:
 			skill_evaluation_results.sort_custom(UnitsKilledSorter, "sort_descending")
+
+
+func get_target_cells(unit: Unit,
+					start_position: Vector2,
+					skill: Skill,
+					grid: Grid,
+					allies: Array,
+					enemies: Array) -> Array:
+	# Don't filter cells, cells are only filtered when the skill will actually
+	# be applied
+	var can_filter_cells: bool = false
+	
+	return BoardUtils.find_area_of_effect_target_cells(unit, start_position, skill, grid, [], [], allies, enemies, can_filter_cells)
 
 
 # TODO: Find nav graph while marking ally cells as unpassable?

@@ -2,28 +2,12 @@ extends Node
 
 class_name Action
 
-
 enum Behavior {
 	MOVE,
 	USE_SKILL,
 	PINCER,
 	WAIT
 }
-
-
-class AiResult extends Reference:
-	var behavior: int
-	
-	var skill: Skill
-	
-	# When it is null, let the unit find the best cell to move to
-	var cell_to_move_to: Vector2
-	
-	var weight: int
-	
-	# Dialogue to show
-	var text: String
-
 
 export(Behavior) var behavior: int
 
@@ -35,9 +19,9 @@ export(Resource) var skill: Resource
 export(float, -1, 5, 1) var cell_x_to_move_to: float = -1
 export(float, -1, 7, 1) var cell_y_to_move_to: float = -1
 
-# If given skill should be used after or before moving to given cell
-# Should only be used when skill and cell to move to are not null
-export(bool) var can_use_skill_after_moving: bool = false
+# If unit can move when using a skill, or if it should use it from its current
+# position. Can only be used when skill and cell to move to are not null
+export(bool) var can_move_when_using_skill: bool = true
 
 # Weight of this action, affects how often this action is chosen if there
 # are multiple available actions
