@@ -148,7 +148,7 @@ static func find_area_of_effect_target_cells(var unit: Unit,
 	if can_filter_cells:
 		return filter_cells(unit, skill, target_cells)
 	else:
-		return target_cells
+		return _remove_duplicates(target_cells)
 
 
 static func _find_area_of_effect(var cell: Cell, # Start cell from which skill is called
@@ -283,6 +283,17 @@ static func filter_cells(unit: Unit, skill: Skill, target_cells: Array) -> Array
 			if cell.unit == null or cell.unit.is_ally(unit.faction):
 				if filtered_cells.find(cell) == -1:
 					filtered_cells.push_back(cell)
+	
+	return filtered_cells
+
+
+static func _remove_duplicates(target_cells: Array) -> Array:
+	# Array<Cell>
+	var filtered_cells := []
+	
+	for cell in target_cells:
+		if filtered_cells.find(cell) == -1:
+			filtered_cells.push_back(cell)
 	
 	return filtered_cells
 
