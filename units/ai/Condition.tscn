@@ -4,3 +4,10 @@
 
 [node name="Condition" type="Node"]
 script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "To execute condition every turn:
+- Set offset to 1 and steps to 1
+
+To execute condition in turn 1:
+- Set offset to 1 and steps to 0"
+}
