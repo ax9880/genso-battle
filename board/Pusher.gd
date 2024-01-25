@@ -13,7 +13,7 @@ const OPPOSITE_DIRECTION := {
 
 
 func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
-	if pushed_unit_cell.unit != null:
+	if pushed_unit_cell.unit != null and not pushed_unit_cell.unit.is2x2():
 		var direction: int = _get_direction(incoming_cell.coordinates, pushed_unit_cell.coordinates)
 		
 		var cell_to_move_to: Cell = pushed_unit_cell.get_neighbor(direction)
