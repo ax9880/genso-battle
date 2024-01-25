@@ -23,7 +23,7 @@ export(Mode) var mode: int = Mode.WEIGHT_BASED
 export(int, -1, 99) var max_turn_counter: int = -1
 
 export(float, 0, 1, 0.1) var chance_to_move_to_enemy_during_move_behavior: float = 0.0
-export(float, 0, 1, 0.1) var chance_to_select_random_top_result: float = 0.0
+export(float, 0, 1, 0.1) var chance_to_select_random_top_result: float = 0.4
 export(int, 0, 5, 1) var max_number_of_random_top_results: float = 3
 
 
