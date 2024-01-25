@@ -38,6 +38,9 @@ func _set_growth_position() -> void:
 		grow_horizontal = Control.GROW_DIRECTION_END
 	
 	if position_relative_to_center.y < 0:
-		grow_vertical = Control.GROW_DIRECTION_END
-	else:
 		grow_vertical = Control.GROW_DIRECTION_BEGIN
+
+
+func reset_growth_direction() -> void:
+	grow_horizontal = Control.GROW_DIRECTION_BOTH
+	grow_vertical = Control.GROW_DIRECTION_END
