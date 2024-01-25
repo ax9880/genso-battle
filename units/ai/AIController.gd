@@ -24,7 +24,7 @@ export(int, -1, 99) var max_turn_counter: int = -1
 
 export(float, 0, 1, 0.1) var chance_to_move_to_enemy_during_move_behavior: float = 0.0
 export(float, 0, 1, 0.1) var chance_to_select_random_top_result: float = 0.4
-export(int, 0, 5, 1) var max_number_of_random_top_results: float = 3
+export(int, 0, 5, 1) var max_number_of_random_top_results: int = 3
 
 
 var current_turn: int = 0
@@ -86,12 +86,12 @@ func _get_action(enemy: Enemy) -> Action:
 	var current_hp_percentage: float = float(enemy.get_stats().health) / float(enemy.get_max_health())
 	
 	if mode == Mode.WEIGHT_BASED:
-		return _get_random_weighted_action(enemy, current_hp_percentage)
+		return _get_random_weighted_action(current_hp_percentage)
 	else:
-		return _get_next_action(enemy, current_hp_percentage)
+		return _get_next_action(current_hp_percentage)
 
 
-func _get_random_weighted_action(enemy: Enemy, current_hp_percentage: float) -> Action:
+func _get_random_weighted_action(current_hp_percentage: float) -> Action:
 	var possible_actions: Array = []
 	var total_weights: int = 0
 	
@@ -122,7 +122,7 @@ func _get_random_weighted_action(enemy: Enemy, current_hp_percentage: float) -> 
 	return possible_actions.back()
 
 
-func _get_next_action(enemy: Enemy, current_hp_percentage: float) -> Action:
+func _get_next_action(current_hp_percentage: float) -> Action:
 	if actions.empty():
 		return null
 	
