@@ -21,7 +21,10 @@ class DamageSorter:
 
 class UnitsAffectedSorter:
 	static func sort_descending(a: SkillEvaluationResult, b: SkillEvaluationResult) -> bool:
-		return a.units_affected > b.units_affected
+		if a.units_affected > b.units_affected:
+			return true
+		else:
+			return a.damage_dealt > b.damage_dealt
 
 
 class UnitsKilledSorter:
@@ -130,7 +133,7 @@ func find_possible_pincers(unit: Unit, grid: Grid, allies: Array) -> Array:
 
 # Returns null if a possible pincer is not found
 func _find_possible_pincer(cell: Cell, faction: int, direction: int) -> PossiblePincer:
-	# Flag enabled if a possible pincer is found
+	# Is not null if a possible pincer is found
 	var candidate_cell: Cell = null
 	
 	var last_unit: Unit = null
