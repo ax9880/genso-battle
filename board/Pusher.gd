@@ -51,8 +51,6 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 			
 			unit.push_to_cell(cell_to_move_to.position)
 			
-			# TODO: Use setter in cell to activate trap when unit is set?
-			# TODO: Only activate trap after snapping to that cell?
 			if cell_to_move_to.trap != null:
 				cell_to_move_to.trap.activate(unit)
 

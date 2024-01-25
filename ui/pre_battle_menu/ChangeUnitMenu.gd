@@ -11,11 +11,6 @@ onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/Scrol
 var active_job_reference: JobReference = null
 
 
-# TODO: Show active unit so that player can compare it?
-func _show_active_unit() -> void:
-	pass
-
-
 func _show_units() -> void:
 	for child in list_container.get_children():
 		child.queue_free()
@@ -55,8 +50,6 @@ func on_add_to_tree(data: Object) -> void:
 		active_job_reference = data as JobReference
 	
 	_show_units()
-	
-	_show_active_unit()
 
 
 func on_load() -> void:

@@ -17,8 +17,10 @@ func get_dialogue_json_filename() -> String:
 
 
 func _skip_dialogue() -> void:
-	# TODO: Pass chapter data...?
-	if Loader.change_scene("res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn") != OK:
-		printerr("Failed to change scene")
-	
-	set_process(false)
+	if not is_dialogue_skipped:
+		is_dialogue_skipped = true
+		
+		if Loader.change_scene("res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn") != OK:
+			printerr("Failed to change scene")
+
+		set_process(false)

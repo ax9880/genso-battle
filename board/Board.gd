@@ -453,7 +453,7 @@ func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
 	else:
 		active_unit_entered_cells[cell] = cell
 		
-		cell.modulate = Color.red
+		_color_cell(cell)
 
 
 # Bugs to fix:
@@ -483,7 +483,7 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 		active_unit_current_cell = selected_cell
 		
 		if selected_cell.coordinates.distance_to(active_unit_last_valid_cell.coordinates) > 1.5:
-			active_unit_last_valid_cell.modulate = Color.red
+			_color_cell(active_unit_last_valid_cell)
 			
 			printerr("Warning! Jumped more than 1 tile")
 		
@@ -527,15 +527,14 @@ func _update_2x2_unit_cells(unit: Unit, cell: Cell) -> void:
 	for area_cell in cell.get_cells_in_area():
 		active_unit_entered_cells[area_cell] = area_cell
 		
-		area_cell.modulate = Color.red
+		_color_cell(area_cell)
 	
 	assert(cell in active_unit_entered_cells)
 
 
 func _push_cells_in_area(unit: Unit, cell: Cell) -> void:
 	for area_cell in cell.get_cells_in_area():
-		# TODO: Only for debug mode
-		area_cell.modulate = Color.red
+		_color_cell(area_cell)
 		
 		if area_cell.unit != null and area_cell.unit != unit:
 			$Pusher.push_unit(cell, area_cell)
@@ -582,6 +581,11 @@ func _clear_active_cells() -> void:
 	has_active_unit_exited_cell = false
 	
 	active_unit_entered_cells.clear()
+
+
+func _color_cell(cell: Cell) -> void:
+	if OS.is_debug_build():
+		cell.modulate = Color.red
 
 
 func _find_closest_cell(unit_position: Vector2) -> Cell:

@@ -49,7 +49,6 @@ func apply_skill(unit: Unit,
 				
 				status_effect.initialize(unit.get_stats())
 				
-				# TODO: Update status effect icons
 				status_effects.append(status_effect)
 				
 				print("Applied %s to %s" % [status_effect.status_effect_type, unit.name])

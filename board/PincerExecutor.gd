@@ -318,16 +318,12 @@ func _emit_deferred(signal_name: String) -> void:
 
 func start_heal_phase() -> void:
 	_execute_next_skill(heal_skills, "heal_phase_finished")
-	
-	# TODO: Add a delay so it doesn't overlap with status effect phase
 
 
 func start_status_effect_phase() -> void:
 	var status_effects: Array = Enums.StatusEffectType.values()
 	
 	for status_effect_type in status_effects:
-		# TODO: Instance scene and play animation and sound
-		
 		var enemies_with_status_effect := get_units_with_status_effect(enemies, status_effect_type)
 		
 		if not enemies_with_status_effect.empty():

@@ -89,13 +89,11 @@ func _show_active_units() -> void:
 
 
 func _on_UnitItem_change_button_clicked(job_reference: JobReference, container_index: int) -> void:
-	# TODO: Make it so you can't remove the three leaders (unless you complete the game?)
-	
 	changed_job_reference = job_reference
 	index_of_changed_job_reference = container_index
 	
 	var save_data: SaveData = GameData.save_data
-
+	
 	number_of_units_before_change = save_data.active_units.size()
 	
 	navigate(change_unit_item_menu_scene, job_reference)

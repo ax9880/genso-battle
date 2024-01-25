@@ -18,7 +18,6 @@ func _ready() -> void:
 	_set_focus()
 	
 	# TODO: Show continue text if there is valid save data
-	# start_button.text = tr("CONTINUE")
 
 
 func on_load() -> void:
