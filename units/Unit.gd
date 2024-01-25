@@ -146,7 +146,6 @@ func stop_scale_and_and_down_animation() -> void:
 	
 	$AnimationPlayer.stop(true)
 	
-	# TODO: Check if these tweens are being removed
 	$Tween.remove($Sprite, ":scale")
 	
 	$Tween.interpolate_property($Sprite, "scale",
