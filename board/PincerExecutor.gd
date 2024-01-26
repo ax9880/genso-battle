@@ -12,34 +12,34 @@ export(PackedScene) var chain_previewer_packed_scene: PackedScene
 export(PackedScene) var pincer_highlight_packed_scene: PackedScene
 
 
-var unit_queue := []
-var dead_units := []
+var _unit_queue := []
+var _dead_units := []
 
-var buff_skills := []
-var attack_skills := []
-var heal_skills := []
+var _buff_skills := []
+var _attack_skills := []
+var _heal_skills := []
 
-var active_pincer: Pincerer.Pincer = null
+var _active_pincer: Pincerer.Pincer = null
 
 # Array<Array<Unit>> which include the pincering unit and the chained units
-var complete_chains := []
+var _complete_chains := []
 
 # Array<Unit>
-var allies := []
+var _allies := []
 
 # Array<Unit>
-var enemies := []
+var _enemies := []
 
-var units_removed_from_play := []
+var _units_removed_from_play := []
 
 # To calculate areas of effect
-var grid: Grid
-var current_z_index: int = 1
+var _grid: Grid
+var _current_z_index: int = 1
 
 var pusher: Pusher = null
 
 # Array<ChainPreviewer>
-var chain_previews := []
+var _chain_previews := []
 
 # The names of these signals are passed as parameters and emitted inside functions
 signal pincer_highlighted
@@ -53,29 +53,29 @@ signal finished_checking_for_dead_units
 signal pincer_executed
 
 
-func initialize(_grid: Grid, _allies: Array, _enemies: Array) -> void:
-	grid = _grid
-	allies = _allies
-	enemies = _enemies
+func initialize(grid: Grid, allies: Array, enemies: Array) -> void:
+	_grid = grid
+	_allies = allies
+	_enemies = enemies
 
 
-func start_skill_activation_phase(pincer: Pincerer.Pincer, _grid: Grid, _allies: Array = [], _enemies: Array = []) -> void:
-	active_pincer = pincer
+func start_skill_activation_phase(pincer: Pincerer.Pincer, grid: Grid, allies: Array = [], enemies: Array = []) -> void:
+	_active_pincer = pincer
 	
-	initialize(_grid, _allies, _enemies)
+	initialize(grid, allies, enemies)
 	
-	unit_queue = _queue_units(pincer)
-	complete_chains = _build_chains_including_pincering_unit(pincer)
+	_unit_queue = _queue_units(pincer)
+	_complete_chains = _build_chains_including_pincering_unit(pincer)
 	
 	$SkillActivationTimer.start()
 	
-	current_z_index = 2
+	_current_z_index = 2
 	
 	_activate_next_skill()
 
 
 func _activate_next_skill() -> void:
-	var unit: Unit = unit_queue.pop_front()
+	var unit: Unit = _unit_queue.pop_front()
 	
 	if unit != null:
 		var activated_skills: Array = unit.activate_skills()
@@ -87,15 +87,15 @@ func _activate_next_skill() -> void:
 		else:
 			_queue_skills(unit, activated_skills)
 			
-			unit.play_skill_activation_animation(activated_skills, current_z_index)
+			unit.play_skill_activation_animation(activated_skills, _current_z_index)
 			
 			unit.play_scale_up_and_down_animation()
 		
-		current_z_index += 1
+		_current_z_index += 1
 	else:
 		$SkillActivationTimer.stop()
 		
-		if not (attack_skills.empty() and heal_skills.empty()):
+		if not (_attack_skills.empty() and _heal_skills.empty()):
 			$BeforeSkillActivationPhaseFinishesTimer.start()
 			
 			yield($BeforeSkillActivationPhaseFinishesTimer, "timeout")
@@ -153,9 +153,9 @@ func _queue_skills(unit: Unit, activated_skills: Array) -> void:
 		
 		match(skill.skill_type):
 			Enums.SkillType.ATTACK:
-				attack_skills.push_back(skill_attack)
+				_attack_skills.push_back(skill_attack)
 			Enums.SkillType.HEAL, Enums.SkillType.CURE_AILMENT:
-				heal_skills.push_back(skill_attack)
+				_heal_skills.push_back(skill_attack)
 			_:
 				printerr("Unrecognized skill type: ", skill.skill_type)
 
@@ -167,17 +167,17 @@ func _show_chain_previews(pincer: Pincerer.Pincer) -> void:
 		var chain_previewer = chain_previewer_packed_scene.instance()
 		
 		add_child(chain_previewer)
-		chain_previews.push_back(chain_previewer)
+		_chain_previews.push_back(chain_previewer)
 		
-		chain_previewer.update_preview(unit, grid.get_cell_from_position(unit.position))
+		chain_previewer.update_preview(unit, _grid.get_cell_from_position(unit.position))
 		chain_previewer.z_index = -1
 
 
 func clear_chain_previews() -> void:
-	for chain_previewer in chain_previews:
+	for chain_previewer in _chain_previews:
 		chain_previewer.queue_free()
 	
-	chain_previews.clear()
+	_chain_previews.clear()
 
 
 func highlight_pincer(pincer: Pincerer.Pincer) -> void:
@@ -195,14 +195,14 @@ func highlight_pincer(pincer: Pincerer.Pincer) -> void:
 
 
 func start_attack_skill_phase() -> void:
-	_execute_next_skill(attack_skills, "attack_skill_phase_finished")
+	_execute_next_skill(_attack_skills, "attack_skill_phase_finished")
 
 
 func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 	var next_skill: SkillAttack = skill_queue.pop_front()
 	
 	if next_skill != null:
-		var chain: Array = _find_chain(next_skill.unit, complete_chains)
+		var chain: Array = _find_chain(next_skill.unit, _complete_chains)
 		
 		assert(!chain.empty())
 		
@@ -210,11 +210,11 @@ func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 		var target_cells: Array = BoardUtils.find_area_of_effect_target_cells(next_skill.unit,
 			next_skill.unit.position,
 			next_skill.skill,
-			grid,
-			active_pincer.pincered_units,
+			_grid,
+			_active_pincer.pincered_units,
 			chain,
-			allies,
-			enemies)
+			_allies,
+			_enemies)
 		
 		var skill_effect: Node2D = next_skill.skill.effect_scene.instance()
 		
@@ -222,7 +222,7 @@ func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 		
 		var _error = skill_effect.connect("effect_finished", self, "_on_SkillEffect_effect_finished", [skill_queue, finish_signal])
 		
-		var start_cell: Cell = grid.get_cell_from_position(next_skill.unit.position)
+		var start_cell: Cell = _grid.get_cell_from_position(next_skill.unit.position)
 		
 		skill_effect.start(next_skill.unit, next_skill.skill, target_cells, start_cell, pusher)
 		
@@ -244,10 +244,10 @@ func _find_chain(unit: Unit, chains: Array) -> Array:
 
 
 func check_dead_units() -> void:
-	dead_units.clear()
+	_dead_units.clear()
 	
-	_add_dead_units_to_queue(allies, dead_units)
-	_add_dead_units_to_queue(enemies, dead_units)
+	_add_dead_units_to_queue(_allies, _dead_units)
+	_add_dead_units_to_queue(_enemies, _dead_units)
 	
 	_check_next_dead_unit()
 	
@@ -268,7 +268,7 @@ func update_dead_unit_on_swap(unit: Unit, cell_to_swap_to: Cell) -> void:
 
 
 func _check_next_dead_unit() -> void:
-	var unit: Unit = dead_units.pop_front()
+	var unit: Unit = _dead_units.pop_front()
 	
 	if unit != null and not unit.is_death_animation_playing():
 		if unit.connect("death_animation_finished", self, "_on_Unit_death_animation_finished") != OK:
@@ -278,7 +278,7 @@ func _check_next_dead_unit() -> void:
 		
 		unit.play_death_animation()
 		
-		var cell: Cell = grid.get_cell_from_position(unit.position)
+		var cell: Cell = _grid.get_cell_from_position(unit.position)
 		
 		if cell.unit != null:
 			assert(cell.unit == unit)
@@ -308,7 +308,7 @@ func _check_next_dead_unit() -> void:
 
 func _add_dead_units_to_queue(units: Array, queue: Array) -> void:
 	for unit in units:
-		if unit.is_dead() and not (unit in units_removed_from_play):
+		if unit.is_dead() and not (unit in _units_removed_from_play):
 			queue.push_back(unit)
 
 
@@ -317,17 +317,17 @@ func _emit_deferred(signal_name: String) -> void:
 
 
 func start_heal_phase() -> void:
-	_execute_next_skill(heal_skills, "heal_phase_finished")
+	_execute_next_skill(_heal_skills, "heal_phase_finished")
 
 
 func start_status_effect_phase() -> void:
 	var status_effects: Array = Enums.StatusEffectType.values()
 	
 	for status_effect_type in status_effects:
-		var enemies_with_status_effect := get_units_with_status_effect(enemies, status_effect_type)
+		var enemies_with_status_effect := get_units_with_status_effect(_enemies, status_effect_type)
 		
 		if not enemies_with_status_effect.empty():
-			for enemy in enemies:
+			for enemy in _enemies:
 				enemy.inflict(status_effect_type)
 			
 			_play_status_effect_sound(status_effect_type)
@@ -337,7 +337,7 @@ func start_status_effect_phase() -> void:
 				
 				yield($StatusEffectTimer, "timeout")
 		
-		var player_units_status_effect := get_units_with_status_effect(allies, status_effect_type)
+		var player_units_status_effect := get_units_with_status_effect(_allies, status_effect_type)
 		
 		if not player_units_status_effect.empty():
 			for unit in player_units_status_effect:
@@ -379,7 +379,7 @@ func _play_status_effect_sound(status_effect_type: int) -> void:
 # Used only in error cases when a unit dies but there is a mismatch with
 # its current cell
 func _clean_up_all_cells(unit: Unit) -> void:
-	for cell in grid.get_all_cells():
+	for cell in _grid.get_all_cells():
 		if cell.unit == unit:
 			cell.unit = null
 
@@ -399,9 +399,9 @@ func _on_DeathAnimationTimer_timeout() -> void:
 func _on_Unit_death_animation_finished(unit: Unit) -> void:
 	unit.get_parent().remove_child(unit)
 	
-	units_removed_from_play.push_back(unit)
+	_units_removed_from_play.push_back(unit)
 
 
 func _on_PincerExecutor_tree_exiting() -> void:
-	for unit in units_removed_from_play:
+	for unit in _units_removed_from_play:
 		unit.free()

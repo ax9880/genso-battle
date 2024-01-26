@@ -22,23 +22,23 @@ var active_trail: Node2D = null
 var active_unit_entered_cells := {}
 var has_active_unit_exited_cell: bool = false
 
-var enemy_queue := []
+var _enemy_queue := []
 
 # Array<Pincer>
-var pincer_queue := []
+var _pincer_queue := []
 
-var possible_chained_units := []
+var _possible_chained_units := []
 
-var current_turn: int = Turn.NONE
+var _current_turn: int = Turn.NONE
 
-var player_units_node: Node2D
-var enemy_units_node: Node2D
+var _player_units_node: Node2D
+var _enemy_units_node: Node2D
 
-var enemy_phase_count: int = 0
-var current_enemy_phase: int = 0
-var enemy_phases_queue: Array
+var _enemy_phase_count: int = 0
+var _current_enemy_phase: int = 0
+var _enemy_phases_queue: Array
 
-var save_data: SaveData
+var _save_data: SaveData
 
 signal drag_timer_started(timer)
 signal drag_timer_stopped
@@ -53,23 +53,23 @@ signal victory
 # Emitted when the player has less than 2 units on the board.
 signal defeat
 
-signal enemy_phase_started(current_enemy_phase, enemy_phase_count)
+signal enemy_phase_started(_current_enemy_phase, _enemy_phase_count)
 signal enemies_appeared
 
 signal unit_selected_for_view(job)
 
 
 func _ready() -> void:
-	save_data = GameData.save_data
+	_save_data = GameData.save_data
 	
 	$PincerExecutor.pusher = $Pusher
 	
 	if can_use_debug_units:
-		player_units_node = $DebugUnits
+		_player_units_node = $DebugUnits
 		
 		$PlayerUnits.queue_free()
 	else:
-		player_units_node = $PlayerUnits
+		_player_units_node = $PlayerUnits
 		
 		$DebugUnits.queue_free()
 	
@@ -84,9 +84,9 @@ func _ready() -> void:
 	
 	_disable_unit_selection()
 	
-	_make_enemies_appear(enemy_units_node.get_children())
+	_make_enemies_appear(_enemy_units_node.get_children())
 	
-	player_units_node.hide()
+	_player_units_node.hide()
 
 
 func _process(_delta: float) -> void:
@@ -99,14 +99,14 @@ func _process(_delta: float) -> void:
 func _load_player_units() -> void:
 	var discarded_units := []
 	
-	for i in range(player_units_node.get_child_count()):
+	for i in range(_player_units_node.get_child_count()):
 		# Load the first X active units
-		if i < save_data.active_units.size():
-			var index: int = save_data.active_units[i]
+		if i < _save_data.active_units.size():
+			var index: int = _save_data.active_units[i]
 			
-			var job_reference: JobReference = save_data.job_references[index]
+			var job_reference: JobReference = _save_data.job_references[index]
 			
-			var unit: Unit = player_units_node.get_child(i)
+			var unit: Unit = _player_units_node.get_child(i)
 			
 			if unit.visible:
 				unit.set_job_reference(job_reference)
@@ -114,12 +114,12 @@ func _load_player_units() -> void:
 				discarded_units.append(unit)
 		else:
 			# If there are more units than active units then we free the rest
-			var discarded_unit: Unit = player_units_node.get_child(i)
+			var discarded_unit: Unit = _player_units_node.get_child(i)
 			
 			discarded_units.append(discarded_unit)
 	
 	for unit in discarded_units:
-		player_units_node.remove_child(unit)
+		_player_units_node.remove_child(unit)
 		unit.queue_free()
 
 
@@ -133,32 +133,32 @@ func _connect_cell_signals() -> void:
 
 # EnemyPhases
 func _load_enemy_phases() -> void:
-	enemy_phases_queue = $EnemyPhases.get_children()
+	_enemy_phases_queue = $EnemyPhases.get_children()
 	
-	for enemy_phase in enemy_phases_queue:
+	for enemy_phase in _enemy_phases_queue:
 		if not enemy_phase.get_children().empty():
-			enemy_phase_count += 1
+			_enemy_phase_count += 1
 		
 		$EnemyPhases.remove_child(enemy_phase)
 
 
 # EnemyPhases
 func _load_next_enemy_phase() -> void:
-	if current_enemy_phase == enemy_phase_count:
+	if _current_enemy_phase == _enemy_phase_count:
 		emit_signal("victory")
 		
-		current_enemy_phase += 1
+		_current_enemy_phase += 1
 	else:
-		enemy_units_node = enemy_phases_queue[current_enemy_phase]
+		_enemy_units_node = _enemy_phases_queue[_current_enemy_phase]
 	
-		$EnemyPhases.add_child(enemy_units_node)
-		enemy_units_node.show()
+		$EnemyPhases.add_child(_enemy_units_node)
+		_enemy_units_node.show()
 		
 		_assign_enemies_to_cells()
 		
-		current_enemy_phase += 1
+		_current_enemy_phase += 1
 		
-		emit_signal("enemy_phase_started", current_enemy_phase, enemy_phase_count)
+		emit_signal("enemy_phase_started", _current_enemy_phase, _enemy_phase_count)
 
 
 # Traps?
@@ -173,7 +173,7 @@ func _assign_traps_to_cells() -> void:
 
 # Grid? Or here?
 func _assign_enemies_to_cells() -> void:
-	for enemy in enemy_units_node.get_children():
+	for enemy in _enemy_units_node.get_children():
 		_assign_unit_to_cell(enemy)
 		
 		enemy.connect("action_done", self, "_on_Enemy_action_done")
@@ -191,7 +191,7 @@ func _assign_enemies_to_cells() -> void:
 
 
 func _assign_units_to_cells() -> void:
-	for unit in player_units_node.get_children():
+	for unit in _player_units_node.get_children():
 		_assign_unit_to_cell(unit)
 		
 		var _error = unit.connect("picked_up", self, "_on_Unit_picked_up")
@@ -260,15 +260,15 @@ func _make_enemies_appear(units: Array) -> void:
 # Units. Rename it to PlayerUnits
 # And also make DebugUnits of same type
 func _make_player_units_appear() -> void:
-	if player_units_node.visible:
+	if _player_units_node.visible:
 		return
 	else:
-		player_units_node.show()
+		_player_units_node.show()
 		
-		player_units_node.modulate = Color.transparent
+		_player_units_node.modulate = Color.transparent
 		
-		$Tween.interpolate_property(player_units_node, "modulate",
-			player_units_node.modulate, Color.white,
+		$Tween.interpolate_property(_player_units_node, "modulate",
+			_player_units_node.modulate, Color.white,
 			0.5)
 		
 		$Tween.start()
@@ -283,20 +283,20 @@ func _make_player_units_appear() -> void:
 func _start_player_turn(var has_same_cell: bool = false) -> void:
 	print("Starting player turn")
 	
-	$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
-	pincer_queue = []
+	$PincerExecutor.initialize(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
+	_pincer_queue = []
 	
-	if player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or _has_less_than_min_squad_size_alive(player_units_node.get_children()):
+	if _player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or _has_less_than_min_squad_size_alive(_player_units_node.get_children()):
 		print("Defeat!")
 		
 		emit_signal("defeat")
-	elif _is_all_units_dead(enemy_units_node.get_children()):
+	elif _is_all_units_dead(_enemy_units_node.get_children()):
 		_load_next_enemy_phase()
 		
-		if current_enemy_phase <= enemy_phase_count:
-			_make_enemies_appear(enemy_units_node.get_children())
+		if _current_enemy_phase <= _enemy_phase_count:
+			_make_enemies_appear(_enemy_units_node.get_children())
 		
-		current_turn = Turn.PLAYER
+		_current_turn = Turn.PLAYER
 		
 		_enable_unit_selection()
 		
@@ -304,10 +304,10 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		
 		if not has_same_cell:
 			emit_signal("player_turn_started")
-	elif _can_any_unit_act(player_units_node.get_children()):
-		current_turn = Turn.PLAYER
+	elif _can_any_unit_act(_player_units_node.get_children()):
+		_current_turn = Turn.PLAYER
 		
-		for enemy in enemy_units_node.get_children():
+		for enemy in _enemy_units_node.get_children():
 			enemy.reset_turn_counter()
 		
 		_enable_unit_selection()
@@ -319,7 +319,7 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 	else:
 		print("Skipped player turn")
 		
-		for enemy in enemy_units_node.get_children():
+		for enemy in _enemy_units_node.get_children():
 			enemy.reset_turn_counter()
 		
 		emit_signal("drag_timer_reset")
@@ -361,21 +361,21 @@ func _can_any_unit_act(units: Array) -> bool:
 
 # Use global signal?
 func update_drag_mode(drag_mode: int) -> void:
-	for unit in player_units_node.get_children():
+	for unit in _player_units_node.get_children():
 		unit.set_drag_mode(drag_mode)
 	
-	for unit in enemy_units_node.get_children():
+	for unit in _enemy_units_node.get_children():
 		unit.set_drag_mode(drag_mode)
 
 
 func _enable_unit_selection() -> void:
-	_enable_units(player_units_node.get_children())
-	_enable_units(enemy_units_node.get_children())
+	_enable_units(_player_units_node.get_children())
+	_enable_units(_enemy_units_node.get_children())
 
 
 func _disable_unit_selection() -> void:
-	_disable_units(player_units_node.get_children())
-	_disable_units(enemy_units_node.get_children())
+	_disable_units(_player_units_node.get_children())
+	_disable_units(_enemy_units_node.get_children())
 
 
 func _enable_units(units: Array) -> void:
@@ -391,21 +391,21 @@ func _disable_units(units: Array) -> void:
 func _start_enemy_turn() -> void:
 	print("Starting enemy turn")
 	
-	current_turn = Turn.ENEMY
+	_current_turn = Turn.ENEMY
 	
 	_disable_unit_selection()
 	
-	enemy_queue.clear()
+	_enemy_queue.clear()
 	
-	if enemy_units_node.get_children().empty():
+	if _enemy_units_node.get_children().empty():
 		emit_signal("victory")
 	else:
 		# Initialize these parameters. Allies and enemies are used when
 		# checking for dead units. The grid is used when checking for
 		# affected cells when using a skill
-		$PincerExecutor.initialize(grid, enemy_units_node.get_children(), player_units_node.get_children())
+		$PincerExecutor.initialize(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
 		
-		pincer_queue = []
+		_pincer_queue = []
 		
 		# enemy turn starts right away, there's no animation
 		# enqueue enemies
@@ -414,8 +414,8 @@ func _start_enemy_turn() -> void:
 		# after AI made its move, check for attacks
 		# after that, decrease the counter of the next enemy
 		# when the queue is empty, start player turn
-		for enemy in enemy_units_node.get_children():
-			enemy_queue.push_back(enemy)
+		for enemy in _enemy_units_node.get_children():
+			_enemy_queue.push_back(enemy)
 	
 	_update_enemy()
 
@@ -423,13 +423,13 @@ func _start_enemy_turn() -> void:
 func _update_enemy() -> void:
 	_clear_active_cells()
 	
-	if not enemy_queue.empty():
-		var enemy: Unit = enemy_queue.pop_front()
+	if not _enemy_queue.empty():
+		var enemy: Unit = _enemy_queue.pop_front()
 		
 		print("Active enemy is %s" % enemy.name)
 		active_unit = enemy
 		
-		enemy.act(grid, enemy_units_node.get_children(), player_units_node.get_children())
+		enemy.act(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
 	else:
 		_update_status_effects()
 
@@ -477,7 +477,7 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 			
 			has_active_unit_exited_cell = true
 			
-			if current_turn == Turn.PLAYER:
+			if _current_turn == Turn.PLAYER:
 				_start_drag_timer()
 		
 		active_unit_current_cell = selected_cell
@@ -642,24 +642,24 @@ func _execute_pincers(unit: Unit) -> void:
 	
 	yield($PincerExecutor, "finished_checking_for_dead_units")
 	
-	pincer_queue = $Pincerer.find_pincers(grid, unit)
+	_pincer_queue = $Pincerer.find_pincers(grid, unit)
 	
-	if current_turn == Turn.ENEMY:
-		pincer_queue = _filter_pincers_with_active_unit(pincer_queue, unit)
+	if _current_turn == Turn.ENEMY:
+		_pincer_queue = _filter_pincers_with_active_unit(_pincer_queue, unit)
 	
-	print("Found %d pincers" % pincer_queue.size())
+	print("Found %d pincers" % _pincer_queue.size())
 	
-	while not pincer_queue.empty() and pincer_queue.front() != null and pincer_queue.front().is_valid():
+	while not _pincer_queue.empty() and _pincer_queue.front() != null and _pincer_queue.front().is_valid():
 		print("Evaluating pincer")
 		
-		var pincer: Pincerer.Pincer = pincer_queue.pop_front()
+		var pincer: Pincerer.Pincer = _pincer_queue.pop_front()
 		
 		$PincerExecutor.highlight_pincer(pincer)
 		
 		yield($PincerExecutor, "pincer_highlighted")
 		
-		if current_turn == Turn.PLAYER:
-			$PincerExecutor.start_skill_activation_phase(pincer, grid, player_units_node.get_children(), enemy_units_node.get_children())
+		if _current_turn == Turn.PLAYER:
+			$PincerExecutor.start_skill_activation_phase(pincer, grid, _player_units_node.get_children(), _enemy_units_node.get_children())
 			
 			yield($PincerExecutor, "skill_activation_phase_finished")
 		
@@ -672,7 +672,7 @@ func _execute_pincers(unit: Unit) -> void:
 		$PincerExecutor.check_dead_units()
 		yield($PincerExecutor, "finished_checking_for_dead_units")
 		
-		if current_turn == Turn.PLAYER:
+		if _current_turn == Turn.PLAYER:
 			$PincerExecutor.start_heal_phase()
 			
 			yield($PincerExecutor, "heal_phase_finished")
@@ -681,7 +681,7 @@ func _execute_pincers(unit: Unit) -> void:
 	
 	$PincerExecutor.clear_chain_previews()
 	
-	if current_turn == Turn.PLAYER:
+	if _current_turn == Turn.PLAYER:
 		_start_enemy_turn()
 	else:
 		_update_enemy()
@@ -758,7 +758,7 @@ func _on_Unit_picked_up(unit: Unit) -> void:
 	assert(active_trail == null)
 	
 	if not unit.is2x2():
-		active_trail = $Trails.build_trail(current_turn == Turn.PLAYER)
+		active_trail = $Trails.build_trail(_current_turn == Turn.PLAYER)
 	
 	_update_trail(grid.get_cell_from_position(unit.position))
 	
@@ -766,8 +766,8 @@ func _on_Unit_picked_up(unit: Unit) -> void:
 	
 	_highlight_possible_chains(unit)
 	
-	if current_turn == Turn.PLAYER:
-		for other_unit in player_units_node.get_children():
+	if _current_turn == Turn.PLAYER:
+		for other_unit in _player_units_node.get_children():
 			if other_unit != unit:
 				other_unit.disable_selection_area()
 
@@ -788,17 +788,17 @@ func _highlight_possible_chains(unit: Unit) -> void:
 	for chains in chain_families.values():
 		for chain in chains:
 			for unit in chain:
-				possible_chained_units.push_back(unit)
+				_possible_chained_units.push_back(unit)
 	
-	for unit in possible_chained_units:
+	for unit in _possible_chained_units:
 		unit.play_scale_up_and_down_animation()
 
 
 func _stop_possible_chained_units_animations() -> void:
-	for unit in possible_chained_units:
+	for unit in _possible_chained_units:
 		unit.stop_scale_and_and_down_animation()
 	
-	possible_chained_units.clear()
+	_possible_chained_units.clear()
 
 
 func _update_trail(cell: Cell) -> void:
@@ -932,7 +932,7 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	
 	$ChainPreviewer.clear()
 	
-	if current_turn == Turn.PLAYER:
+	if _current_turn == Turn.PLAYER:
 		if unit.is_dead():
 			_stop_possible_chained_units_animations()
 		
@@ -1007,14 +1007,14 @@ func _on_DragTimer_timeout() -> void:
 
 func _on_Board_tree_exiting() -> void:
 	# Free unused enemy phases
-	for enemy_phase in enemy_phases_queue:
+	for enemy_phase in _enemy_phases_queue:
 		enemy_phase.free()
 
 
 func _on_StatusEffectIconAnimationTimer_timeout() -> void:
-	for unit in player_units_node.get_children():
+	for unit in _player_units_node.get_children():
 		unit.update_status_effects_icons()
 	
-	for unit in enemy_units_node.get_children():
+	for unit in _enemy_units_node.get_children():
 		unit.update_status_effects_icons()
 	
