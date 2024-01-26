@@ -25,18 +25,20 @@ var _accumulated_time_seconds: float = 0
 # Array<Array>
 var _pages: Array
 
+var _is_local: bool = true
+
 var _is_dialogue_skipped: bool = false
 
 
 func _ready() -> void:
+	set_process(false)
+	
 	_free_container_children()
 	
 	_read_pages()
 	
-	if not _pages.empty():
-		_set_parameters_from_chapter_data()
-		
-		_show_next_paragraph()
+	if _is_local and not _pages.empty():
+		_start_showing_text()
 
 
 func _process(delta: float) -> void:
@@ -47,6 +49,13 @@ func on_instance(data: Object) -> void:
 	assert(data is ChapterData)
 	
 	chapter_data = data
+	
+	_is_local = false
+
+
+func on_fade_out_finished() -> void:
+	if not _pages.empty():
+		_start_showing_text()
 
 
 # Reads _pages and splits them into lines
@@ -81,6 +90,12 @@ func _add_page(key: String) -> void:
 	var lines: Array = page.split("\n", true) # Allow empty
 	
 	_pages.push_back(lines)
+
+
+func _start_showing_text() -> void:
+	_set_parameters_from_chapter_data()
+	
+	_show_next_paragraph()
 
 
 func _show_next_paragraph() -> void:

@@ -16,7 +16,10 @@ var _current_line: int = 0
 var _current_dialogue_message_container: Control
 var _estimated_container_size: float
 
+var _is_local: bool = true
+
 var is_dialogue_skipped: bool = false
+
 
 onready var messages_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer
 onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
@@ -27,16 +30,21 @@ func _ready() -> void:
 	
 	_load_lines_keys()
 	
-	if not lines.empty():
-		_set_parameters_from_chapter_data()
-		
-		_show_next_line()
+	if _is_local and not lines.empty():
+		_start_showing_text()
 
 
 func on_instance(data: Object) -> void:
 	assert(data is ChapterData)
 	
 	chapter_data = data
+	
+	_is_local = false
+
+
+func on_fade_out_finished() -> void:
+	if not lines.empty():
+		_start_showing_text()
 
 
 func get_dialogue_json_filename() -> String:
@@ -63,6 +71,12 @@ func _load_lines_keys() -> void:
 			printerr("Failed to load JSON")
 
 
+func _start_showing_text() -> void:
+	_set_parameters_from_chapter_data()
+	
+	_show_next_line()
+
+
 func _show_next_line() -> void:
 	_dim_text_of_last_line()
 	
@@ -79,9 +93,9 @@ func _show_next_line() -> void:
 
 
 func _dim_text_of_last_line() -> void:
-	var last_dialogue_message_container: Control = messages_container.get_child(messages_container.get_child_count() - 1)
-	
-	if last_dialogue_message_container != null:
+	if messages_container.get_child_count() > 0:
+		var last_dialogue_message_container: Control = messages_container.get_child(messages_container.get_child_count() - 1)
+		
 		last_dialogue_message_container.dim_text()
 
 
