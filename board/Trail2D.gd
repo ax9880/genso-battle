@@ -76,7 +76,7 @@ func _remove_points(points_to_remove: int) -> void:
 				
 				break
 	
-	for i in range(max(points_to_remove, points_to_sharp_angle)):
+	for _i in range(max(points_to_remove, points_to_sharp_angle)):
 		if line_2d.get_point_count() > 0:
 			line_2d.remove_point(0)
 
