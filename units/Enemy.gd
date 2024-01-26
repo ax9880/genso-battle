@@ -95,8 +95,8 @@ func _use_skill() -> void:
 		emit_action_done()
 
 
-func start_moving(_path: Array) -> void:
-	_path = _path
+func start_moving(path: Array) -> void:
+	_path = path
 	
 	_start_moving()
 
