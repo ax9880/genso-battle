@@ -3,7 +3,11 @@ extends Node
 
 # At what HP percentage this condition is true
 # Setting 1.0 is equivalent to ignoring this value
-export(float, 0.1, 1, 0.1) var hp_percentage: float = 1.0
+export(float, 0.1, 1, 0.1) var max_hp_percentage: float = 1.0
+
+# Minimum HP percentage required so this condition is true.
+# Has to be lower than max HP percentage
+export(float, 0.0, 1, 0.1) var minimum_hp_percentage: float = 0.0
 
 # Whether this condition should only activate once
 export(bool) var is_one_shot: bool = false
@@ -28,6 +32,10 @@ var _is_activated: bool = false
 var _counter: int = 0
 
 
+func _ready() -> void:
+	assert(minimum_hp_percentage < max_hp_percentage)
+
+
 func is_true(current_hp_percentage: float, current_turn: int, can_use_turn_counter: bool) -> bool:
 	var is_current_counter_valid: bool = _is_current_counter_valid(current_turn)
 	
@@ -35,7 +43,7 @@ func is_true(current_hp_percentage: float, current_turn: int, can_use_turn_count
 		# Keep track of the counter even if the condition is not fulfilled
 		_counter += 1
 	
-	if current_hp_percentage > hp_percentage:
+	if current_hp_percentage < minimum_hp_percentage or current_hp_percentage > max_hp_percentage:
 		return false
 	
 	if is_one_shot and _is_activated:
