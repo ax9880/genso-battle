@@ -57,7 +57,6 @@ func _on_StackBasedMenu_navigate(scene_path: String, data: Object) -> void:
 	_notify_scene_on_load()
 
 
-# TODO: Also add data when going back?
 func _on_StackBasedMenu_go_back() -> void:
 	yield(_fade_in(), "completed")
 	

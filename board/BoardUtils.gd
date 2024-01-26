@@ -65,8 +65,6 @@ static func get_distance_to_cell(start_cell: Cell, end_cell: Cell) -> float:
 
 
 static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: Vector2, target_cell: Cell) -> Array:
-	# TODO: when planning for chaining, some tiles have to be avoided
-	# and the path has to be split
 	# Array of target cells
 	# and array/dict of excluded cells?
 	var start_cell: Cell = grid.get_cell_from_position(unit_position)

@@ -84,10 +84,6 @@ func _on_ChangeButton_pressed() -> void:
 
 
 func _on_UnitIcon_mouse_entered() -> void:
-	# TODO: Allow selecting units using keyboard?
-	# The issue is that if you hover, you grab focus here, but if you hover away,
-	# you should look focus. The mouse expectations and the keyboard expectations
-	# are different
 	$UnitIcon.show_glow()
 
 

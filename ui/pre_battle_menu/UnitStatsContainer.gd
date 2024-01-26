@@ -1,10 +1,6 @@
 extends VBoxContainer
 
 
-# TODO: Pass current base_stats OR show when a stat is buffed or debuffed...?
-# If the stat is buffed, show it blue with an arrow pointing up next to it
-# If the stat is debuffed, show it purple with an arrow pointing down 
-# i.e. if current stat greater or less than base stat
 func initialize(base_stats: StartingStats, compare_stats: StartingStats, can_show_remaining_health: bool = false) -> void:
 	# TODO: Add label translations
 	
