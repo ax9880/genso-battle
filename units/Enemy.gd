@@ -59,10 +59,10 @@ func _enable_player_control() -> void:
 	$CanvasLayer/UnitName.modulate = Color.white
 
 
-func use_skill(skill: Skill, target_cells: Array, _path: Array) -> void:
+func use_skill(skill: Skill, target_cells: Array, path: Array) -> void:
 	_selected_skill = skill
 	_selected_skill_target_cells = target_cells
-	_path = _path
+	_path = path
 	
 	if _path.size() > 1:
 		_can_use_skill_after_moving = true
