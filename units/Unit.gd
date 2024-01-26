@@ -140,10 +140,7 @@ func play_scale_up_and_down_animation() -> void:
 	$AnimationPlayer.play("scale up and down")
 
 
-func stop_scale_and_and_down_animation() -> void:
-	# FIXME
-	#assert($AnimationPlayer.current_animation == "scale up and down")
-	
+func stop_scale_up_and_down_animation() -> void:
 	$AnimationPlayer.stop(true)
 	
 	$Tween.remove($Sprite, ":scale")

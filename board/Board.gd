@@ -796,7 +796,7 @@ func _highlight_possible_chains(unit: Unit) -> void:
 
 func _stop_possible_chained_units_animations() -> void:
 	for unit in _possible_chained_units:
-		unit.stop_scale_and_and_down_animation()
+		unit.stop_scale_up_and_down_animation()
 	
 	_possible_chained_units.clear()
 

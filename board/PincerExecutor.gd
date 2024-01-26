@@ -226,7 +226,7 @@ func _execute_next_skill(skill_queue: Array, finish_signal: String) -> void:
 		
 		skill_effect.start(next_skill.unit, next_skill.skill, target_cells, start_cell, pusher)
 		
-		next_skill.unit.stop_scale_and_and_down_animation()
+		next_skill.unit.stop_scale_up_and_down_animation()
 	else:
 		_emit_deferred(finish_signal)
 
