@@ -12,11 +12,12 @@ func _ready() -> void:
 
 func _on_Loader_scene_changed() -> void:
 	if not tween.is_active():
-		tween.interpolate_property(self,
+		var _error = tween.interpolate_property(self,
 			"volume_db",
 			volume_db,
 			-80,
 			fade_time_seconds,
 			Tween.TRANS_LINEAR)
 		
-		tween.start()
+		if not tween.start():
+			push_warning("Failed to start tween to fade out audio")
