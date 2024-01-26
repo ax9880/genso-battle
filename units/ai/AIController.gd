@@ -4,10 +4,10 @@ extends Node
 # Action execution mode.
 enum Mode {
 	# Evaluate each condition and choose an action based on a 
-	# random weighted choice.
+	# _random weighted choice.
 	WEIGHT_BASED,
 	
-	# Execute actions in order if their conditions are valid.
+	# Execute _actions in order if their conditions are valid.
 	# If the action has no valid conditions then do nothing.
 	# The conditions ignore turn counters.
 	ORDER_BASED
@@ -27,22 +27,22 @@ export(float, 0, 1, 0.1) var chance_to_select_random_top_result: float = 0.4
 export(int, 0, 5, 1) var max_number_of_random_top_results: int = 3
 
 
-var current_turn: int = 0
-var random: RandomNumberGenerator = RandomNumberGenerator.new()
+var _current_turn: int = 0
+var _random: RandomNumberGenerator = RandomNumberGenerator.new()
 
-var actions: Array
+var _actions: Array
 
-var action_index: int = 0
+var _action_index: int = 0
 
 
 func _ready() -> void:
-	random.randomize()
+	_random.randomize()
 	
 	for action in get_children():
 		if action is Action:
-			actions.push_back(action)
+			_actions.push_back(action)
 	
-	assert(not actions.empty(), "No actions")
+	assert(not _actions.empty(), "No actions")
 
 
 func get_skills() -> Array:
@@ -62,12 +62,12 @@ func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> 
 		# A delayed skill won't increase the turn counter
 		enemy.trigger_delayed_skill()
 	else:
-		current_turn += 1
+		_current_turn += 1
 		
 		var action: Action = _get_action(enemy)
 		
-		if max_turn_counter != -1 and current_turn >= max_turn_counter:
-			current_turn = 0
+		if max_turn_counter != -1 and _current_turn >= max_turn_counter:
+			_current_turn = 0
 			
 			_reset_actions_counters()
 		
@@ -78,7 +78,7 @@ func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> 
 
 
 func _reset_actions_counters() -> void:
-	for action in actions:
+	for action in _actions:
 		action.reset_turn_counter()
 
 
@@ -95,8 +95,8 @@ func _get_random_weighted_action(current_hp_percentage: float) -> Action:
 	var possible_actions: Array = []
 	var total_weights: int = 0
 	
-	for action in actions:
-		if action.can_activate(current_hp_percentage, current_turn):
+	for action in _actions:
+		if action.can_activate(current_hp_percentage, _current_turn):
 			possible_actions.push_back(action)
 			
 			total_weights += action.weight
@@ -109,7 +109,7 @@ func _get_random_weighted_action(current_hp_percentage: float) -> Action:
 		return null
 	
 	# Random weighted choice
-	var selection: int = random.randi_range(0, total_weights)
+	var selection: int = _random.randi_range(0, total_weights)
 	
 	for i in range(possible_actions.size()):
 		var weight: int = possible_actions[i].weight
@@ -123,18 +123,18 @@ func _get_random_weighted_action(current_hp_percentage: float) -> Action:
 
 
 func _get_next_action(current_hp_percentage: float) -> Action:
-	if actions.empty():
+	if _actions.empty():
 		return null
 	
-	if action_index >= actions.size():
-		action_index = 0
+	if _action_index >= _actions.size():
+		_action_index = 0
 	
-	var action: Action = actions[action_index]
+	var action: Action = _actions[_action_index]
 	
-	action_index += 1
+	_action_index += 1
 	
 	# Don't use turn counter
-	if action.can_activate(current_hp_percentage, current_turn, false):
+	if action.can_activate(current_hp_percentage, _current_turn, false):
 		return action
 	else:
 		return null
@@ -164,7 +164,7 @@ func _execute_move_action(enemy: Enemy, grid: Grid, enemies: Array, action: Acti
 	if action.has_valid_cell():
 		_move_to_given_cell(enemy, grid, enemies, action, navigation_graph)
 	else:
-		if random.randf() < chance_to_move_to_enemy_during_move_behavior:
+		if _random.randf() < chance_to_move_to_enemy_during_move_behavior:
 			_find_cell_close_to_enemy(enemy, grid, enemies, navigation_graph)
 		else:
 			_find_random_cell_to_move_to(enemy, grid, navigation_graph)
@@ -223,9 +223,9 @@ func _find_cells_close_to_enemies(enemy: Enemy, grid: Grid, enemies: Array) -> A
 	return candidate_cells
 
 
-# Find a random cell to move to
+# Find a _random cell to move to
 func _find_random_cell_to_move_to(enemy: Enemy, grid: Grid, navigation_graph: Dictionary) -> void:
-	var next_cell: Cell = navigation_graph.keys()[random.randi_range(0, navigation_graph.size() - 1)]
+	var next_cell: Cell = navigation_graph.keys()[_random.randi_range(0, navigation_graph.size() - 1)]
 
 	var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, next_cell)
 	
@@ -246,9 +246,9 @@ func _execute_skill_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Arr
 		
 		var top_result = results.front()
 		
-		# Pick a random result to make it less predictable
-		if results.size() > max_number_of_random_top_results and random.randf() < chance_to_select_random_top_result:
-			top_result = results[random.randi_range(0, max_number_of_random_top_results)]
+		# Pick a _random result to make it less predictable
+		if results.size() > max_number_of_random_top_results and _random.randf() < chance_to_select_random_top_result:
+			top_result = results[_random.randi_range(0, max_number_of_random_top_results)]
 		
 		# TODO: Use skill regardless?
 		if top_result.damage_dealt == 0:

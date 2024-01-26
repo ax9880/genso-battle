@@ -7,18 +7,18 @@ export(PackedScene) var attack_effect_packed_scene: PackedScene = null
 onready var timer: Timer = $Timer
 
 # Array<Attack>
-var attack_queue: Array = []
-var random := RandomNumberGenerator.new()
+var _attack_queue: Array = []
+var _random := RandomNumberGenerator.new()
 
 signal attack_phase_finished
 
 
 func _ready() -> void:
-	random.randomize()
+	_random.randomize()
 
 
 func start(attacks: Array) -> void:
-	attack_queue = attacks
+	_attack_queue = attacks
 	
 	_filter_attacks(attacks)
 	
@@ -39,7 +39,7 @@ func _filter_attacks(attacks: Array) -> void:
 
 
 func _execute_next_attack() -> void:
-	var attack = attack_queue.pop_front()
+	var attack = _attack_queue.pop_front()
 	
 	if attack != null:
 		_execute_attack(attack)
@@ -53,7 +53,7 @@ func _execute_attack(attack: Attack) -> void:
 	_play_sound(attack.pincering_unit.get_stats().weapon_type)
 	
 	for targeted_unit in attack.targeted_units:
-		var damage: int = targeted_unit.calculate_attack_damage(attack.attacking_unit.get_stats(), attack.pincering_unit.get_stats()) * random.randf_range(0.9, 1.1)
+		var damage: int = targeted_unit.calculate_attack_damage(attack.attacking_unit.get_stats(), attack.pincering_unit.get_stats()) * _random.randf_range(0.9, 1.1)
 		
 		var attack_effect: Node2D = attack_effect_packed_scene.instance()
 		add_child(attack_effect)

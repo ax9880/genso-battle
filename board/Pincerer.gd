@@ -53,17 +53,14 @@ class Pincer extends Reference:
 		return is_any_pincered_unit_alive and is_pincering_units_alive
 
 
-var pincer_queue := []
-
-
 func find_pincers(grid: Grid, active_unit: Unit) -> Array:
-	pincer_queue = _find_pincers(grid, active_unit)
+	var pincers := _find_pincers(grid, active_unit)
 	
 	# Add the chains to the pincer
-	for pincer in pincer_queue:
+	for pincer in pincers:
 		pincer.chain_families = _find_chains(grid, pincer.pincering_units)
 	
-	return pincer_queue
+	return pincers
 
 
 # Finds all pincers, but does not find the chains.

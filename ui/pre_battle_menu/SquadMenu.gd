@@ -10,18 +10,16 @@ onready var scene_container: MarginContainer = $MarginContainer
 
 onready var return_button: Button = $MarginContainer/VBoxContainer/ReturnButton
 
-var change_unit_menu: Control
-
-var changed_job_reference: JobReference = null
-var index_of_changed_job_reference: int = -1
-var unit_item_to_highlight: Control = null
-var number_of_units_before_change: int = -1
+var _changed_job_reference: JobReference = null
+var _index_of_changed_job_reference: int = -1
+var _unit_item_to_highlight: Control = null
+var _number_of_units_before_change: int = -1
 
 
 func _ready() -> void:
 	var save_data: SaveData = GameData.save_data
 	
-	number_of_units_before_change = save_data.active_units.size()
+	_number_of_units_before_change = save_data.active_units.size()
 	
 	_show_active_units()
 
@@ -79,9 +77,9 @@ func _show_active_units() -> void:
 		if unit_item.connect("unit_double_clicked", self, "_on_UnitItem_unit_double_clicked", [job_reference]) != OK:
 			printerr("Failed to connect signal")
 		
-		if changed_job_reference != null && index_of_changed_job_reference != -1:
-			if index_of_changed_job_reference == i and changed_job_reference != job_reference:
-				unit_item_to_highlight = unit_item
+		if _changed_job_reference != null && _index_of_changed_job_reference != -1:
+			if _index_of_changed_job_reference == i and _changed_job_reference != job_reference:
+				_unit_item_to_highlight = unit_item
 	
 	
 	# TODO: Show empty spaces to show that player can have up to six units
@@ -89,12 +87,12 @@ func _show_active_units() -> void:
 
 
 func _on_UnitItem_change_button_clicked(job_reference: JobReference, container_index: int) -> void:
-	changed_job_reference = job_reference
-	index_of_changed_job_reference = container_index
+	_changed_job_reference = job_reference
+	_index_of_changed_job_reference = container_index
 	
 	var save_data: SaveData = GameData.save_data
 	
-	number_of_units_before_change = save_data.active_units.size()
+	_number_of_units_before_change = save_data.active_units.size()
 	
 	navigate(change_unit_item_menu_scene, job_reference)
 
@@ -133,20 +131,20 @@ func _highlight_changed_unit() -> void:
 	
 	var number_of_units_after_change: int = save_data.active_units.size()
 	
-	if unit_item_to_highlight != null:
-		if number_of_units_before_change > number_of_units_after_change:
+	if _unit_item_to_highlight != null:
+		if _number_of_units_before_change > number_of_units_after_change:
 			print("Unit removed")
 		else:
-			unit_item_to_highlight.highlight()
+			_unit_item_to_highlight.highlight()
 		
-		unit_item_to_highlight = null
+		_unit_item_to_highlight = null
 		
-		changed_job_reference = null
-		index_of_changed_job_reference = -1
-		number_of_units_before_change = number_of_units_after_change
+		_changed_job_reference = null
+		_index_of_changed_job_reference = -1
+		_number_of_units_before_change = number_of_units_after_change
 	else:
 		# If a unit was added, highlight the last child
-		if number_of_units_before_change < number_of_units_after_change:
+		if _number_of_units_before_change < number_of_units_after_change:
 			assert(list_container.get_child_count() > 0)
 			
 			list_container.get_child(list_container.get_child_count() - 1).highlight()

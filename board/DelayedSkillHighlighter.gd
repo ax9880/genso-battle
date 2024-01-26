@@ -13,7 +13,7 @@ export(Color) var cell_highlight_color
 
 
 # Array<HighlightedSkill>
-var highlighted_skills: Array = []
+var _highlighted_skills: Array = []
 
 
 func highlight(unit: Unit, skill: Skill, target_cells: Array) -> void:
@@ -27,7 +27,7 @@ func highlight(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	highlighted_skill.skill = skill
 	highlighted_skill.skill_highlight = skill_highlight
 	
-	highlighted_skills.push_back(highlighted_skill)
+	_highlighted_skills.push_back(highlighted_skill)
 
 
 func remove(unit: Unit, skill: Skill) -> void:
@@ -40,7 +40,7 @@ func remove(unit: Unit, skill: Skill) -> void:
 func remove_all(unit: Unit) -> void:
 	var highlights_to_remove: Array = []
 	
-	for highlighted_skill in highlighted_skills:
+	for highlighted_skill in _highlighted_skills:
 		if highlighted_skill.unit == unit:
 			highlights_to_remove.push_back(highlighted_skill)
 	
@@ -51,11 +51,11 @@ func remove_all(unit: Unit) -> void:
 func _remove_highlighted_skill(highlighted_skill: HighlightedSkill) -> void:
 	highlighted_skill.skill_highlight.stop()
 	
-	highlighted_skills.erase(highlighted_skill)
+	_highlighted_skills.erase(highlighted_skill)
 
 
 func _find_highlighted_skill(unit: Unit, skill: Skill) -> HighlightedSkill:
-	for highlighted_skill in highlighted_skills:
+	for highlighted_skill in _highlighted_skills:
 		if highlighted_skill.unit == unit and highlighted_skill.skill == skill:
 			return highlighted_skill
 	

@@ -12,9 +12,9 @@ export(float) var scroll_tween_time_seconds: float = 0.75
 # line: String
 var lines: Array = []
 
-var current_line: int = 0
-var current_dialogue_message_container: Control
-var estimated_container_size: float
+var _current_line: int = 0
+var _current_dialogue_message_container: Control
+var _estimated_container_size: float
 
 var is_dialogue_skipped: bool = false
 
@@ -22,7 +22,7 @@ onready var messages_container: VBoxContainer = $MarginContainer/VBoxContainer/S
 onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
 
 
-func _ready():
+func _ready() -> void:
 	_free_container_children()
 	
 	_load_lines_keys()
@@ -66,14 +66,14 @@ func _load_lines_keys() -> void:
 func _show_next_line() -> void:
 	_dim_text_of_last_line()
 	
-	var dialogue_message = lines[current_line]
+	var dialogue_message = lines[_current_line]
 	
-	current_dialogue_message_container = dialogue_message_container_packed_scene.instance()
+	_current_dialogue_message_container = dialogue_message_container_packed_scene.instance()
 	
-	messages_container.add_child(current_dialogue_message_container)
+	messages_container.add_child(_current_dialogue_message_container)
 	
-	current_dialogue_message_container.initialize(dialogue_message)
-	current_dialogue_message_container.modulate = Color.transparent
+	_current_dialogue_message_container.initialize(dialogue_message)
+	_current_dialogue_message_container.modulate = Color.transparent
 	
 	call_deferred("update_scroll")
 
@@ -86,16 +86,14 @@ func _dim_text_of_last_line() -> void:
 
 
 func update_scroll() -> void:
-	estimated_container_size += current_dialogue_message_container.rect_size.y
+	_estimated_container_size += _current_dialogue_message_container.rect_size.y
 	
 	$Tween.interpolate_property(scroll_container, "scroll_vertical",
 		scroll_container.scroll_vertical, scroll_container.get_v_scrollbar().max_value,
 		scroll_tween_time_seconds,
 		Tween.TRANS_SINE)
 	
-	$Tween.start()
-	
-	$Tween.interpolate_property(current_dialogue_message_container, "modulate",
+	$Tween.interpolate_property(_current_dialogue_message_container, "modulate",
 		Color.transparent,
 		Color.white,
 		$Timer.wait_time,
@@ -121,16 +119,16 @@ func _evaluate_input(event: InputEvent) -> void:
 
 
 func _on_press_ui_select() -> void:
-	if current_dialogue_message_container.is_text_fully_visible():
+	if _current_dialogue_message_container.is_text_fully_visible():
 		_advance_to_next_line()
 	else:
-		current_dialogue_message_container.set_text_fully_visible()
+		_current_dialogue_message_container.set_text_fully_visible()
 
 
 func _advance_to_next_line() -> void:
-	current_line += 1
+	_current_line += 1
 	
-	if current_line >= lines.size():
+	if _current_line >= lines.size():
 		_skip_dialogue()
 	else:
 		_show_next_line()
@@ -162,7 +160,7 @@ func _set_parameters_from_chapter_data() -> void:
 
 
 func _on_Timer_timeout() -> void:
-	current_dialogue_message_container.start_showing_text()
+	_current_dialogue_message_container.start_showing_text()
 
 
 func _on_SkipButton_pressed() -> void:

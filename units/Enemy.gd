@@ -8,14 +8,14 @@ export var chance_to_move_to_enemy_during_move_behavior: float = 0.8
 
 var turn_counter_max_value: int
 
-var can_use_skill_after_moving := false
-var is_moving := false
-var selected_skill: Skill
-var selected_skill_target_cells: Array
+var _can_use_skill_after_moving := false
+var _is_moving := false
+var _selected_skill: Skill
+var _selected_skill_target_cells: Array
 var has_active_delayed_skill: bool = false
 
 # Array of Vector2
-var path := []
+var _path := []
 
 signal action_done
 signal started_moving(unit)
@@ -41,8 +41,8 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 			if turn_counter > 0:
 				self.turn_counter = turn_counter - 1
 			
-			can_use_skill_after_moving = false
-			is_moving = false
+			_can_use_skill_after_moving = false
+			_is_moving = false
 			
 			if turn_counter == 0:
 				$AIController.find_next_move(self, grid, allies, enemies)
@@ -60,12 +60,12 @@ func _enable_player_control() -> void:
 
 
 func use_skill(skill: Skill, target_cells: Array, _path: Array) -> void:
-	selected_skill = skill
-	selected_skill_target_cells = target_cells
-	path = _path
+	_selected_skill = skill
+	_selected_skill_target_cells = target_cells
+	_path = _path
 	
-	if path.size() > 1:
-		can_use_skill_after_moving = true
+	if _path.size() > 1:
+		_can_use_skill_after_moving = true
 		
 		_start_moving()
 	else:
@@ -80,15 +80,15 @@ func trigger_delayed_skill() -> void:
 	has_active_delayed_skill = false
 
 
-# Before calling this method set selected_skill and selected_skill_target_cells
+# Before calling this method set _selected_skill and _selected_skill_target_cells
 func _use_skill() -> void:
-	if selected_skill != null and can_act():
-		if selected_skill.is_delayed and not has_active_delayed_skill:
+	if _selected_skill != null and can_act():
+		if _selected_skill.is_delayed and not has_active_delayed_skill:
 			has_active_delayed_skill = true
 			
-			emit_signal("use_delayed_skill", self, selected_skill, selected_skill_target_cells)
+			emit_signal("use_delayed_skill", self, _selected_skill, _selected_skill_target_cells)
 		else:
-			emit_signal("use_skill", self, selected_skill, selected_skill_target_cells)
+			emit_signal("use_skill", self, _selected_skill, _selected_skill_target_cells)
 			
 			has_active_delayed_skill = false
 	else:
@@ -96,7 +96,7 @@ func _use_skill() -> void:
 
 
 func start_moving(_path: Array) -> void:
-	path = _path
+	_path = _path
 	
 	_start_moving()
 
@@ -109,11 +109,11 @@ func _start_moving() -> void:
 		# the unit not having a reference to its cell)
 		return
 	
-	if path.size() <= 1:
+	if _path.size() <= 1:
 		# Path points to current cell
 		emit_action_done()
 	else:
-		is_moving = true
+		_is_moving = true
 		
 		emit_signal("started_moving", self)
 		
@@ -123,7 +123,7 @@ func _start_moving() -> void:
 
 
 func _move() -> void:
-	var target_position = path.pop_front()
+	var target_position = _path.pop_front()
 	
 	if target_position != null:
 		var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
@@ -137,11 +137,11 @@ func _move() -> void:
 	else:
 		release()
 		
-		path.clear()
+		_path.clear()
 
 
 func _execute_after_move() -> void:
-	if can_use_skill_after_moving:
+	if _can_use_skill_after_moving:
 		_use_skill()
 	else:
 		emit_action_done()
@@ -153,7 +153,7 @@ func reset_turn_counter() -> void:
 
 
 func release() -> void:
-	if not path.empty() and $Tween.is_active():
+	if not _path.empty() and $Tween.is_active():
 		$Tween.stop(self, ":position")
 	
 	.release()
@@ -171,16 +171,16 @@ func set_turn_counter(value: int) -> void:
 func emit_action_done() -> void:
 	emit_signal("action_done", self)
 	
-	can_use_skill_after_moving = false
-	is_moving = false
+	_can_use_skill_after_moving = false
+	_is_moving = false
 	
-	path.clear()
+	_path.clear()
 
 
 func _on_snap_to_grid() -> void:
 	._on_snap_to_grid()
 	
-	if is_moving:
+	if _is_moving:
 		_execute_after_move()
 	else:
 		# Called when unit is controlled by player?
@@ -208,5 +208,5 @@ func _on_Tween_tween_completed(_object: Object, key: String) -> void:
 			if key == ":position":
 				self.current_state = STATE.IDLE
 				
-				if !path.empty():
+				if !_path.empty():
 					_start_moving()

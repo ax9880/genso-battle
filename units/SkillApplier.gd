@@ -10,11 +10,11 @@ export(NodePath) var status_effect_node2d_path: NodePath
 onready var status_effect_node2d: Node2D = get_node(status_effect_node2d_path)
 onready var target_unit: Unit = get_node(target_unit_path)
 
-var random := RandomNumberGenerator.new()
+var _random := RandomNumberGenerator.new()
 
 
 func _ready() -> void:
-	random.randomize()
+	_random.randomize()
 
 
 # Applies a skill, inflicts/heals damage, adds/removes status effects and stats modifiers
@@ -25,7 +25,7 @@ func apply_skill(unit: Unit,
 	if (skill.is_attack() or skill.is_healing()) and skill.primary_power > 0:
 		var damage := calculate_damage(unit.get_stats(), target_unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
 		
-		damage = int(damage * random.randf_range(0.9, 1.1))
+		damage = int(damage * _random.randf_range(0.9, 1.1))
 		
 		if skill.is_healing():
 			damage = -damage * 3
@@ -152,7 +152,7 @@ func _get_attribute_resistance(defender_stats: StartingStats, attacker_attribute
 
 
 func _can_inflict_status_effects(skill: Skill) -> bool:
-	return random.randf() < skill.status_effect_infliction_rate
+	return _random.randf() < skill.status_effect_infliction_rate
 
 
 func _can_apply_status_effect(stats: StartingStats, status_effect: StatusEffect) -> bool:
@@ -161,5 +161,5 @@ func _can_apply_status_effect(stats: StartingStats, status_effect: StatusEffect)
 	
 	var vulnerability: float = stats.get_vulnerability(status_effect.status_effect_type)
 	
-	return random.randf() < vulnerability
+	return _random.randf() < vulnerability
 

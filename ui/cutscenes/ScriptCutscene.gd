@@ -16,16 +16,16 @@ export(String) var title_suffix: String = ""
 
 onready var text_container: VBoxContainer = $MarginContainer/VBoxContainer/TextVBoxContainer
 
-var current_page: int = 0
-var current_paragraph: int = 0
-var current_label: Label
+var _current_page: int = 0
+var _current_paragraph: int = 0
+var _current_label: Label
 
-var accumulated_time_seconds: float = 0
+var _accumulated_time_seconds: float = 0
 
 # Array<Array>
-var pages: Array
+var _pages: Array
 
-var is_dialogue_skipped: bool = false
+var _is_dialogue_skipped: bool = false
 
 
 func _ready() -> void:
@@ -33,14 +33,14 @@ func _ready() -> void:
 	
 	_read_pages()
 	
-	if not pages.empty():
+	if not _pages.empty():
 		_set_parameters_from_chapter_data()
 		
 		_show_next_paragraph()
 
 
 func _process(delta: float) -> void:
-	_slowly_make_text_visible(delta, current_label)
+	_slowly_make_text_visible(delta, _current_label)
 
 
 func on_instance(data: Object) -> void:
@@ -49,7 +49,7 @@ func on_instance(data: Object) -> void:
 	chapter_data = data
 
 
-# Reads pages and splits them into lines
+# Reads _pages and splits them into lines
 func _read_pages() -> void:
 	var file: File = File.new()
 	
@@ -67,7 +67,7 @@ func _read_pages() -> void:
 		if parse_result.error == OK:
 			var json = parse_result.result
 			
-			pages = []
+			_pages = []
 			
 			for page_key in json:
 				_add_page(page_key["line"])
@@ -80,39 +80,39 @@ func _add_page(key: String) -> void:
 	
 	var lines: Array = page.split("\n", true) # Allow empty
 	
-	pages.push_back(lines)
+	_pages.push_back(lines)
 
 
 func _show_next_paragraph() -> void:
-	var paragraph: String = pages[current_page][current_paragraph]
+	var paragraph: String = _pages[_current_page][_current_paragraph]
 	
 	if paragraph.empty():
 		# If empty, adds an empty label so that it serves as a line break
-		current_label = text_label_packed_scene.instance()
-		current_label.text = ""
-		current_label.percent_visible = 1
+		_current_label = text_label_packed_scene.instance()
+		_current_label.text = ""
+		_current_label.percent_visible = 1
 		
-		text_container.add_child(current_label)
+		text_container.add_child(_current_label)
 		
 		# Note: Potentially recursive call
 		_advance_to_next_paragraph()
 	else:
-		current_label = text_label_packed_scene.instance()
-		current_label.text = tr(paragraph)
-		current_label.percent_visible = 0
+		_current_label = text_label_packed_scene.instance()
+		_current_label.text = tr(paragraph)
+		_current_label.percent_visible = 0
 		
-		text_container.add_child(current_label)
+		text_container.add_child(_current_label)
 		
 		set_process(true)
 
 
 # Increases percent visible of the given label. When it is >= 1 it is set to 1.0
 func _slowly_make_text_visible(delta: float, label: Label) -> void:
-	accumulated_time_seconds += delta
+	_accumulated_time_seconds += delta
 	
-	if accumulated_time_seconds > new_character_every_x_seconds:
+	if _accumulated_time_seconds > new_character_every_x_seconds:
 		label.visible_characters += 1
-		accumulated_time_seconds = 0
+		_accumulated_time_seconds = 0
 	
 	if label.percent_visible >= 1:
 		_set_text_fully_visible()
@@ -123,7 +123,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _evaluate_input(event: InputEvent) -> void:
-	if not is_dialogue_skipped:
+	if not _is_dialogue_skipped:
 		if event.is_action_released("ui_select"):
 			_on_press_ui_select()
 		elif event.is_action_released("ui_cancel"):
@@ -133,32 +133,32 @@ func _evaluate_input(event: InputEvent) -> void:
 
 
 func _on_press_ui_select() -> void:
-	if current_label.percent_visible >= 1:
+	if _current_label.percent_visible >= 1:
 		_advance_to_next_paragraph()
 	else:
 		_set_text_fully_visible()
 
 
 func _set_text_fully_visible() -> void:
-	current_label.percent_visible = 1
+	_current_label.percent_visible = 1
 	
 	set_process(false)
 
 
 func _advance_to_next_paragraph() -> void:
-	current_paragraph += 1
+	_current_paragraph += 1
 	
-	if current_paragraph >= pages[current_page].size():
+	if _current_paragraph >= _pages[_current_page].size():
 		_advance_to_next_page()
 	else:
 		_show_next_paragraph()
 
 
 func _advance_to_next_page() -> void:
-	current_page += 1
-	current_paragraph = 0
+	_current_page += 1
+	_current_paragraph = 0
 	
-	if current_page >= pages.size():
+	if _current_page >= _pages.size():
 		_skip_dialogue()
 	else:
 		_free_container_children()
@@ -173,8 +173,8 @@ func _free_container_children() -> void:
 
 
 func _skip_dialogue() -> void:
-	if not is_dialogue_skipped:
-		is_dialogue_skipped = true
+	if not _is_dialogue_skipped:
+		_is_dialogue_skipped = true
 		
 		if Loader.change_scene(dialogue_scene_path, chapter_data) != OK:
 			printerr("Failed to change scene")

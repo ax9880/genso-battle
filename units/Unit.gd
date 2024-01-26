@@ -56,12 +56,12 @@ var current_state = STATE.IDLE setget set_current_state
 
 var faction: int = INVALID_FACTION
 
-var random := RandomNumberGenerator.new()
+var _random := RandomNumberGenerator.new()
 
 # Array<StatusEffect>
-var status_effects: Array = []
+var _status_effects: Array = []
 
-var has_entered_cell: bool = false
+var _has_entered_cell: bool = false
 
 
 ## Signals
@@ -75,7 +75,7 @@ signal selected_for_view(unit)
 
 
 func _ready() -> void:
-	random.randomize()
+	_random.randomize()
 	
 	self.current_state = STATE.IDLE
 	
@@ -195,7 +195,7 @@ func disable_swap_area() -> void:
 
 
 func enable_selection_area() -> void:
-	has_entered_cell = false
+	_has_entered_cell = false
 	
 	Utils.enable_object($SelectionArea2D/CollisionShape2D)
 	
@@ -318,7 +318,7 @@ func set_current_state(new_state) -> void:
 			
 			$Sound/PickUpAudio.play()
 			
-			has_entered_cell = false
+			_has_entered_cell = false
 		STATE.SNAPPING_TO_GRID:
 			disable_swap_area()
 		STATE.SWAPPING:
@@ -382,7 +382,7 @@ func get_skills() -> Array:
 
 
 func get_status_effects() -> Array:
-	return status_effects
+	return _status_effects
 
 
 func calculate_attack_damage(attacker_stats: StartingStats, pincering_unit_stats: StartingStats = null) -> int:
@@ -418,7 +418,7 @@ func activate_skills() -> Array:
 		if skill.area_of_effect == Enums.AreaOfEffect.EQUIP:
 			continue
 		
-		var activation: float = random.randf() + $Job.current_stats.skill_activation_rate_modifier
+		var activation: float = _random.randf() + $Job.current_stats.skill_activation_rate_modifier
 		
 		if activation < skill.activation_rate:
 			activated_skills.push_back(skill)
@@ -434,7 +434,7 @@ func play_skill_activation_animation(activated_skills: Array, layer_z_index: int
 
 
 func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef) -> void:
-	$SkillApplier.apply_skill(unit, skill, on_damage_absorbed_callback, status_effects)
+	$SkillApplier.apply_skill(unit, skill, on_damage_absorbed_callback, _status_effects)
 
 
 func calculate_damage(attacker_stats: StartingStats,
@@ -453,7 +453,7 @@ func on_attacked() -> void:
 func recalculate_stats() -> void:
 	$Job.reset_stats()
 	
-	for status_effect in status_effects:
+	for status_effect in _status_effects:
 		status_effect.modify_stats($Job.base_stats, $Job.current_stats)
 
 
@@ -480,16 +480,16 @@ func add_child_at_offset(node: Node2D) -> void:
 
 
 func update_status_effects_icons() -> void:
-	$Control/StatusEffectsIcons.update_icon(status_effects)
+	$Control/StatusEffectsIcons.update_icon(_status_effects)
 
 
 func _remove_all_status_effects_of_type(var status_effect_type: int) -> void:
 	if has_status_effect_of_type(status_effect_type):
-		var status_effects_to_remove: Array = status_effects.duplicate()
+		var status_effects_to_remove: Array = _status_effects.duplicate()
 		
 		for status_effect in status_effects_to_remove:
 			if status_effect.status_effect_type == status_effect_type:
-				$SkillApplier.remove_status_effect(status_effects, status_effect)
+				$SkillApplier.remove_status_effect(_status_effects, status_effect)
 		
 		recalculate_stats()
 
@@ -514,11 +514,11 @@ func _on_snap_to_grid() -> void:
 
 
 func inflict(status_effect_type: int) -> void:
-	$SkillApplier.inflict(status_effect_type, status_effects)
+	$SkillApplier.inflict(status_effect_type, _status_effects)
 
 
 func has_status_effect_of_type(status_effect_type: int) -> bool:
-	for effect in status_effects:
+	for effect in _status_effects:
 		if effect.status_effect_type == status_effect_type:
 			return true
 	
@@ -526,13 +526,13 @@ func has_status_effect_of_type(status_effect_type: int) -> bool:
 
 
 func on_enter_cell() -> void:
-	has_entered_cell = true
+	_has_entered_cell = true
 	
 	$LongPressTimer.stop()
 
 
 func on_select_for_view() -> void:
-	if not has_entered_cell:
+	if not _has_entered_cell:
 		print("Unit selected!")
 		
 		emit_signal("selected_for_view", self)

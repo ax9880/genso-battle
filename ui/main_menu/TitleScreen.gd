@@ -8,7 +8,7 @@ onready var quit_button: Button = $MarginContainer/VBoxContainer2/VBoxContainer/
 onready var start_button: Button = $MarginContainer/VBoxContainer2/VBoxContainer/StartButton
 
 
-var last_active_button: Button = null
+var _last_active_button: Button = null
 
 
 func _ready() -> void:
@@ -27,12 +27,12 @@ func on_load() -> void:
 
 
 func _set_focus() -> void:
-	if last_active_button != null:
-		last_active_button.grab_focus()
+	if _last_active_button != null:
+		_last_active_button.grab_focus()
 	else:
 		start_button.grab_focus()
 		
-		last_active_button = start_button
+		_last_active_button = start_button
 
 
 func _on_StartButton_pressed() -> void:
@@ -45,13 +45,13 @@ func _on_ContinueButton_pressed() -> void:
 
 
 func _on_SettingsButton_pressed() -> void:
-	last_active_button = $MarginContainer/VBoxContainer2/VBoxContainer/SettingsButton
+	_last_active_button = $MarginContainer/VBoxContainer2/VBoxContainer/SettingsButton
 	
 	navigate(settings_scene)
 
 
 func _on_CreditsButton_pressed() -> void:
-	last_active_button = $MarginContainer/VBoxContainer2/VBoxContainer/CreditsButton
+	_last_active_button = $MarginContainer/VBoxContainer2/VBoxContainer/CreditsButton
 	
 	navigate(credits_scene)
 

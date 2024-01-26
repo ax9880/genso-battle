@@ -17,7 +17,7 @@ onready var message_label := $MarginContainer/MarginContainer/MessageLabel
 onready var character_icon := $VBoxContainer/TextureRect
 onready var nine_patch := $MarginContainer/NinePatchRect
 
-var accumulated_time_seconds: float = 0
+var _accumulated_time_seconds: float = 0
 
 signal text_fully_visible
 
@@ -45,7 +45,7 @@ func initialize(dialogue_message) -> void:
 		$VBoxContainer/TextureRect.texture = load(_ICONS[speaker])
 	
 	message_label.percent_visible = 0
-	accumulated_time_seconds = 0
+	_accumulated_time_seconds = 0
 	
 	$DialogueAudio.play()
 
@@ -56,11 +56,11 @@ func start_showing_text() -> void:
 
 
 func _slowly_make_text_visible(delta: float, label: Label) -> void:
-	accumulated_time_seconds += delta
+	_accumulated_time_seconds += delta
 	
-	if accumulated_time_seconds > new_character_every_x_seconds:
+	if _accumulated_time_seconds > new_character_every_x_seconds:
 		label.visible_characters += 1
-		accumulated_time_seconds = 0
+		_accumulated_time_seconds = 0
 	
 	if label.percent_visible >= 1.0:
 		set_text_fully_visible()
