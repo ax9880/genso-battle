@@ -7,7 +7,7 @@
 [ext_resource path="res://assets/ui/enemy_border.png" type="Texture" id=5]
 [ext_resource path="res://assets/enemies/unit_square_bg.png" type="Texture" id=6]
 [ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=7]
-[ext_resource path="res://assets/ui/orange_panel_transparent.png" type="Texture" id=8]
+[ext_resource path="res://assets/ui/light_blue_panel_transparent.png" type="Texture" id=8]
 [ext_resource path="res://units/ai/AIController.tscn" type="PackedScene" id=9]
 [ext_resource path="res://theme.tres" type="Theme" id=10]
 [ext_resource path="res://assets/ui/unit_circle_gradient.png" type="Texture" id=11]
@@ -56,14 +56,7 @@ texture_progress = ExtResource( 4 )
 visible = true
 
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
-margin_right = 340.0
 texture = ExtResource( 8 )
-
-[node name="MarginContainer" parent="CanvasLayer/ActivatedSkillMarginContainer" index="2"]
-margin_right = 340.0
-
-[node name="VBoxContainer" parent="CanvasLayer/ActivatedSkillMarginContainer/MarginContainer" index="0"]
-margin_right = 325.0
 
 [node name="UnitName" parent="CanvasLayer" index="1"]
 modulate = Color( 1, 1, 1, 1 )
