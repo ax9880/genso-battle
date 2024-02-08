@@ -984,9 +984,6 @@ anims/shake = SubResource( 13 )
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling5/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 14 )
 
-[node name="AIController" parent="Board/EnemyPhases/Phase5/TrainingOrbling5" index="11"]
-behaviors = [ 0 ]
-
 [node name="TrainingOrbling6" parent="Board/EnemyPhases/Phase5" index="1" instance=ExtResource( 3 )]
 position = Vector2( 152, 643 )
 
@@ -1001,9 +998,6 @@ anims/shake = SubResource( 20 )
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling6/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 21 )
 
-[node name="AIController" parent="Board/EnemyPhases/Phase5/TrainingOrbling6" index="11"]
-behaviors = [ 0 ]
-
 [node name="TrainingOrbling7" parent="Board/EnemyPhases/Phase5" index="2" instance=ExtResource( 3 )]
 position = Vector2( 246, 254 )
 
@@ -1017,9 +1011,6 @@ anims/shake = SubResource( 27 )
 
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling7/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 28 )
-
-[node name="AIController" parent="Board/EnemyPhases/Phase5/TrainingOrbling7" index="11"]
-behaviors = [ 0 ]
 
 [node name="Unit" parent="Board/PlayerUnits" index="0"]
 position = Vector2( 251, 558 )
