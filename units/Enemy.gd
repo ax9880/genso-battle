@@ -12,12 +12,14 @@ var _can_use_skill_after_moving := false
 var _is_moving := false
 var _selected_skill: Skill
 var _selected_skill_target_cells: Array
+var _can_move_after_using_skill := false
+
 var has_active_delayed_skill: bool = false
 
 # Array of Vector2
 var _path := []
 
-signal action_done
+signal action_done(unit)
 signal started_moving(unit)
 signal use_skill(unit, skill, target_cells)
 
@@ -52,6 +54,15 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 				emit_action_done()
 
 
+func on_skill_used(grid: Grid, enemies: Array) -> void:
+	if _can_move_after_using_skill:
+		_clear_flags()
+		
+		$AIController.move_after_using_skill(self, grid, enemies)
+	else:
+		emit_action_done()
+
+
 func _enable_player_control() -> void:
 	enable_selection_area()
 	
@@ -59,10 +70,11 @@ func _enable_player_control() -> void:
 	$CanvasLayer/UnitName.modulate = Color.white
 
 
-func use_skill(skill: Skill, target_cells: Array, path: Array) -> void:
+func use_skill(skill: Skill, target_cells: Array, path: Array, can_move_after_using_skill: bool = false) -> void:
 	_selected_skill = skill
 	_selected_skill_target_cells = target_cells
 	_path = path
+	_can_move_after_using_skill = can_move_after_using_skill
 	
 	if _path.size() > 1:
 		_can_use_skill_after_moving = true
@@ -171,10 +183,15 @@ func set_turn_counter(value: int) -> void:
 func emit_action_done() -> void:
 	emit_signal("action_done", self)
 	
-	_can_use_skill_after_moving = false
-	_is_moving = false
+	_clear_flags()
 	
 	_path.clear()
+
+
+func _clear_flags() -> void:
+	_can_use_skill_after_moving = false
+	_is_moving = false
+	_can_move_after_using_skill = false
 
 
 func _on_snap_to_grid() -> void:

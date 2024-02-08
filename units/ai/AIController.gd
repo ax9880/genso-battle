@@ -22,8 +22,10 @@ export(Mode) var mode: int = Mode.WEIGHT_BASED
 # If value is -1 then counter is never reset.
 export(int, -1, 99) var max_turn_counter: int = -1
 
-export(float, 0, 1, 0.1) var chance_to_move_to_enemy_during_move_behavior: float = 0.0
+export(float, 0, 1, 0.1) var chance_to_move_to_enemy_during_move_behavior: float = 0.4
 export(float, 0, 1, 0.1) var chance_to_select_random_top_result: float = 0.4
+export(float, 0, 1, 0.1) var chance_to_move_after_using_skill: float = 0.2
+
 export(int, 0, 5, 1) var max_number_of_random_top_results: int = 3
 
 
@@ -75,6 +77,12 @@ func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> 
 			enemy.emit_action_done()
 		else:
 			_execute_action(enemy, grid, allies, enemies, action)
+
+
+func move_after_using_skill(enemy: Enemy, grid: Grid, enemies: Array) -> void:
+	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, enemy.position, enemy.faction, enemy.get_stats().movement_range)
+	
+	_move_to_chosen_cell(enemy, grid, enemies, navigation_graph)
 
 
 func _reset_actions_counters() -> void:
@@ -164,10 +172,7 @@ func _execute_move_action(enemy: Enemy, grid: Grid, enemies: Array, action: Acti
 	if action.has_valid_cell():
 		_move_to_given_cell(enemy, grid, enemies, action, navigation_graph)
 	else:
-		if _random.randf() < chance_to_move_to_enemy_during_move_behavior:
-			_find_cell_close_to_enemy(enemy, grid, enemies, navigation_graph)
-		else:
-			_find_random_cell_to_move_to(enemy, grid, navigation_graph)
+		_move_to_chosen_cell(enemy, grid, enemies, navigation_graph)
 
 
 func _move_to_given_cell(enemy: Enemy, grid: Grid, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
@@ -184,6 +189,13 @@ func _move_to_given_cell(enemy: Enemy, grid: Grid, enemies: Array, action: Actio
 			enemy.start_moving(path)
 		else:
 			_find_random_cell_to_move_to(enemy, grid, navigation_graph)
+
+
+func _move_to_chosen_cell(enemy: Enemy, grid: Grid, enemies: Array, navigation_graph: Dictionary) -> void:
+	if _random.randf() < chance_to_move_to_enemy_during_move_behavior:
+		_find_cell_close_to_enemy(enemy, grid, enemies, navigation_graph)
+	else:
+		_find_random_cell_to_move_to(enemy, grid, navigation_graph)
 
 
 func _find_cell_close_to_enemy(enemy: Enemy, grid: Grid, enemies: Array, navigation_graph: Dictionary) -> void:
@@ -256,7 +268,9 @@ func _execute_skill_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Arr
 		else:
 			var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, top_result.cell)
 			
-			enemy.use_skill(action.skill, top_result.target_cells, path)
+			var can_move_after_using_skill: bool = _random.randf() < chance_to_move_after_using_skill
+			
+			enemy.use_skill(action.skill, top_result.target_cells, path, can_move_after_using_skill)
 
 
 func _execute_pincer_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary) -> void:

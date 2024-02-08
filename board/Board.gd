@@ -21,6 +21,7 @@ var active_trail: Node2D = null
 # Dictionary<Cell, Cell>
 var active_unit_entered_cells := {}
 var has_active_unit_exited_cell: bool = false
+var has_active_unit_used_skill: bool = false
 
 var _enemy_queue := []
 
@@ -428,6 +429,7 @@ func _update_enemy() -> void:
 		
 		print("Active enemy is %s" % enemy.name)
 		active_unit = enemy
+		has_active_unit_used_skill = false
 		
 		enemy.act(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
 	else:
@@ -815,6 +817,8 @@ func _clear_active_trail() -> void:
 func _on_Enemy_use_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
 	
+	has_active_unit_used_skill = true
+	
 	$DelayedSkillHighlighter.remove(unit, skill)
 	
 	_play_skill_activation_animation(unit, skill)
@@ -845,7 +849,7 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	
 	yield($PincerExecutor, "finished_checking_for_dead_units")
 	
-	_update_enemy()
+	unit.on_skill_used(grid, _player_units_node.get_children())
 
 
 func _on_Enemy_use_delayed_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
@@ -981,7 +985,7 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	
 	unit.z_index = 0
 	
-	if has_active_unit_exited_cell:
+	if has_active_unit_exited_cell and not has_active_unit_used_skill:
 		_clear_active_cells()
 		
 		_execute_pincers(unit)

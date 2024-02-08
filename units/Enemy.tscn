@@ -55,6 +55,12 @@ texture_progress = ExtResource( 4 )
 [node name="Container" parent="Control" index="3"]
 visible = true
 
+[node name="Icon" parent="Control/StatusEffectsIcons" index="0"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 32.0
+margin_bottom = 31.9999
+
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
 texture = ExtResource( 8 )
 
@@ -79,6 +85,5 @@ stream = ExtResource( 12 )
 stream = ExtResource( 3 )
 
 [node name="AIController" parent="." index="13" instance=ExtResource( 9 )]
-chance_to_move_to_enemy_during_move_behavior = 0.4
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
