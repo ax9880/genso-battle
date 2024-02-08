@@ -59,7 +59,7 @@ script = ExtResource( 6 )
 
 [node name="UnitIcon" parent="." instance=ExtResource( 3 )]
 margin_right = 100.0
-margin_bottom = 100.0
+margin_bottom = 101.0
 
 [node name="TextureRect2" type="TextureRect" parent="UnitIcon"]
 modulate = Color( 1, 1, 1, 0 )
@@ -79,7 +79,7 @@ stretch_mode = 1
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 116.0
 margin_right = 584.0
-margin_bottom = 100.0
+margin_bottom = 101.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
@@ -100,12 +100,12 @@ anchor_bottom = 0.0
 margin_left = 0.0
 margin_top = 37.0
 margin_right = 468.0
-margin_bottom = 95.0
+margin_bottom = 101.0
 
 [node name="ChangeButton" parent="." instance=ExtResource( 7 )]
 margin_left = 600.0
 margin_right = 720.0
-margin_bottom = 100.0
+margin_bottom = 101.0
 rect_min_size = Vector2( 120, 0 )
 text = "CHANGE"
 
