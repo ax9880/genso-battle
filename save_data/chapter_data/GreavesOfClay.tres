@@ -1,8 +1,18 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=4 format=2]
 
 [ext_resource path="res://save_data/chapter_data/ChapterData.gd" type="Script" id=1]
+[ext_resource path="res://save_data/chapter_data/BattleInfo.gd" type="Script" id=2]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+sword_enemy_count = 12
+gun_enemy_count = 0
+spear_enemy_count = 7
+staff_enemy_count = 0
+phases_count = 5
 
 [resource]
 script = ExtResource( 1 )
 title = "GREAVES_OF_CLAY"
 battle_scene_path = "res://battles/introduction/GreavesOfClay.tscn"
+battle_info = SubResource( 1 )

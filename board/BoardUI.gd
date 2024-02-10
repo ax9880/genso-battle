@@ -43,6 +43,8 @@ func _update_turn_count() -> void:
 	$CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2/TurnCountLabel.text = "%d" % player_turn_count
 
 
+## Signals
+
 func _on_Board_drag_timer_started(_timer: Timer) -> void:
 	timer = _timer
 	

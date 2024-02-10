@@ -45,9 +45,9 @@ _global_script_classes=[ {
 "path": "res://ui/AudioButton.gd"
 }, {
 "base": "Resource",
-"class": "BattleData",
+"class": "BattleInfo",
 "language": "GDScript",
-"path": "res://save_data/BattleData.gd"
+"path": "res://save_data/chapter_data/BattleInfo.gd"
 }, {
 "base": "Node2D",
 "class": "Board",
@@ -172,7 +172,7 @@ _global_script_class_icons={
 "Attack": "",
 "Attacker": "",
 "AudioButton": "",
-"BattleData": "",
+"BattleInfo": "",
 "Board": "",
 "BoardUtils": "",
 "Cell": "",
@@ -225,7 +225,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/antialiased_line2d/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/antialiased_line2d/plugin.cfg", "res://addons/battle_info_provider/plugin.cfg" )
 
 [gui]
 
