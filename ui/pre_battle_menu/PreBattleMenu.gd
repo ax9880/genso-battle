@@ -1,7 +1,7 @@
 extends StackBasedMenuScreen
 
 
-export(PackedScene) var battle_button_packed_scene: PackedScene
+export(PackedScene) var battle_button_container_packed_scene: PackedScene
 
 
 func _ready() -> void:
@@ -27,14 +27,14 @@ func _create_buttons_for_unlocked_chapters() -> void:
 	var save_data: SaveData = GameData.save_data
 	
 	for unlocked_chapter in save_data.unlocked_chapters:
-		var button: Button = battle_button_packed_scene.instance()
-		
-		button.text = tr(unlocked_chapter.title)
+		var container: Control = battle_button_container_packed_scene.instance()
 		
 		var chapter_data: ChapterData = save_data.find_chapter_data_by_title(unlocked_chapter.title)
 		
-		if button.connect("pressed", self, "on_ChapterButton_pressed", [chapter_data]) == OK:
-			$MarginContainer/VBoxContainer/VBoxContainer2.add_child(button)
+		if container.connect("pressed", self, "on_ChapterButton_pressed", [chapter_data]) == OK:
+			$MarginContainer/VBoxContainer/VBoxContainer2.add_child(container)
+		
+		container.set_values(unlocked_chapter.title, chapter_data.battle_info)
 
 
 func _on_SquadButton_pressed() -> void:
