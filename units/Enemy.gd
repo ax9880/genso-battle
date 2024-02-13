@@ -31,7 +31,8 @@ func _ready() -> void:
 	turn_counter_max_value = get_stats().max_turn_counter
 
 
-func act(grid: Grid, allies: Array, enemies: Array) -> void:
+# allies_queue is a queue of the units that will act after this one
+func act(grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void:
 	if not can_act():
 		print("Enemy %s can not act", name)
 		
@@ -47,7 +48,7 @@ func act(grid: Grid, allies: Array, enemies: Array) -> void:
 			_is_moving = false
 			
 			if turn_counter == 0:
-				$AIController.find_next_move(self, grid, allies, enemies)
+				$AIController.find_next_move(self, grid, allies, enemies, allies_queue)
 			else:
 				print("Enemy %s can't act yet" % name)
 				

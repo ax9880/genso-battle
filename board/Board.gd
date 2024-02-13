@@ -416,6 +416,8 @@ func _start_enemy_turn() -> void:
 		# after that, decrease the counter of the next enemy
 		# when the queue is empty, start player turn
 		for enemy in _enemy_units_node.get_children():
+			# enemy.pick_next_action()
+			
 			_enemy_queue.push_back(enemy)
 	
 	_update_enemy()
@@ -431,7 +433,7 @@ func _update_enemy() -> void:
 		active_unit = enemy
 		has_active_unit_used_skill = false
 		
-		enemy.act(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
+		enemy.act(grid, _enemy_units_node.get_children(), _player_units_node.get_children(), _enemy_queue)
 	else:
 		_update_status_effects()
 

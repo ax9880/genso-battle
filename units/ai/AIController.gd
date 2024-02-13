@@ -1,6 +1,35 @@
 extends Node
 
 
+class ActionParameters extends Reference:
+	var enemy: Enemy
+	
+	var grid: Grid
+	
+	# Array<Unit>
+	# Enemy units
+	var allies: Array
+	
+	# Array<Unit>
+	# Player units
+	var enemies: Array
+	
+	var action: Action
+	
+	# Array<Unit>
+	var allies_queue: Array
+	
+	var navigation_graph: Dictionary
+	
+	
+	func build_navigation_graph() -> void:
+		navigation_graph = BoardUtils.build_navigation_graph(grid, enemy.position, enemy.faction, enemy.get_stats().movement_range)
+	
+	
+	func find_path(target_cell: Cell) -> Array:
+		return BoardUtils.find_path(grid, navigation_graph, enemy.position, target_cell)
+
+
 # Action execution mode.
 enum Mode {
 	# Evaluate each condition and choose an action based on a 
@@ -59,7 +88,7 @@ func get_skills() -> Array:
 	return skills.keys()
 
 
-func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> void:
+func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void:
 	if enemy.has_active_delayed_skill:
 		# A delayed skill won't increase the turn counter
 		enemy.trigger_delayed_skill()
@@ -76,13 +105,30 @@ func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array) -> 
 		if action == null:
 			enemy.emit_action_done()
 		else:
-			_execute_action(enemy, grid, allies, enemies, action)
+			var action_parameters = ActionParameters.new()
+			
+			action_parameters.enemy = enemy
+			action_parameters.grid = grid
+			action_parameters.allies = _get_units_alive(allies)
+			action_parameters.enemies = _get_units_alive(enemies)
+			action_parameters.action = action
+			action_parameters.allies_queue = allies_queue
+			
+			action_parameters.build_navigation_graph()
+			
+			_execute_action(action_parameters)
 
 
 func move_after_using_skill(enemy: Enemy, grid: Grid, enemies: Array) -> void:
-	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, enemy.position, enemy.faction, enemy.get_stats().movement_range)
+	var action_parameters = ActionParameters.new()
 	
-	_move_to_chosen_cell(enemy, grid, enemies, navigation_graph)
+	action_parameters.enemy = enemy
+	action_parameters.grid = grid
+	action_parameters.enemies = enemies
+	
+	action_parameters.build_navigation_graph()
+	
+	_move_to_chosen_cell(action_parameters)
 
 
 func _reset_actions_counters() -> void:
@@ -148,83 +194,81 @@ func _get_next_action(current_hp_percentage: float) -> Action:
 		return null
 
 
-func _execute_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, action: Action) -> void:
-	action.on_use()
+func _execute_action(action_parameters: ActionParameters) -> void:
+	action_parameters.action.on_use()
 	
-	var navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, enemy.position, enemy.faction, enemy.get_stats().movement_range)
-	
-	match(action.behavior):
+	match(action_parameters.action.behavior):
 		Action.Behavior.MOVE:
-			_execute_move_action(enemy, grid, enemies, action, navigation_graph)
+			_execute_move_action(action_parameters)
 		Action.Behavior.USE_SKILL:
-			_execute_skill_action(enemy, grid, allies, enemies, action, navigation_graph)
+			_execute_skill_action(action_parameters)
 		Action.Behavior.PINCER:
-			assert(action.skill == null)
+			assert(action_parameters.action.skill == null)
 			
-			_execute_pincer_action(enemy, grid, allies, enemies, navigation_graph)
+			_execute_pincer_action(action_parameters)
 		_:
-			enemy.emit_action_done()
+			action_parameters.enemy.emit_action_done()
 
 
-func _execute_move_action(enemy: Enemy, grid: Grid, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
-	assert(action.skill == null)
+func _execute_move_action(action_parameters: ActionParameters) -> void:
+	assert(action_parameters.action.skill == null)
 	
-	if action.has_valid_cell():
-		_move_to_given_cell(enemy, grid, enemies, action, navigation_graph)
+	if action_parameters.action.has_valid_cell():
+		_move_to_given_cell(action_parameters)
 	else:
-		_move_to_chosen_cell(enemy, grid, enemies, navigation_graph)
+		_move_to_chosen_cell(action_parameters)
 
 
-func _move_to_given_cell(enemy: Enemy, grid: Grid, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
-	var cell_position: Vector2 = action.get_cell_position()
+func _move_to_given_cell(action_parameters: ActionParameters) -> void:
+	var cell_position: Vector2 = action_parameters.action.get_cell_position()
 	
-	var next_cell: Cell = grid.get_cell_from_coordinates(cell_position)
+	var next_cell: Cell = action_parameters.grid.get_cell_from_coordinates(cell_position)
 	
-	if grid.get_cell_from_position(enemy.position) == next_cell:
-		enemy.emit_action_done()
+	if action_parameters.grid.get_cell_from_position(action_parameters.enemy.position) == next_cell:
+		action_parameters.enemy.emit_action_done()
 	else:
-		var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, next_cell)
+		var path: Array = BoardUtils.find_path(action_parameters.grid, action_parameters.navigation_graph, action_parameters.enemy.position, next_cell)
 		
 		if path.size() > 1:
-			enemy.start_moving(path)
+			action_parameters.enemy.start_moving(path)
 		else:
-			_find_random_cell_to_move_to(enemy, grid, navigation_graph)
+			_find_random_cell_to_move_to(action_parameters)
 
 
-func _move_to_chosen_cell(enemy: Enemy, grid: Grid, enemies: Array, navigation_graph: Dictionary) -> void:
+func _move_to_chosen_cell(action_parameters: ActionParameters) -> void:
 	if _random.randf() < chance_to_move_to_enemy_during_move_behavior:
-		_find_cell_close_to_enemy(enemy, grid, enemies, navigation_graph)
+		_find_cell_close_to_enemy(action_parameters)
 	else:
-		_find_random_cell_to_move_to(enemy, grid, navigation_graph)
+		_find_random_cell_to_move_to(action_parameters)
 
 
-func _find_cell_close_to_enemy(enemy: Enemy, grid: Grid, enemies: Array, navigation_graph: Dictionary) -> void:
-	var candidate_cells: Array = _find_cells_close_to_enemies(enemy, grid, enemies)
+func _find_cell_close_to_enemy(action_parameters: ActionParameters) -> void:
+	var candidate_cells: Array = _find_cells_close_to_enemies(action_parameters)
 	
 	var next_cell: Cell = null
 	
 	for cell in candidate_cells:
-		if navigation_graph.has(cell):
+		if action_parameters.navigation_graph.has(cell):
 			next_cell = cell
 			
 			break
 	
 	if next_cell == null:
-		_find_random_cell_to_move_to(enemy, grid, navigation_graph)
+		_find_random_cell_to_move_to(action_parameters)
 	else:
-		var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, next_cell)
+		var path: Array = action_parameters.find_path(next_cell)
 		
-		enemy.start_moving(path)
+		action_parameters.enemy.start_moving(path)
 
 
 # Returns Array<Cell>
 # Finds free cells that neighbor enemies.
-func _find_cells_close_to_enemies(enemy: Enemy, grid: Grid, enemies: Array) -> Array:
+func _find_cells_close_to_enemies(action_parameters: ActionParameters) -> Array:
 	var directions := [Cell.DIRECTION.RIGHT, Cell.DIRECTION.LEFT, Cell.DIRECTION.UP, Cell.DIRECTION.DOWN]
 	var candidate_cells := []
 	
-	for enemy in enemies:
-		var cell = grid.get_cell_from_position(enemy.position)
+	for enemy in action_parameters.enemies:
+		var cell = action_parameters.grid.get_cell_from_position(enemy.position)
 		
 		for direction in directions:
 			var neighbor: Cell = cell.get_neighbor(direction)
@@ -236,25 +280,33 @@ func _find_cells_close_to_enemies(enemy: Enemy, grid: Grid, enemies: Array) -> A
 
 
 # Find a _random cell to move to
-func _find_random_cell_to_move_to(enemy: Enemy, grid: Grid, navigation_graph: Dictionary) -> void:
+func _find_random_cell_to_move_to(action_parameters: ActionParameters) -> void:
+	var navigation_graph: Dictionary = action_parameters.navigation_graph
+	
 	var next_cell: Cell = navigation_graph.keys()[_random.randi_range(0, navigation_graph.size() - 1)]
 
-	var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, next_cell)
+	var path: Array = action_parameters.find_path(next_cell)
 	
-	enemy.start_moving(path)
+	action_parameters.enemy.start_moving(path)
 
 
-func _execute_skill_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, action: Action, navigation_graph: Dictionary) -> void:
+func _execute_skill_action(action_parameters: ActionParameters) -> void:
+	var action: Action = action_parameters.action
+	
 	assert(action.skill != null)
 	
+	var enemy: Unit = action_parameters.enemy
+	
+	var grid: Grid = action_parameters.grid
+	
 	if not action.can_move_when_using_skill:
-		var target_cells: Array = $Evaluator.get_target_cells(enemy, enemy.position, action.skill, grid, allies, enemies)
+		var target_cells: Array = $Evaluator.get_target_cells(enemy, enemy.position, action.skill, action_parameters.grid, action_parameters.allies, action_parameters.enemies)
 		var path: Array = []
 		
 		enemy.use_skill(action.skill, target_cells, path)
 	else:
 		# Evaluate positions (requires having the whole graph)
-		var results: Array = $Evaluator.evaluate_skill(enemy, grid, allies, enemies, navigation_graph, action.skill, action.preference)
+		var results: Array = $Evaluator.evaluate_skill(enemy, grid, action_parameters.allies, action_parameters.enemies, action_parameters.navigation_graph, action.skill, action.preference)
 		
 		var top_result = results.front()
 		
@@ -264,34 +316,54 @@ func _execute_skill_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Arr
 		
 		# TODO: Use skill regardless?
 		if top_result.damage_dealt == 0:
-			_find_cell_close_to_enemy(enemy, grid, enemies, navigation_graph)
+			_find_cell_close_to_enemy(action_parameters)
 		else:
-			var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, top_result.cell)
+			var path: Array = action_parameters.find_path(top_result.cell)
 			
 			var can_move_after_using_skill: bool = _random.randf() < chance_to_move_after_using_skill
 			
-			enemy.use_skill(action.skill, top_result.target_cells, path, can_move_after_using_skill)
+			action_parameters.enemy.use_skill(action.skill, top_result.target_cells, path, can_move_after_using_skill)
 
 
-func _execute_pincer_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary) -> void:
-	var possible_pincers: Array = $Evaluator.find_possible_pincers(enemy, grid, allies)
-	
-	var next_cell: Cell = null
-	
-	# Finds the best and first cell that it can navigate to (i.e. it is in
-	# the navigation graph)
-	for possible_pincer in possible_pincers:
-		if navigation_graph.has(possible_pincer.cell):
-			next_cell = possible_pincer.cell
-			
-			break
-	
-	if next_cell == null:
-		# Move to a cell to try to set up a pincer
-		# Possible to use a skill? Not very simple
-		# Maybe add a node path to action so it has a fallback action?
-		_find_cell_close_to_enemy(enemy, grid, enemies, navigation_graph)
-	else:
-		var path: Array = BoardUtils.find_path(grid, navigation_graph, enemy.position, next_cell)
+func _execute_pincer_action(action_parameters: ActionParameters) -> void:
+	if action_parameters.allies.size() <= 1:
+		print("No allies alive, can't pincer!")
 		
-		enemy.start_moving(path)
+		_find_random_cell_to_move_to(action_parameters)
+		
+		# TODO: Might be made redundant by swap and pincer
+	else:
+		var possible_pincers: Array = $Evaluator.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.allies)
+		
+		var next_cell: Cell = null
+		
+		# Finds the best and first cell that it can navigate to (i.e. it is in
+		# the navigation graph)
+		for possible_pincer in possible_pincers:
+			if action_parameters.navigation_graph.has(possible_pincer.cell):
+				next_cell = possible_pincer.cell
+				
+				break
+		
+		if next_cell == null:
+			print("Did not find pincers")
+			
+			# TODO: Swap and pincer
+			
+			# Move to a random cell
+			# Maybe add a node path to action so it has a fallback action?
+			_find_random_cell_to_move_to(action_parameters)
+		else:
+			var path: Array = action_parameters.find_path(next_cell)
+			
+			action_parameters.enemy.start_moving(path)
+
+
+func _get_units_alive(units: Array) -> Array:
+	var units_alive: Array = []
+	
+	for unit in units:
+		if unit.is_alive():
+			units_alive.push_back(unit)
+	
+	return units_alive
