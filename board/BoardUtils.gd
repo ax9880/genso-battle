@@ -64,9 +64,7 @@ static func get_distance_to_cell(start_cell: Cell, end_cell: Cell) -> float:
 	return abs(end_cell.coordinates.x - start_cell.coordinates.x) + abs(end_cell.coordinates.y - start_cell.coordinates.y)
 
 
-static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: Vector2, target_cell: Cell) -> Array:
-	# Array of target cells
-	# and array/dict of excluded cells?
+static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: Vector2, target_cell: Cell, excluded_cells: Dictionary = {}) -> Array:
 	var start_cell: Cell = grid.get_cell_from_position(unit_position)
 	
 	# Dictionary<Cell, bool>
@@ -91,7 +89,7 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 			break
 		
 		for neighbor in navigation_graph[node]:
-			if not discovered_dict.has(neighbor):
+			if not discovered_dict.has(neighbor) and not excluded_cells.has(neighbor):
 				queue.push_back(neighbor)
 				
 				parent_dict[neighbor] = node

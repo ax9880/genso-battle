@@ -416,7 +416,7 @@ func _start_enemy_turn() -> void:
 		# after that, decrease the counter of the next enemy
 		# when the queue is empty, start player turn
 		for enemy in _enemy_units_node.get_children():
-			# enemy.pick_next_action()
+			enemy.pick_next_action()
 			
 			_enemy_queue.push_back(enemy)
 	

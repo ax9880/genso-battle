@@ -26,8 +26,8 @@ class ActionParameters extends Reference:
 		navigation_graph = BoardUtils.build_navigation_graph(grid, enemy.position, enemy.faction, enemy.get_stats().movement_range)
 	
 	
-	func find_path(target_cell: Cell) -> Array:
-		return BoardUtils.find_path(grid, navigation_graph, enemy.position, target_cell)
+	func find_path(target_cell: Cell, excluded_cells: Dictionary = {}) -> Array:
+		return BoardUtils.find_path(grid, navigation_graph, enemy.position, target_cell, excluded_cells)
 
 
 # Action execution mode.
@@ -65,6 +65,13 @@ var _actions: Array
 
 var _action_index: int = 0
 
+var _action: Action
+
+var _pincer_target_cell: Cell
+
+# Dictionary<Cell, bool>
+var _pincer_excluded_cells: Dictionary
+
 
 func _ready() -> void:
 	_random.randomize()
@@ -88,21 +95,30 @@ func get_skills() -> Array:
 	return skills.keys()
 
 
-func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void:
-	if enemy.has_active_delayed_skill:
+# Picks and action and saves it as a member so that other units can check
+# the action that this unit will perform.
+func pick_next_action(enemy: Enemy) -> void:
+	if not enemy.has_active_delayed_skill:
 		# A delayed skill won't increase the turn counter
-		enemy.trigger_delayed_skill()
-	else:
 		_current_turn += 1
 		
-		var action: Action = _get_action(enemy)
+		_action = _get_action(enemy)
+		
+		# Choosing a new action resets these values
+		_pincer_target_cell = null
+		_pincer_excluded_cells = {}
 		
 		if max_turn_counter != -1 and _current_turn >= max_turn_counter:
 			_current_turn = 0
 			
 			_reset_actions_counters()
-		
-		if action == null:
+
+
+func execute_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void:
+	if enemy.has_active_delayed_skill:
+		enemy.trigger_delayed_skill()
+	else:
+		if _action == null:
 			enemy.emit_action_done()
 		else:
 			var action_parameters = ActionParameters.new()
@@ -111,7 +127,7 @@ func find_next_move(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, all
 			action_parameters.grid = grid
 			action_parameters.allies = _get_units_alive(allies)
 			action_parameters.enemies = _get_units_alive(enemies)
-			action_parameters.action = action
+			action_parameters.action = _action
 			action_parameters.allies_queue = allies_queue
 			
 			action_parameters.build_navigation_graph()
@@ -129,6 +145,17 @@ func move_after_using_skill(enemy: Enemy, grid: Grid, enemies: Array) -> void:
 	action_parameters.build_navigation_graph()
 	
 	_move_to_chosen_cell(action_parameters)
+
+
+func has_pincer_action() -> bool:
+	return _action != null and \
+		(_action.behavior == Action.Behavior.PINCER or \
+	 	(_action.behavior == Action.Behavior.MOVE and not _action.has_valid_cell()))
+
+
+func set_pincer_target_cell(target_cell: Cell, excluded_cell: Cell) -> void:
+	_pincer_target_cell = target_cell
+	_pincer_excluded_cells = {excluded_cell: true}
 
 
 func _reset_actions_counters() -> void:
@@ -214,25 +241,30 @@ func _execute_move_action(action_parameters: ActionParameters) -> void:
 	assert(action_parameters.action.skill == null)
 	
 	if action_parameters.action.has_valid_cell():
-		_move_to_given_cell(action_parameters)
+		assert(_pincer_target_cell == null)
+		
+		var cell_position: Vector2 = action_parameters.action.get_cell_position()
+		var next_cell: Cell = action_parameters.grid.get_cell_from_coordinates(cell_position)
+		
+		_move_to_given_cell(action_parameters, next_cell)
+	elif _pincer_target_cell != null:
+		print("Moving to pincer cell that was set up ", _pincer_target_cell.coordinates)
+		
+		_move_to_given_cell(action_parameters, _pincer_target_cell, _pincer_excluded_cells)
 	else:
 		_move_to_chosen_cell(action_parameters)
 
 
-func _move_to_given_cell(action_parameters: ActionParameters) -> void:
-	var cell_position: Vector2 = action_parameters.action.get_cell_position()
-	
-	var next_cell: Cell = action_parameters.grid.get_cell_from_coordinates(cell_position)
-	
+func _move_to_given_cell(action_parameters: ActionParameters, next_cell: Cell, excluded_cells: Dictionary = {}) -> void:
 	if action_parameters.grid.get_cell_from_position(action_parameters.enemy.position) == next_cell:
 		action_parameters.enemy.emit_action_done()
 	else:
-		var path: Array = BoardUtils.find_path(action_parameters.grid, action_parameters.navigation_graph, action_parameters.enemy.position, next_cell)
+		var path: Array = action_parameters.find_path(next_cell, excluded_cells)
 		
 		if path.size() > 1:
 			action_parameters.enemy.start_moving(path)
 		else:
-			_find_random_cell_to_move_to(action_parameters)
+			_move_to_chosen_cell(action_parameters)
 
 
 func _move_to_chosen_cell(action_parameters: ActionParameters) -> void:
@@ -329,34 +361,68 @@ func _execute_pincer_action(action_parameters: ActionParameters) -> void:
 	if action_parameters.allies.size() <= 1:
 		print("No allies alive, can't pincer!")
 		
-		_find_random_cell_to_move_to(action_parameters)
-		
 		# TODO: Might be made redundant by swap and pincer
-	else:
-		var possible_pincers: Array = $Evaluator.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.allies)
+		_find_random_cell_to_move_to(action_parameters)
+	elif _pincer_target_cell != null:
+		print("Pincer action, moving to pincer that was set up")
 		
-		var next_cell: Cell = null
-		
-		# Finds the best and first cell that it can navigate to (i.e. it is in
-		# the navigation graph)
-		for possible_pincer in possible_pincers:
-			if action_parameters.navigation_graph.has(possible_pincer.cell):
-				next_cell = possible_pincer.cell
-				
-				break
-		
-		if next_cell == null:
-			print("Did not find pincers")
-			
-			# TODO: Swap and pincer
-			
-			# Move to a random cell
-			# Maybe add a node path to action so it has a fallback action?
-			_find_random_cell_to_move_to(action_parameters)
+		# FIXME: Don't repeat code from move_to_given_cell()
+		if action_parameters.grid.get_cell_from_position(action_parameters.enemy.position) == _pincer_target_cell:
+			action_parameters.enemy.emit_action_done()
 		else:
-			var path: Array = action_parameters.find_path(next_cell)
+			var path: Array = action_parameters.find_path(_pincer_target_cell, _pincer_excluded_cells)
 			
-			action_parameters.enemy.start_moving(path)
+			if path.size() > 1:
+				action_parameters.enemy.start_moving(path)
+			else:
+				_find_pincer(action_parameters)
+	else:
+		_find_pincer(action_parameters)
+
+
+func _find_pincer(action_parameters: ActionParameters) -> void:
+	var possible_pincers: Array = $Evaluator.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.allies)
+	
+	var next_cell: Cell = null
+	
+	# Finds the best and first cell that it can navigate to (i.e. it is in
+	# the navigation graph)
+	for possible_pincer in possible_pincers:
+		if action_parameters.navigation_graph.has(possible_pincer.end_cell):
+			next_cell = possible_pincer.end_cell
+			
+			break
+	
+	if next_cell == null:
+		_coordinate_pincer(action_parameters)
+		
+		# TODO: Swap and pincer
+		
+		# Move to a random cell
+		# Maybe add a node path to action so it has a fallback action?
+		#_find_random_cell_to_move_to(action_parameters)
+	else:
+		var path: Array = action_parameters.find_path(next_cell)
+		
+		action_parameters.enemy.start_moving(path)
+
+
+func _coordinate_pincer(action_parameters: ActionParameters) -> void:
+	var coordinatable_pincers: Array =  $Evaluator.find_coordinated_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.enemies, action_parameters.navigation_graph, action_parameters.allies_queue)
+	
+	if coordinatable_pincers.empty():
+		# TODO: Swap and pincer
+		_find_random_cell_to_move_to(action_parameters)
+	else:
+		var possible_pincer = coordinatable_pincers.front()
+		
+		print("Setting up a pincer ", possible_pincer.start_cell.coordinates, " to ", possible_pincer.end_cell.coordinates)
+		
+		var path: Array = action_parameters.find_path(possible_pincer.end_cell)
+		
+		possible_pincer.ally.set_pincer_target_cell(possible_pincer.start_cell, possible_pincer.end_cell)
+		
+		action_parameters.enemy.start_moving(path)
 
 
 func _get_units_alive(units: Array) -> Array:

@@ -48,11 +48,25 @@ func act(grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void
 			_is_moving = false
 			
 			if turn_counter == 0:
-				$AIController.find_next_move(self, grid, allies, enemies, allies_queue)
+				$AIController.execute_action(self, grid, allies, enemies, allies_queue)
 			else:
 				print("Enemy %s can't act yet" % name)
 				
 				emit_action_done()
+
+
+func pick_next_action() -> void:
+	# When it's 1 that means this unit will act in this turn
+	if turn_counter == 1:
+		$AIController.pick_next_action(self)
+
+
+func has_pincer_action() -> bool:
+	return $AIController.has_pincer_action()
+
+
+func set_pincer_target_cell(target_cell: Cell, excluded_cell: Cell) -> void:
+	$AIController.set_pincer_target_cell(target_cell, excluded_cell)
 
 
 func on_skill_used(grid: Grid, enemies: Array) -> void:
