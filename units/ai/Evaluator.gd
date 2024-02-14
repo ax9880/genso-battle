@@ -207,7 +207,7 @@ func find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array, navigation
 	var possible_pincers: Array = _find_coordinatable_pincers(unit, grid, enemies)
 	
 	for ally in allies_queue:
-		if ally.has_pincer_action():
+		if ally.has_pincer_action() and ally.is_alive():
 			var ally_navigation_graph: Dictionary = BoardUtils.build_navigation_graph(grid, ally.position, ally.faction, ally.get_stats().movement_range)
 			
 			var reachable_pincers: Array = _find_reachable_pincers(unit, grid, navigation_graph, ally, ally_navigation_graph, possible_pincers)
