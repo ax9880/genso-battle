@@ -106,3 +106,18 @@ func get_cell_from_coordinates(cell_coordinates: Vector2) -> Cell:
 func cell_coordinates_to_cell_origin(cell_coordinates: Vector2) -> Vector2:
 	return Vector2(cell_coordinates.x * tilesize + half_tilesize + tile_offset, cell_coordinates.y * tilesize + + half_tilesize + tile_offset)
 
+
+func get_bottom_left_corner() -> Cell:
+	return get_cell_from_coordinates(Vector2(0, height - 1))
+
+
+func get_bottom_right_corner() -> Cell:
+	return get_cell_from_coordinates(Vector2(width - 1, height - 1))
+
+
+func get_top_left_corner() -> Cell:
+	return get_cell_from_coordinates(Vector2(0, 0))
+
+
+func get_top_right_corner() -> Cell:
+	return get_cell_from_coordinates(Vector2(width - 1, 0))

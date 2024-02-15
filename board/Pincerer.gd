@@ -124,10 +124,10 @@ func _find_corner_pincers(grid: Grid, active_unit: Unit, leading_pincers: Array,
 	
 	var faction: int = active_unit.faction
 	
-	var bottom_left_corner: Cell = grid.get_cell_from_coordinates(Vector2(0, grid_height - 1))
-	var bottom_right_corner: Cell = grid.get_cell_from_coordinates(Vector2(grid_width - 1, grid_height - 1))
-	var top_left_corner: Cell = grid.get_cell_from_coordinates(Vector2(0, 0))
-	var top_right_corner: Cell = grid.get_cell_from_coordinates(Vector2(grid_width - 1, 0))
+	var bottom_left_corner: Cell = grid.get_bottom_left_corner()
+	var bottom_right_corner: Cell = grid.get_bottom_right_corner()
+	var top_left_corner: Cell = grid.get_top_left_corner()
+	var top_right_corner: Cell = grid.get_top_right_corner()
 	
 	corner_pincers.push_back(_find_corner_pincer(bottom_left_corner, faction, Enums.PincerOrientation.BOTTOM_LEFT_CORNER))
 	corner_pincers.push_back(_find_corner_pincer(bottom_right_corner, faction, Enums.PincerOrientation.BOTTOM_RIGHT_CORNER))
