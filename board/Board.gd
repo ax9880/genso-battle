@@ -713,7 +713,10 @@ func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
 	# Pincering unit followed by its chain
 	for pincering_unit in pincer.pincering_units:
 		_queue_attack(attack_queue, pincer.pincered_units, pincering_unit)
-		_queue_chain_attacks(attack_queue, pincer.chain_families[pincering_unit], pincer.pincered_units, pincering_unit)
+		
+		# Only player pincers have chaining
+		if pincering_unit.faction == Unit.PLAYER_FACTION:
+			_queue_chain_attacks(attack_queue, pincer.chain_families[pincering_unit], pincer.pincered_units, pincering_unit)
 	
 	return attack_queue
 
