@@ -107,6 +107,11 @@ func cell_coordinates_to_cell_origin(cell_coordinates: Vector2) -> Vector2:
 	return Vector2(cell_coordinates.x * tilesize + half_tilesize + tile_offset, cell_coordinates.y * tilesize + + half_tilesize + tile_offset)
 
 
+# Returns Array<Cell>
+func get_corners() -> Array:
+	return [get_bottom_left_corner(), get_bottom_right_corner(), get_top_left_corner(), get_top_right_corner()]
+
+
 func get_bottom_left_corner() -> Cell:
 	return get_cell_from_coordinates(Vector2(0, height - 1))
 

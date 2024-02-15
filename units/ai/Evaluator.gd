@@ -134,7 +134,15 @@ func find_possible_pincers(unit: Unit, grid: Grid, allies: Array) -> Array:
 			
 			possible_pincers.append_array(_find_possible_pincers(cell, unit.faction))
 	
-	# TODO: Find corner pincers
+	# Array<Cell>
+	var corners: Array = grid.get_corners()
+	
+	# TODO: Ignore pincer if one of the pincering units is this unit?
+	for corner_cell in corners:
+		var possible_pincer: PossiblePincer = _find_possible_corner_pincer(corner_cell, unit.faction)
+		
+		if possible_pincer != null:
+			possible_pincers.push_back(possible_pincer)
 	
 	possible_pincers.sort_custom(UnitsPinceredSorter, "sort_descending")
 	
@@ -157,7 +165,11 @@ func _find_possible_pincers(start_cell: Cell, faction: int) -> Array:
 	return possible_pincers
 
 
-# Returns null if a possible pincer is not found
+# Finds a possible pincer from the start cell in the given direction.
+# If the unit in the start cell is not null, it must be an ally. A pincer
+# is possible if there is one or more enemies in a row in the given direction
+# and a free cell in the end.
+# Returns null if a possible pincer is not found.
 func _find_possible_pincer(start_cell: Cell, faction: int, direction: int) -> PossiblePincer:
 	# Is not null if a possible pincer is found
 	var candidate_cell: Cell = null
@@ -201,10 +213,50 @@ func _find_possible_pincer(start_cell: Cell, faction: int, direction: int) -> Po
 		return null
 
 
+func _find_possible_corner_pincer(corner_cell: Cell, faction: int, is_coordinated: bool = false) -> PossiblePincer:
+	# No unit in corner, or it's an ally. There's nothing to pincer
+	if corner_cell.unit == null or corner_cell.unit.is_ally(faction):
+		return null
+	
+	var neighbors: Array = corner_cell.neighbors
+	
+	assert(neighbors.size() == 2)
+	
+	var neighbor_1: Cell = neighbors[0]
+	var neighbor_2: Cell = neighbors[1]
+	
+	if is_coordinated and neighbor_1.unit == null and neighbor_2.unit == null:
+		var possible_pincer := PossiblePincer.new()
+		
+		possible_pincer.start_cell = neighbor_1
+		possible_pincer.end_cell = neighbor_2
+		possible_pincer.units_pincered_count = 1
+		
+		return possible_pincer
+	if neighbor_1.unit != null and neighbor_1.unit.is_ally(faction) and neighbor_2.unit == null:
+		var possible_pincer := PossiblePincer.new()
+		
+		possible_pincer.start_cell = neighbor_1
+		possible_pincer.end_cell = neighbor_2
+		possible_pincer.units_pincered_count = 1
+		
+		return possible_pincer
+	elif neighbor_2.unit != null and neighbor_2.unit.is_ally(faction) and neighbor_1.unit == null:
+		var possible_pincer := PossiblePincer.new()
+		
+		possible_pincer.start_cell = neighbor_2
+		possible_pincer.end_cell = neighbor_1
+		possible_pincer.units_pincered_count = 1
+		
+		return possible_pincer
+	else:
+		return null
+
+
 func find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array, navigation_graph: Dictionary, allies_queue: Array) -> Array:
 	var coordinated_pincers: Array = []
 	
-	var possible_pincers: Array = _find_coordinatable_pincers(unit, grid, enemies)
+	var possible_pincers: Array = _find_coordinated_pincers(unit, grid, enemies)
 	
 	for ally in allies_queue:
 		if ally.has_pincer_action() and ally.is_alive():
@@ -220,7 +272,7 @@ func find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array, navigation
 
 
 # Array<PossiblePincer>
-func _find_coordinatable_pincers(unit: Unit, grid: Grid, enemies: Array) -> Array:
+func _find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array) -> Array:
 	var possible_pincers: Array = []
 	
 	for enemy in enemies:
@@ -238,11 +290,22 @@ func _find_coordinatable_pincers(unit: Unit, grid: Grid, enemies: Array) -> Arra
 						possible_pincers.append(pincer)
 	
 	# Include pincers that include this unit
+	# This is used to coordinate a pincer where this unit doesn't move, but
+	# another unit does move.
 	var cell: Cell = grid.get_cell_from_position(unit.position)
 	
 	possible_pincers.append_array(_find_possible_pincers(cell, unit.faction))
 	
-	# TODO: Find corner pincers
+	# Corner pincers
+	var corners: Array = grid.get_corners()
+	
+	for corner_cell in corners:
+		var is_coordinated: bool = true
+		
+		var possible_pincer: PossiblePincer = _find_possible_corner_pincer(corner_cell, unit.faction, is_coordinated)
+		
+		if possible_pincer != null:
+			possible_pincers.push_back(possible_pincer)
 	
 	return possible_pincers
 
@@ -310,7 +373,7 @@ func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, 
 func _find_shortest_valid_path(ally_path_to_start_cell_size: int, unit_path_to_end_cell_size: int, \
 								unit_path_to_start_cell_size: int, ally_path_to_end_cell_size: int, \
 								possible_pincer: PossiblePincer, ally_cell: Cell, unit_cell: Cell) -> int:
-	if ally_path_to_start_cell_size == 0 and unit_path_to_end_cell_size == 0 and unit_path_to_start_cell_size == 0 and ally_path_to_end_cell_size == 0:
+	if (ally_path_to_start_cell_size == 0 or unit_path_to_end_cell_size == 0) and (unit_path_to_start_cell_size == 0 or ally_path_to_end_cell_size == 0):
 		return ValidPath.NONE
 		
 	if (ally_path_to_start_cell_size > 0 and unit_path_to_end_cell_size > 0) and (unit_path_to_start_cell_size == 0 or ally_path_to_end_cell_size == 0):
