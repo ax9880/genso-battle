@@ -58,7 +58,7 @@ func find_pincers(grid: Grid, active_unit: Unit) -> Array:
 	
 	# Add the chains to the pincer
 	for pincer in pincers:
-		pincer.chain_families = _find_chains(grid, pincer.pincering_units)
+		pincer.chain_families = _find_chains(grid, pincer)
 	
 	return pincers
 
@@ -162,9 +162,11 @@ func _find_corner_pincer(corner: Cell, faction: int, pincer_orientation: int) ->
 			pincer.pincering_units.push_back(neighbor.unit)
 		
 		pincer.pincered_units.push_back(corner.unit)
-	
-	if is_pincer:
+		
 		pincer.pincer_orientation = pincer_orientation
+		
+		pincer.start_position = neighbors[0].position
+		pincer.end_position = neighbors[1].position
 		
 		return pincer
 	else:
@@ -244,7 +246,9 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 
 
 # Returns Dictionary<Unit, Array<Array<Unit>>>
-func _find_chains(grid: Grid, pincering_units: Array) -> Dictionary:
+func _find_chains(grid: Grid, pincer: Pincer) -> Dictionary:
+	var pincering_units: Array = pincer.pincering_units
+	
 	var faction: int = pincering_units.front().faction
 	
 	var chain_families: Dictionary = {}
@@ -254,9 +258,11 @@ func _find_chains(grid: Grid, pincering_units: Array) -> Dictionary:
 		
 		chain_families[pincering_unit] = []
 	
-	for pincering_unit in pincering_units:
-		var cell: Cell = grid.get_cell_from_position(pincering_unit.position)
-		
+	# Get the cells from the recorded positions because if the unit is being
+	# pushed while checking the chains then you may get the wrong cell
+	var cells: Array = [grid.get_cell_from_position(pincer.start_position), grid.get_cell_from_position(pincer.end_position)]
+	
+	for cell in cells:
 		_find_chain(cell, Cell.DIRECTION.RIGHT, chain_families, faction)
 		_find_chain(cell, Cell.DIRECTION.LEFT, chain_families, faction)
 		_find_chain(cell, Cell.DIRECTION.UP, chain_families, faction)

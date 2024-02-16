@@ -48,6 +48,11 @@ func act(grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void
 			_is_moving = false
 			
 			if turn_counter == 0:
+				if current_state != STATE.IDLE:
+					print("Enemy %s waiting for tween to end" % name)
+					
+					yield($Tween, "tween_all_completed")
+				
 				$AIController.execute_action(self, grid, allies, enemies, allies_queue)
 			else:
 				print("Enemy %s can't act yet" % name)

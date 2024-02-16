@@ -26,8 +26,6 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 			direction = _get_next_direction(direction)
 			
 			if direction == initial_direction:
-				print("Failed to find a suitable cell to move to in surrounding cells")
-				
 				cell_to_move_to = null
 				
 				break
@@ -35,9 +33,9 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 				cell_to_move_to = pushed_unit_cell.get_neighbor(direction)
 		
 		if cell_to_move_to == null:
-			print("Failed to find a free neighboring cell. Searching for a free cell using BFS")
-			
 			cell_to_move_to = _find_first_free_cell(pushed_unit_cell)
+			
+			print("Failed to find a free neighboring cell. Searching for a free cell using BFS. Moving to ", cell_to_move_to.coordinates)
 		
 		if cell_to_move_to == null:
 			printerr("Failed to a free cell in the entire grid")
