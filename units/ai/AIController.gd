@@ -370,6 +370,9 @@ func _execute_pincer_action(action_parameters: ActionParameters) -> void:
 		if action_parameters.grid.get_cell_from_position(action_parameters.enemy.position) == _pincer_target_cell:
 			action_parameters.enemy.emit_action_done()
 		else:
+			# TODO: If 2x2 exclude start cells
+			# TODO: Verify that pincer is still valid (ally alive, no allies in 
+			# pincered cells and at least one player unit alive in pincered cells)
 			var path: Array = action_parameters.find_path(_pincer_target_cell, _pincer_excluded_cells)
 			
 			if path.size() > 1:
@@ -381,30 +384,14 @@ func _execute_pincer_action(action_parameters: ActionParameters) -> void:
 
 
 func _find_pincer(action_parameters: ActionParameters) -> void:
-	var possible_pincers: Array = $Evaluator.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.allies)
+	var possible_pincers: Array = $Evaluator.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.navigation_graph, action_parameters.allies)
 	
-	var next_cell: Cell = null
-	
-	# Finds the best and first cell that it can navigate to (i.e. it is in
-	# the navigation graph)
-	for possible_pincer in possible_pincers:
-		if action_parameters.navigation_graph.has(possible_pincer.end_cell):
-			next_cell = possible_pincer.end_cell
-			
-			break
-	
-	if next_cell == null:
+	if possible_pincers.empty():
 		_coordinate_pincer(action_parameters)
-		
-		# TODO: Swap and pincer
-		
-		# Move to a random cell
-		# Maybe add a node path to action so it has a fallback action?
-		#_find_random_cell_to_move_to(action_parameters)
 	else:
-		var path: Array = action_parameters.find_path(next_cell)
+		var possible_pincer: PossiblePincer = possible_pincers.front()
 		
-		action_parameters.enemy.start_moving(path)
+		action_parameters.enemy.start_moving(possible_pincer.path_to_end_cell)
 
 
 func _coordinate_pincer(action_parameters: ActionParameters) -> void:
@@ -414,15 +401,13 @@ func _coordinate_pincer(action_parameters: ActionParameters) -> void:
 		# TODO: Swap and pincer
 		_find_random_cell_to_move_to(action_parameters)
 	else:
-		var possible_pincer = coordinatable_pincers.front()
+		var possible_pincer: PossiblePincer = coordinatable_pincers.front()
 		
 		print("Setting up a pincer ", possible_pincer.start_cell.coordinates, " to ", possible_pincer.end_cell.coordinates)
 		
-		var path: Array = action_parameters.find_path(possible_pincer.end_cell)
-		
 		possible_pincer.ally.set_pincer_target_cell(possible_pincer.start_cell, possible_pincer.end_cell)
 		
-		action_parameters.enemy.start_moving(path)
+		action_parameters.enemy.start_moving(possible_pincer.path_to_end_cell)
 
 
 func _get_units_alive(units: Array) -> Array:

@@ -119,9 +119,6 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 func _find_corner_pincers(grid: Grid, active_unit: Unit, leading_pincers: Array, pincers: Array) -> void:
 	var corner_pincers := []
 	
-	var grid_width: int = grid.width
-	var grid_height: int = grid.height
-	
 	var faction: int = active_unit.faction
 	
 	var bottom_left_corner: Cell = grid.get_bottom_left_corner()

@@ -78,6 +78,8 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 	
 	parent_dict[start_cell] = null
 	
+	var unit: Unit = start_cell.unit
+	
 	# Breadth-first search (again)
 	while not queue.empty():
 		var node: Cell = queue.pop_front()
@@ -88,8 +90,15 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 		if node == target_cell:
 			break
 		
+		if (unit.is2x2() and node.get_cells_in_area().has(target_cell)) and (_is_cell_excluded(target_cell, unit, excluded_cells) or not navigation_graph.has(target_cell)):
+			# If unit enters a cell that contains the target cell, and the
+			# target cell is excluded, then moving to that other cell is enough
+			target_cell = node
+			
+			break
+		
 		for neighbor in navigation_graph[node]:
-			if not discovered_dict.has(neighbor) and not excluded_cells.has(neighbor):
+			if not discovered_dict.has(neighbor) and not _is_cell_excluded(neighbor, unit, excluded_cells):
 				queue.push_back(neighbor)
 				
 				parent_dict[neighbor] = node
@@ -108,6 +117,17 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 			node_parent = parent_dict[node_parent]
 	
 	return path
+
+
+static func _is_cell_excluded(cell: Cell, unit: Unit, excluded_cells: Dictionary) -> bool:
+	if unit == null or not unit.is2x2():
+		return excluded_cells.has(cell)
+	else:
+		for area_cell in cell.get_cells_in_area():
+			if excluded_cells.has(area_cell):
+				return true
+		
+		return false
 
 
 # Returns Array<Cell>
