@@ -76,8 +76,8 @@ func _get_corner_sprite(pincer_orientation: int) -> Node:
 
 
 func _get_corner_position(pincer: Pincerer.Pincer) -> Vector2:
-	var start_position: Vector2 = pincer.pincering_units.front().position
-	var end_position: Vector2 = pincer.pincering_units.back().position
+	var start_position: Vector2 = pincer.start_position
+	var end_position: Vector2 = pincer.end_position
 	
 	match(pincer.pincer_orientation):
 		Enums.PincerOrientation.BOTTOM_LEFT_CORNER:
