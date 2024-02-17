@@ -19,6 +19,8 @@ var path_to_end_cell: Array = []
 # Array of cells that have the pincered units
 var pincered_cells: Array = []
 
+var is_coordinated: bool = false
+
 
 func equals(other: PossiblePincer) -> bool:
 	return (start_cell == other.start_cell and end_cell == other.end_cell) or \

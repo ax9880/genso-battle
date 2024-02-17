@@ -123,8 +123,20 @@ func get_target_cells(unit: Unit,
 
 
 # Returns Array<PossiblePincer> with possible cells were the unit can navigate
-# to to perform a pincer, ordered by how many units are affected.
-func find_possible_pincers(unit: Unit, grid: Grid, navigation_graph: Dictionary, allies: Array) -> Array:
+# to to perform a pincer, and pincers it can coordinate with another ally
+func find_possible_pincers(unit: Unit, grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary, allies_queue: Array) -> Array:
+	var reachable_pincers: Array = _find_reachable_possible_pincers(unit, grid, navigation_graph, allies)
+	
+	var coordinated_pincers: Array = _find_reachable_coordinated_pincers(unit, grid, enemies, navigation_graph, allies_queue)
+	
+	reachable_pincers.append_array(coordinated_pincers)
+	
+	reachable_pincers.sort_custom(PathLengthAndUnitsPinceredSorter, "sort")
+	
+	return reachable_pincers
+
+
+func _find_reachable_possible_pincers(unit: Unit, grid: Grid, navigation_graph: Dictionary, allies: Array) -> Array:
 	var possible_pincers: Array = []
 	
 	for ally in allies:
@@ -140,18 +152,13 @@ func find_possible_pincers(unit: Unit, grid: Grid, navigation_graph: Dictionary,
 	# Array<Cell>
 	var corners: Array = grid.get_corners()
 	
-	# TODO: Ignore pincer if one of the pincering units is this unit?
 	for corner_cell in corners:
 		var possible_pincer: PossiblePincer = _find_possible_corner_pincer(corner_cell, unit.faction)
 		
 		if possible_pincer != null:
 			possible_pincers.push_back(possible_pincer)
 	
-	var reachable_pincers: Array = _filter_reachable_possible_pincers(unit, grid, navigation_graph, possible_pincers)
-	
-	reachable_pincers.sort_custom(UnitsPinceredSorter, "sort_descending")
-	
-	return reachable_pincers
+	return _filter_reachable_possible_pincers(unit, grid, navigation_graph, possible_pincers)
 
 
 func _filter_reachable_possible_pincers(unit: Unit, grid: Grid, navigation_graph: Dictionary, possible_pincers: Array) -> Array:
@@ -169,6 +176,9 @@ func _filter_reachable_possible_pincers(unit: Unit, grid: Grid, navigation_graph
 		var unit_path_to_end_cell: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, possible_pincer.end_cell, excluded_cells)
 		
 		if not unit_path_to_end_cell.empty():
+			possible_pincer.start_cell_path_length = 0
+			possible_pincer.end_cell_path_length = unit_path_to_end_cell.size()
+			
 			possible_pincer.path_to_end_cell = unit_path_to_end_cell
 			
 			reachable_pincers.push_back(possible_pincer)
@@ -214,9 +224,8 @@ func _find_possible_pincer(start_cell: Cell, faction: int, direction: int) -> Po
 	while neighbor != null:
 		var next_unit = neighbor.unit
 		
-		# There is an available cell
-		if next_unit == null:
-			# This unit can move to this cell and perform a pincer
+		# There is an available cell or there is an ally you can swap with
+		if next_unit == null or (next_unit.is_ally(faction) and not next_unit.is2x2()):
 			if last_unit != null and last_unit.is_enemy(faction):
 				candidate_cell = neighbor
 			
@@ -229,7 +238,6 @@ func _find_possible_pincer(start_cell: Cell, faction: int, direction: int) -> Po
 			
 			neighbor = neighbor.get_neighbor(direction)
 		else:
-			# Is an ally, a pincer is not possible
 			break
 	
 	if candidate_cell != null:
@@ -284,7 +292,7 @@ func _is_corner_pincer_possible(start_cell: Cell, end_cell: Cell, faction: int) 
 	return start_cell.unit != null and start_cell.unit.is_ally(faction) and (end_cell.unit == null or end_cell.unit.is_ally(faction))
 
 
-func find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array, navigation_graph: Dictionary, allies_queue: Array) -> Array:
+func _find_reachable_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array, navigation_graph: Dictionary, allies_queue: Array) -> Array:
 	var coordinated_pincers: Array = []
 	
 	var possible_pincers: Array = _find_coordinated_pincers(unit, grid, enemies)
@@ -296,8 +304,6 @@ func find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array, navigation
 			var reachable_pincers: Array = _find_reachable_pincers(unit, grid, navigation_graph, ally, ally_navigation_graph, possible_pincers)
 			
 			coordinated_pincers.append_array(reachable_pincers)
-	
-	coordinated_pincers.sort_custom(PathLengthAndUnitsPinceredSorter, "sort")
 	
 	return coordinated_pincers
 
@@ -367,6 +373,7 @@ func _find_reachable_pincers(unit: Unit, grid: Grid, navigation_graph: Dictionar
 # Checks if pincer is reachable and modifies possible_pincer
 func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, ally: Unit, ally_navigation_graph: Dictionary, possible_pincer: PossiblePincer) -> bool:
 	possible_pincer.ally = ally
+	possible_pincer.is_coordinated = true
 	
 	var excluded_start_cells := {}
 	var excluded_end_cells := {}

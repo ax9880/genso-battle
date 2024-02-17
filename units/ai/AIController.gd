@@ -297,15 +297,12 @@ func _has_valid_coordinated_pincer(action_parameters: ActionParameters) -> bool:
 
 
 func _move_to_given_cell(action_parameters: ActionParameters, next_cell: Cell, excluded_cells: Dictionary = {}) -> void:
-	if action_parameters.grid.get_cell_from_position(action_parameters.enemy.position) == next_cell:
-		action_parameters.enemy.emit_action_done()
+	var path: Array = action_parameters.find_path(next_cell, excluded_cells)
+	
+	if not path.empty():
+		action_parameters.enemy.start_moving(path)
 	else:
-		var path: Array = action_parameters.find_path(next_cell, excluded_cells)
-		
-		if path.size() > 1:
-			action_parameters.enemy.start_moving(path)
-		else:
-			_move_to_chosen_cell(action_parameters)
+		_move_to_chosen_cell(action_parameters)
 
 
 func _move_to_chosen_cell(action_parameters: ActionParameters) -> void:
@@ -406,7 +403,6 @@ func _execute_pincer_action(action_parameters: ActionParameters) -> void:
 		_find_random_cell_to_move_to(action_parameters)
 	elif _has_valid_coordinated_pincer(action_parameters):
 		# FIXME: Don't repeat code from move_to_given_cell()
-		
 		var path: Array = action_parameters.find_path(_pincer_target_cell, _pincer_excluded_cells)
 		
 		if path.size() >= 1:
@@ -420,30 +416,30 @@ func _execute_pincer_action(action_parameters: ActionParameters) -> void:
 
 
 func _find_pincer(action_parameters: ActionParameters) -> void:
-	var possible_pincers: Array = $Evaluator.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.navigation_graph, action_parameters.allies)
+	# Find all possible and coordinated pincers
+	var possible_pincers: Array = $Evaluator.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.allies, action_parameters.enemies, action_parameters.navigation_graph, action_parameters.allies_queue)
 	
 	if possible_pincers.empty():
-		_coordinate_pincer(action_parameters)
-	else:
-		var possible_pincer: PossiblePincer = possible_pincers.front()
-		
-		action_parameters.enemy.start_moving(possible_pincer.path_to_end_cell)
-
-
-func _coordinate_pincer(action_parameters: ActionParameters) -> void:
-	var coordinatable_pincers: Array =  $Evaluator.find_coordinated_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.enemies, action_parameters.navigation_graph, action_parameters.allies_queue)
-	
-	if coordinatable_pincers.empty():
 		# TODO: Swap and pincer
 		_find_random_cell_to_move_to(action_parameters)
 	else:
-		var possible_pincer: PossiblePincer = coordinatable_pincers.front()
+		var possible_pincer: PossiblePincer = possible_pincers[min(_random.randi_range(0, 3), possible_pincers.size() - 1)]
 		
-		print("Setting up a pincer ", possible_pincer.start_cell.coordinates, " to ", possible_pincer.end_cell.coordinates)
-		
-		possible_pincer.ally.set_pincer(possible_pincer.start_cell, possible_pincer.end_cell, possible_pincer.pincered_cells)
-		
-		action_parameters.enemy.start_moving(possible_pincer.path_to_end_cell)
+		if possible_pincer.is_coordinated:
+			_coordinate_pincer(action_parameters, possible_pincer)
+		else:
+			action_parameters.enemy.start_moving(possible_pincer.path_to_end_cell)
+
+
+func _coordinate_pincer(action_parameters: ActionParameters, possible_pincer: PossiblePincer) -> void:
+	assert(possible_pincer.is_coordinated)
+	assert(possible_pincer.end_cell_path_length > 0)
+	
+	print("Setting up a pincer ", possible_pincer.start_cell.coordinates, " to ", possible_pincer.end_cell.coordinates)
+	
+	possible_pincer.ally.set_pincer(possible_pincer.start_cell, possible_pincer.end_cell, possible_pincer.pincered_cells)
+	
+	action_parameters.enemy.start_moving(possible_pincer.path_to_end_cell)
 
 
 func _get_units_alive(units: Array) -> Array:

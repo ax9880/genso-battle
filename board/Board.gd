@@ -28,6 +28,8 @@ var _enemy_queue := []
 # Array<Pincer>
 var _pincer_queue := []
 
+var _completed_enemy_pincers := []
+
 var _possible_chained_units := []
 
 var _current_turn: int = Turn.NONE
@@ -406,7 +408,8 @@ func _start_enemy_turn() -> void:
 		# affected cells when using a skill
 		$PincerExecutor.initialize(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
 		
-		_pincer_queue = []
+		_pincer_queue.clear()
+		_completed_enemy_pincers.clear()
 		
 		# enemy turn starts right away, there's no animation
 		# enqueue enemies
@@ -651,6 +654,8 @@ func _execute_pincers(unit: Unit) -> void:
 	
 	if _current_turn == Turn.ENEMY:
 		_pincer_queue = _filter_pincers_with_active_unit(_pincer_queue, unit)
+		
+		_completed_enemy_pincers.append_array(_pincer_queue)
 	
 	print("Found %d pincers" % _pincer_queue.size())
 	
@@ -991,7 +996,7 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	
 	unit.z_index = 0
 	
-	if has_active_unit_exited_cell and not has_active_unit_used_skill:
+	if not has_active_unit_used_skill:
 		_clear_active_cells()
 		
 		_execute_pincers(unit)
@@ -1003,10 +1008,24 @@ func _filter_pincers_with_active_unit(pincers: Array, unit: Unit) -> Array:
 	var filtered_pincers := []
 	
 	for pincer in pincers:
-		if pincer.pincering_units.find(unit) != -1:
+		if pincer.pincering_units.find(unit) != -1 and not _has_same_pincering_units(pincer):
 			filtered_pincers.push_back(pincer)
 	
 	return filtered_pincers
+
+
+func _has_same_pincering_units(pincer: Pincerer.Pincer) -> bool:
+	assert( pincer.pincering_units.size() == 2)
+	
+	var unit_1: Unit = pincer.pincering_units[0]
+	var unit_2: Unit = pincer.pincering_units[1]
+	
+	for completed_pincer in _completed_enemy_pincers:
+		if (unit_1 == completed_pincer.pincering_units[0] and unit_2 == completed_pincer.pincering_units[1]) or \
+			(unit_1 == completed_pincer.pincering_units[1] and unit_2 == completed_pincer.pincering_units[0]):
+			return true
+	
+	return false
 
 
 func _on_DragTimer_timeout() -> void:
