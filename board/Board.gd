@@ -346,12 +346,11 @@ func _has_less_than_min_squad_size_alive(units: Array) -> bool:
 
 
 func _is_all_units_dead(units: Array) -> bool:
-	var is_all_dead := true
-	
 	for unit in units:
-		is_all_dead = is_all_dead and unit.is_dead()
+		if unit.is_alive():
+			return false
 	
-	return is_all_dead
+	return true
 
 
 func _can_any_unit_act(units: Array) -> bool:
@@ -673,7 +672,7 @@ func _execute_pincers(unit: Unit) -> void:
 			
 			yield($PincerExecutor, "skill_activation_phase_finished")
 		
-		$Attacker.start(_queue_attacks(pincer))
+		$Attacker.start(pincer)
 		yield($Attacker, "attack_phase_finished")
 		
 		$PincerExecutor.start_attack_skill_phase()
@@ -711,40 +710,6 @@ func _update_status_effects() -> void:
 	yield($PincerExecutor, "finished_checking_for_dead_units")
 	
 	_start_player_turn()
-
-
-func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
-	var attack_queue := []
-	
-	# Pincering unit followed by its chain
-	for pincering_unit in pincer.pincering_units:
-		_queue_attack(attack_queue, pincer.pincered_units, pincering_unit)
-		
-		# Only player pincers have chaining
-		if pincering_unit.faction == Unit.PLAYER_FACTION:
-			_queue_chain_attacks(attack_queue, pincer.chain_families[pincering_unit], pincer.pincered_units, pincering_unit)
-	
-	return attack_queue
-
-
-func _queue_attack(queue: Array, targeted_units: Array, attacking_unit: Unit, pincering_unit: Unit = null) -> void:
-	var attack: Attack = Attack.new()
-	
-	attack.targeted_units = targeted_units
-	attack.attacking_unit = attacking_unit
-	
-	if pincering_unit == null:
-		attack.pincering_unit = attacking_unit
-	else:
-		attack.pincering_unit = pincering_unit
-	
-	queue.push_back(attack)
-
-
-func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pincering_unit: Unit) -> void:
-	for chain in chains:
-		for unit in chain:
-			_queue_attack(queue, targeted_units, unit, pincering_unit)
 
 
 func _start_drag_timer() -> void:
@@ -1008,13 +973,13 @@ func _filter_pincers_with_active_unit(pincers: Array, unit: Unit) -> Array:
 	var filtered_pincers := []
 	
 	for pincer in pincers:
-		if pincer.pincering_units.find(unit) != -1 and not _has_same_pincering_units(pincer):
+		if pincer.pincering_units.find(unit) != -1 and not _has_executed_pincer_before(pincer):
 			filtered_pincers.push_back(pincer)
 	
 	return filtered_pincers
 
 
-func _has_same_pincering_units(pincer: Pincerer.Pincer) -> bool:
+func _has_executed_pincer_before(pincer: Pincerer.Pincer) -> bool:
 	assert( pincer.pincering_units.size() == 2)
 	
 	var unit_1: Unit = pincer.pincering_units[0]

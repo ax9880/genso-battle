@@ -17,14 +17,48 @@ func _ready() -> void:
 	_random.randomize()
 
 
-func start(attacks: Array) -> void:
-	_attack_queue = attacks
+func start(pincer: Pincerer.Pincer) -> void:
+	_attack_queue = _queue_attacks(pincer)
 	
-	_filter_attacks(attacks)
+	_filter_attacks(_attack_queue)
 	
 	_execute_next_attack()
 	
 	timer.start()
+
+
+func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
+	var attack_queue := []
+	
+	# Pincering unit followed by its chain
+	for pincering_unit in pincer.pincering_units:
+		_queue_attack(attack_queue, pincer.pincered_units, pincering_unit)
+		
+		# Only player pincers have chaining
+		if pincering_unit.faction == Unit.PLAYER_FACTION:
+			_queue_chain_attacks(attack_queue, pincer.chain_families[pincering_unit], pincer.pincered_units, pincering_unit)
+	
+	return attack_queue
+
+
+func _queue_attack(queue: Array, targeted_units: Array, attacking_unit: Unit, pincering_unit: Unit = null) -> void:
+	var attack: Attack = Attack.new()
+	
+	attack.targeted_units = targeted_units
+	attack.attacking_unit = attacking_unit
+	
+	if pincering_unit == null:
+		attack.pincering_unit = attacking_unit
+	else:
+		attack.pincering_unit = pincering_unit
+	
+	queue.push_back(attack)
+
+
+func _queue_chain_attacks(queue: Array, chains: Array, targeted_units: Array, pincering_unit: Unit) -> void:
+	for chain in chains:
+		for unit in chain:
+			_queue_attack(queue, targeted_units, unit, pincering_unit)
 
 
 func _filter_attacks(attacks: Array) -> void:
