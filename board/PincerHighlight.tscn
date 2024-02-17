@@ -116,7 +116,7 @@ offset = Vector2( 50, 50 )
 
 [node name="PincerHighlightBottomRightCorner" type="Sprite" parent="Highlight"]
 visible = false
-position = Vector2( -50, 50 )
+position = Vector2( -50, -50 )
 rotation = 3.14159
 texture = ExtResource( 7 )
 
