@@ -3,6 +3,67 @@ extends Node
 class_name BoardUtils
 
 
+class Element:
+	var object = null
+	var priority: int = -1
+
+
+# https://simplerize.com/data-structures/priority-queue-implementation-using-unordered-array
+class PriorityQueue:
+	var _array := []
+	var _last_index := -1
+	
+	
+	func resize(size) -> void:
+		_array.resize(size)
+	
+	
+	func is_empty() -> bool:
+		return _last_index < 0
+	
+	
+	func enqueue(element: Element) -> void:
+		if _last_index == _array.size() - 1:
+			printerr("Queue is full")
+			
+			return
+		
+		_last_index += 1
+		
+		_array[_last_index] = element
+	
+	
+	func pop() -> Element:
+		if is_empty():
+			printerr("Queue is empty")
+			
+			return null
+		
+		var index = get_highest_priority_index()
+		
+		var element: Element = _array[index]
+		_array[index] = _array[_last_index]
+		
+		_last_index -= 1
+		
+		return element
+	
+	
+	func get_highest_priority_index() -> int:
+		if is_empty():
+			return -1
+		
+		var index := 0
+		var priority: int = _array[index].priority
+		
+		for i in range(0, _last_index):
+			if (priority > _array[i].priority):
+				index = i
+				priority = _array[i].priority
+		
+		return index
+
+
 # Builds an adjacency dictionary with all the nodes that the given unit can visit
 # Enemies may block the unit from reaching certain tiles, besides the tiles they
 # already occupy
@@ -80,17 +141,6 @@ static func get_distance_to_cell(start_cell: Cell, end_cell: Cell) -> float:
 static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: Vector2, target_cell: Cell, excluded_cells: Dictionary = {}) -> Array:
 	var start_cell: Cell = grid.get_cell_from_position(unit_position)
 	
-	# Dictionary<Cell, bool>
-	var discovered_dict := {}
-	
-	# Dictionary<Cell, Cell>
-	var parent_dict := {}
-	
-	var queue := []
-	queue.push_back(start_cell)
-	
-	parent_dict[start_cell] = null
-	
 	# TODO: Pass unit so that you can find paths for swap and pincer action
 	var unit: Unit = start_cell.unit
 	
@@ -100,12 +150,31 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 	if not unit.is2x2() and not navigation_graph.has(target_cell):
 		return []
 	
-	# Breadth-first search (again)
-	while not queue.empty():
-		var node: Cell = queue.pop_front()
+	# Dictionary<Cell, int (distance)>
+	var discovered_dict := {}
+	
+	# Dictionary<Cell, Cell>
+	var parent_dict := {}
+	
+	parent_dict[start_cell] = null
+	
+	var priority_queue: PriorityQueue = PriorityQueue.new()
+	priority_queue.resize(6 * 8)
+	
+	var start_element := Element.new()
+	start_element.object = start_cell
+	start_element.priority = 0
+	
+	priority_queue.enqueue(start_element)
+	
+	discovered_dict[start_cell] = 0
+	
+	# A* search using priority queue
+	# https://www.redblobgames.com/pathfinding/a-star/introduction.html
+	while not priority_queue.is_empty():
+		var element = priority_queue.pop()
 		
-		# Flag as discovered
-		discovered_dict[node] = true
+		var node: Cell = element.object as Cell
 		
 		if node == target_cell:
 			break
@@ -118,8 +187,16 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 			break
 		
 		for neighbor in navigation_graph[node]:
-			if not discovered_dict.has(neighbor) and not _is_cell_excluded(neighbor, unit, excluded_cells):
-				queue.push_back(neighbor)
+			var distance = discovered_dict[node] + 1
+			
+			if (not neighbor in discovered_dict or distance < discovered_dict[neighbor]) and not _is_cell_excluded(neighbor, unit, excluded_cells):
+				discovered_dict[neighbor] = distance
+				
+				var new_element := Element.new()
+				new_element.object = neighbor
+				new_element.priority = distance + _a_star_heuristic(target_cell, neighbor)
+				
+				priority_queue.enqueue(new_element)
 				
 				parent_dict[neighbor] = node
 	
@@ -137,6 +214,10 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 			node_parent = parent_dict[node_parent]
 	
 	return path
+
+
+static func _a_star_heuristic(target_cell: Cell, current_cell: Cell) -> int:
+	return int(abs(target_cell.position.x - current_cell.position.x) + abs(target_cell.position.y - current_cell.position.y))
 
 
 static func _is_cell_excluded(cell: Cell, unit: Unit, excluded_cells: Dictionary) -> bool:
