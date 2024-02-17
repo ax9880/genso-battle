@@ -26,6 +26,8 @@ var neighbors: Array = []
 # {String, nullable Cell}
 var all_neighbors: Dictionary = {}
 
+var _cells_in_area_2x2: Array = []
+
 
 func add_neighbor(neighbor: Cell, direction: int) -> void:
 	all_neighbors[direction] = neighbor
@@ -39,9 +41,17 @@ func get_neighbor(direction: int) -> Cell:
 	return all_neighbors[direction]
 
 
+func update_cells_in_area() -> void:
+	_cells_in_area_2x2 = _get_cells_in_area(2)
+
+
+func get_cells_in_area() -> Array:
+	return _cells_in_area_2x2
+
+
 # Returns Array<Cell>. If there are not enough neighbors, returns an empty array.
 # Assumes that the cell is at the top left corner of the area.
-func get_cells_in_area(var size: int = 2) -> Array:
+func _get_cells_in_area(var size) -> Array:
 	var row_cell: Cell = self
 	
 	var cells := []
@@ -72,4 +82,3 @@ func get_cells_in_area(var size: int = 2) -> Array:
 		return cells
 	else:
 		return []
-

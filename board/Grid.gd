@@ -47,6 +47,9 @@ func _initialize_grid() -> void:
 			var cell: Cell = grid[x][y]
 			
 			_set_neighbors(cell)
+	
+	for cell in get_all_cells():
+		cell.update_cells_in_area()
 
 
 func _build_cell(x_position: float, y_position: float) -> Cell:
