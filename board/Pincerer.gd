@@ -221,8 +221,6 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 				# Is an ally
 				# Last unit added to list was an enemy
 				if (not pincer.pincered_units.empty()) and pincer.pincered_units.back().is_enemy(faction) and next_unit.can_act():
-					print("Found pincer!")
-					
 					is_pincer = true
 					
 					# End unit
