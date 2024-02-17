@@ -10,6 +10,12 @@
 [node name="Job" parent="." index="2"]
 job = ExtResource( 2 )
 
+[node name="Icon" parent="Control/StatusEffectsIcons" index="0"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 32.0
+margin_bottom = 31.9999
+
 [node name="AIController" parent="." index="13"]
 chance_to_move_to_enemy_during_move_behavior = 1.0
 chance_to_move_after_using_skill = 1.0

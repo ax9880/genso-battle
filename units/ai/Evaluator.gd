@@ -131,7 +131,11 @@ func find_possible_pincers(unit: Unit, grid: Grid, navigation_graph: Dictionary,
 		if ally != unit and ally.can_act():
 			var cell: Cell = grid.get_cell_from_position(ally.position)
 			
-			possible_pincers.append_array(_find_possible_pincers(cell, unit.faction))
+			if ally.is2x2():
+				for area_cell in cell.get_cells_in_area():
+					possible_pincers.append_array(_find_possible_pincers(area_cell, unit.faction))
+			else:
+				possible_pincers.append_array(_find_possible_pincers(cell, unit.faction))
 	
 	# Array<Cell>
 	var corners: Array = grid.get_corners()
@@ -256,24 +260,20 @@ func _find_possible_corner_pincer(corner_cell: Cell, faction: int, is_coordinate
 	
 	var possible_pincer := PossiblePincer.new()
 	
+	possible_pincer.start_cell = neighbor_1
+	possible_pincer.end_cell = neighbor_2
+	
+	possible_pincer.units_pincered_count = 1
 	possible_pincer.pincered_cells.push_back(corner_cell)
 	
 	if is_coordinated and neighbor_1.unit == null and neighbor_2.unit == null:
-		possible_pincer.start_cell = neighbor_1
-		possible_pincer.end_cell = neighbor_2
-		possible_pincer.units_pincered_count = 1
-		
 		return possible_pincer
-	if _is_corner_pincer_possible(neighbor_1, neighbor_2, faction):
-		possible_pincer.start_cell = neighbor_1
-		possible_pincer.end_cell = neighbor_2
-		possible_pincer.units_pincered_count = 1
-		
+	elif _is_corner_pincer_possible(neighbor_1, neighbor_2, faction):
 		return possible_pincer
 	elif _is_corner_pincer_possible(neighbor_2, neighbor_1, faction):
+		# Swap cells
 		possible_pincer.start_cell = neighbor_2
 		possible_pincer.end_cell = neighbor_1
-		possible_pincer.units_pincered_count = 1
 		
 		return possible_pincer
 	else:
@@ -368,24 +368,17 @@ func _find_reachable_pincers(unit: Unit, grid: Grid, navigation_graph: Dictionar
 func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, ally: Unit, ally_navigation_graph: Dictionary, possible_pincer: PossiblePincer) -> bool:
 	possible_pincer.ally = ally
 	
-	var excluded_start_cells := {possible_pincer.start_cell: true}
-	var excluded_end_cells := {possible_pincer.end_cell: true}
+	var excluded_start_cells := {}
+	var excluded_end_cells := {}
 	
-	# Exclude the end cell from the path to the start cell, and viceversa
-	var unit_excluded_start_cells := {possible_pincer.start_cell: true}
-	var unit_excluded_end_cells := {possible_pincer.end_cell: true}
+	var unit_excluded_start_cells := {}
+	var unit_excluded_end_cells := {}
 	
 	var ally_cell: Cell = grid.get_cell_from_position(ally.position)
+	var unit_cell: Cell = grid.get_cell_from_position(unit.position)
 	
-	# If unit is 2x2 exclude pincered cells and ally cell so that
-	# the enemy doesn't push units around and ruin the set up
-	if unit.is2x2():
-		for cell in possible_pincer.pincered_cells:
-			unit_excluded_end_cells[cell] = true
-			unit_excluded_start_cells[cell] = true
-		
-		unit_excluded_start_cells[ally_cell] = true
-		unit_excluded_end_cells[ally_cell] = true
+	_add_excluded_cells(ally, unit, ally_cell, possible_pincer, excluded_start_cells, excluded_end_cells)
+	_add_excluded_cells(unit, ally, unit_cell, possible_pincer, unit_excluded_start_cells, unit_excluded_end_cells)
 	
 	# Find all paths
 	var ally_path_to_start_cell: Array = BoardUtils.find_path(grid, ally_navigation_graph, ally.position, possible_pincer.start_cell, excluded_end_cells)
@@ -394,11 +387,10 @@ func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, 
 	var ally_path_to_end_cell: Array = BoardUtils.find_path(grid, ally_navigation_graph, ally.position, possible_pincer.end_cell, excluded_start_cells)
 	var unit_path_to_start_cell: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, possible_pincer.start_cell, unit_excluded_end_cells)
 	
-	var unit_cell: Cell = grid.get_cell_from_position(unit.position)
-	
 	# Compare the paths and select the best combination (reachable and shortest)
 	var valid_path: int = _find_shortest_valid_path(ally_path_to_start_cell.size(), unit_path_to_end_cell.size(), unit_path_to_start_cell.size(), ally_path_to_end_cell.size(), possible_pincer, unit_cell)
 	
+	# The unit that is coordinating the pincer always moves to the end cell
 	match(valid_path):
 		ValidPath.PATH_A:
 			possible_pincer.start_cell_path_length = ally_path_to_start_cell.size()
@@ -423,6 +415,24 @@ func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, 
 			return true
 		_:
 			return false
+
+
+# Modifies excluded_start_cells and excluded_end_cells
+func _add_excluded_cells(unit: Unit, ally: Unit, ally_cell: Cell, possible_pincer: PossiblePincer, excluded_start_cells: Dictionary, excluded_end_cells: Dictionary) -> void:
+	# Used to exclude the end cell from the path to the start cell, and viceversa
+	excluded_start_cells[possible_pincer.start_cell] = true
+	excluded_end_cells[possible_pincer.end_cell] = true
+	
+	# If unit is 2x2 exclude pincered cells and ally cell so that
+	# the enemy doesn't push units around and ruin the set up
+	if unit.is2x2():
+		for cell in possible_pincer.pincered_cells:
+			excluded_start_cells[cell] = true
+			
+			excluded_end_cells[cell] = true
+		
+		excluded_start_cells[ally_cell] = true
+		excluded_end_cells[ally_cell] = true
 
 
 # Returns ValidPath

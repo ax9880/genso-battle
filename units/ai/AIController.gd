@@ -162,7 +162,8 @@ func move_after_using_skill(enemy: Enemy, grid: Grid, enemies: Array) -> void:
 func has_pincer_action() -> bool:
 	return _action != null and \
 		(_action.behavior == Action.Behavior.PINCER or \
-	 	(_action.behavior == Action.Behavior.MOVE and not _action.has_valid_cell()))
+	 	(_action.behavior == Action.Behavior.MOVE and not _action.has_valid_cell())) \
+		and _pincer_target_cell == null
 
 
 func set_pincer(start_cell: Cell, end_cell: Cell, pincered_cells: Array, is2x2: bool) -> void:
