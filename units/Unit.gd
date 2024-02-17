@@ -63,6 +63,8 @@ var _status_effects: Array = []
 
 var _has_entered_cell: bool = false
 
+onready var _is2x2: bool = (size == Size.DOUBLE_2X2)
+
 
 ## Signals
 
@@ -462,7 +464,7 @@ func is_alive() -> bool:
 
 
 func is2x2() -> bool:
-	return size == Size.DOUBLE_2X2
+	return _is2x2
 
 
 func get_offset_origin() -> Vector2:
