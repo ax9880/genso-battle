@@ -316,6 +316,11 @@ func _find_reachable_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array,
 			var reachable_pincers: Array = _find_reachable_pincers(unit, grid, navigation_graph, ally, ally_navigation_graph, possible_pincers)
 			
 			coordinated_pincers.append_array(reachable_pincers)
+			
+			# Stop with the first reachable pincer
+			# TODO: Use other criteria? Limit how many allies the unit can look ahead?
+			if not coordinated_pincers.empty():
+				break
 	
 	return coordinated_pincers
 
@@ -332,12 +337,7 @@ func _find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array) -> Array:
 		for neighbor in cell.neighbors:
 			if neighbor.unit == null:
 				# Only search in two directions? Right and up?
-				var pincers = _find_possible_pincers(neighbor, unit.faction)
-				
-				# TODO: Filter duplicates at the end instead?
-				for pincer in pincers:
-					if not _has_pincer(possible_pincers, pincer):
-						possible_pincers.append(pincer)
+				possible_pincers.append_array(_find_possible_pincers(neighbor, unit.faction))
 	
 	# Include pincers that include this unit
 	# This is used to coordinate a pincer where this unit doesn't move, but
@@ -361,7 +361,13 @@ func _find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array) -> Array:
 		if possible_pincer != null:
 			possible_pincers.push_back(possible_pincer)
 	
-	return possible_pincers
+	var pincers_without_duplicates: Array = []
+	
+	for pincer in possible_pincers:
+		if not _has_pincer(pincers_without_duplicates, pincer):
+			pincers_without_duplicates.append(pincer)
+
+	return pincers_without_duplicates
 
 
 func _has_pincer(possible_pincers: Array, possible_pincer: PossiblePincer) -> bool:
