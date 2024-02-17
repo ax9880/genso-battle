@@ -94,6 +94,12 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 	# TODO: Pass unit so that you can find paths for swap and pincer action
 	var unit: Unit = start_cell.unit
 	
+	# Skip the search if the cell is not reachable
+	# For 2x2 units you might not know because the target cell might be in 
+	# the area of a reachable cell
+	if not unit.is2x2() and not navigation_graph.has(target_cell):
+		return []
+	
 	# Breadth-first search (again)
 	while not queue.empty():
 		var node: Cell = queue.pop_front()

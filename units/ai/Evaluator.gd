@@ -125,9 +125,21 @@ func get_target_cells(unit: Unit,
 # Returns Array<PossiblePincer> with possible cells were the unit can navigate
 # to to perform a pincer, and pincers it can coordinate with another ally
 func find_possible_pincers(unit: Unit, grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary, allies_queue: Array) -> Array:
+	var start = OS.get_ticks_msec()
+	
 	var reachable_pincers: Array = _find_reachable_possible_pincers(unit, grid, navigation_graph, allies)
 	
+	var end = OS.get_ticks_msec()
+	
+	print("reachable_pincers %f" % [end - start])
+	
+	start = OS.get_ticks_msec()
+	
 	var coordinated_pincers: Array = _find_reachable_coordinated_pincers(unit, grid, enemies, navigation_graph, allies_queue)
+	
+	end = OS.get_ticks_msec()
+	
+	print("coordinated_pincers %f" % [end - start])
 	
 	reachable_pincers.append_array(coordinated_pincers)
 	
@@ -372,27 +384,32 @@ func _find_reachable_pincers(unit: Unit, grid: Grid, navigation_graph: Dictionar
 
 # Checks if pincer is reachable and modifies possible_pincer
 func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, ally: Unit, ally_navigation_graph: Dictionary, possible_pincer: PossiblePincer) -> bool:
+	var unit_excluded_start_cells := {}
+	var unit_excluded_end_cells := {}
+	
+	var unit_cell: Cell = grid.get_cell_from_position(unit.position)
+	
+	_add_excluded_cells(unit, ally, unit_cell, possible_pincer, unit_excluded_start_cells, unit_excluded_end_cells)
+	
+	# Find paths
+	var unit_path_to_end_cell: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, possible_pincer.end_cell, unit_excluded_start_cells)
+	var unit_path_to_start_cell: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, possible_pincer.start_cell, unit_excluded_end_cells)
+	
+	if unit_path_to_end_cell.empty() and unit_path_to_start_cell.empty():
+		return false
+	
 	possible_pincer.ally = ally
 	possible_pincer.is_coordinated = true
 	
 	var excluded_start_cells := {}
 	var excluded_end_cells := {}
 	
-	var unit_excluded_start_cells := {}
-	var unit_excluded_end_cells := {}
-	
 	var ally_cell: Cell = grid.get_cell_from_position(ally.position)
-	var unit_cell: Cell = grid.get_cell_from_position(unit.position)
 	
 	_add_excluded_cells(ally, unit, ally_cell, possible_pincer, excluded_start_cells, excluded_end_cells)
-	_add_excluded_cells(unit, ally, unit_cell, possible_pincer, unit_excluded_start_cells, unit_excluded_end_cells)
 	
-	# Find all paths
 	var ally_path_to_start_cell: Array = BoardUtils.find_path(grid, ally_navigation_graph, ally.position, possible_pincer.start_cell, excluded_end_cells)
-	var unit_path_to_end_cell: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, possible_pincer.end_cell, unit_excluded_start_cells)
-	
 	var ally_path_to_end_cell: Array = BoardUtils.find_path(grid, ally_navigation_graph, ally.position, possible_pincer.end_cell, excluded_start_cells)
-	var unit_path_to_start_cell: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, possible_pincer.start_cell, unit_excluded_end_cells)
 	
 	# Compare the paths and select the best combination (reachable and shortest)
 	var valid_path: int = _find_shortest_valid_path(ally_path_to_start_cell.size(), unit_path_to_end_cell.size(), unit_path_to_start_cell.size(), ally_path_to_end_cell.size(), possible_pincer, unit_cell)
