@@ -355,7 +355,7 @@ func is_ally(unit_faction: int) -> bool:
 
 
 func is_enemy(unit_faction: int) -> bool:
-	return !is_ally(unit_faction)
+	return not is_ally(unit_faction)
 
 
 func get_stats() -> StartingStats:

@@ -10,16 +10,14 @@
 [node name="Job" parent="." index="2"]
 job = ExtResource( 2 )
 
-[node name="Icon" parent="Control/StatusEffectsIcons" index="0"]
-visible = true
-margin_left = 48.0
-margin_top = 48.0
-margin_right = 80.0
-margin_bottom = 79.9999
+[node name="AIController" parent="." index="13"]
+chance_to_move_to_enemy_during_move_behavior = 1.0
+chance_to_move_after_using_skill = 1.0
 
-[node name="Action2" parent="AIController" index="1" instance=ExtResource( 5 )]
+[node name="Action3" parent="AIController" index="0" instance=ExtResource( 5 )]
 behavior = 2
+can_ignore_weights = true
 
-[node name="Condition" parent="AIController/Action2" index="0" instance=ExtResource( 4 )]
+[node name="Condition" parent="AIController/Action3" index="0" instance=ExtResource( 4 )]
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]

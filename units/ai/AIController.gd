@@ -68,9 +68,13 @@ var _action_index: int = 0
 var _action: Action
 
 var _pincer_target_cell: Cell
+var _pincer_ally_cell: Cell
 
 # Dictionary<Cell, bool>
 var _pincer_excluded_cells: Dictionary
+
+# Array<Cell>
+var _pincer_pincered_cells: Array
 
 
 func _ready() -> void:
@@ -105,13 +109,21 @@ func pick_next_action(enemy: Enemy) -> void:
 		_action = _get_action(enemy)
 		
 		# Choosing a new action resets these values
-		_pincer_target_cell = null
-		_pincer_excluded_cells = {}
+		_reset_pincer()
 		
 		if max_turn_counter != -1 and _current_turn >= max_turn_counter:
 			_current_turn = 0
 			
 			_reset_actions_counters()
+
+
+func _reset_pincer() -> void:
+	_pincer_target_cell = null
+	_pincer_ally_cell = null
+	
+	_pincer_excluded_cells = {}
+	
+	_pincer_pincered_cells = []
 
 
 func execute_action(enemy: Enemy, grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void:
@@ -153,9 +165,18 @@ func has_pincer_action() -> bool:
 	 	(_action.behavior == Action.Behavior.MOVE and not _action.has_valid_cell()))
 
 
-func set_pincer_target_cell(target_cell: Cell, excluded_cell: Cell) -> void:
-	_pincer_target_cell = target_cell
-	_pincer_excluded_cells = {excluded_cell: true}
+func set_pincer(start_cell: Cell, end_cell: Cell, pincered_cells: Array, is2x2: bool) -> void:
+	_pincer_target_cell = start_cell
+	_pincer_ally_cell = end_cell
+	
+	_pincer_excluded_cells = {end_cell: true}
+	
+	# If it's 2x2 exclude pincered cells so you don't push the units in them around
+	if is2x2:
+		for cell in pincered_cells:
+			_pincer_excluded_cells[cell] = true
+	
+	_pincer_pincered_cells = pincered_cells
 
 
 func _reset_actions_counters() -> void:
@@ -247,12 +268,31 @@ func _execute_move_action(action_parameters: ActionParameters) -> void:
 		var next_cell: Cell = action_parameters.grid.get_cell_from_coordinates(cell_position)
 		
 		_move_to_given_cell(action_parameters, next_cell)
-	elif _pincer_target_cell != null:
+	elif _has_valid_coordinated_pincer(action_parameters):
 		print("Moving to pincer cell that was set up ", _pincer_target_cell.coordinates)
 		
 		_move_to_given_cell(action_parameters, _pincer_target_cell, _pincer_excluded_cells)
 	else:
 		_move_to_chosen_cell(action_parameters)
+
+
+func _has_valid_coordinated_pincer(action_parameters: ActionParameters) -> bool:
+	if _pincer_target_cell == null:
+		return false
+	
+	var ally: Unit = _pincer_ally_cell.unit
+	
+	if ally == null or ally.is_enemy(action_parameters.enemy.faction):
+		return false
+	
+	# Check that all to-be-pincered units are alive and are enemies
+	for cell in _pincer_pincered_cells:
+		var unit: Unit = cell.unit
+		
+		if unit == null or unit.is_dead() or unit.is_ally(action_parameters.enemy.faction):
+			return false
+	
+	return true
 
 
 func _move_to_given_cell(action_parameters: ActionParameters, next_cell: Cell, excluded_cells: Dictionary = {}) -> void:
@@ -363,22 +403,17 @@ func _execute_pincer_action(action_parameters: ActionParameters) -> void:
 		
 		# TODO: Might be made redundant by swap and pincer
 		_find_random_cell_to_move_to(action_parameters)
-	elif _pincer_target_cell != null:
-		print("Pincer action, moving to pincer that was set up")
-		
+	elif _has_valid_coordinated_pincer(action_parameters):
 		# FIXME: Don't repeat code from move_to_given_cell()
-		if action_parameters.grid.get_cell_from_position(action_parameters.enemy.position) == _pincer_target_cell:
-			action_parameters.enemy.emit_action_done()
-		else:
-			# TODO: If 2x2 exclude pincered cells
-			# TODO: Verify that pincer is still valid (ally alive, no allies in 
-			# pincered cells and at least one player unit alive in pincered cells)
-			var path: Array = action_parameters.find_path(_pincer_target_cell, _pincer_excluded_cells)
+		
+		var path: Array = action_parameters.find_path(_pincer_target_cell, _pincer_excluded_cells)
+		
+		if path.size() >= 1:
+			print("Pincer action, moving to pincer cell that was set up ", _pincer_target_cell.coordinates)
 			
-			if path.size() > 1:
-				action_parameters.enemy.start_moving(path)
-			else:
-				_find_pincer(action_parameters)
+			action_parameters.enemy.start_moving(path)
+		else:
+			_find_pincer(action_parameters)
 	else:
 		_find_pincer(action_parameters)
 
@@ -405,7 +440,7 @@ func _coordinate_pincer(action_parameters: ActionParameters) -> void:
 		
 		print("Setting up a pincer ", possible_pincer.start_cell.coordinates, " to ", possible_pincer.end_cell.coordinates)
 		
-		possible_pincer.ally.set_pincer_target_cell(possible_pincer.start_cell, possible_pincer.end_cell)
+		possible_pincer.ally.set_pincer(possible_pincer.start_cell, possible_pincer.end_cell, possible_pincer.pincered_cells)
 		
 		action_parameters.enemy.start_moving(possible_pincer.path_to_end_cell)
 

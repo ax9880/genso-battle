@@ -70,8 +70,8 @@ func has_pincer_action() -> bool:
 	return $AIController.has_pincer_action()
 
 
-func set_pincer_target_cell(target_cell: Cell, excluded_cell: Cell) -> void:
-	$AIController.set_pincer_target_cell(target_cell, excluded_cell)
+func set_pincer(start_cell: Cell, end_cell: Cell, pincered_cells: Array) -> void:
+	$AIController.set_pincer(start_cell, end_cell, pincered_cells, is2x2())
 
 
 func on_skill_used(grid: Grid, enemies: Array) -> void:

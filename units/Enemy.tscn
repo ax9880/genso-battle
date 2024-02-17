@@ -55,12 +55,6 @@ texture_progress = ExtResource( 4 )
 [node name="Container" parent="Control" index="3"]
 visible = true
 
-[node name="Icon" parent="Control/StatusEffectsIcons" index="0"]
-margin_left = -16.0
-margin_top = -16.0
-margin_right = 16.0
-margin_bottom = 15.9999
-
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
 texture = ExtResource( 8 )
 

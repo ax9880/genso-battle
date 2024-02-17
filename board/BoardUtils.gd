@@ -31,21 +31,34 @@ static func build_navigation_graph(grid: Grid, unit_position: Vector2, faction: 
 		navigation_graph[node] = []
 		
 		for neighbor in node.neighbors:
+			# Distance to this node is distance to the parent node + 1
+			var distance: int = discovered_dict[node] + 1
+			var cell_unit: Unit = neighbor.unit
+			
 			if not discovered_dict.has(neighbor):
-				# Distance to this node is distance to the parent node + 1
-				var distance: int = discovered_dict[node] + 1
-				
 				# Flag as discovered and set the distance
 				discovered_dict[neighbor] = distance
 				
-				var cell_unit: Unit = neighbor.unit
-				
-				if (distance <= movement_range) and _can_enter_cell(unit, cell_unit, faction) and _can_fit_unit(unit, neighbor):
+				if _can_reach_cell(neighbor, distance, movement_range, unit, faction):
 					navigation_graph[node].push_back(neighbor)
 					
 					queue.push_back(neighbor)
+			else:
+				# Add it to the adjacency list, but don't add it to the queue
+				# This so that cells have all their neighbors in their
+				# adjacency lists, and if one cell is excluded (when finding a
+				# path) then a path can still be found through other cells. This
+				# most notably affects 2x2 units.
+				if _can_reach_cell(neighbor, distance, movement_range, unit, faction):
+					navigation_graph[node].push_back(neighbor)
 	
 	return navigation_graph
+
+
+static func _can_reach_cell(cell: Cell, distance: int, movement_range: int, unit: Unit, faction: int) -> bool:
+	var cell_unit: Unit = cell.unit
+	
+	return (distance <= movement_range) and _can_enter_cell(unit, cell_unit, faction) and _can_fit_unit(unit, cell)
 
 
 # 2x2 units can enter any cell, because they can push the unit inside said cell
@@ -78,6 +91,7 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 	
 	parent_dict[start_cell] = null
 	
+	# TODO: Pass unit so that you can find paths for swap and pincer action
 	var unit: Unit = start_cell.unit
 	
 	# Breadth-first search (again)
