@@ -370,7 +370,7 @@ func _execute_pincer_action(action_parameters: ActionParameters) -> void:
 		if action_parameters.grid.get_cell_from_position(action_parameters.enemy.position) == _pincer_target_cell:
 			action_parameters.enemy.emit_action_done()
 		else:
-			# TODO: If 2x2 exclude start cells
+			# TODO: If 2x2 exclude pincered cells
 			# TODO: Verify that pincer is still valid (ally alive, no allies in 
 			# pincered cells and at least one player unit alive in pincered cells)
 			var path: Array = action_parameters.find_path(_pincer_target_cell, _pincer_excluded_cells)

@@ -264,13 +264,13 @@ func _find_possible_corner_pincer(corner_cell: Cell, faction: int, is_coordinate
 		possible_pincer.units_pincered_count = 1
 		
 		return possible_pincer
-	if neighbor_1.unit != null and neighbor_1.unit.is_ally(faction) and neighbor_2.unit == null:
+	if _is_corner_pincer_possible(neighbor_1, neighbor_2, faction):
 		possible_pincer.start_cell = neighbor_1
 		possible_pincer.end_cell = neighbor_2
 		possible_pincer.units_pincered_count = 1
 		
 		return possible_pincer
-	elif neighbor_2.unit != null and neighbor_2.unit.is_ally(faction) and neighbor_1.unit == null:
+	elif _is_corner_pincer_possible(neighbor_2, neighbor_1, faction):
 		possible_pincer.start_cell = neighbor_2
 		possible_pincer.end_cell = neighbor_1
 		possible_pincer.units_pincered_count = 1
@@ -278,6 +278,10 @@ func _find_possible_corner_pincer(corner_cell: Cell, faction: int, is_coordinate
 		return possible_pincer
 	else:
 		return null
+
+
+func _is_corner_pincer_possible(start_cell: Cell, end_cell: Cell, faction: int) -> bool:
+	return start_cell.unit != null and start_cell.unit.is_ally(faction) and (end_cell.unit == null or end_cell.unit.is_ally(faction))
 
 
 func find_coordinated_pincers(unit: Unit, grid: Grid, enemies: Array, navigation_graph: Dictionary, allies_queue: Array) -> Array:

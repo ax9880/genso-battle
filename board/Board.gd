@@ -534,6 +534,7 @@ func _update_2x2_unit_cells(unit: Unit, cell: Cell) -> void:
 		_color_cell(area_cell)
 	
 	assert(cell in active_unit_entered_cells)
+	assert(cell.unit == unit)
 
 
 func _push_cells_in_area(unit: Unit, cell: Cell) -> void:
