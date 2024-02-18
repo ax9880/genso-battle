@@ -663,6 +663,9 @@ func _execute_pincers(unit: Unit) -> void:
 		
 		var pincer: Pincerer.Pincer = _pincer_queue.pop_front()
 		
+		if _current_turn == Turn.ENEMY:
+			_set_turn_counter_of_pincering_units(unit, pincer)
+		
 		$PincerExecutor.highlight_pincer(pincer)
 		
 		yield($PincerExecutor, "pincer_highlighted")
@@ -685,6 +688,11 @@ func _execute_pincers(unit: Unit) -> void:
 			$PincerExecutor.start_heal_phase()
 			
 			yield($PincerExecutor, "heal_phase_finished")
+		
+		if _current_turn == Turn.ENEMY:
+			# Removes the unit (besides the active unit) that performed the
+			# pincer from the queue, so it doesn't act again in the same turn 
+			_remove_pincering_units_from_enemy_queue(unit, pincer)
 	
 	print("All pincers done!")
 	
@@ -694,6 +702,21 @@ func _execute_pincers(unit: Unit) -> void:
 		_start_enemy_turn()
 	else:
 		_update_enemy()
+
+
+func _set_turn_counter_of_pincering_units(active_unit: Unit, pincer: Pincerer.Pincer) -> void:
+	for pincering_unit in pincer.pincering_units:
+		if pincering_unit != active_unit and pincering_unit.has_pincer_action() and pincering_unit.turn_counter != 0:
+			pincering_unit.turn_counter = 0
+
+
+func _remove_pincering_units_from_enemy_queue(active_unit: Unit, pincer: Pincerer.Pincer) -> void:
+	for pincering_unit in pincer.pincering_units:
+		if pincering_unit != active_unit and pincering_unit.has_pincer_action():
+			var index := _enemy_queue.find(pincering_unit)
+			
+			if index != -1:
+				_enemy_queue.remove(index)
 
 
 func _update_status_effects() -> void:

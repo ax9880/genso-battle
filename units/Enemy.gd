@@ -70,6 +70,10 @@ func has_pincer_action() -> bool:
 	return $AIController.has_pincer_action()
 
 
+func can_coordinate_pincer() -> bool:
+	return $AIController.can_coordinate_pincer()
+
+
 func set_pincer(start_cell: Cell, end_cell: Cell, pincered_cells: Array) -> void:
 	$AIController.set_pincer(start_cell, end_cell, pincered_cells, is2x2())
 

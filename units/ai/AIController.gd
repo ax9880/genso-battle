@@ -162,8 +162,11 @@ func move_after_using_skill(enemy: Enemy, grid: Grid, enemies: Array) -> void:
 func has_pincer_action() -> bool:
 	return _action != null and \
 		(_action.behavior == Action.Behavior.PINCER or \
-	 	(_action.behavior == Action.Behavior.MOVE and not _action.has_valid_cell())) \
-		and _pincer_target_cell == null
+	 	(_action.behavior == Action.Behavior.MOVE and not _action.has_valid_cell()))
+
+
+func can_coordinate_pincer() -> bool:
+	return has_pincer_action() and _pincer_target_cell == null
 
 
 func set_pincer(start_cell: Cell, end_cell: Cell, pincered_cells: Array, is2x2: bool) -> void:
@@ -384,15 +387,11 @@ func _execute_skill_action(action_parameters: ActionParameters) -> void:
 		if results.size() > max_number_of_random_top_results and _random.randf() < chance_to_select_random_top_result:
 			top_result = results[_random.randi_range(0, max_number_of_random_top_results)]
 		
-		# TODO: Use skill regardless?
-		if top_result.damage_dealt == 0:
-			_find_cell_close_to_enemy(action_parameters)
-		else:
-			var path: Array = action_parameters.find_path(top_result.cell)
-			
-			var can_move_after_using_skill: bool = _random.randf() < chance_to_move_after_using_skill
-			
-			action_parameters.enemy.use_skill(action.skill, top_result.target_cells, path, can_move_after_using_skill)
+		var path: Array = action_parameters.find_path(top_result.cell)
+		
+		var can_move_after_using_skill: bool = _random.randf() < chance_to_move_after_using_skill
+		
+		action_parameters.enemy.use_skill(action.skill, top_result.target_cells, path, can_move_after_using_skill)
 
 
 func _execute_pincer_action(action_parameters: ActionParameters) -> void:
