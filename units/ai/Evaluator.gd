@@ -42,8 +42,16 @@ class UnitsPinceredSorter:
 		return a.units_pincered_count > b.units_pincered_count
 
 
+# For two elements a and b, if the given method returns true, element b
+# will be after element a in the array.
 class PathLengthAndUnitsPinceredSorter:
 	static func sort(a: PossiblePincer, b: PossiblePincer) -> bool:
+		if b.end_cell.unit != null:
+			return true
+		
+		if a.end_cell.unit != null:
+			return false
+		
 		if a.units_pincered_count == b.units_pincered_count:
 			var path_length_sum_a: int = a.start_cell_path_length + a.end_cell_path_length
 			var path_length_sum_b: int = b.start_cell_path_length + b.end_cell_path_length
@@ -394,8 +402,9 @@ func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, 
 	var unit_excluded_end_cells := {}
 	
 	var unit_cell: Cell = grid.get_cell_from_position(unit.position)
+	var ally_cell: Cell = grid.get_cell_from_position(ally.position)
 	
-	_add_excluded_cells(unit, ally, unit_cell, possible_pincer, unit_excluded_start_cells, unit_excluded_end_cells)
+	_add_excluded_cells(unit, ally, ally_cell, possible_pincer, unit_excluded_start_cells, unit_excluded_end_cells)
 	
 	# Find paths
 	var unit_path_to_end_cell: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, possible_pincer.end_cell, unit_excluded_start_cells)
@@ -410,9 +419,7 @@ func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, 
 	var excluded_start_cells := {}
 	var excluded_end_cells := {}
 	
-	var ally_cell: Cell = grid.get_cell_from_position(ally.position)
-	
-	_add_excluded_cells(ally, unit, ally_cell, possible_pincer, excluded_start_cells, excluded_end_cells)
+	_add_excluded_cells(ally, unit, unit_cell, possible_pincer, excluded_start_cells, excluded_end_cells)
 	
 	var ally_path_to_start_cell: Array = BoardUtils.find_path(grid, ally_navigation_graph, ally.position, possible_pincer.start_cell, excluded_end_cells)
 	var ally_path_to_end_cell: Array = BoardUtils.find_path(grid, ally_navigation_graph, ally.position, possible_pincer.end_cell, excluded_start_cells)
