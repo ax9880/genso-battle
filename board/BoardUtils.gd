@@ -189,6 +189,10 @@ static func find_path(grid: Grid, navigation_graph: Dictionary, unit_position: V
 		for neighbor in navigation_graph[node]:
 			var distance = discovered_dict[node] + 1
 			
+			if neighbor.unit != null and neighbor.unit.is_ally(unit.faction):
+				# Add cost to discourage swapping
+				distance += 2
+			
 			if (not neighbor in discovered_dict or distance < discovered_dict[neighbor]) and not _is_cell_excluded(neighbor, unit, excluded_cells):
 				discovered_dict[neighbor] = distance
 				
