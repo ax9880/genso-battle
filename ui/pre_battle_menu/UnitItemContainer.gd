@@ -3,7 +3,7 @@ extends HBoxContainer
 onready var name_label: Label = $VBoxContainer/HBoxContainer/NameLabel
 
 # JobReference that this container is showing
-var _job_reference: JobReference
+var job_reference: JobReference
 
 var _is_draggable: bool = false
 
@@ -15,21 +15,21 @@ signal unit_dropped_on_unit(target_unit_item, dropped_unit_item)
 signal unit_double_clicked()
 
 
-func initialize(job_reference: JobReference, is_draggable: bool = false, compare_job_reference: JobReference = null) -> void:
-	_job_reference = job_reference
+func initialize(_job_reference: JobReference, is_draggable: bool = false, compare_job_reference: JobReference = null) -> void:
+	job_reference = _job_reference
 	_is_draggable = is_draggable
 	_compare_job_reference = compare_job_reference
 	
-	name_label.text = tr(_job_reference.job.job_name)
+	name_label.text = tr(job_reference.job.job_name)
 	
-	$UnitIcon.initialize(_job_reference.job, _is_draggable)
+	$UnitIcon.initialize(job_reference.job, _is_draggable)
 	
 	var compare_job_stats: StartingStats = null
 	
 	if _compare_job_reference != null:
 		compare_job_stats = _compare_job_reference.job.stats
 	
-	$VBoxContainer/UnitStatsContainer.initialize(_job_reference.job.stats, compare_job_stats)
+	$VBoxContainer/UnitStatsContainer.initialize(job_reference.job.stats, compare_job_stats)
 
 
 func set_change_button_as_choose_button() -> void:
