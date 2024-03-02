@@ -11,7 +11,10 @@ var _status_effects_counter := {}
 
 
 func add(status_effect_type: int, effect_scene: PackedScene) -> void:
-	if effect_scene != null and not _status_effects.has(status_effect_type):
+	if effect_scene == null:
+		return
+	
+	if not _status_effects.has(status_effect_type):
 		var effect: Node2D = effect_scene.instance()
 		
 		add_child(effect)
