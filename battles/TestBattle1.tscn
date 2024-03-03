@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://board/Battle.tscn" type="PackedScene" id=1]
 [ext_resource path="res://units/enemies/HaniwaOrbling.tscn" type="PackedScene" id=2]
+[ext_resource path="res://units/enemies/Enemy2x2.tscn" type="PackedScene" id=3]
 
 [node name="BoardUI" instance=ExtResource( 1 )]
 anchor_left = 0.5
@@ -13,20 +14,32 @@ margin_top = -480.0
 margin_right = 360.0
 margin_bottom = 480.0
 
-[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 2 )]
-position = Vector2( 53, 739 )
+[node name="Enemy2x2" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 3 )]
+position = Vector2( 446, 551 )
 
-[node name="HaniwaOrbling3" parent="Board/EnemyPhases/Phase1" index="1" instance=ExtResource( 2 )]
-position = Vector2( 554, 50 )
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" index="1" instance=ExtResource( 2 )]
+position = Vector2( 156, 257 )
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="2" instance=ExtResource( 2 )]
+position = Vector2( 336, 255 )
 
 [node name="Unit" parent="Board/PlayerUnits" index="0"]
-position = Vector2( 258, 349 )
+position = Vector2( 350, 145 )
 
 [node name="Unit2" parent="Board/PlayerUnits" index="1"]
-position = Vector2( 447, 444 )
+position = Vector2( 260, 541 )
 
 [node name="Unit3" parent="Board/PlayerUnits" index="2"]
-position = Vector2( 359, 543 )
+position = Vector2( 146, 363 )
+
+[node name="Unit4" parent="Board/PlayerUnits" index="3"]
+position = Vector2( 339, 354 )
+
+[node name="Unit5" parent="Board/PlayerUnits" index="4"]
+position = Vector2( 161, 147 )
 
 [node name="Unit6" parent="Board/PlayerUnits" index="5"]
-position = Vector2( 258, 549 )
+position = Vector2( 148, 557 )
+
+[node name="DebugUnits" parent="Board" index="17"]
+visible = true

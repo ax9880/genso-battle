@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://board/Cell.tscn" type="PackedScene" id=2]
@@ -8,12 +8,7 @@
 [ext_resource path="res://board/Board.gd" type="Script" id=6]
 [ext_resource path="res://board/BoardUI.gd" type="Script" id=7]
 [ext_resource path="res://assets/ui/yellow_bar_progress_big.png" type="Texture" id=8]
-[ext_resource path="res://assets/ui/spear.png" type="Texture" id=9]
-[ext_resource path="res://assets/ui/sword.png" type="Texture" id=10]
-[ext_resource path="res://assets/ui/arrow_right.png" type="Texture" id=11]
 [ext_resource path="res://assets/ui/big_bar_progress_bg.png" type="Texture" id=12]
-[ext_resource path="res://assets/ui/gun.png" type="Texture" id=13]
-[ext_resource path="res://assets/ui/clock.png" type="Texture" id=14]
 [ext_resource path="res://board/PincerExecutor.gd" type="Script" id=15]
 [ext_resource path="res://board/Pincerer.gd" type="Script" id=16]
 [ext_resource path="res://board/Grid.gd" type="Script" id=17]
@@ -35,6 +30,7 @@
 [ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=33]
 [ext_resource path="res://assets/sfx/chess_place_2.wav" type="AudioStream" id=34]
 [ext_resource path="res://board/Trails.gd" type="Script" id=35]
+[ext_resource path="res://assets/ui/ui_icons.png" type="Texture" id=36]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 324, 8 )
@@ -49,6 +45,31 @@ colors = PoolColorArray( 0, 0, 0, 0, 0.65098, 0.14902, 0.329412, 1 )
 [sub_resource type="Gradient" id=4]
 offsets = PoolRealArray( 0, 0.237 )
 colors = PoolColorArray( 0, 0, 0, 0, 0.780392, 0.968627, 0.94902, 1 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 256, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=8]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 0, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 320, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 128, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 64, 0, 64, 64 )
 
 [node name="BoardUI" type="MarginContainer"]
 anchor_right = 1.0
@@ -357,7 +378,7 @@ rect_min_size = Vector2( 0, 32 )
 margin_right = 32.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture = ExtResource( 14 )
+texture = SubResource( 9 )
 expand = true
 
 [node name="TextureProgress" type="TextureProgress" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
@@ -390,7 +411,7 @@ custom_constants/separation = -4
 margin_right = 32.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture = ExtResource( 10 )
+texture = SubResource( 8 )
 expand = true
 
 [node name="TextureRect2" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -398,7 +419,7 @@ margin_left = 28.0
 margin_right = 60.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture = ExtResource( 11 )
+texture = SubResource( 5 )
 expand = true
 
 [node name="TextureRect3" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -406,7 +427,7 @@ margin_left = 56.0
 margin_right = 88.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture = ExtResource( 13 )
+texture = SubResource( 6 )
 expand = true
 
 [node name="TextureRect4" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -414,7 +435,7 @@ margin_left = 84.0
 margin_right = 116.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture = ExtResource( 11 )
+texture = SubResource( 5 )
 expand = true
 
 [node name="TextureRect5" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -422,7 +443,7 @@ margin_left = 112.0
 margin_right = 144.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture = ExtResource( 9 )
+texture = SubResource( 7 )
 expand = true
 
 [node name="TextureRect6" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -430,7 +451,7 @@ margin_left = 140.0
 margin_right = 172.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture = ExtResource( 11 )
+texture = SubResource( 5 )
 expand = true
 
 [node name="TextureRect7" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -438,7 +459,7 @@ margin_left = 168.0
 margin_right = 200.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture = ExtResource( 10 )
+texture = SubResource( 8 )
 expand = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer"]
