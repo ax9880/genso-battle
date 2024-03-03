@@ -14,7 +14,7 @@ export(Enums.StatusEffectType) var status_effect_type: int = Enums.StatusEffectT
 export(int, 0, 5, 1) var duration_turns: int = 3
 
 # Custom icon. If it is null then skill labels use default icons
-export(Texture) var icon = null
+export(Texture) var icon: Texture = null
 
 # Effect scene must have a stop() method that stops the effect
 # and automatically frees the node.

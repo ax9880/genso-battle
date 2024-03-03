@@ -419,7 +419,7 @@ func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, 
 	var excluded_start_cells := {}
 	var excluded_end_cells := {}
 	
-	_add_excluded_cells(ally, unit, unit_cell, possible_pincer, excluded_start_cells, excluded_end_cells)
+	_add_excluded_cells(ally, unit_cell, possible_pincer, excluded_start_cells, excluded_end_cells)
 	
 	var ally_path_to_start_cell: Array = BoardUtils.find_path(grid, ally_navigation_graph, ally.position, possible_pincer.start_cell, excluded_end_cells)
 	var ally_path_to_end_cell: Array = BoardUtils.find_path(grid, ally_navigation_graph, ally.position, possible_pincer.end_cell, excluded_start_cells)
