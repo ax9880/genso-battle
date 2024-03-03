@@ -175,11 +175,11 @@ func push_to_cell(target_position: Vector2) -> void:
 	
 	var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
 	
-	tween.interpolate_property(self, "rotation",
+	tween.interpolate_property($Sprite, "rotation",
 				0.0, 2 * PI,
 				tween_time_seconds,
 				Tween.TRANS_SINE)
-			
+	
 	tween.start()
 	
 	Utils.disable_object($CollisionShape2D)
@@ -271,7 +271,7 @@ func _load_job_textures() -> void:
 	
 	$CanvasLayer/UnitName.text = tr($Job.job.job_name)
 	
-	$Control/StatusEffectsIcons/AnimationPlayer.play("show icon and fade")
+	$CanvasLayer/StatusEffectsIcons/AnimationPlayer.play("show icon and fade")
 
 
 ## Setters
@@ -478,7 +478,8 @@ func add_child_at_offset(node: Node2D) -> void:
 
 
 func update_status_effects_icons() -> void:
-	$Control/StatusEffectsIcons.update_icon(_status_effects)
+	if is_alive():
+		$CanvasLayer/StatusEffectsIcons.update_icon(_status_effects)
 
 
 func _remove_all_status_effects_of_type(var status_effect_type: int) -> void:

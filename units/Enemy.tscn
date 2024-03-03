@@ -58,7 +58,7 @@ visible = true
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
 texture = ExtResource( 8 )
 
-[node name="UnitName" parent="CanvasLayer" index="1"]
+[node name="UnitName" parent="CanvasLayer" index="2"]
 modulate = Color( 1, 1, 1, 1 )
 theme = ExtResource( 10 )
 

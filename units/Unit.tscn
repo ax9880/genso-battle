@@ -518,20 +518,22 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StatusEffectsIcons" type="Control" parent="Control"]
+[node name="CanvasLayer" type="Node2D" parent="."]
+z_index = 10
+
+[node name="StatusEffectsIcons" type="Control" parent="CanvasLayer"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -33.0
-margin_top = -49.0
-margin_right = 15.0
-margin_bottom = -1.0
+margin_left = 16.0
+margin_right = 64.0
+margin_bottom = 48.0
 rect_min_size = Vector2( 48, 48 )
 mouse_filter = 2
 script = ExtResource( 27 )
 
-[node name="Icon" type="TextureRect" parent="Control/StatusEffectsIcons"]
+[node name="Icon" type="TextureRect" parent="CanvasLayer/StatusEffectsIcons"]
 visible = false
 modulate = Color( 0, 0, 0, 0 )
 anchor_left = 0.5
@@ -547,12 +549,9 @@ texture = ExtResource( 26 )
 expand = true
 stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Control/StatusEffectsIcons"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/StatusEffectsIcons"]
 anims/RESET = SubResource( 14 )
 "anims/show icon and fade" = SubResource( 15 )
-
-[node name="CanvasLayer" type="Node2D" parent="."]
-z_index = 10
 
 [node name="ActivatedSkillMarginContainer" parent="CanvasLayer" instance=ExtResource( 10 )]
 visible = false
