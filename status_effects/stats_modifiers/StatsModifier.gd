@@ -70,7 +70,7 @@ func get_description() -> String:
 		
 		status_effect_description += tr("STATUS_EFFECT_RESISTANCE") % [_get_sign(modified_status_effect_vulnerability), (100.0 * modified_status_effect_vulnerability), modified_status_effect_key]
 	
-	status_effect_description += " " + tr("TURNS_LEFT") % turn_count
+	status_effect_description += ", " + tr("TURNS_LEFT") % turn_count
 	
 	return status_effect_description
 
