@@ -675,6 +675,9 @@ func _execute_pincers(unit: Unit) -> void:
 			
 			yield($PincerExecutor, "skill_activation_phase_finished")
 		
+		$PincerExecutor.start_buff_skill_phase()
+		yield($PincerExecutor, "buff_skill_phase_finished")
+		
 		$Attacker.start(pincer)
 		yield($Attacker, "attack_phase_finished")
 		

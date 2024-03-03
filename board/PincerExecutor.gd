@@ -44,6 +44,7 @@ var _chain_previews := []
 # The names of these signals are passed as parameters and emitted inside functions
 signal pincer_highlighted
 signal skill_activation_phase_finished
+signal buff_skill_phase_finished
 signal attack_skill_phase_finished
 signal heal_phase_finished
 signal status_effect_phase_finished
@@ -95,7 +96,7 @@ func _activate_next_skill() -> void:
 	else:
 		$SkillActivationTimer.stop()
 		
-		if not (_attack_skills.empty() and _heal_skills.empty()):
+		if _is_any_skill_activated():
 			$BeforeSkillActivationPhaseFinishesTimer.start()
 			
 			yield($BeforeSkillActivationPhaseFinishesTimer, "timeout")
@@ -105,6 +106,10 @@ func _activate_next_skill() -> void:
 			yield($NoSkillsActivatedTimer, "timeout")
 		
 		_emit_deferred("skill_activation_phase_finished")
+
+
+func _is_any_skill_activated() -> bool:
+	return (not _buff_skills.empty()) or (not _attack_skills.empty()) or (not _heal_skills.empty())
 
 
 # Queue units to activate their skills one by one
@@ -152,10 +157,12 @@ func _queue_skills(unit: Unit, activated_skills: Array) -> void:
 		skill_attack.skill = skill
 		
 		match(skill.skill_type):
-			Enums.SkillType.ATTACK:
+			Enums.SkillType.ATTACK, Enums.SkillType.DEBUFF:
 				_attack_skills.push_back(skill_attack)
 			Enums.SkillType.HEAL, Enums.SkillType.CURE_AILMENT:
 				_heal_skills.push_back(skill_attack)
+			Enums.SkillType.BUFF:
+				_buff_skills.push_back(skill_attack)
 			_:
 				printerr("Unrecognized skill type: ", skill.skill_type)
 
@@ -192,6 +199,10 @@ func highlight_pincer(pincer: Pincerer.Pincer) -> void:
 	yield(pincer_higlight, "pincer_highlighted")
 	
 	emit_signal("pincer_highlighted")
+
+
+func start_buff_skill_phase() -> void:
+	_execute_next_skill(_buff_skills, "buff_skill_phase_finished")
 
 
 func start_attack_skill_phase() -> void:
