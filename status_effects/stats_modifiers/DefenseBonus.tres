@@ -6,14 +6,14 @@
 [sub_resource type="AtlasTexture" id=1]
 flags = 5
 atlas = ExtResource( 2 )
-region = Rect2( 128, 64, 64, 64 )
+region = Rect2( 0, 64, 64, 64 )
 
 [resource]
 script = ExtResource( 1 )
 status_effect_type = 7
 duration_turns = 3
 icon = SubResource( 1 )
-modified_stat = 1
+modified_stat = 2
 modified_stat_percentage = 0.2
 modified_status_effect = 0
 modified_status_effect_vulnerability = 0.0
