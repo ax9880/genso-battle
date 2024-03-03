@@ -774,6 +774,9 @@ func _on_Unit_picked_up(unit: Unit) -> void:
 
 
 func _highlight_possible_chains(unit: Unit) -> void:
+	if unit.faction != Unit.PLAYER_FACTION:
+		return
+	
 	_stop_possible_chained_units_animations()
 	
 	var chain_families: Dictionary = {}
