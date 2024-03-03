@@ -39,25 +39,25 @@ custom_constants/separation = 64
 alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer2"]
-margin_top = 165.0
+margin_top = 173.0
 margin_right = 620.0
-margin_bottom = 194.0
+margin_bottom = 202.0
 text = "POST_BATTLE"
 align = 1
 autowrap = true
 
 [node name="Label2" type="Label" parent="MarginContainer/VBoxContainer2"]
-margin_top = 258.0
+margin_top = 266.0
 margin_right = 620.0
-margin_bottom = 287.0
+margin_bottom = 295.0
 text = "CHOOSE_A_PAIR"
 align = 1
 autowrap = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer2"]
-margin_top = 351.0
+margin_top = 359.0
 margin_right = 620.0
-margin_bottom = 695.0
+margin_bottom = 687.0
 rect_min_size = Vector2( 240, 0 )
 size_flags_horizontal = 7
 custom_constants/separation = 12
@@ -66,30 +66,31 @@ alignment = 1
 [node name="YachieAndSakiButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 6 )]
 margin_left = 150.0
 margin_right = 470.0
+margin_bottom = 73.0
 rect_min_size = Vector2( 320, 0 )
 text = "YACHIE_AND_SAKI"
 
 [node name="SakiAndYuumaButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 6 )]
 margin_left = 150.0
-margin_top = 89.0
+margin_top = 85.0
 margin_right = 470.0
-margin_bottom = 166.0
+margin_bottom = 158.0
 rect_min_size = Vector2( 320, 0 )
 text = "SAKI_AND_YUUMA"
 
 [node name="YuumaAndYachieButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 6 )]
 margin_left = 150.0
-margin_top = 178.0
+margin_top = 170.0
 margin_right = 470.0
-margin_bottom = 255.0
+margin_bottom = 243.0
 rect_min_size = Vector2( 320, 0 )
 text = "YUUMA_AND_YACHIE"
 
 [node name="ReturnButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 6 )]
 margin_left = 150.0
-margin_top = 267.0
+margin_top = 255.0
 margin_right = 470.0
-margin_bottom = 344.0
+margin_bottom = 328.0
 rect_min_size = Vector2( 320, 0 )
 text = "RETURN"
 
