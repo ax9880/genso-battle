@@ -94,7 +94,6 @@ static func build_navigation_graph(grid: Grid, unit_position: Vector2, faction: 
 		for neighbor in node.neighbors:
 			# Distance to this node is distance to the parent node + 1
 			var distance: int = discovered_dict[node] + 1
-			var cell_unit: Unit = neighbor.unit
 			
 			if not discovered_dict.has(neighbor):
 				# Flag as discovered and set the distance

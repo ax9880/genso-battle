@@ -704,15 +704,15 @@ func _execute_pincers(unit: Unit) -> void:
 		_update_enemy()
 
 
-func _set_turn_counter_of_pincering_units(active_unit: Unit, pincer: Pincerer.Pincer) -> void:
+func _set_turn_counter_of_pincering_units(unit: Unit, pincer: Pincerer.Pincer) -> void:
 	for pincering_unit in pincer.pincering_units:
-		if pincering_unit != active_unit and pincering_unit.has_pincer_action() and pincering_unit.turn_counter != 0:
+		if pincering_unit != unit and pincering_unit.has_pincer_action() and pincering_unit.turn_counter != 0:
 			pincering_unit.turn_counter = 0
 
 
-func _remove_pincering_units_from_enemy_queue(active_unit: Unit, pincer: Pincerer.Pincer) -> void:
+func _remove_pincering_units_from_enemy_queue(unit: Unit, pincer: Pincerer.Pincer) -> void:
 	for pincering_unit in pincer.pincering_units:
-		if pincering_unit != active_unit and pincering_unit.has_pincer_action():
+		if pincering_unit != unit and pincering_unit.has_pincer_action():
 			var index := _enemy_queue.find(pincering_unit)
 			
 			if index != -1:

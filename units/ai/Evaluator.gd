@@ -404,7 +404,7 @@ func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, 
 	var unit_cell: Cell = grid.get_cell_from_position(unit.position)
 	var ally_cell: Cell = grid.get_cell_from_position(ally.position)
 	
-	_add_excluded_cells(unit, ally, ally_cell, possible_pincer, unit_excluded_start_cells, unit_excluded_end_cells)
+	_add_excluded_cells(unit, ally_cell, possible_pincer, unit_excluded_start_cells, unit_excluded_end_cells)
 	
 	# Find paths
 	var unit_path_to_end_cell: Array = BoardUtils.find_path(grid, navigation_graph, unit.position, possible_pincer.end_cell, unit_excluded_start_cells)
@@ -455,7 +455,7 @@ func _is_pincer_reachable(unit: Unit, grid: Grid, navigation_graph: Dictionary, 
 
 
 # Modifies excluded_start_cells and excluded_end_cells
-func _add_excluded_cells(unit: Unit, ally: Unit, ally_cell: Cell, possible_pincer: PossiblePincer, excluded_start_cells: Dictionary, excluded_end_cells: Dictionary) -> void:
+func _add_excluded_cells(unit: Unit, ally_cell: Cell, possible_pincer: PossiblePincer, excluded_start_cells: Dictionary, excluded_end_cells: Dictionary) -> void:
 	# Used to exclude the end cell from the path to the start cell, and viceversa
 	excluded_start_cells[possible_pincer.start_cell] = true
 	excluded_end_cells[possible_pincer.end_cell] = true
