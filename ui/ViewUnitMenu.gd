@@ -48,9 +48,10 @@ func initialize_from_data(job: Job, current_stats: StartingStats, level: int, sk
 	
 	unit_icon.initialize(job)
 	
-	var can_show_remaining_health: bool = is_in_battle
-	
-	unit_stats_container.initialize(job.stats, current_stats, can_show_remaining_health)
+	if is_in_battle:
+		unit_stats_container.initialize_in_battle(job.stats, current_stats)
+	else:
+		unit_stats_container.initialize(job.stats, current_stats)
 	
 	var unlocked_skills: Array = job.get_unlocked_skills(level)
 	
@@ -86,6 +87,8 @@ func _set_focus() -> void:
 
 
 func _on_ReturnButton_pressed() -> void:
+	$MarginContainer/VBoxContainer/ReturnButton.disabled = true
+	
 	go_back()
 
 

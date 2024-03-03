@@ -14,6 +14,8 @@ margin_right = 152.0
 margin_bottom = 35.0
 custom_constants/separation = -1
 script = ExtResource( 2 )
+advantage_color = Color( 0.607843, 0.835294, 0.278431, 1 )
+disadvantage_color = Color( 1, 0.309804, 0.309804, 1 )
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="."]
 margin_right = 304.0

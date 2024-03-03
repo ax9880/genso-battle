@@ -1,5 +1,10 @@
 extends VBoxContainer
 
+
+export(Color) var advantage_color: Color
+export(Color) var disadvantage_color: Color
+
+
 onready var health_number_label: Label = $HBoxContainer3/HealthNumber
 
 onready var attack_number_label: Label = $HBoxContainer/AttackNumber
@@ -8,12 +13,11 @@ onready var spiritual_attack_number_label: Label = $HBoxContainer2/SpiritualAtta
 onready var spiritual_defense_number_label: Label = $HBoxContainer2/SpiritualDefenseNumber
 
 
-func initialize(base_stats: StartingStats, compare_stats: StartingStats, can_show_remaining_health: bool = false) -> void:
+func initialize(base_stats: StartingStats, compare_stats: StartingStats) -> void:
 	# TODO: Add label translations
 	
 	if compare_stats != null:
-		if not can_show_remaining_health:
-			_show_compared_number(health_number_label, base_stats.health, compare_stats.health)
+		_show_compared_number(health_number_label, base_stats.health, compare_stats.health)
 		
 		_show_compared_number(attack_number_label, base_stats.attack, compare_stats.attack)
 		_show_compared_number(defense_number_label, base_stats.defense, compare_stats.defense)
@@ -28,9 +32,16 @@ func initialize(base_stats: StartingStats, compare_stats: StartingStats, can_sho
 		
 		_show_number(spiritual_attack_number_label, base_stats.spiritual_attack)
 		_show_number(spiritual_defense_number_label, base_stats.spiritual_defense)
+
+
+func initialize_in_battle(base_stats: StartingStats, current_stats: StartingStats) -> void:
+	_show_remaining_health(base_stats, current_stats)
 	
-	if can_show_remaining_health and compare_stats != null:
-		_show_remaining_health(base_stats, compare_stats)
+	_show_compared_number(attack_number_label, current_stats.attack, base_stats.attack)
+	_show_compared_number(defense_number_label, current_stats.defense, base_stats.defense)
+	
+	_show_compared_number(spiritual_attack_number_label, current_stats.spiritual_attack, base_stats.spiritual_attack)
+	_show_compared_number(spiritual_defense_number_label, current_stats.spiritual_defense, base_stats.spiritual_defense)
 
 
 func _show_number(label: Label, job_stat: int) -> void:
@@ -41,11 +52,11 @@ func _show_compared_number(label: Label, job_stat: int, compare_job_stat: int) -
 	var difference: int = job_stat - compare_job_stat
 	
 	if difference > 0:
-		label.add_color_override("font_color", Color("#9bd547"))
+		label.add_color_override("font_color", advantage_color)
 		
 		label.text = "%d (%+d)" % [job_stat, difference]
 	elif difference < 0:
-		label.add_color_override("font_color", Color("#ff4f4f"))
+		label.add_color_override("font_color", disadvantage_color)
 		
 		label.text = "%d (%+d)" % [job_stat, difference]
 	else:
