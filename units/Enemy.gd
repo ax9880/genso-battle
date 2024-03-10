@@ -61,8 +61,8 @@ func act(grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void
 
 
 func pick_next_action() -> void:
-	# When it's 1 that means this unit will act in this turn
-	if turn_counter == 1:
+	# When it's 1 or 0 (turn 0) that means this unit will act in this turn
+	if turn_counter <= 1:
 		$AIController.pick_next_action(self)
 
 

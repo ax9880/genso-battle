@@ -87,9 +87,9 @@ func _ready() -> void:
 	
 	_disable_unit_selection()
 	
-	_make_enemies_appear(_enemy_units_node.get_children())
-	
 	_player_units_node.hide()
+	
+	_make_enemies_appear(_enemy_units_node.get_children())
 
 
 func _process(_delta: float) -> void:
@@ -280,14 +280,36 @@ func _make_player_units_appear() -> void:
 		
 		# TODO: Apply equip skills
 		
-		_start_player_turn()
+		_start_turn_zero_enemy_turn()
+
+
+func _start_turn_zero_enemy_turn() -> void:
+	print("Starting turn 0 enemy turn")
+	
+	_current_turn = Turn.ENEMY
+	
+	_disable_unit_selection()
+	
+	_initialize_enemy_pincer_executor()
+	
+	_enemy_queue.clear()
+	
+	for enemy in _enemy_units_node.get_children():
+		if enemy.turn_counter == 0:
+			enemy.pick_next_action()
+			
+			_enemy_queue.push_back(enemy)
+	
+	_update_enemy()
 
 
 func _start_player_turn(var has_same_cell: bool = false) -> void:
 	print("Starting player turn")
 	
 	$PincerExecutor.initialize(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
-	_pincer_queue = []
+	_pincer_queue.clear()
+	
+	_current_turn = Turn.PLAYER
 	
 	if _player_units_node.get_children().size() < SaveData.MIN_SQUAD_SIZE or _has_less_than_min_squad_size_alive(_player_units_node.get_children()):
 		print("Defeat!")
@@ -298,8 +320,8 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		
 		if _current_enemy_phase <= _enemy_phase_count:
 			_make_enemies_appear(_enemy_units_node.get_children())
-		
-		_current_turn = Turn.PLAYER
+			
+			# TODO: Yield to wait until enemies appear
 		
 		_enable_unit_selection()
 		
@@ -308,8 +330,6 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		if not has_same_cell:
 			emit_signal("player_turn_started")
 	elif _can_any_unit_act(_player_units_node.get_children()):
-		_current_turn = Turn.PLAYER
-		
 		for enemy in _enemy_units_node.get_children():
 			enemy.reset_turn_counter()
 		
@@ -333,6 +353,16 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 		yield($PlayerSkipTurnTimer, "timeout")
 		
 		_start_enemy_turn()
+
+
+func _initialize_enemy_pincer_executor() -> void:
+	# Initialize these parameters. Allies and enemies are used when
+	# checking for dead units. The grid is used when checking for
+	# affected cells when using a skill
+	$PincerExecutor.initialize(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
+	
+	_pincer_queue.clear()
+	_completed_enemy_pincers.clear()
 
 
 func _has_less_than_min_squad_size_alive(units: Array) -> bool:
@@ -402,13 +432,7 @@ func _start_enemy_turn() -> void:
 	if _enemy_units_node.get_children().empty():
 		emit_signal("victory")
 	else:
-		# Initialize these parameters. Allies and enemies are used when
-		# checking for dead units. The grid is used when checking for
-		# affected cells when using a skill
-		$PincerExecutor.initialize(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
-		
-		_pincer_queue.clear()
-		_completed_enemy_pincers.clear()
+		_initialize_enemy_pincer_executor()
 		
 		# enemy turn starts right away, there's no animation
 		# enqueue enemies
