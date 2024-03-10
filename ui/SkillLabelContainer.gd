@@ -52,14 +52,12 @@ func initialize(skill: Skill, can_show_full_data: bool = false, is_locked: bool 
 			for i in range(skill.status_effects.size()):
 				var status_effect: StatusEffect = skill.status_effects[i]
 				
-				var status_effect_type_translation_key: String = Enums.StatusEffectType.keys()[status_effect.status_effect_type]
-				
 				if i == 0:
 					skill_description += " "
 				else:
 					skill_description += COMMA_AND_SPACE
 				
-				skill_description += tr("STATUS_EFFECT_DESCRIPTION") % [tr(status_effect_type_translation_key).to_lower(), status_effect.duration_turns]
+				skill_description += tr("STATUS_EFFECT_DESCRIPTION") % [status_effect.get_description(false), status_effect.duration_turns]
 	
 	$Label.text = skill_description
 	

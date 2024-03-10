@@ -91,7 +91,7 @@ HEAL_DESCRIPTION,%.1fx healing power,%.1fx de poder curativo
 MAX_HEAL_DESCRIPTION,(Up to %d HP),(Máximo %d puntos de vida)
 SECONDARY_WEAPON_DAMAGE_DESCRIPTION,(+%.1fx %s damage),(+%.1fx daño de %s)
 ABSORB_DESCRIPTION,absorb %.0f%% of attack damage,absorbe %.0f%% del daño infligido
-STATUS_EFFECT_CHANCE_DESCRIPTION,%.0f%% chance to inflict,%.0f%% de probabilidad de infligir
+STATUS_EFFECT_CHANCE_DESCRIPTION,%.0f%% chance to add,%.0f%% de probabilidad de agregar
 STATUS_EFFECT_DESCRIPTION,%s for %d turn(s),%s por %d turno(s)
 TURNS_LEFT,%d turn(s) left,%d turno(s) restante(s)
 SWORD,Sword,Espada
@@ -109,6 +109,6 @@ DEFENSE,Defense,Defensa
 SPIRITUAL_ATTACK,Spiritual attack,Ataque spiritual
 SPIRITUAL_DEFENSE,Spiritual defense,Defensa spiritual
 SKILL_ACTIVATION_RATE_MODIFIER,Skill activation rate,Tasa de activación de habilidades
-STATUS_EFFECT_RESISTANCE,%s%.0f%% resistance to %s,%s%.0f%% de resistencia a %s
+STATUS_EFFECT_RESISTANCE,%+.0f%% resistance to %s,%+.0f%% de resistencia a %s
 SKILLS_TAB,Skills,Habilidades
 STATUS_EFFECTS_TAB,Status effects,Estados

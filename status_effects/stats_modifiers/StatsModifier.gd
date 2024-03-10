@@ -54,13 +54,13 @@ func is_buff() -> bool:
 	return .is_buff() and (modified_stat_percentage > 0 or modified_status_effect_vulnerability < 0)
 
 
-func get_description() -> String:
+func get_description(can_show_remaining_turns: bool = true) -> String:
 	var status_effect_description: String = ""
 	
 	if modified_stat != Enums.StatsType.NONE:
 		var modified_stat_key: String = Enums.StatsType.keys()[modified_stat]
 		
-		status_effect_description += "%s %s %.0f%%" % [tr(modified_stat_key), _get_sign(modified_stat_percentage), (100.0 * modified_stat_percentage)]
+		status_effect_description += "%s %+.0f%%" % [tr(modified_stat_key), (100.0 * modified_stat_percentage)]
 		
 		if modified_status_effect != Enums.StatusEffectType.NONE:
 			status_effect_description += ", "
@@ -68,15 +68,10 @@ func get_description() -> String:
 	if modified_status_effect != Enums.StatusEffectType.NONE:
 		var modified_status_effect_key: String = Enums.status_effect_type_to_string(modified_status_effect)
 		
-		status_effect_description += tr("STATUS_EFFECT_RESISTANCE") % [_get_sign(modified_status_effect_vulnerability), (100.0 * modified_status_effect_vulnerability), modified_status_effect_key]
+		status_effect_description += tr("STATUS_EFFECT_RESISTANCE") % [(100.0 * modified_status_effect_vulnerability), modified_status_effect_key]
 	
-	status_effect_description += ", " + tr("TURNS_LEFT") % turn_count
+	if can_show_remaining_turns:
+		status_effect_description += ", " + tr("TURNS_LEFT") % turn_count
 	
 	return status_effect_description
 
-
-func _get_sign(value: float) -> String:
-	if value > 0:
-		return "+"
-	else:
-		return "-"
