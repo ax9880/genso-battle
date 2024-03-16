@@ -5,14 +5,14 @@
 
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
-sword_enemy_count = 1
-gun_enemy_count = 0
-spear_enemy_count = 0
+sword_enemy_count = 0
+gun_enemy_count = 14
+spear_enemy_count = 12
 staff_enemy_count = 0
-phases_count = 1
+phases_count = 6
 
 [resource]
 script = ExtResource( 1 )
 title = "TO_OLD_HELL_2"
-battle_scene_path = "res://battles/introduction/ToOldHell.tscn"
+battle_scene_path = "res://battles/introduction/ToOldHell2.tscn"
 battle_info = SubResource( 1 )

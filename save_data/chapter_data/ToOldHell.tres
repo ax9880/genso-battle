@@ -5,11 +5,11 @@
 
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
-sword_enemy_count = 1
-gun_enemy_count = 0
+sword_enemy_count = 14
+gun_enemy_count = 14
 spear_enemy_count = 0
 staff_enemy_count = 0
-phases_count = 1
+phases_count = 5
 
 [resource]
 script = ExtResource( 1 )
