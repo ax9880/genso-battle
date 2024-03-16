@@ -64,6 +64,8 @@ func pick_next_action() -> void:
 	# When it's 1 or 0 (turn 0) that means this unit will act in this turn
 	if turn_counter <= 1:
 		$AIController.pick_next_action(self)
+	else:
+		$AIController.clear_action()
 
 
 func has_pincer_action() -> bool:
