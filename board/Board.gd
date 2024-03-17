@@ -682,10 +682,13 @@ func _execute_pincers(unit: Unit) -> void:
 	
 	print("Found %d pincers" % _pincer_queue.size())
 	
-	while not _pincer_queue.empty() and _pincer_queue.front() != null and _pincer_queue.front().is_valid():
-		print("Evaluating pincer")
-		
+	while not _pincer_queue.empty() and _pincer_queue.front() != null:
 		var pincer: Pincerer.Pincer = _pincer_queue.pop_front()
+		
+		if not pincer.is_valid():
+			continue
+		
+		print("Evaluating pincer")
 		
 		if _current_turn == Turn.ENEMY:
 			_set_turn_counter_of_pincering_units(unit, pincer)
