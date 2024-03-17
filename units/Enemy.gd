@@ -34,7 +34,7 @@ func _ready() -> void:
 # allies_queue is a queue of the units that will act after this one
 func act(grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void:
 	if not can_act():
-		print("Enemy %s can not act", name)
+		print("Enemy %s can not act" % name)
 		
 		emit_action_done()
 	else:
