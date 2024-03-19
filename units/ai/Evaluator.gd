@@ -42,11 +42,6 @@ class UnitsKilledSorter:
 			return a.damage_dealt > b.damage_dealt
 
 
-class UnitsPinceredSorter:
-	static func sort_descending(a: PossiblePincer, b: PossiblePincer) -> bool:
-		return a.units_pincered_count > b.units_pincered_count
-
-
 # For two elements a and b, if the given method returns true, element b
 # will be after element a in the array.
 class PathLengthAndUnitsPinceredSorter:
