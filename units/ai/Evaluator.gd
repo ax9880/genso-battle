@@ -18,6 +18,11 @@ class SkillEvaluationResult extends Reference:
 
 class DamageSorter:
 	static func sort_descending(a: SkillEvaluationResult, b: SkillEvaluationResult) -> bool:
+		if a.cell.unit == null and b.cell.unit != null:
+			return true
+		elif a.cell.unit != null and b.cell.unit == null:
+			return false
+		
 		return a.damage_dealt > b.damage_dealt
 
 
