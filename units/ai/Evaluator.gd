@@ -121,6 +121,8 @@ func _sort_by_preference(preference: int, skill_evaluation_results: Array) -> vo
 			skill_evaluation_results.sort_custom(DamageSorter, "sort_descending")
 		Enums.Preference.AFFECT_UNITS:
 			skill_evaluation_results.sort_custom(UnitsAffectedSorter, "sort_descending")
+		Enums.Preference.RANDOM:
+			skill_evaluation_results.shuffle()
 		_:
 			skill_evaluation_results.sort_custom(UnitsKilledSorter, "sort_descending")
 

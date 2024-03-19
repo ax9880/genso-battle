@@ -196,7 +196,10 @@ enum Preference {
 	AFFECT_UNITS,
 	
 	# Deal damage but prioritize killing units if possible.
-	KILL_UNITS
+	KILL_UNITS,
+	
+	# Pick a target randomly.
+	RANDOM
 }
 
 static func status_effect_type_to_string(status_effect_type: int) -> String:
