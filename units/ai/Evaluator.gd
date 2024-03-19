@@ -84,15 +84,19 @@ func evaluate_skill(unit: Unit,
 			var targeted_unit: Unit = targeted_cell.unit
 			
 			if targeted_unit != null:
-				var estimated_damage: int = targeted_unit.calculate_damage(unit.get_stats(), targeted_unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
+				var estimated_damage: int = 0
 				
 				# Check if units are enemies or allies in case cells are not filtered
 				if targeted_unit.is_enemy(unit.faction) and skill.is_attack():
+					estimated_damage = _estimate_damage(unit, targeted_unit, skill)
+					
 					skill_evaluation_result.units_affected += 1
 					
 					if (targeted_unit.get_stats().health - estimated_damage) <= 0:
 						skill_evaluation_result.units_killed += 1
 				elif targeted_unit.is_ally(unit.faction) and skill.is_healing():
+					estimated_damage = _estimate_damage(unit, targeted_unit, skill)
+					
 					skill_evaluation_result.units_affected += 1
 					
 					# If skill heals, damage is negative
@@ -105,6 +109,10 @@ func evaluate_skill(unit: Unit,
 	_sort_by_preference(preference, skill_evaluation_results)
 	
 	return skill_evaluation_results
+
+
+func _estimate_damage(unit: Unit, targeted_unit: Unit, skill: Skill) -> int:
+	return targeted_unit.calculate_damage(unit.get_stats(), targeted_unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
 
 
 func _sort_by_preference(preference: int, skill_evaluation_results: Array) -> void:
