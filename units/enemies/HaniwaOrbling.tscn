@@ -11,10 +11,25 @@
 [node name="Job" parent="." index="2"]
 job = ExtResource( 2 )
 
-[node name="Action" parent="AIController" index="1" instance=ExtResource( 5 )]
+[node name="Icon" parent="CanvasLayer/StatusEffectsIcons" index="0"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 48.0
+margin_bottom = 48.0
+
+[node name="AIController" parent="." index="13"]
+chance_to_move_after_using_skill = 0.0
+
+[node name="Action" parent="AIController" index="0" instance=ExtResource( 5 )]
 behavior = 1
 skill = ExtResource( 3 )
 
 [node name="Condition" parent="AIController/Action" index="0" instance=ExtResource( 4 )]
+
+[node name="Action2" parent="AIController" index="1" instance=ExtResource( 5 )]
+behavior = 2
+weight = 3
+
+[node name="Condition" parent="AIController/Action2" index="0" instance=ExtResource( 4 )]
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
