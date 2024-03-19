@@ -169,6 +169,10 @@ func can_coordinate_pincer() -> bool:
 	return has_pincer_action() and _pincer_target_cell == null
 
 
+func clear_action() -> void:
+	_action = null
+
+
 func set_pincer(start_cell: Cell, end_cell: Cell, pincered_cells: Array, is2x2: bool) -> void:
 	_pincer_target_cell = start_cell
 	_pincer_ally_cell = end_cell
