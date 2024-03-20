@@ -1,17 +1,18 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://units/Unit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://units/Enemy.gd" type="Script" id=2]
 [ext_resource path="res://assets/sfx/ceramic_drag_3.wav" type="AudioStream" id=3]
 [ext_resource path="res://assets/ui/hp_bar_progress.png" type="Texture" id=4]
 [ext_resource path="res://assets/ui/enemy_border.png" type="Texture" id=5]
-[ext_resource path="res://assets/enemies/unit_square_bg.png" type="Texture" id=6]
-[ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=7]
+[ext_resource path="res://assets/player/yachie.png" type="Texture" id=6]
+[ext_resource path="res://assets/enemies/unit_square_bg.png" type="Texture" id=7]
 [ext_resource path="res://assets/ui/light_blue_panel_transparent.png" type="Texture" id=8]
 [ext_resource path="res://units/ai/AIController.tscn" type="PackedScene" id=9]
 [ext_resource path="res://theme.tres" type="Theme" id=10]
 [ext_resource path="res://assets/ui/unit_circle_gradient.png" type="Texture" id=11]
 [ext_resource path="res://assets/sfx/pot_break_2.wav" type="AudioStream" id=12]
+[ext_resource path="res://units/JobTool.gd" type="Script" id=13]
 
 [node name="Enemy" instance=ExtResource( 1 )]
 collision_layer = 8
@@ -26,13 +27,13 @@ chance_to_move_to_enemy_during_move_behavior = 0.8
 visible = false
 
 [node name="Sprite" parent="." index="5"]
-texture = ExtResource( 6 )
+texture = ExtResource( 7 )
 
 [node name="Glow" parent="Sprite" index="0"]
 modulate = Color( 0.780392, 0.968627, 0.94902, 1 )
 
 [node name="Icon" parent="Sprite" index="1"]
-texture = ExtResource( 7 )
+texture = ExtResource( 6 )
 
 [node name="Border" parent="Sprite" index="2"]
 texture = ExtResource( 5 )
@@ -55,12 +56,22 @@ texture_progress = ExtResource( 4 )
 [node name="Container" parent="Control" index="3"]
 visible = true
 
+[node name="TurnCount" parent="Control/Container" index="0"]
+text = "1"
+
+[node name="Icon" parent="CanvasLayer/StatusEffectsIcons" index="0"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 48.0
+margin_bottom = 48.0
+
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
 texture = ExtResource( 8 )
 
 [node name="UnitName" parent="CanvasLayer" index="2"]
 modulate = Color( 1, 1, 1, 1 )
 theme = ExtResource( 10 )
+text = "YACHIE"
 
 [node name="Sprite" type="Sprite" parent="CanvasLayer/UnitName" index="0"]
 modulate = Color( 1, 1, 1, 0.752941 )
@@ -79,5 +90,14 @@ stream = ExtResource( 12 )
 stream = ExtResource( 3 )
 
 [node name="AIController" parent="." index="13" instance=ExtResource( 9 )]
+
+[node name="JobTool" type="Node" parent="." index="14"]
+script = ExtResource( 13 )
+unit_node_path = NodePath("..")
+sprite_node_path = NodePath("../Sprite/Icon")
+job_node_path = NodePath("../Job")
+weapon_type_node_path = NodePath("../Control/WeaponType")
+turn_count_node_path = NodePath("../Control/Container/TurnCount")
+unit_name_node_path = NodePath("../CanvasLayer/UnitName")
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]
