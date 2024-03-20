@@ -5,6 +5,10 @@ signal try_again_button_pressed
 signal quit_button_pressed
 
 
+func grab_focus() -> void:
+	$MarginContainer/VBoxContainer/TryAgainButton.grab_focus()
+
+
 func _on_TryAgainButton_pressed() -> void:
 	emit_signal("try_again_button_pressed")
 

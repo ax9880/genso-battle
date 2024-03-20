@@ -86,6 +86,7 @@ func _on_Board_victory() -> void:
 	_is_battle_finished = true
 	
 	$CanvasLayer/VictoryScreen.initialize(_total_drag_time_seconds, _player_turn_count)
+	$CanvasLayer/VictoryScreen.grab_focus()
 	
 	$CanvasLayer/VictoryScreen.show()
 
@@ -97,6 +98,7 @@ func _on_Board_defeat() -> void:
 	_is_battle_finished = true
 	
 	$CanvasLayer/DefeatScreen.show()
+	$CanvasLayer/DefeatScreen.grab_focus()
 	
 	$BattleTheme.stop()
 

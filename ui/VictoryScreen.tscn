@@ -76,14 +76,14 @@ align = 1
 [node name="TurnCountLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 margin_top = 445.0
 margin_right = 620.0
-margin_bottom = 775.0
+margin_bottom = 779.0
 size_flags_vertical = 3
 text = "Turns: 4"
 align = 1
 
 [node name="ContinueButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 5 )]
 margin_left = 190.0
-margin_top = 783.0
+margin_top = 787.0
 margin_right = 430.0
 margin_bottom = 860.0
 text = "CONTINUE"

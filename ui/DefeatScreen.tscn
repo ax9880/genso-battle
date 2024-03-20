@@ -36,9 +36,9 @@ margin_bottom = 910.0
 custom_constants/separation = 16
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
-margin_top = 137.0
+margin_top = 141.0
 margin_right = 620.0
-margin_bottom = 537.0
+margin_bottom = 541.0
 rect_min_size = Vector2( 0, 400 )
 size_flags_vertical = 6
 custom_fonts/font = SubResource( 1 )
@@ -48,14 +48,14 @@ valign = 1
 
 [node name="TryAgainButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
 margin_left = 190.0
-margin_top = 690.0
+margin_top = 698.0
 margin_right = 430.0
-margin_bottom = 767.0
+margin_bottom = 771.0
 text = "TRY_AGAIN"
 
 [node name="QuitButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
 margin_left = 190.0
-margin_top = 783.0
+margin_top = 787.0
 margin_right = 430.0
 margin_bottom = 860.0
 text = "QUIT"
