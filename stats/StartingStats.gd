@@ -34,6 +34,10 @@ export(Enums.WeaponType) var weapon_type: int = Enums.WeaponType.SWORD
 # Max turn counter (only applies to AI-controlled characters)
 export(int, 0, 10, 1) var max_turn_counter: int = 3
 
+# Says if turn counter can be randomized from [1, max_turn_counter] after
+# it reaches 0.
+export(bool) var can_randomize_turn_counter: bool = false
+
 # How many cells this unit can move (only applies to AI-controlled characters)
 export(int, 0, 15, 1) var movement_range: int = 5
 

@@ -187,7 +187,10 @@ func _execute_after_move() -> void:
 
 func reset_turn_counter() -> void:
 	if turn_counter <= 0:
-		self.turn_counter = turn_counter_max_value
+		if get_stats().can_randomize_turn_counter:
+			self.turn_counter = _random.randi_range(1, turn_counter_max_value)
+		else:
+			self.turn_counter = turn_counter_max_value
 
 
 func release() -> void:

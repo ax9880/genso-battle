@@ -59,12 +59,6 @@ visible = true
 [node name="TurnCount" parent="Control/Container" index="0"]
 text = "1"
 
-[node name="Icon" parent="CanvasLayer/StatusEffectsIcons" index="0"]
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 48.0
-margin_bottom = 48.0
-
 [node name="NinePatchRect" parent="CanvasLayer/ActivatedSkillMarginContainer" index="1"]
 texture = ExtResource( 8 )
 
