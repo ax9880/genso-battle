@@ -1011,7 +1011,8 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	_clear_active_trail()
 	
 	if unit.is_alive():
-		assert(grid.get_cell_from_position(unit.position).unit == unit)
+		if grid.get_cell_from_position(unit.position).unit != unit:
+			push_error("Unit in cell of active unit %s is not the active unit" % unit.name)
 	
 	$PincerExecutor.check_dead_units()
 	
