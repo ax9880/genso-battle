@@ -63,6 +63,8 @@ signal unit_selected_for_view(job)
 
 
 func _ready() -> void:
+	randomize()
+	
 	_save_data = GameData.save_data
 	
 	$PincerExecutor.pusher = $Pusher
