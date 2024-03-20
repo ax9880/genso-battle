@@ -43,6 +43,8 @@ var _enemy_phases_queue: Array
 
 var _save_data: SaveData
 
+var _is_battle_finished: bool = false
+
 signal drag_timer_started(timer)
 signal drag_timer_stopped
 signal drag_timer_reset
@@ -400,6 +402,13 @@ func update_drag_mode(drag_mode: int) -> void:
 	
 	for unit in _enemy_units_node.get_children():
 		unit.set_drag_mode(drag_mode)
+
+
+func on_give_up() -> void:
+	if active_unit != null and active_unit.is_player():
+		_is_battle_finished = true
+		
+		active_unit.release()
 
 
 func _enable_unit_selection() -> void:
@@ -969,6 +978,9 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 	print("Unit %s snapped to grid" % unit.name)
 	
 	$ChainPreviewer.clear()
+	
+	if _is_battle_finished:
+		return
 	
 	if _current_turn == Turn.PLAYER:
 		if unit.is_dead():

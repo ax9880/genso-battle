@@ -14,9 +14,11 @@ export(float) var view_unit_menu_fade_time_seconds: float = 0.5
 onready var progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
 onready var tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
 
-var timer: Timer
-var player_turn_count: int = 0
-var total_drag_time_seconds: float = 0
+var _timer: Timer
+var _player_turn_count: int = 0
+var _total_drag_time_seconds: float = 0
+
+var _is_battle_finished: bool = false
 
 
 func _ready() -> void:
@@ -28,7 +30,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	var percentage_left = progress_bar.max_value * timer.time_left / timer.wait_time
+	var percentage_left = progress_bar.max_value * _timer.time_left / _timer.wait_time
 	
 	progress_bar.value = percentage_left
 
@@ -40,13 +42,13 @@ func on_instance(data: Object) -> void:
 
 
 func _update_turn_count() -> void:
-	$CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2/TurnCountLabel.text = "%d" % player_turn_count
+	$CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2/TurnCountLabel.text = "%d" % _player_turn_count
 
 
 ## Signals
 
-func _on_Board_drag_timer_started(_timer: Timer) -> void:
-	timer = _timer
+func _on_Board_drag_timer_started(timer: Timer) -> void:
+	_timer = timer
 	
 	progress_bar.value = progress_bar.max_value
 	
@@ -56,10 +58,10 @@ func _on_Board_drag_timer_started(_timer: Timer) -> void:
 func _on_Board_drag_timer_stopped(time_left_seconds: float) -> void:
 	set_process(false)
 	
-	if timer != null:
-		total_drag_time_seconds += timer.wait_time - time_left_seconds
+	if _timer != null:
+		_total_drag_time_seconds += _timer.wait_time - time_left_seconds
 	
-	timer = null
+	_timer = null
 
 
 func _on_Board_drag_timer_reset() -> void:
@@ -72,18 +74,28 @@ func _on_Board_drag_timer_reset() -> void:
 
 
 func _on_Board_player_turn_started() -> void:
-	player_turn_count += 1
+	_player_turn_count += 1
 	
 	_update_turn_count()
 
 
 func _on_Board_victory() -> void:
-	$CanvasLayer/VictoryScreen.initialize(total_drag_time_seconds, player_turn_count)
+	if _is_battle_finished:
+		return
+	
+	_is_battle_finished = true
+	
+	$CanvasLayer/VictoryScreen.initialize(_total_drag_time_seconds, _player_turn_count)
 	
 	$CanvasLayer/VictoryScreen.show()
 
 
 func _on_Board_defeat() -> void:
+	if _is_battle_finished:
+		return
+	
+	_is_battle_finished = true
+	
 	$CanvasLayer/DefeatScreen.show()
 	
 	$BattleTheme.stop()
@@ -106,6 +118,8 @@ func _on_VictoryScreen_continue_button_pressed() -> void:
 
 func _on_GiveUpButton_pressed() -> void:
 	_on_Board_defeat()
+	
+	$Board.on_give_up()
 
 
 func _on_DragModeOptionButton_drag_mode_changed(drag_mode: int) -> void:
