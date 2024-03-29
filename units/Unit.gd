@@ -384,15 +384,8 @@ func get_status_effects() -> Array:
 	return _status_effects
 
 
-func calculate_attack_damage(attacker_stats: StartingStats, pincering_unit_stats: StartingStats = null) -> int:
-	var attacker_weapon_type: int = attacker_stats.weapon_type
-	
-	if pincering_unit_stats != null:
-		attacker_weapon_type = pincering_unit_stats.weapon_type
-	
-	var damage: int = calculate_damage(attacker_stats, get_stats(), 1.0, attacker_weapon_type, attacker_stats.attribute)
-	
-	return damage
+func calculate_attack_damage(attacker_stats: StartingStats) -> int:
+	return calculate_damage(attacker_stats, get_stats(), 1.0, attacker_stats.weapon_type, attacker_stats.attribute)
 
 
 func inflict_damage(damage: int) -> void:
