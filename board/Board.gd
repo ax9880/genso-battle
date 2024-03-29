@@ -696,6 +696,8 @@ func _execute_pincers(unit: Unit) -> void:
 	while not _pincer_queue.empty() and _pincer_queue.front() != null:
 		var pincer: Pincerer.Pincer = _pincer_queue.pop_front()
 		
+		$Pincerer.find_chains(grid, pincer)
+		
 		if not pincer.is_valid():
 			continue
 		

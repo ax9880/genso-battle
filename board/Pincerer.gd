@@ -53,14 +53,18 @@ class Pincer extends Reference:
 		return is_any_pincered_unit_alive and is_pincering_units_alive
 
 
+# Finds pincers without chains. The chains must be found before Board executes
+# the pincer, in case that a pincer cleared up enemy units and thus the next
+# pincer can now chain with units that were previously blocked.
 func find_pincers(grid: Grid, active_unit: Unit) -> Array:
 	var pincers := _find_pincers(grid, active_unit)
 	
-	# Add the chains to the pincer
-	for pincer in pincers:
-		pincer.chain_families = _find_chains(grid, pincer)
-	
 	return pincers
+
+
+# Finds and sets a pincer's chains
+func find_chains(grid:Grid, pincer: Pincer) -> void:
+	pincer.chain_families = _find_chains(grid, pincer)
 
 
 # Finds all pincers, but does not find the chains.
