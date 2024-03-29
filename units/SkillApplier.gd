@@ -35,6 +35,9 @@ func apply_skill(unit: Unit,
 		on_damage_absorbed_callback.call_func(absorbed_damage)
 		
 		target_unit.inflict_damage(damage)
+		
+		if damage > 0:
+			target_unit.on_attacked()
 	
 	var has_modified_stats: bool = false
 	
