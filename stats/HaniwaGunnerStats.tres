@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource( 1 )
-health = 600
-attack = 53
-spiritual_attack = 3
-defense = 35
-spiritual_defense = 89
+health = 1050
+attack = 42
+defense = 26
+spiritual_attack = 1
+spiritual_defense = 94
 status_ailment_vulnerability = 1.0
 status_ailment_vulnerabilities = {
 }

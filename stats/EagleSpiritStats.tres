@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource( 1 )
-health = 1800
-attack = 57
-spiritual_attack = 43
-defense = 59
-spiritual_defense = 42
+health = 1320
+attack = 51
+defense = 43
+spiritual_attack = 32
+spiritual_defense = 40
 status_ailment_vulnerability = 1.0
 status_ailment_vulnerabilities = {
 }
@@ -16,4 +16,6 @@ same_attribute_resistance = 0.0
 attribute = 0
 weapon_type = 0
 max_turn_counter = 3
+can_randomize_turn_counter = false
 movement_range = 5
+skill_activation_rate_modifier = 0.0

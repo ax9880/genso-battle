@@ -6,8 +6,8 @@ class_name StartingStats
 export var health: int = 0
 
 export var attack: int = 0
-export var spiritual_attack: int = 0
 export var defense: int = 0
+export var spiritual_attack: int = 0
 export var spiritual_defense: int = 0
 
 # General status ailment vulnerability. The greater it is the
