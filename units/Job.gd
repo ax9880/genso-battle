@@ -34,6 +34,7 @@ func set_job_reference(job_reference: JobReference) -> void:
 func reset_stats() -> void:
 	var current_health: int = current_stats.health
 	
+	# TODO: Set only current stats to avoid recalculating base stats?
 	_set_stats()
 	
 	current_stats.health = int(min(base_stats.health, current_health))
@@ -41,8 +42,10 @@ func reset_stats() -> void:
 
 func _set_stats() -> void:
 	base_stats = job.stats.duplicate()
+	base_stats.level = level
 	
 	current_stats = base_stats.duplicate()
+	current_stats.level = level
 	
 	skills = job.skills
 

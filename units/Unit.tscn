@@ -4,7 +4,7 @@
 [ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=2]
 [ext_resource path="res://units/SwapArea2D.gd" type="Script" id=3]
 [ext_resource path="res://units/Job.gd" type="Script" id=4]
-[ext_resource path="res://jobs/YachieJob.tres" type="Resource" id=5]
+[ext_resource path="res://jobs/animal_spirit/YachieJob.tres" type="Resource" id=5]
 [ext_resource path="res://assets/ui/red_bar_progress.png" type="Texture" id=6]
 [ext_resource path="res://assets/ui/hp_bar_bg.png" type="Texture" id=7]
 [ext_resource path="res://units/HpBar.gd" type="Script" id=8]
@@ -373,6 +373,7 @@ anims/shake = SubResource( 9 )
 [node name="Job" type="Node" parent="."]
 script = ExtResource( 4 )
 job = ExtResource( 5 )
+level = 10
 
 [node name="SkillApplier" type="Node" parent="."]
 script = ExtResource( 25 )

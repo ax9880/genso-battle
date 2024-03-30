@@ -2,12 +2,12 @@
 
 [ext_resource path="res://save_data/SaveData.gd" type="Script" id=1]
 [ext_resource path="res://save_data/JobReference.gd" type="Script" id=2]
-[ext_resource path="res://jobs/SakiJob.tres" type="Resource" id=3]
-[ext_resource path="res://jobs/YuumaJob.tres" type="Resource" id=4]
-[ext_resource path="res://jobs/YachieJob.tres" type="Resource" id=5]
-[ext_resource path="res://jobs/WolfSpiritJob.tres" type="Resource" id=6]
-[ext_resource path="res://jobs/EagleSpiritJob.tres" type="Resource" id=7]
-[ext_resource path="res://jobs/OtterSpiritJob.tres" type="Resource" id=8]
+[ext_resource path="res://jobs/animal_spirit/SakiJob.tres" type="Resource" id=3]
+[ext_resource path="res://jobs/animal_spirit/YuumaJob.tres" type="Resource" id=4]
+[ext_resource path="res://jobs/animal_spirit/YachieJob.tres" type="Resource" id=5]
+[ext_resource path="res://jobs/animal_spirit/WolfSpiritJob.tres" type="Resource" id=6]
+[ext_resource path="res://jobs/animal_spirit/EagleSpiritJob.tres" type="Resource" id=7]
+[ext_resource path="res://jobs/animal_spirit/OtterSpiritJob.tres" type="Resource" id=8]
 
 [sub_resource type="Resource" id=2]
 script = ExtResource( 2 )

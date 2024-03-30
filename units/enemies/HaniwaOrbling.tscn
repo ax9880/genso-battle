@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://units/Enemy.tscn" type="PackedScene" id=1]
-[ext_resource path="res://jobs/HaniwaOrblingJob.tres" type="Resource" id=2]
+[ext_resource path="res://jobs/haniwa/HaniwaOrblingJob.tres" type="Resource" id=2]
 [ext_resource path="res://skills/resources/PushingSlash.tres" type="Resource" id=3]
 [ext_resource path="res://units/ai/Condition.tscn" type="PackedScene" id=4]
 [ext_resource path="res://units/ai/Action.tscn" type="PackedScene" id=5]

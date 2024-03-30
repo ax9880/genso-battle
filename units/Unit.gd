@@ -44,6 +44,8 @@ export var kp: float = 1.4
 export(bool) var is_click_to_drag: bool = true
 export(bool) var is_controlled_by_player: bool = true
 
+export(int, 1, 50, 1) var level: int = 10
+
 ## Onready
 
 onready var tween := $Tween

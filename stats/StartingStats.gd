@@ -2,13 +2,20 @@ extends Resource
 
 class_name StartingStats
 
+const _DEFAULT_HP: int = 1500
+const _DEFAULT_STAT: int = 50
+const _STAT_GROWTH_PER_LEVEL: float = 0.1
 
-export var health: int = 0
 
-export var attack: int = 0
-export var defense: int = 0
-export var spiritual_attack: int = 0
-export var spiritual_defense: int = 0
+export(String) var unit_name: String
+export(String) var unit_type: String
+
+export var health_percentage: float = 1
+
+export var attack_percentage: float = 1
+export var defense_percentage: float = 1
+export var spiritual_attack_percentage: float = 1
+export var spiritual_defense_percentage: float = 1
 
 # General status ailment vulnerability. The greater it is the
 # more vulnerable to status ailments. If it's zero then the unit
@@ -48,6 +55,19 @@ export(int, 0, 15, 1) var movement_range: int = 5
 # > 0 -> skills are activated more often
 export(float, -1, 1, 0.1) var skill_activation_rate_modifier: float = 0.0
 
+var health: int = 0
+
+var attack: int = 0
+var defense: int = 0
+var spiritual_attack: int = 0
+var spiritual_defense: int = 0
+
+var level: int = 1 setget set_level
+
+
+func _init() -> void:
+	_update_stats()
+
 
 func is_physical() -> bool:
 	return weapon_type != Enums.WeaponType.STAFF
@@ -62,3 +82,22 @@ func get_vulnerability(status_effect_type: int) -> float:
 		return status_ailment_vulnerabilities[status_effect_type_str]
 	else:
 		return status_ailment_vulnerability
+
+
+func set_level(_level: int) -> void:
+	level = _level
+	
+	_update_stats()
+
+
+func _update_stats() -> void:
+	health = _get_stat(_DEFAULT_HP, health_percentage)
+	
+	attack = _get_stat(_DEFAULT_STAT, attack_percentage)
+	defense = _get_stat(_DEFAULT_STAT, defense_percentage)
+	spiritual_attack = _get_stat(_DEFAULT_STAT, spiritual_attack_percentage)
+	spiritual_defense = _get_stat(_DEFAULT_STAT, spiritual_defense_percentage)
+
+
+func _get_stat(base_value: int, modifier: float) -> int:
+	return int(round(float(level * base_value) * _STAT_GROWTH_PER_LEVEL * modifier))
