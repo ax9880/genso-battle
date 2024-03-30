@@ -1,6 +1,6 @@
 extends Node
 
-const WEAPON_ADVANTAGE: float = 3.0
+const WEAPON_ADVANTAGE: float = 2.0
 const WEAPON_DISADVANTAGE: float = 1.0
 
 
