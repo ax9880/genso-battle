@@ -32,6 +32,8 @@ func load_data():
 			_load_data_from_configs_file()
 	else:
 		_load_data_from_default_resource()
+	
+	_duplicate_jobs()
 
 
 # Returns Error
@@ -52,7 +54,7 @@ func _load_data_from_configs_file() -> void:
 		
 		job_reference.from_dictionary(job_reference_dictionary)
 		
-		save_data.job.push_back(job_reference)
+		save_data.job_references.push_back(job_reference)
 	
 	save_data.active_units = config_file.get_value(_UNIT_DATA_SECTION, "active_units", save_data.active_units)
 
@@ -72,6 +74,19 @@ func _load_data_from_default_resource() -> void:
 	save_data = default_save_data.duplicate()
 	
 	unlock_default_chapters()
+
+
+func _duplicate_jobs() -> void:
+	for job_reference in save_data.job_references:
+		# Duplicates job and stats (so that job can be assigned different stats),
+		# but does not duplicate other resources other of Job
+		var job: Job = job_reference.job.duplicate()
+		job.stats = job.stats.duplicate()
+		
+		# Sets the level to update the stats
+		job.stats.level = job_reference.level
+		
+		job_reference.job = job
 
 
 func unlock_default_chapters() -> void:
