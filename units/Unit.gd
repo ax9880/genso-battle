@@ -362,6 +362,10 @@ func is_enemy(unit_faction: int) -> bool:
 	return not is_ally(unit_faction)
 
 
+func get_base_stats() -> StartingStats:
+	return $Job.base_stats
+
+
 func get_stats() -> StartingStats:
 	return $Job.current_stats
 

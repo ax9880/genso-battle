@@ -81,6 +81,8 @@ margin_bottom = 164.0
 alignment = 1
 
 [node name="UnitIcon" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 106.0
 margin_right = 206.0
 margin_bottom = 100.0

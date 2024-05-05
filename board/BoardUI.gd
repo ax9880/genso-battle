@@ -176,7 +176,7 @@ func _on_Board_unit_selected_for_view(unit: Unit) -> void:
 		
 		$ViewUnitMenuCanvasLayer.add_child(view_unit_menu)
 		
-		view_unit_menu.initialize_from_data(unit.get_job(), unit.get_stats(), unit.get_level(), unit.get_skills(), unit.get_status_effects(), unit.faction == Unit.PLAYER_FACTION, true, unit.faction == Unit.ENEMY_FACTION)
+		view_unit_menu.initialize_from_data(unit.get_job(), unit.get_base_stats(), unit.get_stats(), unit.get_level(), unit.get_skills(), unit.get_status_effects(), unit.faction == Unit.PLAYER_FACTION, true, unit.faction == Unit.ENEMY_FACTION)
 		
 		var _error = view_unit_menu.connect("go_back", self, "_on_ViewUnitMenu_go_back", [view_unit_menu])
 		

@@ -25,10 +25,10 @@ onready var status_effects_vbox_container := $MarginContainer/VBoxContainer/TabC
 # Called from squad menu
 func initialize(job: Job, level: int) -> void:
 	# Show activation rate, is not in battle, don't ignore locked skills
-	initialize_from_data(job, null, level, job.skills, [], true, false, false)
+	initialize_from_data(job, job.stats, null, level, job.skills, [], true, false, false)
 
 
-func initialize_from_data(job: Job, current_stats: StartingStats, level: int, skills: Array, status_effects: Array, var can_show_activation_rate: bool, var is_in_battle: bool, var can_ignore_locked_skills: bool) -> void:
+func initialize_from_data(job: Job, base_stats: StartingStats, current_stats: StartingStats, level: int, skills: Array, status_effects: Array, var can_show_activation_rate: bool, var is_in_battle: bool, var can_ignore_locked_skills: bool) -> void:
 	_set_focus()
 	
 	for child in skills_vbox_container.get_children():
@@ -49,9 +49,9 @@ func initialize_from_data(job: Job, current_stats: StartingStats, level: int, sk
 	unit_icon.initialize(job)
 	
 	if is_in_battle:
-		unit_stats_container.initialize_in_battle(job.stats, current_stats)
+		unit_stats_container.initialize_in_battle(base_stats, current_stats)
 	else:
-		unit_stats_container.initialize(job.stats, current_stats)
+		unit_stats_container.initialize(base_stats, current_stats)
 	
 	var unlocked_skills: Array = job.get_unlocked_skills(level)
 	
