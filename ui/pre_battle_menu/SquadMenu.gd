@@ -60,6 +60,7 @@ func _show_active_units() -> void:
 	for i in range(save_data.active_units.size()):
 		var index: int = save_data.active_units[i]
 		
+		# TODO: Check if index is valid
 		var job_reference: JobReference = save_data.job_references[index]
 		
 		var unit_item: Control = unit_item_packed_scene.instance()
@@ -80,7 +81,6 @@ func _show_active_units() -> void:
 		if _changed_job_reference != null && _index_of_changed_job_reference != -1:
 			if _index_of_changed_job_reference == i and _changed_job_reference != job_reference:
 				_unit_item_to_highlight = unit_item
-	
 	
 	# TODO: Show empty spaces to show that player can have up to six units
 	$MarginContainer/VBoxContainer/ReturnButton.disabled = save_data.active_units.size() < SaveData.MIN_SQUAD_SIZE
