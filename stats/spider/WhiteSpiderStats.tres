@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "WHITE_SPIDER"
 unit_type = "SPIDER"
-health_percentage = 1.0
-attack_percentage = 1.0
-defense_percentage = 1.0
-spiritual_attack_percentage = 1.0
-spiritual_defense_percentage = 1.0
+health_percentage = 0.64
+attack_percentage = 1.46617922801492
+defense_percentage = 0.7326666666666669
+spiritual_attack_percentage = 1.46617922801492
+spiritual_defense_percentage = 0.7326666666666669
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

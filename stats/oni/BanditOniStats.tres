@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "BANDIT_ONI"
 unit_type = "ONI"
-health_percentage = 1.0
-attack_percentage = 1.0
-defense_percentage = 1.0
-spiritual_attack_percentage = 1.0
-spiritual_defense_percentage = 1.0
+health_percentage = 0.96
+attack_percentage = 1.19713032670143
+defense_percentage = 1.15133333333333
+spiritual_attack_percentage = 1.19713032670143
+spiritual_defense_percentage = 1.15133333333333
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

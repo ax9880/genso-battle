@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "DAMNED_SOUL"
 unit_type = "SOUL"
-health_percentage = 0.72
-attack_percentage = 1.05
-defense_percentage = 0.58
-spiritual_attack_percentage = 0.59
-spiritual_defense_percentage = 0.59
+health_percentage = 0.66
+attack_percentage = 1.07074591537237
+defense_percentage = 0.634343434343434
+spiritual_attack_percentage = 1.07074591537237
+spiritual_defense_percentage = 0.634343434343434
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

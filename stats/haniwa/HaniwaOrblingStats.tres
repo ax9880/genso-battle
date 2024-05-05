@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "HANIWA_ORBLING"
 unit_type = "HANIWA"
-health_percentage = 0.75
-attack_percentage = 1.48
-defense_percentage = 0.54
-spiritual_attack_percentage = 0.01
-spiritual_defense_percentage = 1.98
+health_percentage = 0.594
+attack_percentage = 0.9636713238351371
+defense_percentage = 0.570909090909091
+spiritual_attack_percentage = 0.0107074591537237
+spiritual_defense_percentage = 1.58585858585859
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

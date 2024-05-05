@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "OTTER_SPIRIT_ENEMY"
 unit_type = "ANIMAL_SPIRIT"
-health_percentage = 1.0
-attack_percentage = 1.0
-defense_percentage = 1.0
-spiritual_attack_percentage = 1.0
-spiritual_defense_percentage = 1.0
+health_percentage = 0.8
+attack_percentage = 2.07349054912841
+defense_percentage = 0.8792
+spiritual_attack_percentage = 2.07349054912841
+spiritual_defense_percentage = 0.8792
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

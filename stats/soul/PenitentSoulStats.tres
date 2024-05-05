@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "PENITENT_SOUL"
 unit_type = "SOUL"
-health_percentage = 0.73
-attack_percentage = 0.93
-defense_percentage = 0.69
-spiritual_attack_percentage = 0.55
-spiritual_defense_percentage = 0.49
+health_percentage = 0.72
+attack_percentage = 0.977452818676612
+defense_percentage = 0.767555555555556
+spiritual_attack_percentage = 0.977452818676612
+spiritual_defense_percentage = 0.767555555555556
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

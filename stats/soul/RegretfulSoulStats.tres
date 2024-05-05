@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "REGRETFUL_SOUL"
 unit_type = "SOUL"
-health_percentage = 0.68
-attack_percentage = 1.15
-defense_percentage = 0.51
-spiritual_attack_percentage = 0.5
-spiritual_defense_percentage = 0.58
+health_percentage = 0.6
+attack_percentage = 1.11446768304896
+defense_percentage = 0.5652
+spiritual_attack_percentage = 1.11446768304896
+spiritual_defense_percentage = 0.5652
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

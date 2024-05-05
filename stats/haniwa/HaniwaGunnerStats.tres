@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "HANIWA_GUNNER"
 unit_type = "HANIWA"
-health_percentage = 0.66
-attack_percentage = 1.52
-defense_percentage = 0.51
-spiritual_attack_percentage = 0.01
-spiritual_defense_percentage = 1.87
+health_percentage = 0.54
+attack_percentage = 1.00302091474406
+defense_percentage = 0.50868
+spiritual_attack_percentage = 0.0111446768304896
+spiritual_defense_percentage = 1.413
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

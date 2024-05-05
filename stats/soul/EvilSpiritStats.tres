@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "EVIL_SPIRIT"
 unit_type = "SOUL"
-health_percentage = 8.53
-attack_percentage = 0.5
-defense_percentage = 0.89
-spiritual_attack_percentage = 2.24
-spiritual_defense_percentage = 1.42
+health_percentage = 4.8
+attack_percentage = 2.07349054912841
+defense_percentage = 0.8792
+spiritual_attack_percentage = 2.07349054912841
+spiritual_defense_percentage = 0.8792
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

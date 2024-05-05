@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "OUTLAW_ONI"
 unit_type = "ONI"
-health_percentage = 1.0
-attack_percentage = 1.0
-defense_percentage = 1.0
-spiritual_attack_percentage = 1.0
-spiritual_defense_percentage = 1.0
+health_percentage = 0.8
+attack_percentage = 1.3649385791458801
+defense_percentage = 0.8478
+spiritual_attack_percentage = 1.3649385791458801
+spiritual_defense_percentage = 0.8478
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }
