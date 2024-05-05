@@ -28,6 +28,8 @@ signal use_delayed_skill(unit, skill, target_cells)
 
 
 func _ready() -> void:
+	$Job.set_level(level)
+	
 	turn_counter_max_value = get_stats().max_turn_counter
 
 

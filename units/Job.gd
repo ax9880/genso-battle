@@ -16,10 +16,6 @@ var skills: Array
 signal health_changed(current_health, max_health)
 
 
-func _ready() -> void:
-	_set_stats()
-
-
 func get_unlocked_skills() -> Array:
 	return job.get_unlocked_skills(level)
 
@@ -28,29 +24,38 @@ func set_job_reference(job_reference: JobReference) -> void:
 	job = job_reference.job
 	level = job_reference.level
 	
-	_set_stats()
+	_reset_base_stats()
+	_reset_current_stats()
+
+
+func set_level(value: int) -> void:
+	level = value
+	
+	_reset_base_stats()
+	_reset_current_stats()
 
 
 func reset_stats() -> void:
 	var current_health: int = current_stats.health
 	
-	# TODO: Set only current stats to avoid recalculating base stats?
-	_set_stats()
+	_reset_current_stats()
 	
 	current_stats.health = int(min(base_stats.health, current_health))
-
-
-func _set_stats() -> void:
-	base_stats = job.stats.duplicate()
-	base_stats.level = level
-	
-	current_stats = base_stats.duplicate()
-	current_stats.level = level
-	
-	skills = job.skills
 
 
 func decrease_health(value: int) -> void:
 	current_stats.health = int(clamp(current_stats.health - value, 0, base_stats.health))
 	
 	emit_signal("health_changed", current_stats.health, base_stats.health)
+
+
+func _reset_base_stats() -> void:
+	base_stats = job.stats.duplicate()
+	base_stats.level = level
+
+
+func _reset_current_stats() -> void:
+	current_stats = base_stats.duplicate()
+	current_stats.level = level
+	
+	skills = job.skills
