@@ -3,6 +3,9 @@ extends Node
 const WEAPON_ADVANTAGE: float = 2.0
 const WEAPON_DISADVANTAGE: float = 0.8
 
+const PHYSICAL_DAMAGE_MODIFIER: float = 1.57
+const STAFF_DAMAGE_MODIFIER: float = 1.57
+
 
 export(NodePath) var target_unit_path: NodePath
 export(NodePath) var status_effect_node2d_path: NodePath
@@ -85,11 +88,11 @@ func calculate_damage(attacker_stats: StartingStats,
 	var damage: float = 0
 	
 	if weapon_type == Enums.WeaponType.STAFF:
-		damage = 1.8 * power * attacker_stats.attack * attacker_stats.attack / float(defender_stats.defense)
+		damage = STAFF_DAMAGE_MODIFIER * power * attacker_stats.attack * attacker_stats.attack / float(defender_stats.defense)
 		
 		damage = damage * (1 - _get_attribute_resistance(defender_stats, attribute, defender_stats.attribute))
 	else:
-		damage = 1.57 * power * attacker_stats.attack * attacker_stats.attack / float(defender_stats.defense)
+		damage = PHYSICAL_DAMAGE_MODIFIER * power * attacker_stats.attack * attacker_stats.attack / float(defender_stats.defense)
 		
 		damage = damage * _get_weapon_type_advantage(weapon_type, defender_stats.weapon_type)
 	
