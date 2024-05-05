@@ -1,7 +1,7 @@
 extends Node
 
 const WEAPON_ADVANTAGE: float = 2.0
-const WEAPON_DISADVANTAGE: float = 1.0
+const WEAPON_DISADVANTAGE: float = 0.8
 
 
 export(NodePath) var target_unit_path: NodePath
@@ -130,6 +130,9 @@ func remove_status_effect(status_effects: Array, status_effect: StatusEffect) ->
 
 
 func _get_weapon_type_advantage(attacker_weapon_type: int, defender_weapon_type: int) -> float:
+	if attacker_weapon_type == defender_weapon_type or attacker_weapon_type == Enums.WeaponType.STAFF:
+		return 1.0
+	
 	var disadvantaged_weapon_type = Enums.WEAPON_RELATIONSHIPS.get(attacker_weapon_type)
 	
 	if disadvantaged_weapon_type == defender_weapon_type:
