@@ -20,12 +20,18 @@ func play(activated_skills: Array) -> void:
 			
 			vbox_container.add_child(activated_skill_hbox_container)
 		
+		# Yields one frame so the container updates before setting the growth
+		# position
+		yield(get_tree(), "idle_frame")
+		
 		_set_growth_position()
 		
 		$AnimationPlayer.play("Fade in and then out")
 
 
 func _set_growth_position() -> void:
+	reset_growth_direction()
+	
 	var screen_center: Vector2 = get_viewport_rect().size / 2.0
 	
 	var position_in_viewport: Vector2 = get_global_transform_with_canvas().origin
