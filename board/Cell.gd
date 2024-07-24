@@ -26,6 +26,8 @@ var neighbors: Array = []
 # {String, nullable Cell}
 var all_neighbors: Dictionary = {}
 
+# Cells in 2x2 area around this cell, with this cell as the top left cell.
+# These cells are saved in this list to calculate this only once
 var _cells_in_area_2x2: Array = []
 
 

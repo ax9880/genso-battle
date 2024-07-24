@@ -1,5 +1,8 @@
 extends Node
 
+# Pushes a unit to an appropriate free cell. Units can be pushed by skills,
+# by an enemy that appears in the same cell, or when a 2x2 unit moves into
+# their same cell
 class_name Pusher
 
 
@@ -12,6 +15,8 @@ const OPPOSITE_DIRECTION := {
 }
 
 
+# Pushes a unit in the pushed unit cell in a direction that depends from the
+# incoming cell
 func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 	if pushed_unit_cell.unit != null and not pushed_unit_cell.unit.is2x2():
 		var direction: int = _get_direction(incoming_cell.coordinates, pushed_unit_cell.coordinates)
@@ -33,9 +38,9 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 				cell_to_move_to = pushed_unit_cell.get_neighbor(direction)
 		
 		if cell_to_move_to == null:
-			cell_to_move_to = _find_first_free_cell(pushed_unit_cell)
+			cell_to_move_to = _find_closest_free_cell(pushed_unit_cell)
 			
-			print("Failed to find a free neighboring cell. Searching for a free cell using BFS. Moving to ", cell_to_move_to.coordinates)
+			print("Failed to find a free neighboring cell. Searched for a free cell using BFS. Moving to ", cell_to_move_to.coordinates)
 		
 		if cell_to_move_to == null:
 			printerr("Failed to a free cell in the entire grid")
@@ -53,7 +58,8 @@ func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
 				cell_to_move_to.trap.activate(unit)
 
 
-func _find_first_free_cell(start_cell: Cell) -> Cell:
+# Searches for the closest free cell in the grid
+func _find_closest_free_cell(start_cell: Cell) -> Cell:
 	var queue := []
 	
 	queue.push_back(start_cell)

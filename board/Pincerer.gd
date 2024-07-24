@@ -1,5 +1,6 @@
 extends Node
 
+# Finds pincers and chains by walking through the grid.
 class_name Pincerer
 
 

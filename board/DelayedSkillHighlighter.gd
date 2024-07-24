@@ -1,5 +1,6 @@
 extends Node2D
 
+
 class HighlightedSkill extends Reference:
 	var unit: Unit
 	var skill: Skill
@@ -30,6 +31,7 @@ func highlight(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	_highlighted_skills.push_back(highlighted_skill)
 
 
+# Removes the highlight of the delayed skill associated to the given unit
 func remove(unit: Unit, skill: Skill) -> void:
 	var highlighted_skill: HighlightedSkill = _find_highlighted_skill(unit, skill)
 	
@@ -37,6 +39,9 @@ func remove(unit: Unit, skill: Skill) -> void:
 		_remove_highlighted_skill(highlighted_skill)
 
 
+# Removes all highlights of a delayed skill associated to the given unit.
+# A unit can have several highlights active at the same time if they
+# use a delayed skill before the previous one triggers.
 func remove_all(unit: Unit) -> void:
 	var highlights_to_remove: Array = []
 	
@@ -48,6 +53,8 @@ func remove_all(unit: Unit) -> void:
 		_remove_highlighted_skill(highlighted_skill)
 
 
+# Stops the animation (which frees the highlight at the end)
+# and removes the highlighted skill from the list
 func _remove_highlighted_skill(highlighted_skill: HighlightedSkill) -> void:
 	highlighted_skill.skill_highlight.stop()
 	

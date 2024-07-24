@@ -5,6 +5,8 @@ class_name JobReference
 
 # Job
 export(Resource) var job: Resource
+
+# Unit level
 export(int) var level: int
 
 

@@ -96,6 +96,7 @@ func unlock_default_chapters() -> void:
 	save_data.current_chapter = save_data.unlocked_chapters.back()
 
 
+# TODO: Test save and load functions
 func save() -> void:
 	var jobs_references := []
 	

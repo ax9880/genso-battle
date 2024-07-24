@@ -5,4 +5,7 @@
 
 [node name="DelayedSkillHighlighter" type="Node2D"]
 script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": " Manages and stores skill highlights to highlight new delayed skills and to remove them after the skill is triggered or after the unit dies."
+}
 skill_highlight_packed_scene = ExtResource( 2 )

@@ -6,4 +6,7 @@
 [node name="ChainPreviewer" type="Node2D"]
 z_index = 1
 script = ExtResource( 2 )
+__meta__ = {
+"_editor_description_": "Paints lines between the units that will be chained when a unit hovers over a cell that will trigger a pincer."
+}
 chain_preview_line_2d_packed_scene = ExtResource( 1 )
