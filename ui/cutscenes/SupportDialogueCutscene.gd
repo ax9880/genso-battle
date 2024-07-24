@@ -24,3 +24,7 @@ func _skip_dialogue() -> void:
 			printerr("Failed to change scene")
 
 		set_process(false)
+
+
+func _set_parameters_from_chapter_data() -> void:
+	printerr("TODO: Implement _set_parameters_from_chapter_data() in SupportSelectionMenu")
