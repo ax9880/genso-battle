@@ -15,6 +15,9 @@ job = ExtResource( 2 )
 [node name="Icon" parent="Sprite" index="1"]
 texture = ExtResource( 6 )
 
+[node name="UnitName" parent="CanvasLayer" index="2"]
+text = "HANIWA_ORBLING"
+
 [node name="AIController" parent="." index="13"]
 chance_to_move_after_using_skill = 0.0
 
