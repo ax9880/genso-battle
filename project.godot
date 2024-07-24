@@ -163,11 +163,6 @@ _global_script_classes=[ {
 "class": "Unit",
 "language": "GDScript",
 "path": "res://units/Unit.gd"
-}, {
-"base": "Reference",
-"class": "UnlockedBattle",
-"language": "GDScript",
-"path": "res://save_data/UnlockedBattle.gd"
 } ]
 _global_script_class_icons={
 "Action": "",
