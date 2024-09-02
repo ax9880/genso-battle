@@ -5,7 +5,7 @@ const _ICONS: Dictionary = {
 	"YACHIE": "res://assets/player/yachie.png",
 	"SAKI": "res://assets/player/saki.png",
 	"YUUMA": "res://assets/player/yuuma.png",
-	"HAWK_SPIRIT": "res://assets/player/eagle_1.png"
+	"EAGLE_SPIRIT": "res://assets/player/eagle_1.png"
 }
 
 export(float) var new_character_every_x_seconds: float = 0
