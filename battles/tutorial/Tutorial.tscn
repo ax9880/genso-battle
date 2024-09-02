@@ -793,6 +793,10 @@ tracks/2/keys = {
 [node name="BoardUI" instance=ExtResource( 1 )]
 next_scene = "res://ui/pre_battle_menu/StackBasedPreBattleMenu.tscn"
 
+[node name="Board" parent="." index="3"]
+player_units_count = 3
+fixed_player_units_level = 5
+
 [node name="Guidelines" type="Node2D" parent="Board" index="11"]
 script = ExtResource( 4 )
 __meta__ = {
@@ -940,6 +944,9 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Phase1" parent="Board/EnemyPhases" index="0"]
+visible = false
+
 [node name="TrainingOrbling" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 3 )]
 position = Vector2( 253, 349 )
 
@@ -967,9 +974,6 @@ position = Vector2( 49, 753 )
 [node name="TrainingOrbling6" parent="Board/EnemyPhases/Phase4" index="2" instance=ExtResource( 3 )]
 position = Vector2( 550, 48 )
 
-[node name="Phase5" parent="Board/EnemyPhases" index="4"]
-visible = false
-
 [node name="TrainingOrbling5" parent="Board/EnemyPhases/Phase5" index="0" instance=ExtResource( 3 )]
 position = Vector2( 452, 149 )
 
@@ -983,6 +987,10 @@ anims/shake = SubResource( 13 )
 
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling5/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 14 )
+
+[node name="Action" parent="Board/EnemyPhases/Phase5/TrainingOrbling5/AIController" index="1"]
+behavior = 0
+preference = 3
 
 [node name="TrainingOrbling6" parent="Board/EnemyPhases/Phase5" index="1" instance=ExtResource( 3 )]
 position = Vector2( 152, 643 )
@@ -998,6 +1006,10 @@ anims/shake = SubResource( 20 )
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling6/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 21 )
 
+[node name="Action" parent="Board/EnemyPhases/Phase5/TrainingOrbling6/AIController" index="1"]
+behavior = 0
+preference = 3
+
 [node name="TrainingOrbling7" parent="Board/EnemyPhases/Phase5" index="2" instance=ExtResource( 3 )]
 position = Vector2( 246, 254 )
 
@@ -1012,23 +1024,21 @@ anims/shake = SubResource( 27 )
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling7/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 28 )
 
+[node name="Action" parent="Board/EnemyPhases/Phase5/TrainingOrbling7/AIController" index="1"]
+behavior = 0
+preference = 3
+
 [node name="Unit" parent="Board/PlayerUnits" index="0"]
 position = Vector2( 251, 558 )
+level = 5
 
 [node name="Unit2" parent="Board/PlayerUnits" index="1"]
 position = Vector2( 249, 153 )
+level = 5
 
 [node name="Unit3" parent="Board/PlayerUnits" index="2"]
 position = Vector2( 448, 447 )
-
-[node name="Unit4" parent="Board/PlayerUnits" index="3"]
-visible = false
-
-[node name="Unit5" parent="Board/PlayerUnits" index="4"]
-visible = false
-
-[node name="Unit6" parent="Board/PlayerUnits" index="5"]
-visible = false
+level = 5
 
 [connection signal="enemy_phase_started" from="Board" to="Board/Guidelines" method="_on_Board_enemy_phase_started"]
 [connection signal="player_turn_started" from="Board" to="Board/Guidelines" method="_on_Board_player_turn_started"]

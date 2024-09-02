@@ -9,6 +9,12 @@ enum Turn {
 # Set to true to use debug units instead of the player's squad
 export(bool) var can_use_debug_units: bool = false
 
+# Maximum amount of player units loaded into the field
+export(int, 2, 6) var player_units_count: int = 6
+
+# Fixed player units level
+export(int, -1, 100) var fixed_player_units_level: int = -1
+
 onready var grid := $Grid
 onready var grid_width: int = grid.width
 onready var grid_height: int = grid.height
@@ -108,17 +114,16 @@ func _load_player_units() -> void:
 	
 	for i in range(_player_units_node.get_child_count()):
 		# Load the first X active units
-		if i < _save_data.active_units.size():
+		if i < player_units_count and i < _save_data.active_units.size():
 			var index: int = _save_data.active_units[i]
 			
+			var unit: Unit = _player_units_node.get_child(i)
 			var job_reference: JobReference = _save_data.job_references[index]
 			
-			var unit: Unit = _player_units_node.get_child(i)
+			if fixed_player_units_level > 0:
+				job_reference.level = fixed_player_units_level
 			
-			if unit.visible:
-				unit.set_job_reference(job_reference)
-			else:
-				discarded_units.append(unit)
+			unit.set_job_reference(job_reference)
 		else:
 			# If there are more units than active units then we free the rest
 			var discarded_unit: Unit = _player_units_node.get_child(i)
@@ -264,8 +269,6 @@ func _make_enemies_appear(units: Array) -> void:
 	_make_player_units_appear()
 
 
-# Units. Rename it to PlayerUnits
-# And also make DebugUnits of same type
 func _make_player_units_appear() -> void:
 	if _player_units_node.visible:
 		return

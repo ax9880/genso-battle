@@ -38,7 +38,7 @@ alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer2"]
 margin_right = 620.0
-margin_bottom = 504.0
+margin_bottom = 520.0
 size_flags_vertical = 3
 texture = ExtResource( 3 )
 expand = true
@@ -46,7 +46,7 @@ stretch_mode = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer2"]
 margin_left = 190.0
-margin_top = 516.0
+margin_top = 532.0
 margin_right = 430.0
 margin_bottom = 860.0
 rect_min_size = Vector2( 240, 0 )
@@ -56,6 +56,7 @@ custom_constants/separation = 12
 alignment = 1
 
 [node name="StartButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 4 )]
+margin_bottom = 73.0
 text = "START"
 
 [node name="ContinueButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 4 )]
@@ -65,18 +66,18 @@ margin_bottom = 166.0
 text = "CONTINUE"
 
 [node name="SettingsButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 4 )]
-margin_top = 89.0
-margin_bottom = 166.0
+margin_top = 85.0
+margin_bottom = 158.0
 text = "SETTINGS"
 
 [node name="CreditsButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 4 )]
-margin_top = 178.0
-margin_bottom = 255.0
+margin_top = 170.0
+margin_bottom = 243.0
 text = "CREDITS"
 
 [node name="QuitButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 4 )]
-margin_top = 267.0
-margin_bottom = 344.0
+margin_top = 255.0
+margin_bottom = 328.0
 text = "QUIT"
 
 [connection signal="tree_entered" from="." to="." method="_on_TitleScreen_tree_entered"]

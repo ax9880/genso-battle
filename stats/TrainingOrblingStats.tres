@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = ""
 unit_type = ""
-health_percentage = 1.0
-attack_percentage = 1.0
-defense_percentage = 1.0
-spiritual_attack_percentage = 1.0
-spiritual_defense_percentage = 1.0
+health_percentage = 0.2
+attack_percentage = 0.2
+defense_percentage = 0.2
+spiritual_attack_percentage = 0.2
+spiritual_defense_percentage = 0.2
 status_ailment_vulnerability = 1.0
 status_ailment_vulnerabilities = {
 }
