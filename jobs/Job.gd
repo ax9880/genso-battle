@@ -25,4 +25,4 @@ func get_unlocked_skills(level: int) -> Array:
 	if skills_unlocked_count == 0:
 		return []
 	else:
-		return skills.slice(0, skills_unlocked_count)
+		return skills.slice(0, skills_unlocked_count - 1)
