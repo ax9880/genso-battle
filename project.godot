@@ -195,8 +195,7 @@ _global_script_class_icons={
 "StatusEffect": "",
 "SupportDialogueData": "",
 "Trap": "",
-"Unit": "",
-"UnlockedBattle": ""
+"Unit": ""
 }
 
 [application]
