@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/city_bg.png-bfba90b67463ed83443d1760cee08206.stex"
+path="res://.import/city_bg.png-75fb04c502f3e29f3c30ab278191ae0f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/city_bg.png"
-dest_files=[ "res://.import/city_bg.png-bfba90b67463ed83443d1760cee08206.stex" ]
+source_file="res://assets/ui/city_bg.png"
+dest_files=[ "res://.import/city_bg.png-75fb04c502f3e29f3c30ab278191ae0f.stex" ]
 
 [params]
 
