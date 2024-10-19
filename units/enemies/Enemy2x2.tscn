@@ -2,7 +2,7 @@
 
 [ext_resource path="res://skills/resources/PushingSlash.tres" type="Resource" id=1]
 [ext_resource path="res://units/Enemy.tscn" type="PackedScene" id=2]
-[ext_resource path="res://jobs/TrainingBoss.tres" type="Resource" id=3]
+[ext_resource path="res://jobs/TrainingBossJob.tres" type="Resource" id=3]
 [ext_resource path="res://units/ai/Condition.tscn" type="PackedScene" id=4]
 [ext_resource path="res://units/ai/Action.tscn" type="PackedScene" id=5]
 [ext_resource path="res://assets/enemies/big_mayumi.png" type="Texture" id=6]
