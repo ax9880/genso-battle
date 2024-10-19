@@ -268,6 +268,8 @@ func release() -> void:
 
 
 func _load_job_textures() -> void:
+	var job: Job = $Job.job
+	
 	$Control/WeaponType.texture = load(Enums.WEAPON_TYPE_TEXTURES[$Job.job.stats.weapon_type])
 	$Sprite/Icon.texture = $Job.job.portrait
 	
@@ -278,8 +280,8 @@ func _load_job_textures() -> void:
 
 ## Setters
 
-func set_job_reference(job_reference: JobReference) -> void:
-	$Job.set_job_reference(job_reference)
+func set_job(job: Job) -> void:
+	$Job.set_job(job)
 	
 	_load_job_textures()
 

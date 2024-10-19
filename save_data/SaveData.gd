@@ -7,9 +7,9 @@ const MIN_SQUAD_SIZE: int = 2
 
 export(int) var version: int = 1
 
-# Array<JobReference>
-# Jobs that the player has 
-export(Array, Resource) var job_references: Array = []
+# Array<Job>
+# Jobs that the player has
+export(Array, Resource) var jobs: Array = []
 
 # Array<int>
 export(Array, int) var active_units: Array = []
@@ -72,47 +72,47 @@ func is_chapter_cleared(title: String) -> bool:
 
 
 func add_job(job: Job, level: int) -> void:
-	var job_reference: JobReference = JobReference.new()
+	var new_job: Job = job.duplicate()
+	new_job.stats = new_job.stats.duplicate()
 	
-	job_reference.job = job
-	job_reference.level = level
+	new_job.level = level
 	
-	job_references.push_back(job_reference)
+	jobs.push_back(new_job)
 
 
-func swap_job_references(old_job_reference: JobReference, new_job_reference: JobReference) -> void:
-	if old_job_reference != null:
-		var index_of_old_job_reference: int = job_references.find(old_job_reference)
+func swap_jobs(old_job: Job, new_job: Job) -> void:
+	if old_job != null:
+		var index_of_old_job: int = jobs.find(old_job)
 		
-		assert(index_of_old_job_reference != -1)
+		assert(index_of_old_job != -1)
 		
-		var index_of_old_job_reference_in_active_units: int = active_units.find(index_of_old_job_reference)
+		var index_of_old_job_in_active_units: int = active_units.find(index_of_old_job)
 		
-		assert(index_of_old_job_reference_in_active_units != -1)
+		assert(index_of_old_job_in_active_units != -1)
 		
-		var index_of_new_job_reference: int = job_references.find(new_job_reference)
+		var index_of_new_job: int = jobs.find(new_job)
 		
-		assert(index_of_new_job_reference != -1)
+		assert(index_of_new_job != -1)
 		
-		var index_of_new_job_reference_in_active_units: int = active_units.find(index_of_new_job_reference)
+		var index_of_new_job_in_active_units: int = active_units.find(index_of_new_job)
 		
-		active_units[index_of_old_job_reference_in_active_units] = index_of_new_job_reference
+		active_units[index_of_old_job_in_active_units] = index_of_new_job
 		
-		if index_of_new_job_reference_in_active_units != -1:
-			active_units[index_of_new_job_reference_in_active_units] = index_of_old_job_reference
+		if index_of_new_job_in_active_units != -1:
+			active_units[index_of_new_job_in_active_units] = index_of_old_job
 	else:
-		var index_of_new_job_reference: int = job_references.find(new_job_reference)
+		var index_of_new_job: int = jobs.find(new_job)
 		
-		assert(index_of_new_job_reference != -1)
+		assert(index_of_new_job != -1)
 		
-		active_units.push_back(index_of_new_job_reference)
+		active_units.push_back(index_of_new_job)
 		
 		assert(active_units.size() <= MAX_SQUAD_SIZE)
 
 
-func remove_job_reference(job_reference: JobReference) -> void:
-	if job_reference != null:
-		var index: int = job_references.find(job_reference)
+func remove_job(job: Job) -> void:
+	if job != null:
+		var index: int = jobs.find(job)
 		
 		assert(index != -1)
 		

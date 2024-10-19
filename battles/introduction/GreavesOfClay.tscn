@@ -6,6 +6,11 @@
 
 [node name="BoardUI" instance=ExtResource( 2 )]
 
+[node name="Board" parent="." index="3"]
+can_use_debug_units = null
+player_units_count = null
+fixed_player_units_level = null
+
 [node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 1 )]
 position = Vector2( 251, 256 )
 

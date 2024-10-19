@@ -2,12 +2,12 @@ extends HBoxContainer
 
 onready var name_label: Label = $VBoxContainer/HBoxContainer/NameLabel
 
-# JobReference that this container is showing
-var job_reference: JobReference
+# Job that this container is showing
+var job: Job
 
 var _is_draggable: bool = false
 
-var _compare_job_reference: JobReference
+var _compare_job: Job
 
 signal change_button_clicked
 signal unit_selected
@@ -15,21 +15,21 @@ signal unit_dropped_on_unit(target_unit_item, dropped_unit_item)
 signal unit_double_clicked()
 
 
-func initialize(_job_reference: JobReference, is_draggable: bool = false, compare_job_reference: JobReference = null) -> void:
-	job_reference = _job_reference
+func initialize(_job: Job, is_draggable: bool = false, compare_job: Job = null) -> void:
+	job = _job
 	_is_draggable = is_draggable
-	_compare_job_reference = compare_job_reference
+	_compare_job = compare_job
 	
-	name_label.text = tr(job_reference.job.job_name)
+	name_label.text = tr(job.job_name)
 	
-	$UnitIcon.initialize(job_reference.job, _is_draggable)
+	$UnitIcon.initialize(job, _is_draggable)
 	
 	var compare_job_stats: Stats = null
 	
-	if _compare_job_reference != null:
-		compare_job_stats = _compare_job_reference.job.stats
+	if _compare_job != null:
+		compare_job_stats = _compare_job.stats
 	
-	$VBoxContainer/UnitStatsContainer.initialize(job_reference.job.stats, compare_job_stats)
+	$VBoxContainer/UnitStatsContainer.initialize(job.stats, compare_job_stats)
 
 
 func set_change_button_as_choose_button() -> void:

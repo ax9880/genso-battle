@@ -48,7 +48,7 @@ func _process_phases(enemy_phases: Node2D) -> BattleInfo:
 			for enemy in phase.get_children():
 				var job = enemy.get_node("Job")
 				
-				var weapon_type: int = job.job.stats.weapon_type
+				var weapon_type: int = job.stats.weapon_type
 				
 				match(weapon_type):
 					Enums.WeaponType.SWORD:

@@ -116,13 +116,14 @@ func _load_player_units() -> void:
 		if i < player_units_count and i < _save_data.active_units.size():
 			var index: int = _save_data.active_units[i]
 			
-			var unit: Unit = _player_units_node.get_child(i)
-			var job_reference: JobReference = _save_data.job_references[index]
+			var job: Job = _save_data.jobs[index]
 			
 			if fixed_player_units_level > 0:
-				job_reference.level = fixed_player_units_level
+				job.level = fixed_player_units_level
 			
-			unit.set_job_reference(job_reference)
+			var unit: Unit = _player_units_node.get_child(i)
+			
+			unit.set_job(job)
 		else:
 			# If there are more units than active units then we free the rest
 			var discarded_unit: Unit = _player_units_node.get_child(i)

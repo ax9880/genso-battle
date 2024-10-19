@@ -77,9 +77,9 @@ func initialize_from_data(job: Job, base_stats: Stats, current_stats: Stats, lev
 
 
 func on_add_to_tree(data: Object) -> void:
-	var job_reference: JobReference = data as JobReference
+	var job: Job = data as Job
 	
-	initialize(job_reference.job, job_reference.level)
+	initialize(job, job.level)
 
 
 func _set_focus() -> void:

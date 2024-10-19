@@ -1,7 +1,6 @@
-[gd_resource type="Resource" load_steps=18 format=2]
+[gd_resource type="Resource" load_steps=8 format=2]
 
 [ext_resource path="res://save_data/SaveData.gd" type="Script" id=1]
-[ext_resource path="res://save_data/JobReference.gd" type="Script" id=2]
 [ext_resource path="res://jobs/animal_spirit/SakiJob.tres" type="Resource" id=3]
 [ext_resource path="res://jobs/animal_spirit/YuumaJob.tres" type="Resource" id=4]
 [ext_resource path="res://jobs/animal_spirit/YachieJob.tres" type="Resource" id=5]
@@ -9,55 +8,10 @@
 [ext_resource path="res://jobs/animal_spirit/EagleSpiritJob.tres" type="Resource" id=7]
 [ext_resource path="res://jobs/animal_spirit/OtterSpiritJob.tres" type="Resource" id=8]
 
-[sub_resource type="Resource" id=2]
-script = ExtResource( 2 )
-job = ExtResource( 5 )
-level = 10
-
-[sub_resource type="Resource" id=1]
-script = ExtResource( 2 )
-job = ExtResource( 3 )
-level = 10
-
-[sub_resource type="Resource" id=3]
-script = ExtResource( 2 )
-job = ExtResource( 4 )
-level = 10
-
-[sub_resource type="Resource" id=4]
-script = ExtResource( 2 )
-job = ExtResource( 8 )
-level = 10
-
-[sub_resource type="Resource" id=6]
-script = ExtResource( 2 )
-job = ExtResource( 6 )
-level = 10
-
-[sub_resource type="Resource" id=5]
-script = ExtResource( 2 )
-job = ExtResource( 7 )
-level = 10
-
-[sub_resource type="Resource" id=7]
-script = ExtResource( 2 )
-job = ExtResource( 8 )
-level = 10
-
-[sub_resource type="Resource" id=9]
-script = ExtResource( 2 )
-job = ExtResource( 6 )
-level = 10
-
-[sub_resource type="Resource" id=8]
-script = ExtResource( 2 )
-job = ExtResource( 7 )
-level = 10
-
 [resource]
 script = ExtResource( 1 )
 version = 1
-job_references = [ SubResource( 2 ), SubResource( 1 ), SubResource( 3 ), SubResource( 4 ), SubResource( 6 ), SubResource( 5 ), SubResource( 7 ), SubResource( 9 ), SubResource( 8 ) ]
+jobs = [ ExtResource( 5 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 6 ) ]
 active_units = [ 0, 1, 2, 3, 4, 5 ]
 music_volume = 1.0
 sound_effects_volume = 1.0

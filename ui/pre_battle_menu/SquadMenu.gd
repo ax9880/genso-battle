@@ -10,8 +10,8 @@ onready var scene_container: MarginContainer = $MarginContainer
 
 onready var return_button: Button = $MarginContainer/VBoxContainer/ReturnButton
 
-var _changed_job_reference: JobReference = null
-var _index_of_changed_job_reference: int = -1
+var _changed_job: Job = null
+var _index_of_changed_job: int = -1
 var _unit_item_to_highlight: Control = null
 var _number_of_units_before_change: int = -1
 
@@ -61,40 +61,40 @@ func _show_active_units() -> void:
 		var index: int = save_data.active_units[i]
 		
 		# TODO: Check if index is valid
-		var job_reference: JobReference = save_data.job_references[index]
+		var job: Job = save_data.jobs[index]
 		
 		var unit_item: Control = unit_item_packed_scene.instance()
 		
 		list_container.add_child(unit_item)
 		
-		unit_item.initialize(job_reference, true) # Is draggable
+		unit_item.initialize(job, true) # Is draggable
 		
-		if unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job_reference, i]) != OK:
+		if unit_item.connect("change_button_clicked", self, "_on_UnitItem_change_button_clicked", [job, i]) != OK:
 			printerr("Failed to connect signal")
 		
 		if unit_item.connect("unit_dropped_on_unit", self, "_on_UnitItem_unit_dropped_on_unit") != OK:
 			printerr("Failed to connect signal")
 			
-		if unit_item.connect("unit_double_clicked", self, "_on_UnitItem_unit_double_clicked", [job_reference]) != OK:
+		if unit_item.connect("unit_double_clicked", self, "_on_UnitItem_unit_double_clicked", [job]) != OK:
 			printerr("Failed to connect signal")
 		
-		if _changed_job_reference != null && _index_of_changed_job_reference != -1:
-			if _index_of_changed_job_reference == i and _changed_job_reference != job_reference:
+		if _changed_job != null && _index_of_changed_job != -1:
+			if _index_of_changed_job == i and _changed_job != job:
 				_unit_item_to_highlight = unit_item
 	
 	# TODO: Show empty spaces to show that player can have up to six units
 	$MarginContainer/VBoxContainer/ReturnButton.disabled = save_data.active_units.size() < SaveData.MIN_SQUAD_SIZE
 
 
-func _on_UnitItem_change_button_clicked(job_reference: JobReference, container_index: int) -> void:
-	_changed_job_reference = job_reference
-	_index_of_changed_job_reference = container_index
+func _on_UnitItem_change_button_clicked(job: Job, container_index: int) -> void:
+	_changed_job = job
+	_index_of_changed_job = container_index
 	
 	var save_data: SaveData = GameData.save_data
 	
 	_number_of_units_before_change = save_data.active_units.size()
 	
-	navigate(change_unit_item_menu_scene, job_reference)
+	navigate(change_unit_item_menu_scene, job)
 
 
 func _on_UnitItem_unit_dropped_on_unit(target_unit_item: Control, dropped_unit_item: Control) -> void:
@@ -109,7 +109,7 @@ func _on_UnitItem_unit_dropped_on_unit(target_unit_item: Control, dropped_unit_i
 	
 	var save_data: SaveData = GameData.save_data
 	
-	save_data.swap_job_references(target_unit_item.job_reference, dropped_unit_item.job_reference)
+	save_data.swap_jobs(target_unit_item.job, dropped_unit_item.job)
 	
 	$PlaceSound.play()
 
@@ -139,8 +139,8 @@ func _highlight_changed_unit() -> void:
 		
 		_unit_item_to_highlight = null
 		
-		_changed_job_reference = null
-		_index_of_changed_job_reference = -1
+		_changed_job = null
+		_index_of_changed_job = -1
 		_number_of_units_before_change = number_of_units_after_change
 	else:
 		# If a unit was added, highlight the last child
@@ -158,5 +158,5 @@ func _on_AddUnitButton_pressed() -> void:
 	_on_UnitItem_change_button_clicked(null, -1)
 
 
-func _on_UnitItem_unit_double_clicked(job_reference: JobReference) -> void:
-	navigate(view_unit_menu_scene, job_reference)
+func _on_UnitItem_unit_double_clicked(job: Job) -> void:
+	navigate(view_unit_menu_scene, job)

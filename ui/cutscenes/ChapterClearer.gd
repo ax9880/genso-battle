@@ -45,8 +45,8 @@ func unlock_next_chapter() -> void:
 
 
 func _increase_levels(save_data: SaveData) -> void:
-	for job_reference in save_data.job_references:
-		job_reference.level += levels_to_add
+	for job in save_data.jobs:
+		job.level += levels_to_add
 
 
 func _add_unlocked_jobs(save_data: SaveData) -> void:

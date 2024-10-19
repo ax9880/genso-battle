@@ -1,5 +1,7 @@
 extends Node
 
+# TODO: Merge with unit script
+
 # Job
 export(Resource) var job: Resource
 
@@ -20,9 +22,9 @@ func get_unlocked_skills() -> Array:
 	return job.get_unlocked_skills(level)
 
 
-func set_job_reference(job_reference: JobReference) -> void:
-	job = job_reference.job
-	level = job_reference.level
+func set_job(_job: Job) -> void:
+	job = _job
+	level = job.level
 	
 	_reset_base_stats()
 	_reset_current_stats()

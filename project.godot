@@ -94,11 +94,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://jobs/Job.gd"
 }, {
-"base": "Resource",
-"class": "JobReference",
-"language": "GDScript",
-"path": "res://save_data/JobReference.gd"
-}, {
 "base": "Reference",
 "class": "Pincer",
 "language": "GDScript",
@@ -187,7 +182,6 @@ _global_script_class_icons={
 "Enemy": "",
 "Grid": "",
 "Job": "",
-"JobReference": "",
 "Pincer": "",
 "Pincerer": "",
 "PossiblePincer": "",

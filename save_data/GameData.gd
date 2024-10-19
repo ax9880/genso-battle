@@ -4,7 +4,7 @@ extends Node
 const _UNIT_DATA_SECTION: String = "unit_data"
 const _SETTINGS_SECTION: String = "settings"
 
-const _JOB_REFERENCES_KEY: String = "job_references"
+const _JOBS_KEY: String = "jobs"
 
 const _PASSWORD: String = "SkIHn2y08Z6RKbsFAU1axABs6GHf00qUmY0OP5SKfZMG1g9pzQ"
 
@@ -33,8 +33,6 @@ func load_data():
 			_load_data_from_configs_file()
 	else:
 		_load_data_from_default_resource()
-	
-	_duplicate_jobs()
 
 
 # Returns Error
@@ -48,14 +46,10 @@ func _load_config_file():
 func _load_data_from_configs_file() -> void:
 	save_data = SaveData.new()
 	
-	var unit_data: Array = config_file.get_value(_UNIT_DATA_SECTION, _JOB_REFERENCES_KEY, null)
+	var unit_data: Array = config_file.get_value(_UNIT_DATA_SECTION, _JOBS_KEY, null)
 	
-	for job_reference_dictionary in unit_data:
-		var job_reference := JobReference.new()
-		
-		job_reference.from_dictionary(job_reference_dictionary)
-		
-		save_data.job_references.push_back(job_reference)
+	for serialized_job in unit_data:
+		save_data.jobs.push_back(_deserialize_job(serialized_job))
 	
 	save_data.active_units = config_file.get_value(_UNIT_DATA_SECTION, "active_units", save_data.active_units)
 
@@ -75,19 +69,13 @@ func _load_data_from_default_resource() -> void:
 	save_data = default_save_data.duplicate()
 	
 	unlock_default_chapters()
-
-
-func _duplicate_jobs() -> void:
-	for job_reference in save_data.job_references:
-		# Duplicates job and stats (so that job can be assigned different stats),
-		# but does not duplicate other resources other of Job
-		var job: Job = job_reference.job.duplicate()
-		job.stats = job.stats.duplicate()
-		
-		# Sets the level to update the stats
-		job.stats.level = job_reference.level
-		
-		job_reference.job = job
+	
+	var duplicated_jobs: Array = []
+	
+	for job in save_data.jobs:
+		duplicated_jobs.push_back(_duplicate_job(job, 10))
+	
+	save_data.jobs = duplicated_jobs
 
 
 func unlock_default_chapters() -> void:
@@ -99,14 +87,14 @@ func unlock_default_chapters() -> void:
 
 # TODO: Test save and load functions
 func save() -> void:
-	var jobs_references := []
+	var serialized_jobs := []
 	
 	# Save jobs references as an array of dictionaries. Preserve the order
 	# so that active_units can point to the correct units.
-	for job_reference in save_data.jobs_references:
-		jobs_references.push_back(job_reference.to_dictionary())
+	for job in save_data.jobs:
+		serialized_jobs.push_back(job.to_dictionary())
 	
-	config_file.set_value(_UNIT_DATA_SECTION, _JOB_REFERENCES_KEY, jobs_references)
+	config_file.set_value(_UNIT_DATA_SECTION, _JOBS_KEY, serialized_jobs)
 	config_file.set_value(_UNIT_DATA_SECTION, "active_units", save_data.active_units)
 	
 	config_file.set_value(_SETTINGS_SECTION, "music_volume", save_data.music_volume)
@@ -139,3 +127,28 @@ func _build_config_file_path() -> String:
 		return "save-data-debug.sav"
 	else:
 		return "save-data.sav"
+
+
+func _serialize_job(job: Job) -> Dictionary:
+	var dictionary := {}
+	
+	dictionary["job_resource_path"] = job.resource_path
+	dictionary["level"] = job.level
+	
+	return dictionary
+
+
+func _deserialize_job(dictionary: Dictionary) -> Job:
+	return _duplicate_job(load(dictionary.job_resource_path), dictionary.level)
+
+
+func _duplicate_job(job: Job, level: int) -> Job:
+	# Duplicates job and stats (to update stats according to the level),
+	# but does not duplicate other resources of Job
+	var new_job: Job = job.duplicate()
+	new_job.stats = job.stats.duplicate()
+	
+	# Sets the level to update the stats
+	new_job.level = level
+	
+	return new_job
