@@ -28,7 +28,7 @@ func initialize(job: Job, level: int) -> void:
 	initialize_from_data(job, job.stats, null, level, job.skills, [], true, false, false)
 
 
-func initialize_from_data(job: Job, base_stats: StartingStats, current_stats: StartingStats, level: int, skills: Array, status_effects: Array, var can_show_activation_rate: bool, var is_in_battle: bool, var can_ignore_locked_skills: bool) -> void:
+func initialize_from_data(job: Job, base_stats: Stats, current_stats: Stats, level: int, skills: Array, status_effects: Array, var can_show_activation_rate: bool, var is_in_battle: bool, var can_ignore_locked_skills: bool) -> void:
 	_set_focus()
 	
 	for child in skills_vbox_container.get_children():

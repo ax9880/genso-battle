@@ -5,7 +5,7 @@ class_name Job
 # Unlock skills every X levels
 const _UNLOCK_SKILL_LEVEL_MULTIPLE: int = 10
 
-# StartingStats
+# Stats
 # Has to be unique (duplicated)
 export(Resource) var stats: Resource = null
 

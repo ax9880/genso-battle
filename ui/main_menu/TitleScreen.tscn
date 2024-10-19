@@ -61,8 +61,8 @@ text = "START"
 
 [node name="ContinueButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 4 )]
 visible = false
-margin_top = 89.0
-margin_bottom = 166.0
+margin_top = 85.0
+margin_bottom = 158.0
 text = "CONTINUE"
 
 [node name="SettingsButton" parent="MarginContainer/VBoxContainer2/VBoxContainer" instance=ExtResource( 4 )]

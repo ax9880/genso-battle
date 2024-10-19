@@ -24,7 +24,7 @@ func initialize(_job_reference: JobReference, is_draggable: bool = false, compar
 	
 	$UnitIcon.initialize(job_reference.job, _is_draggable)
 	
-	var compare_job_stats: StartingStats = null
+	var compare_job_stats: Stats = null
 	
 	if _compare_job_reference != null:
 		compare_job_stats = _compare_job_reference.job.stats

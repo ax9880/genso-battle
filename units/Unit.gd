@@ -362,11 +362,11 @@ func is_enemy(unit_faction: int) -> bool:
 	return not is_ally(unit_faction)
 
 
-func get_base_stats() -> StartingStats:
+func get_base_stats() -> Stats:
 	return $Job.base_stats
 
 
-func get_stats() -> StartingStats:
+func get_stats() -> Stats:
 	return $Job.current_stats
 
 
@@ -390,7 +390,7 @@ func get_status_effects() -> Array:
 	return _status_effects
 
 
-func calculate_attack_damage(attacker_stats: StartingStats) -> int:
+func calculate_attack_damage(attacker_stats: Stats) -> int:
 	return calculate_damage(attacker_stats, get_stats(), 1.0, attacker_stats.weapon_type, attacker_stats.attribute)
 
 
@@ -434,8 +434,8 @@ func apply_skill(unit: Unit, skill: Skill, on_damage_absorbed_callback: FuncRef)
 	$SkillApplier.apply_skill(unit, skill, on_damage_absorbed_callback, _status_effects)
 
 
-func calculate_damage(attacker_stats: StartingStats,
-			defender_stats: StartingStats,
+func calculate_damage(attacker_stats: Stats,
+			defender_stats: Stats,
 			power: float,
 			weapon_type: int,
 			attribute: int) -> int:

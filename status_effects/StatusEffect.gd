@@ -28,22 +28,22 @@ var base_damage: int = 0
 var turn_count: int = -1
 
 
-func initialize(inflicting_unit_stats: StartingStats) -> void:
+func initialize(inflicting_unit_stats: Stats) -> void:
 	calculate_base_damage(inflicting_unit_stats)
 
 
-func calculate_base_damage(_inflicting_unit_stats: StartingStats) -> void:
+func calculate_base_damage(_inflicting_unit_stats: Stats) -> void:
 	pass
 
 
 # Implement this method to modify stats. For general stat buffs/debuffs
 # see StatsModifier.
-func modify_stats(_base_stats: StartingStats, _modified_stats: StartingStats) -> void:
+func modify_stats(_base_stats: Stats, _modified_stats: Stats) -> void:
 	pass
 
 
 # Implement this method if the modifier causes or heals damage over time.
-func calculate_damage(_affected_unit_stats: StartingStats) -> int:
+func calculate_damage(_affected_unit_stats: Stats) -> int:
 	return 0
 
 

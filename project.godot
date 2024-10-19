@@ -135,9 +135,9 @@ _global_script_classes=[ {
 "path": "res://ui/StackBasedMenuScreen.gd"
 }, {
 "base": "Resource",
-"class": "StartingStats",
+"class": "Stats",
 "language": "GDScript",
-"path": "res://stats/StartingStats.gd"
+"path": "res://stats/Stats.gd"
 }, {
 "base": "StatusEffect",
 "class": "StatsModifier",
@@ -190,7 +190,7 @@ _global_script_class_icons={
 "Skill": "",
 "SkillEffect": "",
 "StackBasedMenuScreen": "",
-"StartingStats": "",
+"Stats": "",
 "StatsModifier": "",
 "StatusEffect": "",
 "SupportDialogueData": "",
@@ -213,6 +213,10 @@ Enums="*res://Enums.gd"
 Loader="*res://Loader.gd"
 GameData="*res://save_data/GameData.gd"
 AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
+
+[debug]
+
+gdscript/warnings/unused_signal=false
 
 [display]
 

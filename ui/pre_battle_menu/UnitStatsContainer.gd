@@ -13,7 +13,7 @@ onready var spiritual_attack_number_label: Label = $HBoxContainer2/SpiritualAtta
 onready var spiritual_defense_number_label: Label = $HBoxContainer2/SpiritualDefenseNumber
 
 
-func initialize(base_stats: StartingStats, compare_stats: StartingStats) -> void:
+func initialize(base_stats: Stats, compare_stats: Stats) -> void:
 	# TODO: Add label translations
 	
 	if compare_stats != null:
@@ -34,7 +34,7 @@ func initialize(base_stats: StartingStats, compare_stats: StartingStats) -> void
 		_show_number(spiritual_defense_number_label, base_stats.spiritual_defense)
 
 
-func initialize_in_battle(base_stats: StartingStats, current_stats: StartingStats) -> void:
+func initialize_in_battle(base_stats: Stats, current_stats: Stats) -> void:
 	_show_remaining_health(base_stats, current_stats)
 	
 	_show_compared_number(attack_number_label, current_stats.attack, base_stats.attack)
@@ -63,5 +63,5 @@ func _show_compared_number(label: Label, job_stat: int, compare_job_stat: int) -
 		_show_number(label, job_stat)
 
 
-func _show_remaining_health(base_stats: StartingStats, current_stats: StartingStats) -> void:
+func _show_remaining_health(base_stats: Stats, current_stats: Stats) -> void:
 	health_number_label.text = "%d/%d" % [current_stats.health, base_stats.health]

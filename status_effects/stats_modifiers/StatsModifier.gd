@@ -19,7 +19,7 @@ export(Enums.StatusEffectType) var modified_status_effect: int = Enums.StatusEff
 export(float, -1, 1, 0.1) var modified_status_effect_vulnerability: float
 
 
-func modify_stats(base_stats: StartingStats, modified_stats: StartingStats) -> void:
+func modify_stats(base_stats: Stats, modified_stats: Stats) -> void:
 	match(modified_stat):
 		Enums.StatsType.ATTACK:
 			modified_stats.attack += int(base_stats.attack * modified_stat_percentage)

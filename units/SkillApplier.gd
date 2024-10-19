@@ -80,8 +80,8 @@ func apply_skill(unit: Unit,
 		target_unit.recalculate_stats()
 
 
-func calculate_damage(attacker_stats: StartingStats,
-			defender_stats: StartingStats,
+func calculate_damage(attacker_stats: Stats,
+			defender_stats: Stats,
 			power: float,
 			weapon_type: int,
 			attribute: int) -> int:
@@ -144,7 +144,7 @@ func _get_weapon_type_advantage(attacker_weapon_type: int, defender_weapon_type:
 		return WEAPON_DISADVANTAGE
 
 
-func _get_attribute_resistance(defender_stats: StartingStats, attacker_attribute, defender_attribute) -> float:
+func _get_attribute_resistance(defender_stats: Stats, attacker_attribute, defender_attribute) -> float:
 	if attacker_attribute == defender_attribute:
 		return defender_stats.same_attribute_resistance
 	else:
@@ -164,7 +164,7 @@ func _can_inflict_status_effects(skill: Skill) -> bool:
 	return _random.randf() < skill.status_effect_infliction_rate
 
 
-func _can_apply_status_effect(stats: StartingStats, status_effect: StatusEffect) -> bool:
+func _can_apply_status_effect(stats: Stats, status_effect: StatusEffect) -> bool:
 	assert(not status_effect.status_effect_type == Enums.StatusEffectType.BUFF)
 	assert(not status_effect.status_effect_type == Enums.StatusEffectType.REGENERATE)
 	

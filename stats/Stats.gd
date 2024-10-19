@@ -1,6 +1,6 @@
 extends Resource
 
-class_name StartingStats
+class_name Stats
 
 const _DEFAULT_HP: int = 1500
 const _DEFAULT_STAT: int = 50

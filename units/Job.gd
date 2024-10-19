@@ -5,10 +5,10 @@ export(Resource) var job: Resource
 
 export(int) var level: int = 0
 
-var base_stats: StartingStats
+var base_stats: Stats
 
 # Stats after buffs and debuffs
-var current_stats: StartingStats
+var current_stats: Stats
 
 # Array<Skill>
 var skills: Array
