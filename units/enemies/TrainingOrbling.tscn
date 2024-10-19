@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://units/Enemy.tscn" type="PackedScene" id=1]
-[ext_resource path="res://jobs/TrainingOrblingJob.tres" type="Resource" id=2]
+[ext_resource path="res://jobs/haniwa/TrainingOrblingJob.tres" type="Resource" id=2]
 [ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=3]
 [ext_resource path="res://units/ai/Action.tscn" type="PackedScene" id=4]
 
