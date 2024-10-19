@@ -697,7 +697,7 @@ func _execute_pincers(unit: Unit) -> void:
 	print("Found %d pincers" % _pincer_queue.size())
 	
 	while not _pincer_queue.empty() and _pincer_queue.front() != null:
-		var pincer: Pincerer.Pincer = _pincer_queue.pop_front()
+		var pincer: Pincer = _pincer_queue.pop_front()
 		
 		$Pincerer.find_chains(grid, pincer)
 		
@@ -750,13 +750,13 @@ func _execute_pincers(unit: Unit) -> void:
 		_update_enemy()
 
 
-func _set_turn_counter_of_pincering_units(unit: Unit, pincer: Pincerer.Pincer) -> void:
+func _set_turn_counter_of_pincering_units(unit: Unit, pincer: Pincer) -> void:
 	for pincering_unit in pincer.pincering_units:
 		if pincering_unit != unit and pincering_unit.has_pincer_action() and pincering_unit.turn_counter != 0:
 			pincering_unit.turn_counter = 0
 
 
-func _remove_pincering_units_from_enemy_queue(unit: Unit, pincer: Pincerer.Pincer) -> void:
+func _remove_pincering_units_from_enemy_queue(unit: Unit, pincer: Pincer) -> void:
 	for pincering_unit in pincer.pincering_units:
 		if pincering_unit != unit and pincering_unit.has_pincer_action():
 			var index := _enemy_queue.find(pincering_unit)
@@ -1055,7 +1055,7 @@ func _filter_pincers_with_active_unit(pincers: Array, unit: Unit) -> Array:
 	return filtered_pincers
 
 
-func _has_executed_pincer_before(pincer: Pincerer.Pincer) -> bool:
+func _has_executed_pincer_before(pincer: Pincer) -> bool:
 	assert( pincer.pincering_units.size() == 2)
 	
 	var unit_1: Unit = pincer.pincering_units[0]

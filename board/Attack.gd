@@ -1,6 +1,6 @@
+class_name Attack
 extends Reference
 
-class_name Attack
 
 # Array<Unit>
 var targeted_units: Array = []

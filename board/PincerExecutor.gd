@@ -7,10 +7,20 @@ class SkillAttack extends Reference:
 	var skill: Skill
 
 
+# The names of these signals are passed as parameters and emitted inside functions
+signal pincer_highlighted
+signal skill_activation_phase_finished
+signal buff_skill_phase_finished
+signal attack_skill_phase_finished
+signal heal_phase_finished
+signal status_effect_phase_finished
+signal finished_checking_for_dead_units
+
+# Finished executing a pincer
+signal pincer_executed
+
 export(PackedScene) var chain_previewer_packed_scene: PackedScene
-
 export(PackedScene) var pincer_highlight_packed_scene: PackedScene
-
 
 var _unit_queue := []
 var _dead_units := []
@@ -19,7 +29,7 @@ var _buff_skills := []
 var _attack_skills := []
 var _heal_skills := []
 
-var _active_pincer: Pincerer.Pincer = null
+var _active_pincer: Pincer = null
 
 # Array<Array<Unit>> which include the pincering unit and the chained units
 var _complete_chains := []
@@ -41,18 +51,6 @@ var pusher: Pusher = null
 # Array<ChainPreviewer>
 var _chain_previews := []
 
-# The names of these signals are passed as parameters and emitted inside functions
-signal pincer_highlighted
-signal skill_activation_phase_finished
-signal buff_skill_phase_finished
-signal attack_skill_phase_finished
-signal heal_phase_finished
-signal status_effect_phase_finished
-signal finished_checking_for_dead_units
-
-# Finished executing a pincer
-signal pincer_executed
-
 
 func initialize(grid: Grid, allies: Array, enemies: Array) -> void:
 	_grid = grid
@@ -60,7 +58,7 @@ func initialize(grid: Grid, allies: Array, enemies: Array) -> void:
 	_enemies = enemies
 
 
-func start_skill_activation_phase(pincer: Pincerer.Pincer, grid: Grid, allies: Array = [], enemies: Array = []) -> void:
+func start_skill_activation_phase(pincer: Pincer, grid: Grid, allies: Array = [], enemies: Array = []) -> void:
 	_active_pincer = pincer
 	
 	initialize(grid, allies, enemies)
@@ -113,7 +111,7 @@ func _is_any_skill_activated() -> bool:
 
 
 # Queue units to activate their skills one by one
-func _queue_units(pincer: Pincerer.Pincer) -> Array:
+func _queue_units(pincer: Pincer) -> Array:
 	# Array<Unit>
 	var units := []
 	
@@ -132,7 +130,7 @@ func _queue_units(pincer: Pincerer.Pincer) -> Array:
 
 
 # Returns Array<Array<Unit>>
-func _build_chains_including_pincering_unit(pincer: Pincerer.Pincer) -> Array:
+func _build_chains_including_pincering_unit(pincer: Pincer) -> Array:
 	var chains = []
 	
 	for pincering_unit in pincer.pincering_units:
@@ -167,7 +165,7 @@ func _queue_skills(unit: Unit, activated_skills: Array) -> void:
 				printerr("Unrecognized skill type: ", skill.skill_type)
 
 
-func _show_chain_previews(pincer: Pincerer.Pincer) -> void:
+func _show_chain_previews(pincer: Pincer) -> void:
 	clear_chain_previews()
 	
 	for unit in pincer.pincering_units:
@@ -187,7 +185,7 @@ func clear_chain_previews() -> void:
 	_chain_previews.clear()
 
 
-func highlight_pincer(pincer: Pincerer.Pincer) -> void:
+func highlight_pincer(pincer: Pincer) -> void:
 	var pincer_higlight: Node2D = pincer_highlight_packed_scene.instance()
 	
 	add_child(pincer_higlight)

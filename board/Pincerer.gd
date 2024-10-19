@@ -1,57 +1,6 @@
-extends Node
-
-# Finds pincers and chains by walking through the grid.
 class_name Pincerer
-
-
-class Pincer extends Reference: 
-	# Array<Unit>
-	var pincering_units: Array
-	
-	# Array<Unit>
-	var pincered_units: Array
-	
-	# Dictionary<Unit, Array<Array<Unit>>>
-	# Where chain_families[unit] consists of all the chains for the given unit (a chain family)
-	# And where a chain family consists of lists of chained units (chain). The index of each chain
-	# is its chain level. The chain does include the pincering units.
-	var chain_families: Dictionary
-	
-	var pincer_orientation: int = Enums.PincerOrientation.HORIZONTAL
-	
-	# start position and end position so the pincer highlight
-	# uses these positions and it works correctly for 2x2 units
-	var start_position: Vector2
-	var end_position: Vector2
-	
-	
-	# Size of the pincer (amount of units involved, including pincering and pincered units)
-	func size() -> int:
-		var size_modifier: int = 0
-		
-		for unit in pincered_units:
-			if unit.is2x2():
-				size_modifier += 1
-		
-		return pincering_units.size() + pincered_units.size() + size_modifier
-	
-	
-	# A pincer is valid if at least one pincered unit is alive, and all the
-	# pincering units are alive.
-	# Pincered units can be killed by skills before the pincer is executed.
-	# Pincering units can be killed by traps.
-	func is_valid() -> bool:
-		var is_any_pincered_unit_alive: bool = false
-		
-		for unit in pincered_units:
-			is_any_pincered_unit_alive = is_any_pincered_unit_alive or unit.is_alive()
-		
-		var is_pincering_units_alive: bool = true
-		
-		for unit in pincering_units:
-			is_pincering_units_alive = is_pincering_units_alive and unit.is_alive()
-		
-		return is_any_pincered_unit_alive and is_pincering_units_alive
+extends Node
+# Finds pincers and chains by walking through the grid.
 
 
 # Finds pincers without chains. The chains must be found before Board executes
@@ -83,7 +32,7 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 	var faction = active_unit.faction
 	
 	# Check left to right, down to up
-	# from X - 1, step -1, while > -1
+	# from height - 1, step -1, while > -1
 	for y in range(grid_height - 1, -1, -1):
 		var x: int = 0
 		
@@ -96,6 +45,7 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 				x += pincer.size() - 1
 				
 				_add_pincer(active_unit, leading_pincers, pincers, pincer)
+	
 	# Check vertical pincers
 	for x in range(grid_width):
 		var y: int = grid_height - 1
@@ -126,15 +76,10 @@ func _find_corner_pincers(grid: Grid, active_unit: Unit, leading_pincers: Array,
 	
 	var faction: int = active_unit.faction
 	
-	var bottom_left_corner: Cell = grid.get_bottom_left_corner()
-	var bottom_right_corner: Cell = grid.get_bottom_right_corner()
-	var top_left_corner: Cell = grid.get_top_left_corner()
-	var top_right_corner: Cell = grid.get_top_right_corner()
-	
-	corner_pincers.push_back(_find_corner_pincer(bottom_left_corner, faction, Enums.PincerOrientation.BOTTOM_LEFT_CORNER))
-	corner_pincers.push_back(_find_corner_pincer(bottom_right_corner, faction, Enums.PincerOrientation.BOTTOM_RIGHT_CORNER))
-	corner_pincers.push_back(_find_corner_pincer(top_left_corner, faction, Enums.PincerOrientation.TOP_LEFT_CORNER))
-	corner_pincers.push_back(_find_corner_pincer(top_right_corner, faction, Enums.PincerOrientation.TOP_RIGHT_CORNER))
+	corner_pincers.push_back(_find_corner_pincer(grid.get_bottom_left_corner(), faction, Enums.PincerOrientation.BOTTOM_LEFT_CORNER))
+	corner_pincers.push_back(_find_corner_pincer(grid.get_bottom_right_corner(), faction, Enums.PincerOrientation.BOTTOM_RIGHT_CORNER))
+	corner_pincers.push_back(_find_corner_pincer(grid.get_top_left_corner(), faction, Enums.PincerOrientation.TOP_LEFT_CORNER))
+	corner_pincers.push_back(_find_corner_pincer(grid.get_top_right_corner(), faction, Enums.PincerOrientation.TOP_RIGHT_CORNER))
 	
 	for pincer in corner_pincers:
 		if pincer != null:
@@ -178,7 +123,7 @@ func _find_corner_pincer(corner: Cell, faction: int, pincer_orientation: int) ->
 		return null
 
 
-# Side effect: Adds a Pincer object to the leading_pincers or pincers arrays
+# Adds the given pincer to the leading_pincers or pincers arrays
 func _add_pincer(active_unit: Unit, leading_pincers: Array, pincers: Array, pincer: Pincer) -> void:
 	if pincer == null:
 		return
@@ -224,7 +169,7 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 				neighbor = neighbor.get_neighbor(direction)
 			else:
 				# Is an ally
-				# Last unit added to list was an enemy
+				# Check if the last unit added to the list was an enemy
 				if (not pincer.pincered_units.empty()) and pincer.pincered_units.back().is_enemy(faction) and next_unit.can_act():
 					is_pincer = true
 					
@@ -284,19 +229,18 @@ func _find_chain(cell: Cell, direction: int, chain_families: Dictionary, faction
 		var chained_unit: Unit = neighbor.unit
 		
 		if chained_unit != null:
-			if chained_unit.is_ally(faction):
-				if chained_unit.can_act():
-					var chains: Array = chain_families[cell.unit]
+			if chained_unit.is_ally(faction) and chained_unit.can_act():
+				var chains: Array = chain_families[cell.unit]
+				
+				if chains.size() < chain_level + 1:
+					chains.push_back([])
+				
+				var chain: Array = chains[chain_level]
+				
+				if not _is_in_any_chain(chained_unit, chain_families):
+					chain_level += 1
 					
-					if chains.size() < chain_level + 1:
-						chains.push_back([])
-					
-					var chain: Array = chains[chain_level]
-					
-					if not _is_in_any_chain(chained_unit, chain_families):
-						chain_level += 1
-						
-						chain.push_back(chained_unit)
+					chain.push_back(chained_unit)
 			else:
 				# Found an enemy unit, stop searching
 				break
@@ -311,4 +255,3 @@ func _is_in_any_chain(unit: Unit, chain_families: Dictionary) -> bool:
 				return true
 	
 	return false
-	

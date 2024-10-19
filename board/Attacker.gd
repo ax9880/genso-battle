@@ -1,23 +1,22 @@
+class_name Attacker
 extends Node2D
 
-class_name Attacker
+signal attack_phase_finished
 
 export(PackedScene) var attack_effect_packed_scene: PackedScene = null
-
-onready var timer: Timer = $Timer
 
 # Array<Attack>
 var _attack_queue: Array = []
 var _random := RandomNumberGenerator.new()
 
-signal attack_phase_finished
+onready var timer: Timer = $Timer
 
 
 func _ready() -> void:
 	_random.randomize()
 
 
-func start(pincer: Pincerer.Pincer) -> void:
+func start(pincer: Pincer) -> void:
 	_attack_queue = _queue_attacks(pincer)
 	
 	_filter_attacks(_attack_queue)
@@ -27,7 +26,7 @@ func start(pincer: Pincerer.Pincer) -> void:
 	timer.start()
 
 
-func _queue_attacks(pincer: Pincerer.Pincer) -> Array:
+func _queue_attacks(pincer: Pincer) -> Array:
 	var attack_queue := []
 	
 	# Pincering unit followed by its chain

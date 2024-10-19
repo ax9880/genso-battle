@@ -7,7 +7,7 @@ export(Color) var enemy_color: Color
 signal pincer_highlighted
 
 
-func initialize(pincer: Pincerer.Pincer) -> void:
+func initialize(pincer: Pincer) -> void:
 	for children in $Highlight.get_children():
 		children.hide()
 	
@@ -75,7 +75,7 @@ func _get_corner_sprite(pincer_orientation: int) -> Node:
 			return $Highlight/PincerHighlightBottomLeftCorner
 
 
-func _get_corner_position(pincer: Pincerer.Pincer) -> Vector2:
+func _get_corner_position(pincer: Pincer) -> Vector2:
 	var start_position: Vector2 = pincer.start_position
 	var end_position: Vector2 = pincer.end_position
 	
