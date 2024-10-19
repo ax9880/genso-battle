@@ -7,18 +7,6 @@ extends Node
 # the pincer, in case that a pincer cleared up enemy units and thus the next
 # pincer can now chain with units that were previously blocked.
 func find_pincers(grid: Grid, active_unit: Unit) -> Array:
-	var pincers := _find_pincers(grid, active_unit)
-	
-	return pincers
-
-
-# Finds and sets a pincer's chains
-func find_chains(grid:Grid, pincer: Pincer) -> void:
-	pincer.chain_families = _find_chains(grid, pincer)
-
-
-# Finds all pincers, but does not find the chains.
-func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 	# List of pincers with the active unit. Horizontal, vertical, and corners
 	# Array<Pincer>
 	var leading_pincers := []
@@ -69,6 +57,32 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 	all_pincers.append_array(pincers)
 	
 	return all_pincers
+
+
+# Finds and sets a pincer's chains
+func find_chains(grid:Grid, pincer: Pincer) -> void:
+	var pincering_units: Array = pincer.pincering_units
+	
+	var faction: int = pincering_units.front().faction
+	
+	var chain_families: Dictionary = {}
+	
+	for pincering_unit in pincering_units:
+		assert(pincering_unit != null)
+		
+		chain_families[pincering_unit] = []
+	
+	# Get the cells from the recorded positions because if the unit is being
+	# pushed while checking the chains then you may get the wrong cell
+	var cells: Array = [grid.get_cell_from_position(pincer.start_position), grid.get_cell_from_position(pincer.end_position)]
+	
+	for cell in cells:
+		_find_chain(cell, Cell.DIRECTION.RIGHT, chain_families, faction)
+		_find_chain(cell, Cell.DIRECTION.LEFT, chain_families, faction)
+		_find_chain(cell, Cell.DIRECTION.UP, chain_families, faction)
+		_find_chain(cell, Cell.DIRECTION.DOWN, chain_families, faction)
+	
+	pincer.chain_families = chain_families
 
 
 func _find_corner_pincers(grid: Grid, active_unit: Unit, leading_pincers: Array, pincers: Array) -> void:
@@ -191,32 +205,6 @@ func _check_neighbors_for_pincers(grid: Grid, start_x: int, start_y: int, factio
 		return pincer
 	else:
 		return null
-
-
-# Returns Dictionary<Unit, Array<Array<Unit>>>
-func _find_chains(grid: Grid, pincer: Pincer) -> Dictionary:
-	var pincering_units: Array = pincer.pincering_units
-	
-	var faction: int = pincering_units.front().faction
-	
-	var chain_families: Dictionary = {}
-	
-	for pincering_unit in pincering_units:
-		assert(pincering_unit != null)
-		
-		chain_families[pincering_unit] = []
-	
-	# Get the cells from the recorded positions because if the unit is being
-	# pushed while checking the chains then you may get the wrong cell
-	var cells: Array = [grid.get_cell_from_position(pincer.start_position), grid.get_cell_from_position(pincer.end_position)]
-	
-	for cell in cells:
-		_find_chain(cell, Cell.DIRECTION.RIGHT, chain_families, faction)
-		_find_chain(cell, Cell.DIRECTION.LEFT, chain_families, faction)
-		_find_chain(cell, Cell.DIRECTION.UP, chain_families, faction)
-		_find_chain(cell, Cell.DIRECTION.DOWN, chain_families, faction)
-	
-	return chain_families
 
 
 # Finds a chain from a given cell

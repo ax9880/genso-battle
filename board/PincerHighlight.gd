@@ -1,15 +1,15 @@
 extends Node2D
 
+
+signal pincer_highlighted
+
 export(Color) var player_color: Color
 export(Color) var enemy_color: Color
 
 
-signal pincer_highlighted
-
-
 func initialize(pincer: Pincer) -> void:
-	for children in $Highlight.get_children():
-		children.hide()
+	for child in $Highlight.get_children():
+		child.hide()
 	
 	var sprite: Sprite
 	

@@ -17,8 +17,8 @@ var _total_drag_time_seconds: float = 0
 
 var _is_battle_finished: bool = false
 
-onready var progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
-onready var tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
+onready var _progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
+onready var _tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
 
 
 func _ready() -> void:
@@ -30,9 +30,9 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	var percentage_left = progress_bar.max_value * _timer.time_left / _timer.wait_time
+	var percentage_left = _progress_bar.max_value * _timer.time_left / _timer.wait_time
 	
-	progress_bar.value = percentage_left
+	_progress_bar.value = percentage_left
 
 
 func on_instance(data: Object) -> void:
@@ -50,7 +50,7 @@ func _update_turn_count() -> void:
 func _on_Board_drag_timer_started(timer: Timer) -> void:
 	_timer = timer
 	
-	progress_bar.value = progress_bar.max_value
+	_progress_bar.value = _progress_bar.max_value
 	
 	set_process(true)
 
@@ -65,12 +65,12 @@ func _on_Board_drag_timer_stopped(time_left_seconds: float) -> void:
 
 
 func _on_Board_drag_timer_reset() -> void:
-	var _error = tween.interpolate_property(progress_bar, "value", 
-		progress_bar.value, progress_bar.max_value,
+	var _error = _tween.interpolate_property(_progress_bar, "value", 
+		_progress_bar.value, _progress_bar.max_value,
 		0.5,
 		Tween.TRANS_LINEAR)
 	
-	_error = tween.start()
+	_error = _tween.start()
 
 
 func _on_Board_player_turn_started() -> void:
@@ -140,8 +140,7 @@ func _on_Board_enemy_phase_started(current_enemy_phase: int, enemy_phase_count: 
 		Color.transparent,
 		Color.white,
 		enemy_phase_container_fade_time_seconds,
-		Tween.TRANS_LINEAR
-	)
+		Tween.TRANS_LINEAR)
 	
 	_error = control_tween.start()
 	
@@ -158,8 +157,7 @@ func _on_Board_enemies_appeared() -> void:
 		control.modulate,
 		Color.transparent,
 		enemy_phase_container_fade_time_seconds,
-		Tween.TRANS_LINEAR
-	)
+		Tween.TRANS_LINEAR)
 	
 	_error = control_tween.start()
 	

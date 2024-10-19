@@ -1,9 +1,8 @@
+class_name Pusher
 extends Node
-
 # Pushes a unit to an appropriate free cell. Units can be pushed by skills,
 # by an enemy that appears in the same cell, or when a 2x2 unit moves into
 # their same cell
-class_name Pusher
 
 
 # Dictionary<Direction, Direction>
@@ -18,44 +17,45 @@ const OPPOSITE_DIRECTION := {
 # Pushes a unit in the pushed unit cell in a direction that depends from the
 # incoming cell
 func push_unit(incoming_cell: Cell, pushed_unit_cell: Cell) -> void:
-	if pushed_unit_cell.unit != null and not pushed_unit_cell.unit.is2x2():
-		var direction: int = _get_direction(incoming_cell.coordinates, pushed_unit_cell.coordinates)
+	if pushed_unit_cell.unit == null or pushed_unit_cell.unit.is2x2():
+		return
+	
+	var direction: int = _get_direction(incoming_cell.coordinates, pushed_unit_cell.coordinates)
+	var initial_direction: int = direction
+	
+	var cell_to_move_to: Cell = pushed_unit_cell.get_neighbor(direction)
+	
+	# If the cell is null, pick another one
+	# Move just one cell
+	while not _is_cell_free(cell_to_move_to):
+		direction = _get_next_direction(direction)
 		
-		var cell_to_move_to: Cell = pushed_unit_cell.get_neighbor(direction)
-		
-		var initial_direction: int = direction
-		
-		# If the cell is null, pick another one
-		# Move just one cell
-		while not _is_cell_free(cell_to_move_to):
-			direction = _get_next_direction(direction)
+		if direction == initial_direction:
+			cell_to_move_to = null
 			
-			if direction == initial_direction:
-				cell_to_move_to = null
-				
-				break
-			else:
-				cell_to_move_to = pushed_unit_cell.get_neighbor(direction)
-		
-		if cell_to_move_to == null:
-			cell_to_move_to = _find_closest_free_cell(pushed_unit_cell)
-			
-			print("Failed to find a free neighboring cell. Searched for a free cell using BFS. Moving to ", cell_to_move_to.coordinates)
-		
-		if cell_to_move_to == null:
-			printerr("Failed to a free cell in the entire grid")
+			break
 		else:
-			assert(cell_to_move_to.unit == null)
-			
-			var unit: Unit = pushed_unit_cell.unit
-			
-			pushed_unit_cell.unit = null
-			cell_to_move_to.unit = unit
-			
-			unit.push_to_cell(cell_to_move_to.position)
-			
-			if cell_to_move_to.trap != null:
-				cell_to_move_to.trap.activate(unit)
+			cell_to_move_to = pushed_unit_cell.get_neighbor(direction)
+	
+	if cell_to_move_to == null:
+		cell_to_move_to = _find_closest_free_cell(pushed_unit_cell)
+		
+		print("Failed to find a free neighboring cell. Searched for a free cell using BFS. Moving to ", cell_to_move_to.coordinates)
+	
+	if cell_to_move_to == null:
+		printerr("Failed to a free cell in the entire grid")
+	else:
+		assert(cell_to_move_to.unit == null)
+		
+		var unit: Unit = pushed_unit_cell.unit
+		
+		pushed_unit_cell.unit = null
+		cell_to_move_to.unit = unit
+		
+		unit.push_to_cell(cell_to_move_to.position)
+		
+		if cell_to_move_to.trap != null:
+			cell_to_move_to.trap.activate(unit)
 
 
 # Searches for the closest free cell in the grid

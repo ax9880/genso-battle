@@ -1,5 +1,6 @@
 extends Node2D
 
+
 export(int) var max_point_count: int = 20
 export(int) var points_to_remove_when_adding_a_point: int = 8
 
