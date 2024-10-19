@@ -2,11 +2,11 @@
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://board/Cell.tscn" type="PackedScene" id=2]
-[ext_resource path="res://board/Trail2D.tscn" type="PackedScene" id=3]
-[ext_resource path="res://board/ChainPreviewer.tscn" type="PackedScene" id=4]
-[ext_resource path="res://board/PincerHighlight.tscn" type="PackedScene" id=5]
+[ext_resource path="res://board/highlights/Trail2D.tscn" type="PackedScene" id=3]
+[ext_resource path="res://board/highlights/ChainPreviewer.tscn" type="PackedScene" id=4]
+[ext_resource path="res://board/highlights/PincerHighlight.tscn" type="PackedScene" id=5]
 [ext_resource path="res://board/Board.gd" type="Script" id=6]
-[ext_resource path="res://board/BoardUI.gd" type="Script" id=7]
+[ext_resource path="res://board/Battle.gd" type="Script" id=7]
 [ext_resource path="res://assets/ui/yellow_bar_progress_big.png" type="Texture" id=8]
 [ext_resource path="res://assets/ui/big_bar_progress_bg.png" type="Texture" id=12]
 [ext_resource path="res://board/PincerExecutor.gd" type="Script" id=15]
@@ -26,10 +26,10 @@
 [ext_resource path="res://assets/sfx/bells.wav" type="AudioStream" id=29]
 [ext_resource path="res://assets/sfx/spell_1.wav" type="AudioStream" id=30]
 [ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=31]
-[ext_resource path="res://board/DelayedSkillHighlighter.tscn" type="PackedScene" id=32]
+[ext_resource path="res://board/highlights/DelayedSkillHighlighter.tscn" type="PackedScene" id=32]
 [ext_resource path="res://ui/AudioButton.tscn" type="PackedScene" id=33]
 [ext_resource path="res://assets/sfx/chess_place_2.wav" type="AudioStream" id=34]
-[ext_resource path="res://board/Trails.gd" type="Script" id=35]
+[ext_resource path="res://board/highlights/Trails.gd" type="Script" id=35]
 [ext_resource path="res://assets/ui/ui_icons.png" type="Texture" id=36]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -71,7 +71,7 @@ flags = 5
 atlas = ExtResource( 36 )
 region = Rect2( 64, 0, 64, 64 )
 
-[node name="BoardUI" type="MarginContainer"]
+[node name="Battle" type="MarginContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2

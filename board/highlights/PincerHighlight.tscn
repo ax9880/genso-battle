@@ -1,13 +1,13 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://assets/pincer_highlights/pincer_highlight_1.png" type="Texture" id=1]
+[ext_resource path="res://board/highlights/PincerHighlight.gd" type="Script" id=1]
 [ext_resource path="res://assets/pincer_highlights/pincer_highlight_3.png" type="Texture" id=2]
 [ext_resource path="res://assets/pincer_highlights/pincer_highlight_4.png" type="Texture" id=3]
-[ext_resource path="res://assets/pincer_highlights/pincer_highlight_6.png" type="Texture" id=4]
-[ext_resource path="res://assets/pincer_highlights/pincer_highlight_2.png" type="Texture" id=5]
-[ext_resource path="res://assets/pincer_highlights/pincer_highlight_5.png" type="Texture" id=6]
+[ext_resource path="res://assets/pincer_highlights/pincer_highlight_5.png" type="Texture" id=4]
+[ext_resource path="res://assets/pincer_highlights/pincer_highlight_1.png" type="Texture" id=5]
+[ext_resource path="res://assets/pincer_highlights/pincer_highlight_6.png" type="Texture" id=6]
 [ext_resource path="res://assets/pincer_highlights/pincer_highlight_corner.png" type="Texture" id=7]
-[ext_resource path="res://board/PincerHighlight.gd" type="Script" id=8]
+[ext_resource path="res://assets/pincer_highlights/pincer_highlight_2.png" type="Texture" id=8]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Fade in and out"
@@ -78,7 +78,7 @@ tracks/4/keys = {
 }
 
 [node name="PincerHighlight" type="Node2D"]
-script = ExtResource( 8 )
+script = ExtResource( 1 )
 __meta__ = {
 "_editor_description_": "Highlights a pincer, including pincering and pincered units."
 }
@@ -89,11 +89,11 @@ enemy_color = Color( 0.780392, 0.968627, 0.94902, 1 )
 modulate = Color( 1, 1, 1, 0 )
 
 [node name="PincerHighlight3Units" type="Sprite" parent="Highlight"]
-texture = ExtResource( 1 )
+texture = ExtResource( 5 )
 
 [node name="PincerHighlight4Units" type="Sprite" parent="Highlight"]
 visible = false
-texture = ExtResource( 5 )
+texture = ExtResource( 8 )
 
 [node name="PincerHighlight5Units" type="Sprite" parent="Highlight"]
 visible = false
@@ -105,11 +105,11 @@ texture = ExtResource( 3 )
 
 [node name="PincerHighlight7Units" type="Sprite" parent="Highlight"]
 visible = false
-texture = ExtResource( 6 )
+texture = ExtResource( 4 )
 
 [node name="PincerHighlight8Units" type="Sprite" parent="Highlight"]
 visible = false
-texture = ExtResource( 4 )
+texture = ExtResource( 6 )
 
 [node name="PincerHighlightBottomLeftCorner" type="Sprite" parent="Highlight"]
 visible = false

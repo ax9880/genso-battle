@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://board/DelayedSkillHighlighter.gd" type="Script" id=1]
-[ext_resource path="res://board/SkillHighlight.tscn" type="PackedScene" id=2]
+[ext_resource path="res://board/highlights/DelayedSkillHighlighter.gd" type="Script" id=1]
+[ext_resource path="res://board/highlights/SkillHighlight.tscn" type="PackedScene" id=2]
 
 [node name="DelayedSkillHighlighter" type="Node2D"]
 script = ExtResource( 1 )
