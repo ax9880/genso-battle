@@ -420,7 +420,7 @@ func _execute_pincer_action(action_parameters: ActionParameters) -> void:
 
 func _find_pincer(action_parameters: ActionParameters) -> void:
 	# Find all possible and coordinated pincers
-	var possible_pincers: Array = $Evaluator.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.allies, action_parameters.enemies, action_parameters.navigation_graph, action_parameters.allies_queue)
+	var possible_pincers: Array = $PincerFinder.find_possible_pincers(action_parameters.enemy, action_parameters.grid, action_parameters.allies, action_parameters.enemies, action_parameters.navigation_graph, action_parameters.allies_queue)
 	
 	if possible_pincers.empty():
 		# TODO: Swap and pincer

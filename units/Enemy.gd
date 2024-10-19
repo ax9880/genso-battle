@@ -1,12 +1,18 @@
+class_name Enemy
 extends Unit
 
-class_name Enemy
 
+signal action_done(unit)
+signal started_moving(unit)
+signal use_skill(unit, skill, target_cells)
+
+# Unit, Skill, Array
+signal use_delayed_skill(unit, skill, target_cells)
 
 export var turn_counter: int = 1 setget set_turn_counter
 export var chance_to_move_to_enemy_during_move_behavior: float = 0.8
 
-var turn_counter_max_value: int
+var _turn_counter_max_value: int
 
 var _can_use_skill_after_moving := false
 var _is_moving := false
@@ -19,18 +25,11 @@ var has_active_delayed_skill: bool = false
 # Array of Vector2
 var _path := []
 
-signal action_done(unit)
-signal started_moving(unit)
-signal use_skill(unit, skill, target_cells)
-
-# Unit, Skill, Array
-signal use_delayed_skill(unit, skill, target_cells)
-
 
 func _ready() -> void:
 	$Job.set_level(level)
 	
-	turn_counter_max_value = get_stats().max_turn_counter
+	_turn_counter_max_value = get_stats().max_turn_counter
 
 
 # allies_queue is a queue of the units that will act after this one
@@ -51,9 +50,9 @@ func act(grid: Grid, allies: Array, enemies: Array, allies_queue: Array) -> void
 			
 			if turn_counter == 0:
 				if current_state != STATE.IDLE:
-					print("Enemy %s waiting for tween to end" % name)
+					print("Enemy %s waiting for _tween to end" % name)
 					
-					yield($Tween, "tween_all_completed")
+					yield(_tween, "tween_all_completed")
 				
 				$AIController.execute_action(self, grid, allies, enemies, allies_queue)
 			else:
@@ -143,7 +142,7 @@ func start_moving(path: Array) -> void:
 
 func _start_moving() -> void:
 	if current_state == STATE.SWAPPING:
-		# Wait for tween to end before you start moving (see signal callback)
+		# Wait for _tween to end before you start moving (see signal callback)
 		# Otherwise you might start moving from the wrong cell, because the active
 		# cell is determined from the position of the unit (this is a problem of
 		# the unit not having a reference to its cell)
@@ -168,12 +167,12 @@ func _move() -> void:
 	if target_position != null:
 		var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
 		
-		tween.interpolate_property(self, "position",
+		_tween.interpolate_property(self, "position",
 					position, target_position,
 					tween_time_seconds,
 					Tween.TRANS_LINEAR)
 			
-		tween.start()
+		_tween.start()
 	else:
 		release()
 		
@@ -190,14 +189,14 @@ func _execute_after_move() -> void:
 func reset_turn_counter() -> void:
 	if turn_counter <= 0:
 		if get_stats().can_randomize_turn_counter:
-			self.turn_counter = _random.randi_range(1, turn_counter_max_value)
+			self.turn_counter = _random.randi_range(1, _turn_counter_max_value)
 		else:
-			self.turn_counter = turn_counter_max_value
+			self.turn_counter = _turn_counter_max_value
 
 
 func release() -> void:
-	if not _path.empty() and $Tween.is_active():
-		$Tween.stop(self, ":position")
+	if not _path.empty() and _tween.is_active():
+		_tween.stop(self, "position")
 	
 	.release()
 	

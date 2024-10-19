@@ -5,15 +5,14 @@ export(PackedScene) var unit_item_packed_scene: PackedScene
 export(String, FILE, "*.tscn") var change_unit_item_menu_scene: String
 export(String, FILE, "*.tscn") var view_unit_menu_scene: String
 
-onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer
-onready var scene_container: MarginContainer = $MarginContainer
-
-onready var return_button: Button = $MarginContainer/VBoxContainer/ReturnButton
-
 var _changed_job: Job = null
 var _index_of_changed_job: int = -1
 var _unit_item_to_highlight: Control = null
 var _number_of_units_before_change: int = -1
+
+onready var _list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer
+
+onready var _return_button: Button = $MarginContainer/VBoxContainer/ReturnButton
 
 
 func _ready() -> void:
@@ -27,7 +26,7 @@ func _ready() -> void:
 func on_load() -> void:
 	.on_load()
 	
-	return_button.grab_focus()
+	_return_button.grab_focus()
 	
 	_highlight_changed_unit()
 
@@ -43,7 +42,7 @@ func _show_active_units() -> void:
 	
 	var save_data: SaveData = GameData.save_data
 	
-	for child in list_container.get_children():
+	for child in _list_container.get_children():
 		child.queue_free()
 	
 	if save_data.active_units.size() < SaveData.MAX_SQUAD_SIZE:
@@ -65,7 +64,7 @@ func _show_active_units() -> void:
 		
 		var unit_item: Control = unit_item_packed_scene.instance()
 		
-		list_container.add_child(unit_item)
+		_list_container.add_child(unit_item)
 		
 		unit_item.initialize(job, true) # Is draggable
 		
@@ -98,14 +97,14 @@ func _on_UnitItem_change_button_clicked(job: Job, container_index: int) -> void:
 
 
 func _on_UnitItem_unit_dropped_on_unit(target_unit_item: Control, dropped_unit_item: Control) -> void:
-	var target_unit_item_position: int = _get_index_of_child(list_container, target_unit_item)
-	var dropped_unit_item_position: int = _get_index_of_child(list_container, dropped_unit_item)
+	var target_unit_item_position: int = _get_index_of_child(_list_container, target_unit_item)
+	var dropped_unit_item_position: int = _get_index_of_child(_list_container, dropped_unit_item)
 	
 	assert(target_unit_item_position != -1)
 	assert(dropped_unit_item_position != -1)
 	
-	list_container.move_child(dropped_unit_item, target_unit_item_position)
-	list_container.move_child(target_unit_item, dropped_unit_item_position)
+	_list_container.move_child(dropped_unit_item, target_unit_item_position)
+	_list_container.move_child(target_unit_item, dropped_unit_item_position)
 	
 	var save_data: SaveData = GameData.save_data
 	
@@ -145,9 +144,9 @@ func _highlight_changed_unit() -> void:
 	else:
 		# If a unit was added, highlight the last child
 		if _number_of_units_before_change < number_of_units_after_change:
-			assert(list_container.get_child_count() > 0)
+			assert(_list_container.get_child_count() > 0)
 			
-			list_container.get_child(list_container.get_child_count() - 1).highlight()
+			_list_container.get_child(_list_container.get_child_count() - 1).highlight()
 
 
 func _on_ReturnButton_pressed() -> void:

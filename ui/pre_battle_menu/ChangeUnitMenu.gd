@@ -5,14 +5,13 @@ export(PackedScene) var unit_item_container_packed_scene: PackedScene
 
 export(String, FILE, "*.tscn") var view_unit_menu_scene: String
 
-onready var list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer
-
-
 var _active_job: Job = null
+
+onready var _list_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer
 
 
 func _show_units() -> void:
-	for child in list_container.get_children():
+	for child in _list_container.get_children():
 		child.queue_free()
 	
 	var save_data: SaveData = GameData.save_data
@@ -26,7 +25,7 @@ func _show_units() -> void:
 		if not job in active_jobs:
 			var unit_item_container: Control = unit_item_container_packed_scene.instance()
 			
-			list_container.add_child(unit_item_container)
+			_list_container.add_child(unit_item_container)
 			
 			# false: not draggable
 			unit_item_container.initialize(job, false, _active_job)

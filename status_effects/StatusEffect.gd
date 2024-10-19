@@ -1,10 +1,10 @@
+class_name StatusEffect
 extends Resource
-
 # The effect is different from the skill
 # This class is just what should happen every turn, e.g. lose health to poison
 # or regenerate health
 # Alternatively this logic could go in the unit or $Job scene
-class_name StatusEffect
+
 
 # Status effect type: poison, sleep, paralyze, confuse, demoralize,
 # buffs, or debuffs
@@ -28,11 +28,8 @@ var base_damage: int = 0
 var turn_count: int = -1
 
 
-func initialize(inflicting_unit_stats: Stats) -> void:
-	calculate_base_damage(inflicting_unit_stats)
-
-
-func calculate_base_damage(_inflicting_unit_stats: Stats) -> void:
+# Implement this method and calculate the base damage.
+func initialize(_inflicting_unit_stats: Stats) -> void:
 	pass
 
 

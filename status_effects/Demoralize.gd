@@ -1,9 +1,6 @@
 extends StatusEffect
 
 
-var random := RandomNumberGenerator.new()
-
-
 func modify_stats(_base_stats: Stats, modified_stats: Stats) -> void:
 	modified_stats.attack = 0
 	

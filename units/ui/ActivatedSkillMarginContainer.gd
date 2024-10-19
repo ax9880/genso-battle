@@ -3,11 +3,11 @@ extends MarginContainer
 
 export(PackedScene) var activated_skill_hbox_container_packed_scene: PackedScene
 
-onready var vbox_container := $MarginContainer/VBoxContainer
+onready var _vbox_container := $MarginContainer/VBoxContainer
 
 
 func play(activated_skills: Array) -> void:
-	for child in vbox_container.get_children():
+	for child in _vbox_container.get_children():
 		child.queue_free()
 	
 	if not activated_skills.empty():
@@ -18,7 +18,7 @@ func play(activated_skills: Array) -> void:
 			
 			activated_skill_hbox_container.initialize(skill)
 			
-			vbox_container.add_child(activated_skill_hbox_container)
+			_vbox_container.add_child(activated_skill_hbox_container)
 		
 		# Yields one frame so the container updates before setting the growth
 		# position
@@ -30,6 +30,7 @@ func play(activated_skills: Array) -> void:
 
 
 func _set_growth_position() -> void:
+	# TODO: Review again, it's not working
 	reset_growth_direction()
 	
 	var screen_center: Vector2 = get_viewport_rect().size / 2.0

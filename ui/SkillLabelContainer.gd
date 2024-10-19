@@ -1,5 +1,6 @@
 extends HBoxContainer
 
+
 const COMMA_AND_SPACE: String = ", "
 
 export(Color) var locked_color: Color

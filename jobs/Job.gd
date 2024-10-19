@@ -21,8 +21,8 @@ export(Texture) var full_portrait: Texture = null
 var level: int = 1 setget set_level
 
 
-func get_unlocked_skills(level: int) -> Array:
-	var skills_unlocked_count := int(floor(float(level) / float(_UNLOCK_SKILL_LEVEL_MULTIPLE)))
+func get_unlocked_skills(_level: int) -> Array:
+	var skills_unlocked_count := int(floor(float(_level) / float(_UNLOCK_SKILL_LEVEL_MULTIPLE)))
 	
 	if skills_unlocked_count == 0:
 		return []

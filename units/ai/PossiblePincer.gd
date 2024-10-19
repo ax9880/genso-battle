@@ -1,6 +1,5 @@
-extends Reference
-
 class_name PossiblePincer
+extends Reference
 
 
 var start_cell: Cell = null

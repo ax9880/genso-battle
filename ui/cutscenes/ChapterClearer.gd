@@ -6,7 +6,6 @@ export(Resource) var current_chapter_data: Resource
 # ChapterData
 export(Resource) var next_chapter_data: Resource
 
-
 export(Array, Resource) var unlocked_jobs: Array
 
 export(int) var unlocked_jobs_level: int = 1

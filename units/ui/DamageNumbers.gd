@@ -1,9 +1,9 @@
 extends Node2D
 
 
-onready var label: Label = $Label
-
 export(Color) var heal_color: Color
+
+onready var _label: Label = $Label
 
 
 func play(value: int) -> void:
@@ -13,8 +13,8 @@ func play(value: int) -> void:
 		queue_free()
 	else:
 		if value < 0:
-			label.modulate = heal_color
+			_label.modulate = heal_color
 		
-		label.text = str(abs(value))
+		_label.text = str(abs(value))
 		
 		$AnimationPlayer.play("Appear and then disappear")

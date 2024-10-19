@@ -1,5 +1,6 @@
 extends Node2D
 
+
 # Dictionary<StatusEffectType, PackedScene>
 # This class uses a dictionary so that there is only one effect per type, in
 # case unit has multiple status effects of the same type.

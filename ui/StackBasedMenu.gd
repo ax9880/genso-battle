@@ -1,14 +1,15 @@
 extends Node
 
+
 # Root screen, must be a StackBasedMenuScreen
 export var root_screen_node_path: NodePath
-
-onready var loading_screen = preload("res://ui/LoadingScreen.tscn")
 
 var _loading_screen_instance: Node = null
 
 # Screen or scene stack
 var _screens := []
+
+onready var loading_screen = preload("res://ui/LoadingScreen.tscn")
 
 
 func _ready() -> void:

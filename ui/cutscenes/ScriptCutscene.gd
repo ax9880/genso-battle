@@ -14,8 +14,6 @@ export(float) var new_character_every_x_seconds: float = 0.0
 
 export(String) var title_suffix: String = ""
 
-onready var text_container: VBoxContainer = $MarginContainer/VBoxContainer/TextVBoxContainer
-
 var _current_page: int = 0
 var _current_paragraph: int = 0
 var _current_label: Label
@@ -28,6 +26,8 @@ var _pages: Array
 var _is_local: bool = true
 
 var _is_dialogue_skipped: bool = false
+
+onready var _text_container: VBoxContainer = $MarginContainer/VBoxContainer/TextVBoxContainer
 
 
 func _ready() -> void:
@@ -107,7 +107,7 @@ func _show_next_paragraph() -> void:
 		_current_label.text = ""
 		_current_label.percent_visible = 1
 		
-		text_container.add_child(_current_label)
+		_text_container.add_child(_current_label)
 		
 		# Note: Potentially recursive call
 		_advance_to_next_paragraph()
@@ -116,7 +116,7 @@ func _show_next_paragraph() -> void:
 		_current_label.text = tr(paragraph)
 		_current_label.percent_visible = 0
 		
-		text_container.add_child(_current_label)
+		_text_container.add_child(_current_label)
 		
 		set_process(true)
 
@@ -183,7 +183,7 @@ func _advance_to_next_page() -> void:
 
 # Frees any default or test text containers that you may have added
 func _free_container_children() -> void:
-	for child in text_container.get_children():
+	for child in _text_container.get_children():
 		child.queue_free()
 
 

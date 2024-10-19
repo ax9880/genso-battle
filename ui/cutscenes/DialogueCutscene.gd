@@ -20,9 +20,8 @@ var _is_local: bool = true
 
 var is_dialogue_skipped: bool = false
 
-
-onready var messages_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer
-onready var scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
+onready var _messages_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer
+onready var _scroll_container: ScrollContainer = $MarginContainer/VBoxContainer/ScrollContainer
 
 
 func _ready() -> void:
@@ -84,7 +83,7 @@ func _show_next_line() -> void:
 	
 	_current_dialogue_message_container = dialogue_message_container_packed_scene.instance()
 	
-	messages_container.add_child(_current_dialogue_message_container)
+	_messages_container.add_child(_current_dialogue_message_container)
 	
 	_current_dialogue_message_container.initialize(dialogue_message)
 	_current_dialogue_message_container.modulate = Color.transparent
@@ -93,8 +92,8 @@ func _show_next_line() -> void:
 
 
 func _dim_text_of_last_line() -> void:
-	if messages_container.get_child_count() > 0:
-		var last_dialogue_message_container: Control = messages_container.get_child(messages_container.get_child_count() - 1)
+	if _messages_container.get_child_count() > 0:
+		var last_dialogue_message_container: Control = _messages_container.get_child(_messages_container.get_child_count() - 1)
 		
 		last_dialogue_message_container.dim_text()
 
@@ -102,8 +101,8 @@ func _dim_text_of_last_line() -> void:
 func update_scroll() -> void:
 	_estimated_container_size += _current_dialogue_message_container.rect_size.y
 	
-	$Tween.interpolate_property(scroll_container, "scroll_vertical",
-		scroll_container.scroll_vertical, scroll_container.get_v_scrollbar().max_value,
+	$Tween.interpolate_property(_scroll_container, "scroll_vertical",
+		_scroll_container.scroll_vertical, _scroll_container.get_v_scrollbar().max_value,
 		scroll_tween_time_seconds,
 		Tween.TRANS_SINE)
 	
@@ -149,7 +148,7 @@ func _advance_to_next_line() -> void:
 
 
 func _free_container_children() -> void:
-	for child in messages_container.get_children():
+	for child in _messages_container.get_children():
 		child.queue_free()
 
 

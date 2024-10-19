@@ -87,11 +87,5 @@ stream = ExtResource( 3 )
 
 [node name="JobTool" type="Node" parent="." index="14"]
 script = ExtResource( 13 )
-unit_node_path = NodePath("..")
-sprite_node_path = NodePath("../Sprite/Icon")
-job_node_path = NodePath("../Job")
-weapon_type_node_path = NodePath("../Control/WeaponType")
-turn_count_node_path = NodePath("../Control/Container/TurnCount")
-unit_name_node_path = NodePath("../CanvasLayer/UnitName")
 
 [editable path="CanvasLayer/ActivatedSkillMarginContainer"]

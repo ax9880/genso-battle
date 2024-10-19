@@ -1,12 +1,13 @@
 extends CanvasLayer
 
+
 const FADE_IN_ANIMATION_NAME := "Fade in"
 const FADE_OUT_ANIMATION_NAME := "Fade out"
 
-onready var animation_player := $AnimationPlayer
-
 signal fade_in_finished()
 signal fade_out_finished()
+
+onready var animation_player := $AnimationPlayer
 
 
 func play_loading_animation() -> void:

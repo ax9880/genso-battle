@@ -1,6 +1,5 @@
-extends Control
-
 class_name StackBasedMenuScreen
+extends Control
 
 
 signal navigate(scene_path, data)

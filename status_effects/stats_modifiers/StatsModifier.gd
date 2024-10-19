@@ -1,6 +1,5 @@
-extends StatusEffect
-
 class_name StatsModifier
+extends StatusEffect
 
 
 export(Enums.StatsType) var modified_stat: int = Enums.StatsType.NONE
@@ -74,4 +73,3 @@ func get_description(can_show_remaining_turns: bool = true) -> String:
 		status_effect_description += ", " + tr("TURNS_LEFT") % turn_count
 	
 	return status_effect_description
-

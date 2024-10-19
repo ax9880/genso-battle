@@ -1,6 +1,6 @@
+class_name Unit
 extends KinematicBody2D
 
-class_name Unit
 
 enum STATE {
 	# Idle
@@ -23,7 +23,12 @@ const INVALID_FACTION: int = -1
 const PLAYER_FACTION: int = 1
 const ENEMY_FACTION: int = 2
 
-## Exports
+signal picked_up(unit)
+signal released(unit)
+signal snapped_to_grid(unit)
+signal dead(unit)
+signal death_animation_finished(unit)
+signal selected_for_view(unit)
 
 export(PackedScene) var damage_numbers_packed_scene: PackedScene
 export(PackedScene) var death_effect_packed_scene: PackedScene
@@ -46,14 +51,6 @@ export(bool) var is_controlled_by_player: bool = true
 
 export(int, 1, 50, 1) var level: int = 10
 
-## Onready
-
-onready var tween := $Tween
-onready var sprite := $Sprite
-
-
-## Vars
-
 var current_state = STATE.IDLE setget set_current_state
 
 var faction: int = INVALID_FACTION
@@ -67,15 +64,8 @@ var _has_entered_cell: bool = false
 
 onready var _is2x2: bool = (size == Size.DOUBLE_2X2)
 
-
-## Signals
-
-signal picked_up(unit)
-signal released(unit)
-signal snapped_to_grid(unit)
-signal dead(unit)
-signal death_animation_finished(unit)
-signal selected_for_view(unit)
+onready var _tween := $Tween
+onready var _sprite := $Sprite
 
 
 func _ready() -> void:
@@ -139,7 +129,7 @@ func is_death_animation_playing() -> bool:
 
 
 func play_scale_up_and_down_animation() -> void:
-	$Tween.remove($Sprite, ":scale")
+	_tween.remove($Sprite, ":scale")
 	
 	$AnimationPlayer.play("scale up and down")
 
@@ -147,27 +137,27 @@ func play_scale_up_and_down_animation() -> void:
 func stop_scale_up_and_down_animation() -> void:
 	$AnimationPlayer.stop(true)
 	
-	$Tween.remove($Sprite, ":scale")
+	_tween.remove($Sprite, ":scale")
 	
-	$Tween.interpolate_property($Sprite, "scale",
+	_tween.interpolate_property($Sprite, "scale",
 		$Sprite.scale, Vector2.ONE,
 		0.15,
 		Tween.TRANS_LINEAR)
 	
-	$Tween.start()
+	_tween.start()
 
 
 func move_to_new_cell(target_position: Vector2) -> void:
-	tween.remove(self, "position")
+	_tween.remove(self, ":position")
 	
 	var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
 	
-	tween.interpolate_property(self, "position",
+	_tween.interpolate_property(self, "position",
 				position, target_position,
 				tween_time_seconds,
 				Tween.TRANS_SINE)
 			
-	tween.start()
+	_tween.start()
 	
 	self.current_state = STATE.SWAPPING
 
@@ -177,12 +167,12 @@ func push_to_cell(target_position: Vector2) -> void:
 	
 	var tween_time_seconds: float = Utils.calculate_time(position, target_position, swap_velocity_pixels_per_second)
 	
-	tween.interpolate_property($Sprite, "rotation",
+	_tween.interpolate_property($Sprite, "rotation",
 				0.0, 2 * PI,
 				tween_time_seconds,
 				Tween.TRANS_SINE)
 	
-	tween.start()
+	_tween.start()
 	
 	Utils.disable_object($CollisionShape2D)
 
@@ -230,12 +220,12 @@ func snap_to_grid(cell_origin: Vector2) -> void:
 	
 	var tween_time_seconds: float = Utils.calculate_time(position, cell_origin, snap_velocity_pixels_per_second)
 	
-	tween.interpolate_property(self, "position",
+	_tween.interpolate_property(self, "position",
 		position, cell_origin,
 		tween_time_seconds,
 		Tween.TRANS_SINE)
 	
-	tween.start()
+	_tween.start()
 
 
 func is_picked_up() -> bool:
@@ -268,8 +258,6 @@ func release() -> void:
 
 
 func _load_job_textures() -> void:
-	var job: Job = $Job.job
-	
 	$Control/WeaponType.texture = load(Enums.WEAPON_TYPE_TEXTURES[$Job.job.stats.weapon_type])
 	$Sprite/Icon.texture = $Job.job.portrait
 	
@@ -331,25 +319,25 @@ func set_current_state(new_state) -> void:
 
 
 func _increase_sprite_size() -> void:
-	tween.remove(sprite, ":scale")
+	_tween.remove(_sprite, ":scale")
 	
-	tween.interpolate_property(sprite, "scale",
-		sprite.scale, Vector2(1.2, 1.2),
+	_tween.interpolate_property(_sprite, "scale",
+		_sprite.scale, Vector2(1.2, 1.2),
 		0.25,
 		Tween.TRANS_SINE)
 	
-	tween.start()
+	_tween.start()
 
 
 func _restore_sprite_size() -> void:
-	tween.remove(sprite, ":scale")
+	_tween.remove(_sprite, ":scale")
 	
-	tween.interpolate_property(sprite, "scale",
-		sprite.scale, Vector2.ONE, # TODO: Save original sprite scale
+	_tween.interpolate_property(_sprite, "scale",
+		_sprite.scale, Vector2.ONE, # TODO: Save original _sprite scale
 		0.25,
 		Tween.TRANS_SINE)
 	
-	tween.start()
+	_tween.start()
 
 
 func is_player() -> bool:
@@ -469,13 +457,13 @@ func is2x2() -> bool:
 
 
 func get_offset_origin() -> Vector2:
-	return position + sprite.position
+	return position + _sprite.position
 
 
 func add_child_at_offset(node: Node2D) -> void:
 	add_child(node)
 	
-	node.position = sprite.position
+	node.position = _sprite.position
 
 
 func update_status_effects_icons() -> void:

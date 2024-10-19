@@ -1,21 +1,25 @@
 extends Node
 
+
+# Emitted when change_scene() is called and a new scene is going to be loaded
+signal scene_changed()
+
 var loader: ResourceInteractiveLoader = null
 
-var wait_frames: int = 1
+var _wait_frames: int = 1
 
-var time_max_ms: int = 100
+var _time_max_ms: int = 100
 
-var current_scene: Node = null
+var _current_scene: Node = null
 
 # Data passed from one scene to another
 var data: Reference = null
 
-var loading_screen_instance: Node = null
+var _loading_screen_instance: Node = null
 
 # Flag set to true when the loading screen is active, so that it not
 # instanced again in that case.
-var is_loading: bool = false
+var _is_loading: bool = false
 
 # Some nodes try to change scenes in their _ready() method. When that happens,
 # the fade out animation should only play once, not every time the scene is changed.
@@ -24,18 +28,15 @@ var is_loading: bool = false
 # changed scenes in its  _ready() method and a new loader was created. If it
 # remains true then the new scene did not change scenes in its _ready() method,
 # and we can fade out.
-var can_fade_out: bool = false
+var _can_fade_out: bool = false
 
-onready var loading_screen = preload("res://ui/LoadingScreen.tscn")
-
-# Emitted when change_scene() is called and a new scene is going to be loaded
-signal scene_changed()
+onready var _loading_screen: PackedScene = preload("res://ui/LoadingScreen.tscn")
 
 
 func _ready() -> void:
 	var root: Node = get_tree().get_root()
 	
-	current_scene = root.get_child(root.get_child_count() - 1)
+	_current_scene = root.get_child(root.get_child_count() - 1)
 	
 	set_process(false)
 
@@ -46,12 +47,12 @@ func _process(_delta: float) -> void:
 	else:
 		var current_time_ms : = Time.get_ticks_msec()
 		
-		if wait_frames > 0:
-			wait_frames -= 1
+		if _wait_frames > 0:
+			_wait_frames -= 1
 			
 			return
 		
-		while Time.get_ticks_msec() < current_time_ms + time_max_ms:
+		while Time.get_ticks_msec() < current_time_ms + _time_max_ms:
 			var error = loader.poll()
 			
 			if error == ERR_FILE_EOF:
@@ -94,7 +95,7 @@ func change_scene(path: String, _data = null) -> int:
 	else:
 		data = _data
 		
-		if is_loading:
+		if _is_loading:
 			_start_loader()
 		else:
 			call_deferred("_play_loading_animation")
@@ -105,50 +106,50 @@ func change_scene(path: String, _data = null) -> int:
 
 
 func _play_loading_animation() -> void:
-	is_loading = true
+	_is_loading = true
 	
-	loading_screen_instance = loading_screen.instance()
+	_loading_screen_instance = _loading_screen.instance()
 	
-	get_tree().get_root().add_child(loading_screen_instance)
+	get_tree().get_root().add_child(_loading_screen_instance)
 	
-	var _error = loading_screen_instance.connect("fade_in_finished", self, "_on_LoadingScreen_fade_in_finished")
+	var _error = _loading_screen_instance.connect("fade_in_finished", self, "_on_LoadingScreen_fade_in_finished")
 	
-	loading_screen_instance.play_loading_animation()
+	_loading_screen_instance.play_loading_animation()
 
 
 func _set_new_scene(resource: Resource) -> void:
-	can_fade_out = true
+	_can_fade_out = true
 	
-	current_scene = resource.instance()
+	_current_scene = resource.instance()
 	
-	if current_scene.has_method("on_instance"):
-		current_scene.on_instance(data)
+	if _current_scene.has_method("on_instance"):
+		_current_scene.on_instance(data)
 		
 		data = null
 	
-	get_tree().get_root().add_child(current_scene)
+	get_tree().get_root().add_child(_current_scene)
 	
-	# This flag can be set to false if the current_scene wants to change
+	# This flag can be set to false if the _current_scene wants to change
 	# scenes in its _ready() method (when it is added to the tree) and 
 	# _start_loader() is called
 	# This is so that the fade out animation is only played once, for the last
 	# scene changed to
-	if can_fade_out:
-		var _error = loading_screen_instance.connect("fade_out_finished", self, "_on_LoadingScreen_fade_out_finished")
+	if _can_fade_out:
+		var _error = _loading_screen_instance.connect("fade_out_finished", self, "_on_LoadingScreen_fade_out_finished")
 		
-		loading_screen_instance.fade_out()
+		_loading_screen_instance.fade_out()
 
 
 func _start_loader() -> void:
 	# Wait until sound effects and such have finished playing
-	# TODO: current_scene.cleanup()
-	current_scene.queue_free()
+	# TODO: _current_scene.cleanup()
+	_current_scene.queue_free()
 	
-	wait_frames = 1
+	_wait_frames = 1
 	
 	set_process(true)
 	
-	can_fade_out = false
+	_can_fade_out = false
 
 
 func _on_LoadingScreen_fade_in_finished() -> void:
@@ -156,10 +157,10 @@ func _on_LoadingScreen_fade_in_finished() -> void:
 
 
 func _on_LoadingScreen_fade_out_finished() -> void:
-	is_loading = false
+	_is_loading = false
 	
-	loading_screen_instance.queue_free()
+	_loading_screen_instance.queue_free()
 	
 	# Enable buttons, input
-	if current_scene.has_method("on_fade_out_finished"):
-		current_scene.on_fade_out_finished()
+	if _current_scene.has_method("on_fade_out_finished"):
+		_current_scene.on_fade_out_finished()

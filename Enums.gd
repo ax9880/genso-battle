@@ -1,5 +1,6 @@
 extends Node
 
+
 enum Attribute {
 	# Non-elemental (e.g. healing)
 	NONE,

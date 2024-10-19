@@ -1,33 +1,27 @@
 extends HBoxContainer
 
-onready var name_label: Label = $VBoxContainer/HBoxContainer/NameLabel
-
-# Job that this container is showing
-var job: Job
-
-var _is_draggable: bool = false
-
-var _compare_job: Job
 
 signal change_button_clicked
 signal unit_selected
 signal unit_dropped_on_unit(target_unit_item, dropped_unit_item)
 signal unit_double_clicked()
 
+var _is_draggable: bool = false
 
-func initialize(_job: Job, is_draggable: bool = false, compare_job: Job = null) -> void:
-	job = _job
+onready var _name_label: Label = $VBoxContainer/HBoxContainer/NameLabel
+
+
+func initialize(job: Job, is_draggable: bool = false, compare_job: Job = null) -> void:
 	_is_draggable = is_draggable
-	_compare_job = compare_job
 	
-	name_label.text = tr(job.job_name)
+	_name_label.text = tr(job.job_name)
 	
 	$UnitIcon.initialize(job, _is_draggable)
 	
 	var compare_job_stats: Stats = null
 	
-	if _compare_job != null:
-		compare_job_stats = _compare_job.stats
+	if compare_job != null:
+		compare_job_stats = compare_job.stats
 	
 	$VBoxContainer/UnitStatsContainer.initialize(job.stats, compare_job_stats)
 

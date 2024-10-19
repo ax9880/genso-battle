@@ -1,5 +1,6 @@
 extends Node
 
+
 const WEAPON_ADVANTAGE: float = 2.0
 const WEAPON_DISADVANTAGE: float = 0.8
 
@@ -10,10 +11,10 @@ const STAFF_DAMAGE_MODIFIER: float = 1.57
 export(NodePath) var target_unit_path: NodePath
 export(NodePath) var status_effect_node2d_path: NodePath
 
-onready var status_effect_node2d: Node2D = get_node(status_effect_node2d_path)
-onready var target_unit: Unit = get_node(target_unit_path)
-
 var _random := RandomNumberGenerator.new()
+
+onready var _status_effect_node2d: Node2D = get_node(status_effect_node2d_path)
+onready var _target_unit: Unit = get_node(target_unit_path)
 
 
 func _ready() -> void:
@@ -26,7 +27,7 @@ func apply_skill(unit: Unit,
 		on_damage_absorbed_callback: FuncRef,
 		status_effects: Array) -> void:
 	if (skill.is_attack() or skill.is_healing()) and skill.primary_power > 0:
-		var damage := calculate_damage(unit.get_stats(), target_unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
+		var damage := calculate_damage(unit.get_stats(), _target_unit.get_stats(), skill.primary_power, skill.primary_weapon_type, skill.primary_attribute)
 		
 		damage = int(damage * _random.randf_range(0.9, 1.1))
 		
@@ -37,10 +38,10 @@ func apply_skill(unit: Unit,
 		
 		on_damage_absorbed_callback.call_func(absorbed_damage)
 		
-		target_unit.inflict_damage(damage)
+		_target_unit.inflict_damage(damage)
 		
 		if damage > 0:
-			target_unit.on_attacked()
+			_target_unit.on_attacked()
 	
 	var has_modified_stats: bool = false
 	
@@ -50,16 +51,16 @@ func apply_skill(unit: Unit,
 		for status_effect_resource in skill.status_effects:
 			var status_effect: StatusEffect = status_effect_resource.duplicate()
 			
-			if status_effect.is_buff() or _can_apply_status_effect(target_unit.get_stats(), status_effect):
+			if status_effect.is_buff() or _can_apply_status_effect(_target_unit.get_stats(), status_effect):
 				has_modified_stats = true
 				
 				status_effect.initialize(unit.get_stats())
 				
 				status_effects.append(status_effect)
 				
-				print("Applied %s to %s" % [status_effect.status_effect_type, target_unit.name])
+				print("Applied %s to %s" % [status_effect.status_effect_type, _target_unit.name])
 				
-				status_effect_node2d.add(status_effect.status_effect_type, status_effect.effect_scene)
+				_status_effect_node2d.add(status_effect.status_effect_type, status_effect.effect_scene)
 			else:
 				print("%s resisted %s" % [name, status_effect.status_effect_type])
 	
@@ -77,7 +78,7 @@ func apply_skill(unit: Unit,
 			has_modified_stats = true
 	
 	if has_modified_stats:
-		target_unit.recalculate_stats()
+		_target_unit.recalculate_stats()
 
 
 func calculate_damage(attacker_stats: Stats,
@@ -104,11 +105,11 @@ func inflict(status_effect_type: int, status_effects: Array) -> void:
 	
 	for status_effect in status_effects:
 		if status_effect.status_effect_type == status_effect_type:
-			accumulated_damage += status_effect.calculate_damage(target_unit.get_stats())
+			accumulated_damage += status_effect.calculate_damage(_target_unit.get_stats())
 			
 			status_effect.update()
 	
-	target_unit.inflict_damage(accumulated_damage)
+	_target_unit.inflict_damage(accumulated_damage)
 	
 	var status_effects_to_remove := []
 	
@@ -120,7 +121,7 @@ func inflict(status_effect_type: int, status_effects: Array) -> void:
 		remove_status_effect(status_effects, status_effect)
 	
 	if not status_effects_to_remove.empty():
-		target_unit.recalculate_stats()
+		_target_unit.recalculate_stats()
 
 
 func remove_status_effect(status_effects: Array, status_effect: StatusEffect) -> void:
@@ -129,7 +130,7 @@ func remove_status_effect(status_effects: Array, status_effect: StatusEffect) ->
 	if index != -1:
 		status_effects.remove(index)
 		
-		status_effect_node2d.remove(status_effect.status_effect_type)
+		_status_effect_node2d.remove(status_effect.status_effect_type)
 
 
 func _get_weapon_type_advantage(attacker_weapon_type: int, defender_weapon_type: int) -> float:

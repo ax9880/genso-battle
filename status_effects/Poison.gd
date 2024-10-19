@@ -4,7 +4,7 @@ extends StatusEffect
 var random := RandomNumberGenerator.new()
 
 
-func calculate_base_damage(inflicting_unit_stats: Stats) -> void:
+func initialize(inflicting_unit_stats: Stats) -> void:
 	random.randomize()
 	
 	base_damage = int(inflicting_unit_stats.spiritual_attack * 1.5)
