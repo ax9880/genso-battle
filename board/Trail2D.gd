@@ -64,7 +64,7 @@ func set_gradient(gradient: Gradient) -> void:
 func _remove_points(points_to_remove: int) -> void:
 	var points_to_sharp_angle: int = -1
 	
-	for i in range(0, interpolation_steps):
+	for i in interpolation_steps:
 		if (i + 2) < line_2d.get_point_count():
 			var vector_1: Vector2 = line_2d.get_point_position(i + 1) - line_2d.get_point_position(i)
 			var vector_2: Vector2 = line_2d.get_point_position(i + 2) - line_2d.get_point_position(i + 1)
@@ -76,7 +76,7 @@ func _remove_points(points_to_remove: int) -> void:
 				
 				break
 	
-	for _i in range(max(points_to_remove, points_to_sharp_angle)):
+	for _i in max(points_to_remove, points_to_sharp_angle):
 		if line_2d.get_point_count() > 0:
 			line_2d.remove_point(0)
 

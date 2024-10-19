@@ -33,17 +33,17 @@ func get_all_cells() -> Array:
 # Create the grid matrix and populate it with cell objects.
 # Connect body enter and exit signals.
 func _initialize_grid() -> void:
-	for x in range(width):
+	for x in width:
 		grid.append([])
 		grid[x].resize(height)
 		
 		# For each column:
-		for y in range(height):
+		for y in height:
 			grid[x][y] = _build_cell(x, y)
 	
 	# Populate cell neighbors
-	for x in range(width):
-		for y in range(height):
+	for x in width:
+		for y in height:
 			var cell: Cell = grid[x][y]
 			
 			_set_neighbors(cell)

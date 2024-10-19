@@ -1,6 +1,5 @@
-extends Node
-
 class_name BoardUtils
+extends Reference
 
 
 class Element:
@@ -56,7 +55,7 @@ class PriorityQueue:
 		var index := 0
 		var priority: int = _array[index].priority
 		
-		for i in range(0, _last_index):
+		for i in _last_index:
 			if (priority > _array[i].priority):
 				index = i
 				priority = _array[i].priority
@@ -322,7 +321,7 @@ static func _find_area_of_effect(var cell: Cell, # Start cell from which skill i
 			
 			assert(start <= end)
 			
-			for x in range(grid.width):
+			for x in grid.width:
 				for y in range(start, end + 1):
 					var candidate_cell_coordinates := Vector2(x, y)
 					
@@ -346,7 +345,7 @@ static func _find_area_of_effect(var cell: Cell, # Start cell from which skill i
 			assert(start <= end)
 			
 			for x in range(start, end + 1):
-				for y in range(grid.height):
+				for y in grid.height:
 					var candidate_cell_coordinates := Vector2(x, y)
 					
 					if grid._is_in_range(candidate_cell_coordinates):

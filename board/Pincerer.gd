@@ -47,7 +47,7 @@ func _find_pincers(grid: Grid, active_unit: Unit) -> Array:
 				_add_pincer(active_unit, leading_pincers, pincers, pincer)
 	
 	# Check vertical pincers
-	for x in range(grid_width):
+	for x in grid_width:
 		var y: int = grid_height - 1
 		
 		while y > -1:

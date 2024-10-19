@@ -49,7 +49,7 @@ func initialize(skill: Skill, can_show_full_data: bool = false, is_locked: bool 
 		if skill.has_status_effects():
 			skill_description += COMMA_AND_SPACE + tr("STATUS_EFFECT_CHANCE_DESCRIPTION") % (skill.status_effect_infliction_rate * 100.0)
 			
-			for i in range(skill.status_effects.size()):
+			for i in skill.status_effects.size():
 				var status_effect: StatusEffect = skill.status_effects[i]
 				
 				if i == 0:

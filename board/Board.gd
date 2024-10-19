@@ -1,10 +1,29 @@
+class_name Board
 extends Node2D
 
-class_name Board
 
 enum Turn {
 	NONE, PLAYER, ENEMY
 }
+
+
+signal drag_timer_started(timer)
+signal drag_timer_stopped
+signal drag_timer_reset
+
+# Emitted when the player's turn starts.
+signal player_turn_started
+
+# Emitted when all enemies are defeated.
+signal victory
+
+# Emitted when the player has less than 2 units on the board.
+signal defeat
+
+signal enemy_phase_started(_current_enemy_phase, _enemy_phase_count)
+signal enemies_appeared
+
+signal unit_selected_for_view(job)
 
 # Set to true to use debug units instead of the player's squad
 export(bool) var can_use_debug_units: bool = false
@@ -15,19 +34,15 @@ export(int, 2, 6) var player_units_count: int = 6
 # Fixed player units level
 export(int, -1, 100) var fixed_player_units_level: int = -1
 
-onready var grid := $Grid
-onready var grid_width: int = grid.width
-onready var grid_height: int = grid.height
-
-var active_unit: Unit = null
-var active_unit_current_cell: Cell = null
-var active_unit_last_valid_cell: Cell = null
-var active_trail: Node2D = null
+var _active_unit: Unit = null
+var _active_unit_current_cell: Cell = null
+var _active_unit_last_valid_cell: Cell = null
+var _active_trail: Node2D = null
 
 # Dictionary<Cell, Cell>
-var active_unit_entered_cells := {}
-var has_active_unit_exited_cell: bool = false
-var has_active_unit_used_skill: bool = false
+var _active_unit_entered_cells := {}
+var _has_active_unit_exited_cell: bool = false
+var _has_active_unit_used_skill: bool = false
 
 var _enemy_queue := []
 
@@ -51,23 +66,7 @@ var _save_data: SaveData
 
 var _is_battle_finished: bool = false
 
-signal drag_timer_started(timer)
-signal drag_timer_stopped
-signal drag_timer_reset
-
-# Emitted when the player's turn starts.
-signal player_turn_started
-
-# Emitted when all enemies are defeated.
-signal victory
-
-# Emitted when the player has less than 2 units on the board.
-signal defeat
-
-signal enemy_phase_started(_current_enemy_phase, _enemy_phase_count)
-signal enemies_appeared
-
-signal unit_selected_for_view(job)
+onready var _grid := $Grid
 
 
 func _ready() -> void:
@@ -112,7 +111,7 @@ func _process(_delta: float) -> void:
 func _load_player_units() -> void:
 	var discarded_units := []
 	
-	for i in range(_player_units_node.get_child_count()):
+	for i in _player_units_node.get_child_count():
 		# Load the first X active units
 		if i < player_units_count and i < _save_data.active_units.size():
 			var index: int = _save_data.active_units[i]
@@ -137,7 +136,7 @@ func _load_player_units() -> void:
 
 # Connect body enter and exit signals.
 func _connect_cell_signals() -> void:
-	for row in grid.grid:
+	for row in _grid.grid:
 		for cell in row:
 			var _error = cell.connect("area_entered", self, "_on_Cell_area_entered", [cell])
 			_error = cell.connect("area_exited", self, "_on_Cell_area_exited", [cell])
@@ -176,11 +175,11 @@ func _load_next_enemy_phase() -> void:
 # Traps?
 func _assign_traps_to_cells() -> void:
 	for trap in $Traps.get_children():
-		var cell_coordinates: Vector2 = grid.get_cell_coordinates(trap.position)
+		var cell_coordinates: Vector2 = _grid.get_cell_coordinates(trap.position)
 		
-		trap.position = grid.cell_coordinates_to_cell_origin(cell_coordinates)
+		trap.position = _grid.cell_coordinates_to_cell_origin(cell_coordinates)
 		
-		grid.get_cell_from_coordinates(cell_coordinates).trap = trap
+		_grid.get_cell_from_coordinates(cell_coordinates).trap = trap
 
 
 # Grid? Or here?
@@ -215,11 +214,11 @@ func _assign_units_to_cells() -> void:
 
 
 func _assign_unit_to_cell(unit: Unit) -> void:
-	var cell_coordinates: Vector2 = grid.get_cell_coordinates(unit.position)
+	var cell_coordinates: Vector2 = _grid.get_cell_coordinates(unit.position)
 	
-	unit.position = grid.cell_coordinates_to_cell_origin(cell_coordinates)
+	unit.position = _grid.cell_coordinates_to_cell_origin(cell_coordinates)
 	
-	var cell: Cell = grid.get_cell_from_coordinates(cell_coordinates)
+	var cell: Cell = _grid.get_cell_from_coordinates(cell_coordinates)
 	
 	if cell.unit != null:
 		$Pusher.push_unit(cell, cell)
@@ -313,7 +312,7 @@ func _start_turn_zero_enemy_turn() -> void:
 func _start_player_turn(var has_same_cell: bool = false) -> void:
 	print("Starting player turn")
 	
-	$PincerExecutor.initialize(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
+	$PincerExecutor.initialize(_grid, _enemy_units_node.get_children(), _player_units_node.get_children())
 	_pincer_queue.clear()
 	
 	_current_turn = Turn.PLAYER
@@ -364,9 +363,9 @@ func _start_player_turn(var has_same_cell: bool = false) -> void:
 
 func _initialize_enemy_pincer_executor() -> void:
 	# Initialize these parameters. Allies and enemies are used when
-	# checking for dead units. The grid is used when checking for
+	# checking for dead units. The _grid is used when checking for
 	# affected cells when using a skill
-	$PincerExecutor.initialize(grid, _enemy_units_node.get_children(), _player_units_node.get_children())
+	$PincerExecutor.initialize(_grid, _enemy_units_node.get_children(), _player_units_node.get_children())
 	
 	_pincer_queue.clear()
 	_completed_enemy_pincers.clear()
@@ -408,10 +407,10 @@ func update_drag_mode(drag_mode: int) -> void:
 
 
 func on_give_up() -> void:
-	if active_unit != null and active_unit.is_player():
+	if _active_unit != null and _active_unit.is_player():
 		_is_battle_finished = true
 		
-		active_unit.release()
+		_active_unit.release()
 
 
 func _enable_unit_selection() -> void:
@@ -470,10 +469,10 @@ func _update_enemy() -> void:
 		var enemy: Unit = _enemy_queue.pop_front()
 		
 		print("Active enemy is %s" % enemy.name)
-		active_unit = enemy
-		has_active_unit_used_skill = false
+		_active_unit = enemy
+		_has_active_unit_used_skill = false
 		
-		enemy.act(grid, _enemy_units_node.get_children(), _player_units_node.get_children(), _enemy_queue)
+		enemy.act(_grid, _enemy_units_node.get_children(), _player_units_node.get_children(), _enemy_queue)
 	else:
 		_update_status_effects()
 
@@ -481,21 +480,21 @@ func _update_enemy() -> void:
 # Move to UnitMonitor/GridMonitor/CellMonitor ?
 # UnitMovementMonitor
 func _on_Cell_area_entered(_area: Area2D, cell: Cell) -> void:
-	assert(active_unit != null)
+	assert(_active_unit != null)
 	
-	if cell != active_unit_current_cell:
-		active_unit.on_enter_cell()
+	if cell != _active_unit_current_cell:
+		_active_unit.on_enter_cell()
 	
-	if active_unit.is2x2():
-		var previously_entered_cells: Dictionary = active_unit_entered_cells.duplicate()
+	if _active_unit.is2x2():
+		var previously_entered_cells: Dictionary = _active_unit_entered_cells.duplicate()
 		
-		_update_2x2_unit_cells(active_unit, cell)
+		_update_2x2_unit_cells(_active_unit, cell)
 		
-		for cell in active_unit_entered_cells:
+		for cell in _active_unit_entered_cells:
 			if not cell in previously_entered_cells:
-				_activate_trap(cell, active_unit)
+				_activate_trap(cell, _active_unit)
 	else:
-		active_unit_entered_cells[cell] = cell
+		_active_unit_entered_cells[cell] = cell
 		
 		_color_cell(cell)
 
@@ -510,54 +509,54 @@ func _on_Cell_area_exited(area: Area2D, cell: Cell) -> void:
 	if not area.get_unit().is_picked_up():
 		return
 	
-	assert(active_unit == area.get_unit(), "Unit exiting cells should be the same as the active unit")
+	assert(_active_unit == area.get_unit(), "Unit exiting cells should be the same as the active unit")
 	
-	var selected_cell: Cell = _find_closest_cell(active_unit.position)
+	var selected_cell: Cell = _find_closest_cell(_active_unit.position)
 	
 	if selected_cell != null:
 		# TODO: If there's an enemy in the selected cell then don't do this assignment
-		if active_unit_last_valid_cell != active_unit_current_cell:
-			active_unit_last_valid_cell = active_unit_current_cell
+		if _active_unit_last_valid_cell != _active_unit_current_cell:
+			_active_unit_last_valid_cell = _active_unit_current_cell
 			
-			has_active_unit_exited_cell = true
+			_has_active_unit_exited_cell = true
 			
 			if _current_turn == Turn.PLAYER:
 				_start_drag_timer()
 		
-		active_unit_current_cell = selected_cell
+		_active_unit_current_cell = selected_cell
 		
-		if selected_cell.coordinates.distance_to(active_unit_last_valid_cell.coordinates) > 1.5:
-			_color_cell(active_unit_last_valid_cell)
+		if selected_cell.coordinates.distance_to(_active_unit_last_valid_cell.coordinates) > 1.5:
+			_color_cell(_active_unit_last_valid_cell)
 			
 			printerr("Warning! Jumped more than 1 tile")
 		
-		if active_unit.is2x2():
-			_update_2x2_unit_cells(active_unit, selected_cell)
+		if _active_unit.is2x2():
+			_update_2x2_unit_cells(_active_unit, selected_cell)
 		else:
 			var unit_to_swap: Unit = selected_cell.unit
 			
-			_swap_units(active_unit, selected_cell.unit, active_unit_current_cell, active_unit_last_valid_cell)
+			_swap_units(_active_unit, selected_cell.unit, _active_unit_current_cell, _active_unit_last_valid_cell)
 			
-			if selected_cell != active_unit_last_valid_cell:
-				_activate_trap(selected_cell, active_unit)
+			if selected_cell != _active_unit_last_valid_cell:
+				_activate_trap(selected_cell, _active_unit)
 			
-			_highlight_possible_chains(active_unit)
+			_highlight_possible_chains(_active_unit)
 			
-			$ChainPreviewer.update_preview(active_unit, selected_cell)
+			$ChainPreviewer.update_preview(_active_unit, selected_cell)
 			
-			var _is_present: bool = active_unit_entered_cells.erase(cell)
+			var _is_present: bool = _active_unit_entered_cells.erase(cell)
 			
 			if unit_to_swap != null and unit_to_swap.is_dead():
-				$PincerExecutor.update_dead_unit_on_swap(unit_to_swap, active_unit_last_valid_cell)
+				$PincerExecutor.update_dead_unit_on_swap(unit_to_swap, _active_unit_last_valid_cell)
 		
 		_update_trail(selected_cell)
 
 
 func _update_2x2_unit_cells(unit: Unit, cell: Cell) -> void:
-	assert(active_unit_entered_cells.values().size() == 4)
+	assert(_active_unit_entered_cells.values().size() == 4)
 	assert(unit.is2x2())
 	
-	for entered_cell in active_unit_entered_cells.values():
+	for entered_cell in _active_unit_entered_cells.values():
 		assert(entered_cell.unit == unit)
 		
 		entered_cell.unit = null
@@ -566,14 +565,14 @@ func _update_2x2_unit_cells(unit: Unit, cell: Cell) -> void:
 	
 	_push_cells_in_area(unit, cell)
 	
-	active_unit_entered_cells.clear()
+	_active_unit_entered_cells.clear()
 	
 	for area_cell in cell.get_cells_in_area():
-		active_unit_entered_cells[area_cell] = area_cell
+		_active_unit_entered_cells[area_cell] = area_cell
 		
 		_color_cell(area_cell)
 	
-	assert(cell in active_unit_entered_cells)
+	assert(cell in _active_unit_entered_cells)
 	assert(cell.unit == unit)
 
 
@@ -600,32 +599,32 @@ func _clean_up_cells_in_area(unit: Unit, cell: Cell) -> void:
 
 
 func _update_active_unit(unit: Unit) -> void:
-	active_unit = unit
+	_active_unit = unit
 	
-	active_unit_current_cell = grid.get_cell_from_position(unit.position)
+	_active_unit_current_cell = _grid.get_cell_from_position(unit.position)
 	
-	active_unit_last_valid_cell = null
-	has_active_unit_exited_cell = false
+	_active_unit_last_valid_cell = null
+	_has_active_unit_exited_cell = false
 	
-	assert(active_unit_current_cell.unit == unit, "Unit %s is not in cell %s" % [unit.name, active_unit_current_cell.coordinates])
+	assert(_active_unit_current_cell.unit == unit, "Unit %s is not in cell %s" % [unit.name, _active_unit_current_cell.coordinates])
 	
-	active_unit_entered_cells.clear()
+	_active_unit_entered_cells.clear()
 	
 	if unit.is2x2():
-		_push_cells_in_area(unit, active_unit_current_cell)
+		_push_cells_in_area(unit, _active_unit_current_cell)
 		
-		for cell in active_unit_current_cell.get_cells_in_area():
-			active_unit_entered_cells[cell] = cell
+		for cell in _active_unit_current_cell.get_cells_in_area():
+			_active_unit_entered_cells[cell] = cell
 	
-	$ChainPreviewer.update_preview(unit, active_unit_current_cell)
+	$ChainPreviewer.update_preview(unit, _active_unit_current_cell)
 
 
 func _clear_active_cells() -> void:
-	active_unit_current_cell = null
-	active_unit_last_valid_cell = null
-	has_active_unit_exited_cell = false
+	_active_unit_current_cell = null
+	_active_unit_last_valid_cell = null
+	_has_active_unit_exited_cell = false
 	
-	active_unit_entered_cells.clear()
+	_active_unit_entered_cells.clear()
 
 
 func _color_cell(cell: Cell) -> void:
@@ -635,8 +634,8 @@ func _color_cell(cell: Cell) -> void:
 
 func _find_closest_cell(unit_position: Vector2) -> Cell:
 	# If empty then unit hasn't moved
-	if active_unit_entered_cells.empty():
-		var cell = grid.get_cell_from_position(unit_position)
+	if _active_unit_entered_cells.empty():
+		var cell = _grid.get_cell_from_position(unit_position)
 		
 		assert(cell.unit != null)
 		
@@ -645,7 +644,7 @@ func _find_closest_cell(unit_position: Vector2) -> Cell:
 		var selected_cell: Cell = null
 		var minimum_distance: float = 1000000.0
 		
-		for entered_cell in active_unit_entered_cells.values():
+		for entered_cell in _active_unit_entered_cells.values():
 			var distance_squared: float = unit_position.distance_squared_to(entered_cell.position)
 			
 			if distance_squared < minimum_distance: # and cell does not contain an enemy unit (just in case)
@@ -687,7 +686,7 @@ func _execute_pincers(unit: Unit) -> void:
 	
 	yield($PincerExecutor, "finished_checking_for_dead_units")
 	
-	_pincer_queue = $Pincerer.find_pincers(grid, unit)
+	_pincer_queue = $Pincerer.find_pincers(_grid, unit)
 	
 	if _current_turn == Turn.ENEMY:
 		_pincer_queue = _filter_pincers_with_active_unit(_pincer_queue, unit)
@@ -699,7 +698,7 @@ func _execute_pincers(unit: Unit) -> void:
 	while not _pincer_queue.empty() and _pincer_queue.front() != null:
 		var pincer: Pincer = _pincer_queue.pop_front()
 		
-		$Pincerer.find_chains(grid, pincer)
+		$Pincerer.find_chains(_grid, pincer)
 		
 		if not pincer.is_valid():
 			continue
@@ -714,7 +713,7 @@ func _execute_pincers(unit: Unit) -> void:
 		yield($PincerExecutor, "pincer_highlighted")
 		
 		if _current_turn == Turn.PLAYER:
-			$PincerExecutor.start_skill_activation_phase(pincer, grid, _player_units_node.get_children(), _enemy_units_node.get_children())
+			$PincerExecutor.start_skill_activation_phase(pincer, _grid, _player_units_node.get_children(), _enemy_units_node.get_children())
 			
 			yield($PincerExecutor, "skill_activation_phase_finished")
 		
@@ -802,12 +801,12 @@ func _stop_drag_timer() -> void:
 func _on_Unit_picked_up(unit: Unit) -> void:
 	_update_active_unit(unit)
 	
-	assert(active_trail == null)
+	assert(_active_trail == null)
 	
 	if not unit.is2x2():
-		active_trail = $Trails.build_trail(_current_turn == Turn.PLAYER)
+		_active_trail = $Trails.build_trail(_current_turn == Turn.PLAYER)
 	
-	_update_trail(grid.get_cell_from_position(unit.position))
+	_update_trail(_grid.get_cell_from_position(unit.position))
 	
 	unit.z_index += 1
 	
@@ -830,10 +829,10 @@ func _highlight_possible_chains(unit: Unit) -> void:
 	chain_families[unit] = []
 	var faction: int = unit.faction
 	
-	$Pincerer._find_chain(active_unit_current_cell, Cell.DIRECTION.RIGHT, chain_families, faction)
-	$Pincerer._find_chain(active_unit_current_cell, Cell.DIRECTION.LEFT, chain_families, faction)
-	$Pincerer._find_chain(active_unit_current_cell, Cell.DIRECTION.UP, chain_families, faction)
-	$Pincerer._find_chain(active_unit_current_cell, Cell.DIRECTION.DOWN, chain_families, faction)
+	$Pincerer._find_chain(_active_unit_current_cell, Cell.DIRECTION.RIGHT, chain_families, faction)
+	$Pincerer._find_chain(_active_unit_current_cell, Cell.DIRECTION.LEFT, chain_families, faction)
+	$Pincerer._find_chain(_active_unit_current_cell, Cell.DIRECTION.UP, chain_families, faction)
+	$Pincerer._find_chain(_active_unit_current_cell, Cell.DIRECTION.DOWN, chain_families, faction)
 	
 	for chains in chain_families.values():
 		for chain in chains:
@@ -852,20 +851,20 @@ func _stop_possible_chained_units_animations() -> void:
 
 
 func _update_trail(cell: Cell) -> void:
-	if active_trail != null:
-		active_trail.add(cell.position)
+	if _active_trail != null:
+		_active_trail.add(cell.position)
 
 
 func _clear_active_trail() -> void:
-	if active_trail != null:
-		active_trail.queue_clear()
-		active_trail = null
+	if _active_trail != null:
+		_active_trail.queue_clear()
+		_active_trail = null
 
 
 func _on_Enemy_use_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	print("Enemy %s is going to use skill %s" %[unit.name, skill.skill_name])
 	
-	has_active_unit_used_skill = true
+	_has_active_unit_used_skill = true
 	
 	$DelayedSkillHighlighter.remove(unit, skill)
 	
@@ -881,7 +880,7 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	var skill_effect: Node2D = skill.effect_scene.instance()
 	add_child(skill_effect)
 	
-	var start_cell: Cell = grid.get_cell_from_position(unit.position)
+	var start_cell: Cell = _grid.get_cell_from_position(unit.position)
 	
 	assert(start_cell != null)
 	
@@ -897,7 +896,7 @@ func _on_Enemy_use_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
 	
 	yield($PincerExecutor, "finished_checking_for_dead_units")
 	
-	unit.on_skill_used(grid, _player_units_node.get_children())
+	unit.on_skill_used(_grid, _player_units_node.get_children())
 
 
 func _on_Enemy_use_delayed_skill(unit: Unit, skill: Skill, target_cells: Array) -> void:
@@ -942,32 +941,32 @@ func _on_Unit_released(unit: Unit) -> void:
 	assert(selected_cell != null)
 	
 	if unit.is2x2():
-		var cell_below: Cell = grid.get_cell_from_position(unit.position)
+		var cell_below: Cell = _grid.get_cell_from_position(unit.position)
 		
 		if unit.position.distance_squared_to(cell_below.position) < unit.position.distance_squared_to(selected_cell.position):
 			selected_cell = cell_below
 	
-	if active_unit_last_valid_cell == null and selected_cell != active_unit_current_cell:
-		has_active_unit_exited_cell = true
+	if _active_unit_last_valid_cell == null and selected_cell != _active_unit_current_cell:
+		_has_active_unit_exited_cell = true
 	
 	# FIXME: May not work always
-	if active_unit_last_valid_cell != null:
-		has_active_unit_exited_cell = true
+	if _active_unit_last_valid_cell != null:
+		_has_active_unit_exited_cell = true
 		
 		print("Unit %s exited a cell" % unit.name)
 	
-	if active_unit_current_cell != selected_cell:
+	if _active_unit_current_cell != selected_cell:
 		_activate_trap(selected_cell, unit)
 	
 	if unit.is2x2():
 		_update_2x2_unit_cells(unit, selected_cell)
 		
-		for cell in active_unit_entered_cells:
+		for cell in _active_unit_entered_cells:
 			if cell.unit == unit:
 				cell.modulate = Color.white
 	else:
 		# If there is a unit in the selected cell swap with it
-		_swap_units(unit, selected_cell.unit, selected_cell, active_unit_current_cell)
+		_swap_units(unit, selected_cell.unit, selected_cell, _active_unit_current_cell)
 	
 	unit.snap_to_grid(selected_cell.position)
 	
@@ -980,7 +979,7 @@ func _on_Unit_released(unit: Unit) -> void:
 
 
 func _on_Unit_snapped_to_grid(unit: Unit) -> void:
-	print("Unit %s snapped to grid" % unit.name)
+	print("Unit %s snapped to _grid" % unit.name)
 	
 	$ChainPreviewer.clear()
 	
@@ -995,7 +994,7 @@ func _on_Unit_snapped_to_grid(unit: Unit) -> void:
 		
 		yield($PincerExecutor, "finished_checking_for_dead_units")
 		
-		if has_active_unit_exited_cell:
+		if _has_active_unit_exited_cell:
 			_clear_active_cells()
 			
 			_disable_unit_selection()
@@ -1016,7 +1015,7 @@ func _on_Enemy_dead(unit: Unit) -> void:
 
 
 func _on_Enemy_action_done(unit: Unit) -> void:
-	if unit != active_unit:
+	if unit != _active_unit:
 		push_warning("Unexpected unit %s action done" % unit.name)
 		
 		return
@@ -1028,7 +1027,7 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	_clear_active_trail()
 	
 	if unit.is_alive():
-		if grid.get_cell_from_position(unit.position).unit != unit:
+		if _grid.get_cell_from_position(unit.position).unit != unit:
 			push_error("Unit in cell of active unit %s is not the active unit" % unit.name)
 	
 	$PincerExecutor.check_dead_units()
@@ -1037,7 +1036,7 @@ func _on_Enemy_action_done(unit: Unit) -> void:
 	
 	unit.z_index = 0
 	
-	if not has_active_unit_used_skill:
+	if not _has_active_unit_used_skill:
 		_clear_active_cells()
 		
 		_execute_pincers(unit)
@@ -1070,7 +1069,7 @@ func _has_executed_pincer_before(pincer: Pincer) -> bool:
 
 
 func _on_DragTimer_timeout() -> void:
-	active_unit.release()
+	_active_unit.release()
 	
 	_stop_drag_timer()
 

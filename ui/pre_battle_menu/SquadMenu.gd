@@ -57,7 +57,7 @@ func _show_active_units() -> void:
 	# if so then the unit was changed and you should highlight it
 	# and set the parameters back to null and -1
 	
-	for i in range(save_data.active_units.size()):
+	for i in save_data.active_units.size():
 		var index: int = save_data.active_units[i]
 		
 		# TODO: Check if index is valid

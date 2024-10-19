@@ -221,7 +221,7 @@ func _get_random_weighted_action(current_hp_percentage: float) -> Action:
 	# Random weighted choice
 	var selection: int = _random.randi_range(0, total_weights)
 	
-	for i in range(possible_actions.size()):
+	for i in possible_actions.size():
 		var weight: int = possible_actions[i].weight
 		
 		selection -= weight

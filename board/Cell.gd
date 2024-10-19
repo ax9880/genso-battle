@@ -1,6 +1,6 @@
+class_name Cell
 extends Area2D
 
-class_name Cell
 
 enum DIRECTION {
 	UP,
@@ -53,7 +53,7 @@ func get_cells_in_area() -> Array:
 
 # Returns Array<Cell>. If there are not enough neighbors, returns an empty array.
 # Assumes that the cell is at the top left corner of the area.
-func _get_cells_in_area(var size) -> Array:
+func _get_cells_in_area(var size: int) -> Array:
 	var row_cell: Cell = self
 	
 	var cells := []
@@ -64,10 +64,10 @@ func _get_cells_in_area(var size) -> Array:
 	# 0 -> 1 -> 2
 	# 3 -> 4 -> 5
 	# 6 -> 7 -> 8
-	for _x in range(size):
+	for _x in size:
 		cells.push_back(row_cell)
 		
-		for _y in range(size - 1):
+		for _y in size - 1:
 			var column_cell: Cell = row_cell.get_neighbor(DIRECTION.RIGHT)
 			
 			if column_cell != null:

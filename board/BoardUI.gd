@@ -11,14 +11,14 @@ export(PackedScene) var view_unit_menu_packed_scene: PackedScene
 
 export(float) var view_unit_menu_fade_time_seconds: float = 0.5
 
-onready var progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
-onready var tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
-
 var _timer: Timer
 var _player_turn_count: int = 0
 var _total_drag_time_seconds: float = 0
 
 var _is_battle_finished: bool = false
+
+onready var progress_bar: TextureProgress = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress
+onready var tween: Tween = $CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress/Tween
 
 
 func _ready() -> void:
