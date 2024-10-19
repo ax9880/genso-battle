@@ -1,0 +1,247 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://units/enemies/haniwa_orbling.tscn" type="PackedScene" id=2]
+[ext_resource path="res://units/enemies/dracorin.tscn" type="PackedScene" id=3]
+[ext_resource path="res://board/battle.tscn" type="PackedScene" id=4]
+
+[node name="BoardUI" instance=ExtResource( 4 )]
+view_unit_menu_fade_time_seconds = null
+
+[node name="Board" parent="." index="3"]
+can_use_debug_units = null
+player_units_count = null
+fixed_player_units_level = null
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 2 )]
+position = Vector2( 251, 256 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = null
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="1" instance=ExtResource( 2 )]
+position = Vector2( 349, 253 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Phase2" parent="Board/EnemyPhases" index="1"]
+visible = false
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase2" index="0" instance=ExtResource( 2 )]
+position = Vector2( 149, 352 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = null
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase2" index="1" instance=ExtResource( 2 )]
+position = Vector2( 449, 344 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling4" parent="Board/EnemyPhases/Phase2" index="2" instance=ExtResource( 2 )]
+position = Vector2( 453, 145 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = null
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase2" index="3" instance=ExtResource( 3 )]
+position = Vector2( 157, 152 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase3" index="0" instance=ExtResource( 3 )]
+position = Vector2( 61, 344 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Dracorin2" parent="Board/EnemyPhases/Phase3" index="1" instance=ExtResource( 3 )]
+position = Vector2( 53, 454 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 3
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase3" index="2" instance=ExtResource( 2 )]
+position = Vector2( 549, 456 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase3" index="3" instance=ExtResource( 2 )]
+position = Vector2( 549, 560 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = null
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Phase4" parent="Board/EnemyPhases" index="3"]
+visible = false
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase4" index="0" instance=ExtResource( 2 )]
+position = Vector2( 57, 49 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase4" index="1" instance=ExtResource( 2 )]
+position = Vector2( 549, 50 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = null
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase4" index="2" instance=ExtResource( 3 )]
+position = Vector2( 251, 248 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = null
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Dracorin" parent="Board/EnemyPhases/Phase5" index="0" instance=ExtResource( 3 )]
+position = Vector2( 251, 351 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = null
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Dracorin2" parent="Board/EnemyPhases/Phase5" index="1" instance=ExtResource( 3 )]
+position = Vector2( 349, 248 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = null
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="Dracorin3" parent="Board/EnemyPhases/Phase5" index="2" instance=ExtResource( 3 )]
+position = Vector2( 149, 152 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase5" index="3" instance=ExtResource( 2 )]
+position = Vector2( 253, 744 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 3
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase5" index="4" instance=ExtResource( 2 )]
+position = Vector2( 341, 656 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null
+
+[node name="HaniwaOrbling3" parent="Board/EnemyPhases/Phase5" index="5" instance=ExtResource( 2 )]
+position = Vector2( 253, 566 )
+size = null
+velocity_pixels_per_second = null
+snap_velocity_pixels_per_second = null
+max_velocity_pixels_per_second = null
+kp = null
+is_click_to_drag = null
+level = null
+turn_counter = 2
+chance_to_move_to_enemy_during_move_behavior = null

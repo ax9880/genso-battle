@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://board/highlights/delayed_skill_highlighter.gd" type="Script" id=1]
+[ext_resource path="res://board/highlights/skill_highlight.tscn" type="PackedScene" id=2]
+
+[node name="DelayedSkillHighlighter" type="Node2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": " Manages and stores skill highlights to highlight new delayed skills and to remove them after the skill is triggered or after the unit dies."
+}
+skill_highlight_packed_scene = ExtResource( 2 )

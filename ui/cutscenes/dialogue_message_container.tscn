@@ -1,0 +1,89 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://assets/ui/red_panel.png" type="Texture" id=1]
+[ext_resource path="res://assets/ui/unit_square_bg.png" type="Texture" id=2]
+[ext_resource path="res://theme.tres" type="Theme" id=3]
+[ext_resource path="res://ui/cutscenes/dialogue_message_container.gd" type="Script" id=4]
+[ext_resource path="res://assets/sfx/casino/place10.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/ui/red_panel_border.png" type="Texture" id=6]
+
+[node name="DialogueMessageContainer" type="HBoxContainer"]
+anchor_right = 1.0
+margin_bottom = 162.0
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+script = ExtResource( 4 )
+dim_color = Color( 1, 1, 1, 0.752941 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 150.0
+margin_bottom = 170.0
+rect_min_size = Vector2( 150, 0 )
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+margin_left = 26.0
+margin_right = 124.0
+margin_bottom = 98.0
+size_flags_horizontal = 4
+texture = ExtResource( 2 )
+
+[node name="NinePatchRect" type="NinePatchRect" parent="VBoxContainer/TextureRect"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -50.0
+margin_top = -50.0
+margin_right = 50.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 100, 100 )
+texture = ExtResource( 6 )
+patch_margin_left = 29
+patch_margin_top = 29
+patch_margin_right = 29
+patch_margin_bottom = 29
+
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
+margin_top = 106.0
+margin_right = 150.0
+margin_bottom = 170.0
+text = "Mononobe no Futo"
+align = 1
+autowrap = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_left = 158.0
+margin_right = 720.0
+margin_bottom = 170.0
+size_flags_horizontal = 3
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MarginContainer"]
+margin_right = 562.0
+margin_bottom = 170.0
+texture = ExtResource( 1 )
+patch_margin_left = 25
+patch_margin_top = 25
+patch_margin_right = 25
+patch_margin_bottom = 22
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+margin_right = 562.0
+margin_bottom = 170.0
+custom_constants/margin_right = 24
+custom_constants/margin_top = 24
+custom_constants/margin_left = 24
+custom_constants/margin_bottom = 24
+
+[node name="MessageLabel" type="Label" parent="MarginContainer/MarginContainer"]
+margin_left = 24.0
+margin_top = 24.0
+margin_right = 538.0
+margin_bottom = 146.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "We are going in too deep."
+autowrap = true
+
+[node name="DialogueAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+bus = "Sound effects"

@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://chapter_data/greaves_of_clay.tres" type="Resource" id=2]
+[ext_resource path="res://assets/ui/circle_gradient.png" type="Texture" id=3]
+[ext_resource path="res://ui/cutscenes/script_cutscene.gd" type="Script" id=4]
+[ext_resource path="res://ui/cutscenes/script_label.tscn" type="PackedScene" id=5]
+[ext_resource path="res://ui/auto_fading_audio_stream_player.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/music/Unlocated_Hell.mp3" type="AudioStream" id=7]
+[ext_resource path="res://ui/audio_button.tscn" type="PackedScene" id=8]
+
+[node name="ScriptCutscene" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 4 )
+chapter_data = ExtResource( 2 )
+text_label_packed_scene = ExtResource( 5 )
+dialogue_scene_path = "res://ui/cutscenes/DialogueCutscene.tscn"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.207843, 0.0313726, 0.164706, 1 )
+
+[node name="Background" type="TextureRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = -480.0
+margin_right = 360.0
+margin_bottom = 480.0
+texture = ExtResource( 3 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = -480.0
+margin_right = 360.0
+margin_bottom = 480.0
+custom_constants/margin_right = 50
+custom_constants/margin_top = 50
+custom_constants/margin_left = 50
+custom_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 670.0
+margin_bottom = 910.0
+
+[node name="TextVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 620.0
+margin_bottom = 779.0
+size_flags_vertical = 3
+
+[node name="Label" parent="MarginContainer/VBoxContainer/TextVBoxContainer" instance=ExtResource( 5 )]
+margin_right = 620.0
+
+[node name="SkipButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 8 )]
+margin_left = 380.0
+margin_top = 787.0
+margin_right = 620.0
+margin_bottom = 860.0
+size_flags_horizontal = 8
+text = "SKIP"
+
+[node name="AudioStreamPlayer" parent="." instance=ExtResource( 6 )]
+stream = ExtResource( 7 )
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_SkipButton_pressed"]

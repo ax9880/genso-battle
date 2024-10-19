@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=5 format=2]
+
+[ext_resource path="res://status_effects/status_effect.gd" type="Script" id=1]
+[ext_resource path="res://status_effects/effects/paralyze_particles.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/ui/ui_icons.png" type="Texture" id=3]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 5
+atlas = ExtResource( 3 )
+region = Rect2( 128, 128, 64, 64 )
+
+[resource]
+script = ExtResource( 1 )
+status_effect_type = 3
+duration_turns = 3
+icon = SubResource( 1 )
+effect_scene = ExtResource( 2 )

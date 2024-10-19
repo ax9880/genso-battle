@@ -7,7 +7,7 @@ extends EditorPlugin
 # in the resource to show that in the menu.
 
 
-const CHAPTER_LIST_PATH := "res://chapter_data/MainStoryChapterList.tres"
+const CHAPTER_LIST_PATH := "res://chapter_data/main_story_chapter_list.tres"
 
 
 func _enter_tree() -> void:
@@ -23,6 +23,12 @@ func build() -> bool:
 		var battle_scene_path: String = chapter.battle_scene_path
 		
 		var battle_packed_scene: Resource = load(battle_scene_path)
+		
+		if battle_packed_scene == null:
+			push_error("Failed to load battle %s, cannot generate battle info" % battle_scene_path)
+			
+			continue
+		
 		var battle = battle_packed_scene.instance()
 		
 		var enemy_phases: Node2D = battle.get_node("Board/EnemyPhases")

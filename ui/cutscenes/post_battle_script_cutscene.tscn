@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/cutscenes/script_cutscene.tscn" type="PackedScene" id=1]
+
+[node name="ScriptCutscene" instance=ExtResource( 1 )]
+dialogue_scene_path = "res://ui/cutscenes/PostBattleDialogueCutscene.tscn"
+title_suffix = "_POST_BATTLE"

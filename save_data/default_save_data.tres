@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=8 format=2]
+
+[ext_resource path="res://save_data/save_data.gd" type="Script" id=1]
+[ext_resource path="res://jobs/animal_spirit/saki_job.tres" type="Resource" id=3]
+[ext_resource path="res://jobs/animal_spirit/yuuma_job.tres" type="Resource" id=4]
+[ext_resource path="res://jobs/animal_spirit/yachie_job.tres" type="Resource" id=5]
+[ext_resource path="res://jobs/animal_spirit/wolf_spirit_job.tres" type="Resource" id=6]
+[ext_resource path="res://jobs/animal_spirit/eagle_spirit_job.tres" type="Resource" id=7]
+[ext_resource path="res://jobs/animal_spirit/otter_spirit_job.tres" type="Resource" id=8]
+
+[resource]
+script = ExtResource( 1 )
+version = 1
+jobs = [ ExtResource( 5 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 6 ) ]
+active_units = [ 0, 1, 2, 3, 4, 5 ]
+music_volume = 1.0
+sound_effects_volume = 1.0
+locale = ""
+drag_mode = 0

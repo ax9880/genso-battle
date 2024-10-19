@@ -1,17 +1,16 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://stats/Stats.gd" type="Script" id=1]
-
+[ext_resource path="res://stats/stats.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
 unit_name = "HANIWA_ORBLING"
 unit_type = "HANIWA"
 health_percentage = 0.594
-attack_percentage = 0.9636713238351371
-defense_percentage = 0.570909090909091
-spiritual_attack_percentage = 0.0107074591537237
-spiritual_defense_percentage = 1.58585858585859
+attack_percentage = 0.963671
+defense_percentage = 0.570909
+spiritual_attack_percentage = 0.0107075
+spiritual_defense_percentage = 1.58586
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

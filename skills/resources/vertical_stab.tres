@@ -1,0 +1,26 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://skills/effects/sweep_skill_effect.tscn" type="PackedScene" id=1]
+[ext_resource path="res://skills/skill.gd" type="Script" id=2]
+
+[resource]
+script = ExtResource( 2 )
+skill_name = "VERTICAL_STAB"
+skill_type = 0
+area_of_effect = 7
+area_of_effect_size = 3
+activation_rate = 0.3
+is_pusher = true
+primary_power = 1.0
+primary_weapon_type = 2
+primary_attribute = 0
+secondary_power = 0.0
+secondary_weapon_type = 1
+secondary_attribute = 0
+absorb_rate = 0.0
+max_heal = 700
+status_effects = [  ]
+status_effect_infliction_rate = 0.3
+cured_status_effects = [  ]
+effect_scene = ExtResource( 1 )
+is_delayed = false

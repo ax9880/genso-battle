@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://units/ai/ai_controller.gd" type="Script" id=1]
+[ext_resource path="res://units/ai/evaluator.gd" type="Script" id=2]
+[ext_resource path="res://units/ai/pincer_finder.gd" type="Script" id=3]
+
+[node name="AIController" type="Node"]
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "Should have actions as children."
+}
+
+[node name="Evaluator" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="PincerFinder" type="Node" parent="."]
+script = ExtResource( 3 )

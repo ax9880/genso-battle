@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://units/enemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://units/ai/action.tscn" type="PackedScene" id=2]
+[ext_resource path="res://units/ai/condition.tscn" type="PackedScene" id=3]
+[ext_resource path="res://jobs/haniwa/haniwa_gunner_job.tres" type="Resource" id=4]
+[ext_resource path="res://skills/resources/quick_shot.tres" type="Resource" id=5]
+[ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=6]
+[ext_resource path="res://assets/ui/gun.png" type="Texture" id=7]
+
+[node name="HaniwaGunner" instance=ExtResource( 1 )]
+
+[node name="Job" parent="." index="2"]
+job = ExtResource( 4 )
+
+[node name="Icon" parent="Sprite" index="1"]
+texture = ExtResource( 6 )
+
+[node name="WeaponType" parent="Control" index="2"]
+texture = ExtResource( 7 )
+
+[node name="AIController" parent="." index="13"]
+chance_to_move_after_using_skill = 0.0
+
+[node name="Action" parent="AIController" index="1" instance=ExtResource( 2 )]
+behavior = 2
+
+[node name="Condition" parent="AIController/Action" index="0" instance=ExtResource( 3 )]
+
+[node name="Action2" parent="AIController" index="2" instance=ExtResource( 2 )]
+behavior = 1
+skill = ExtResource( 5 )
+weight = 4
+can_ignore_weights = true
+
+[node name="Condition" parent="AIController/Action2" index="0" instance=ExtResource( 3 )]
+turn_steps = 2
+
+[editable path="CanvasLayer/ActivatedSkillMarginContainer"]

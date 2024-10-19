@@ -1,0 +1,65 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://units/enemies/haniwa_orbling.tscn" type="PackedScene" id=1]
+[ext_resource path="res://units/enemies/enemy_2x2.tscn" type="PackedScene" id=2]
+[ext_resource path="res://board/battle.tscn" type="PackedScene" id=3]
+
+[node name="BoardUI" instance=ExtResource( 3 )]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = -480.0
+margin_right = 360.0
+margin_bottom = 480.0
+
+[node name="Enemy2x2" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 2 )]
+position = Vector2( 446, 551 )
+velocity_pixels_per_second = 10.0
+snap_velocity_pixels_per_second = 200.0
+max_velocity_pixels_per_second = 2048.0
+kp = 1.4
+is_click_to_drag = true
+level = 10
+
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" index="1" instance=ExtResource( 1 )]
+position = Vector2( 156, 257 )
+size = 0
+velocity_pixels_per_second = 10.0
+snap_velocity_pixels_per_second = 200.0
+max_velocity_pixels_per_second = 2048.0
+kp = 1.4
+is_click_to_drag = true
+level = 10
+
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="2" instance=ExtResource( 1 )]
+position = Vector2( 336, 255 )
+size = 0
+velocity_pixels_per_second = 10.0
+snap_velocity_pixels_per_second = 200.0
+max_velocity_pixels_per_second = 2048.0
+kp = 1.4
+is_click_to_drag = true
+level = 10
+
+[node name="Unit" parent="Board/PlayerUnits" index="0"]
+position = Vector2( 350, 145 )
+
+[node name="Unit2" parent="Board/PlayerUnits" index="1"]
+position = Vector2( 260, 541 )
+
+[node name="Unit3" parent="Board/PlayerUnits" index="2"]
+position = Vector2( 146, 363 )
+
+[node name="Unit4" parent="Board/PlayerUnits" index="3"]
+position = Vector2( 339, 354 )
+
+[node name="Unit5" parent="Board/PlayerUnits" index="4"]
+position = Vector2( 161, 147 )
+
+[node name="Unit6" parent="Board/PlayerUnits" index="5"]
+position = Vector2( 148, 557 )
+
+[node name="DebugUnits" parent="Board" index="17"]
+visible = true

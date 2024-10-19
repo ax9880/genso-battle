@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://ui/StackBasedMenu.gd" type="Script" id=1]
-
-[node name="StackBasedMenu" type="Node"]
-script = ExtResource( 1 )
-
-[connection signal="tree_exiting" from="." to="." method="_on_StackBasedMenu_tree_exiting"]

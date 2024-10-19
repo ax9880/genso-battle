@@ -1,0 +1,111 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://ui/cutscenes/dialogue_message_container.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ui/cutscenes/dialogue_cutscene.gd" type="Script" id=3]
+[ext_resource path="res://chapter_data/to_old_hell.tres" type="Resource" id=4]
+[ext_resource path="res://ui/auto_fading_audio_stream_player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/music/Unlocated_Hell.mp3" type="AudioStream" id=6]
+[ext_resource path="res://ui/audio_button.tscn" type="PackedScene" id=7]
+
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="Theme" id=1]
+VScrollBar/styles/grabber = SubResource( 2 )
+VScrollBar/styles/grabber_highlight = SubResource( 3 )
+VScrollBar/styles/grabber_pressed = SubResource( 4 )
+VScrollBar/styles/scroll = SubResource( 5 )
+VScrollBar/styles/scroll_focus = SubResource( 6 )
+
+[node name="DialogueCutscene" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 3 )
+chapter_data = ExtResource( 4 )
+dialogue_message_container_packed_scene = ExtResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.207843, 0.0313726, 0.164706, 1 )
+
+[node name="Background" type="TextureRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = -480.0
+margin_right = 360.0
+margin_bottom = 480.0
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = -480.0
+margin_right = 360.0
+margin_bottom = 480.0
+custom_constants/margin_right = 50
+custom_constants/margin_top = 50
+custom_constants/margin_left = 50
+custom_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 670.0
+margin_bottom = 910.0
+custom_constants/separation = 48
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 620.0
+margin_bottom = 739.0
+size_flags_vertical = 3
+theme = SubResource( 1 )
+scroll_horizontal_enabled = false
+
+[node name="MessagesVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+margin_right = 620.0
+margin_bottom = 739.0
+rect_clip_content = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 16
+
+[node name="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MessagesVBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+margin_right = 620.0
+margin_bottom = 170.0
+
+[node name="SkipButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 7 )]
+margin_left = 380.0
+margin_top = 787.0
+margin_right = 620.0
+margin_bottom = 860.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+text = "SKIP"
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="AudioStreamPlayer" parent="." instance=ExtResource( 5 )]
+stream = ExtResource( 6 )
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_SkipButton_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

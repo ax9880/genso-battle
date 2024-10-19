@@ -1,16 +1,15 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://stats/Stats.gd" type="Script" id=1]
-
+[ext_resource path="res://stats/stats.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
 unit_name = "HANIWA_GUNNER"
 unit_type = "HANIWA"
 health_percentage = 0.54
-attack_percentage = 1.00302091474406
+attack_percentage = 1.00302
 defense_percentage = 0.50868
-spiritual_attack_percentage = 0.0111446768304896
+spiritual_attack_percentage = 0.0111447
 spiritual_defense_percentage = 1.413
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {

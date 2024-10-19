@@ -1,17 +1,16 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://stats/Stats.gd" type="Script" id=1]
-
+[ext_resource path="res://stats/stats.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
 unit_name = "DRACORIN"
 unit_type = "HANIWA"
 health_percentage = 0.648
-attack_percentage = 0.879707536808951
+attack_percentage = 0.879708
 defense_percentage = 0.6908
-spiritual_attack_percentage = 0.0195490563735322
-spiritual_defense_percentage = 1.91888888888889
+spiritual_attack_percentage = 0.0195491
+spiritual_defense_percentage = 1.91889
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }

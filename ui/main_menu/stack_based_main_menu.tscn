@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/stack_based_menu.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ui/main_menu/title_screen.tscn" type="PackedScene" id=2]
+
+[node name="StackBasedMainMenu" instance=ExtResource( 1 )]
+root_screen_node_path = NodePath("TitleScreen")
+
+[node name="TitleScreen" parent="." index="0" instance=ExtResource( 2 )]
+settings_scene = "res://ui/main_menu/settings_menu.tscn"
+credits_scene = "res://ui/main_menu/credits_menu.tscn"

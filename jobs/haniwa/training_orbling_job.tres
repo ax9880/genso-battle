@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=5 format=2]
+
+[ext_resource path="res://jobs/job.gd" type="Script" id=1]
+[ext_resource path="res://assets/enemies/orbling_haniwa_full.png" type="Texture" id=2]
+[ext_resource path="res://assets/enemies/orbling_haniwa.png" type="Texture" id=3]
+[ext_resource path="res://stats/TrainingOrblingStats.tres" type="Resource" id=4]
+
+[resource]
+script = ExtResource( 1 )
+stats = ExtResource( 4 )
+skills = [  ]
+job_name = "TRAINING_ORBLING"
+portrait = ExtResource( 3 )
+full_portrait = ExtResource( 2 )

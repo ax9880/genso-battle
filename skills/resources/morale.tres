@@ -1,0 +1,28 @@
+[gd_resource type="Resource" load_steps=5 format=2]
+
+[ext_resource path="res://skills/skill.gd" type="Script" id=1]
+[ext_resource path="res://status_effects/stats_modifiers/attack_bonus.tres" type="Resource" id=2]
+[ext_resource path="res://status_effects/stats_modifiers/defense_bonus.tres" type="Resource" id=3]
+[ext_resource path="res://skills/effects/antidote_skill_effect.tscn" type="PackedScene" id=4]
+
+[resource]
+script = ExtResource( 1 )
+skill_name = "MORALE"
+skill_type = 3
+area_of_effect = 3
+area_of_effect_size = 1
+activation_rate = 1.0
+is_pusher = false
+primary_power = 1.0
+primary_weapon_type = 0
+primary_attribute = 0
+secondary_power = 0.0
+secondary_weapon_type = 1
+secondary_attribute = 0
+absorb_rate = 0.0
+max_heal = 700
+status_effects = [ ExtResource( 2 ), ExtResource( 3 ) ]
+status_effect_infliction_rate = 1.0
+cured_status_effects = [  ]
+effect_scene = ExtResource( 4 )
+is_delayed = false

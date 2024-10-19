@@ -1,0 +1,632 @@
+[gd_scene load_steps=41 format=2]
+
+[ext_resource path="res://assets/fonts/Exo2-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://jobs/animal_spirit/yachie_job.tres" type="Resource" id=2]
+[ext_resource path="res://units/ui/activated_skill_margin_container.tscn" type="PackedScene" id=3]
+[ext_resource path="res://units/ui/damage_numbers.tscn" type="PackedScene" id=4]
+[ext_resource path="res://units/ui/death_particles.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/ui/unit_square_bg_2.png" type="Texture" id=6]
+[ext_resource path="res://assets/ui/unit_glow.png" type="Texture" id=7]
+[ext_resource path="res://assets/sfx/youkai_death.wav" type="AudioStream" id=8]
+[ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=9]
+[ext_resource path="res://assets/sfx/casino/shove2.wav" type="AudioStream" id=10]
+[ext_resource path="res://assets/sfx/casino/place10.wav" type="AudioStream" id=11]
+[ext_resource path="res://assets/ui/sword.png" type="Texture" id=12]
+[ext_resource path="res://assets/sfx/ceramic_drag_2.wav" type="AudioStream" id=13]
+[ext_resource path="res://assets/ui/letter_z.png" type="Texture" id=14]
+[ext_resource path="res://assets/enemies/orbling_dracorin.png" type="Texture" id=15]
+[ext_resource path="res://units/job.gd" type="Script" id=16]
+[ext_resource path="res://units/swap_area2d.gd" type="Script" id=17]
+[ext_resource path="res://units/unit.gd" type="Script" id=18]
+[ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=19]
+[ext_resource path="res://assets/ui/unit_player_border.png" type="Texture" id=20]
+[ext_resource path="res://assets/ui/red_bar_progress.png" type="Texture" id=21]
+[ext_resource path="res://assets/sfx/ceramic_drag_1.wav" type="AudioStream" id=22]
+[ext_resource path="res://assets/ui/hp_bar_bg.png" type="Texture" id=23]
+[ext_resource path="res://units/skill_applier.gd" type="Script" id=24]
+[ext_resource path="res://units/status_effects.gd" type="Script" id=25]
+[ext_resource path="res://units/hp_bar.gd" type="Script" id=26]
+[ext_resource path="res://units/status_effects_icons.gd" type="Script" id=27]
+
+[sub_resource type="Animation" id=7]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Control:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "appear"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 2 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_appear_animation_finished"
+} ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CanvasLayer/UnitName:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("CanvasLayer/UnitName:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "death"
+length = 2.0
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 2 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_death_animation_finished"
+} ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.8, 0.34902, 0.34902, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Control:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=12]
+resource_name = "hide name"
+tracks/0/type = "value"
+tracks/0/path = NodePath("CanvasLayer/UnitName:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CanvasLayer/UnitName:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=13]
+resource_name = "scale up and down"
+length = 0.6
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.1, 1.1 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "shake"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:rotation_degrees")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 5.0, -5.0, 0.0 ]
+}
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 32, 32 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 49, 49 )
+
+[sub_resource type="Animation" id=14]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Icon:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Icon:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Icon:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=15]
+resource_name = "show icon and fade"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Icon:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.5, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 0, 0, 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Icon:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Icon:rect_position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ), Vector2( 0, -40 ) ]
+}
+
+[sub_resource type="DynamicFont" id=8]
+font_data = ExtResource( 1 )
+
+[sub_resource type="AudioStreamRandomPitch" id=11]
+audio_stream = ExtResource( 22 )
+
+[sub_resource type="AudioStreamRandomPitch" id=10]
+audio_stream = ExtResource( 9 )
+
+[node name="Unit" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 9
+collision/safe_margin = 0.16
+script = ExtResource( 18 )
+damage_numbers_packed_scene = ExtResource( 4 )
+death_effect_packed_scene = ExtResource( 5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 7 )
+anims/appear = SubResource( 5 )
+anims/death = SubResource( 6 )
+"anims/hide name" = SubResource( 12 )
+"anims/scale up and down" = SubResource( 13 )
+anims/shake = SubResource( 9 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Job" type="Node" parent="."]
+script = ExtResource( 16 )
+job = ExtResource( 2 )
+level = 10
+
+[node name="SkillApplier" type="Node" parent="."]
+script = ExtResource( 24 )
+target_unit_path = NodePath("..")
+status_effect_node2d_path = NodePath("../Sprite/StatusEffects")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 6 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Glow" type="Sprite" parent="Sprite"]
+modulate = Color( 0.65098, 0.14902, 0.329412, 1 )
+show_behind_parent = true
+z_index = -1
+texture = ExtResource( 7 )
+
+[node name="Icon" type="Sprite" parent="Sprite"]
+texture = ExtResource( 15 )
+
+[node name="Border" type="Sprite" parent="Sprite"]
+texture = ExtResource( 20 )
+
+[node name="StatusEffects" type="Node2D" parent="Sprite"]
+z_index = 5
+script = ExtResource( 25 )
+
+[node name="FullSprite" type="Sprite" parent="."]
+visible = false
+
+[node name="SwapArea2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource( 17 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SwapArea2D"]
+visible = false
+shape = SubResource( 3 )
+disabled = true
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="SelectionArea2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+monitoring = false
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea2D"]
+visible = false
+shape = SubResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -48.0
+margin_top = -48.0
+margin_right = 49.0
+margin_bottom = 49.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="HpBar" type="TextureProgress" parent="Control"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = -22.0
+margin_right = 62.0
+margin_bottom = -15.0
+mouse_filter = 2
+value = 100.0
+texture_under = ExtResource( 23 )
+texture_progress = ExtResource( 21 )
+stretch_margin_left = 3
+stretch_margin_top = 2
+stretch_margin_right = 3
+stretch_margin_bottom = 2
+script = ExtResource( 26 )
+
+[node name="Tween" type="Tween" parent="Control/HpBar"]
+
+[node name="Attribute" type="TextureRect" parent="Control"]
+visible = false
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -21.0
+margin_top = -33.0
+margin_right = -9.0
+margin_bottom = -17.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="WeaponType" type="TextureRect" parent="Control"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -42.0
+margin_top = -16.0
+margin_right = 23.0
+margin_bottom = 49.0
+mouse_filter = 2
+texture = ExtResource( 12 )
+
+[node name="Container" type="MarginContainer" parent="Control"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -43.5
+margin_top = -80.5
+margin_right = 56.5
+margin_bottom = 19.5
+rect_min_size = Vector2( 100, 100 )
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TurnCount" type="Label" parent="Control/Container"]
+margin_top = 22.0
+margin_right = 100.0
+margin_bottom = 77.0
+grow_horizontal = 2
+grow_vertical = 2
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 19 )
+text = "99"
+valign = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CanvasLayer" type="Node2D" parent="."]
+z_index = 10
+
+[node name="StatusEffectsIcons" type="Control" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_right = 64.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 48, 48 )
+mouse_filter = 2
+script = ExtResource( 27 )
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/StatusEffectsIcons"]
+visible = false
+modulate = Color( 0, 0, 0, 0 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_right = 48.0
+margin_bottom = 48.0
+mouse_filter = 2
+texture = ExtResource( 14 )
+expand = true
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/StatusEffectsIcons"]
+anims/RESET = SubResource( 14 )
+"anims/show icon and fade" = SubResource( 15 )
+
+[node name="ActivatedSkillMarginContainer" parent="CanvasLayer" instance=ExtResource( 3 )]
+visible = false
+margin_left = -22.0
+margin_right = 22.0
+margin_bottom = 59.0
+mouse_filter = 2
+
+[node name="UnitName" type="Label" parent="CanvasLayer"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -49.0
+margin_top = -21.5
+margin_right = 49.0
+margin_bottom = 21.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 8 )
+text = "HANIWA_WARRIOR"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="LongPressTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="Sound" type="Node" parent="."]
+
+[node name="AppearAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 10 )
+bus = "Sound effects"
+
+[node name="DeathAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 8 )
+volume_db = 3.0
+bus = "Sound effects"
+
+[node name="PickUpAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 13 )
+volume_db = 16.0
+bus = "Sound effects"
+
+[node name="SwapAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = SubResource( 11 )
+volume_db = 12.0
+bus = "Sound effects"
+
+[node name="SnapAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = SubResource( 10 )
+volume_db = 6.0
+bus = "Sound effects"
+
+[node name="SkillActivationAudio" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource( 11 )
+bus = "Sound effects"
+
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
+[connection signal="health_changed" from="Job" to="Control/HpBar" method="_on_Job_health_changed"]
+[connection signal="input_event" from="SelectionArea2D" to="." method="_on_SelectionArea2D_input_event"]
+[connection signal="mouse_entered" from="SelectionArea2D" to="." method="_on_SelectionArea2D_mouse_entered"]
+[connection signal="mouse_exited" from="SelectionArea2D" to="." method="_on_SelectionArea2D_mouse_exited"]
+[connection signal="timeout" from="LongPressTimer" to="." method="_on_LongPressTimer_timeout"]

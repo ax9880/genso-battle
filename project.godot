@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Action",
 "language": "GDScript",
-"path": "res://units/ai/Action.gd"
+"path": "res://units/ai/action.gd"
 }, {
 "base": "Line2D",
 "class": "AntialiasedLine2D",
@@ -32,137 +32,137 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Attack",
 "language": "GDScript",
-"path": "res://board/Attack.gd"
+"path": "res://board/attack.gd"
 }, {
 "base": "Node2D",
 "class": "Attacker",
 "language": "GDScript",
-"path": "res://board/Attacker.gd"
+"path": "res://board/attacker.gd"
 }, {
 "base": "Button",
 "class": "AudioButton",
 "language": "GDScript",
-"path": "res://ui/AudioButton.gd"
+"path": "res://ui/audio_button.gd"
 }, {
 "base": "Resource",
 "class": "BattleInfo",
 "language": "GDScript",
-"path": "res://chapter_data/BattleInfo.gd"
+"path": "res://chapter_data/battle_info.gd"
 }, {
 "base": "Node2D",
 "class": "Board",
 "language": "GDScript",
-"path": "res://board/Board.gd"
+"path": "res://board/board.gd"
 }, {
 "base": "Reference",
 "class": "BoardUtils",
 "language": "GDScript",
-"path": "res://board/BoardUtils.gd"
+"path": "res://board/board_utils.gd"
 }, {
 "base": "Area2D",
 "class": "Cell",
 "language": "GDScript",
-"path": "res://board/Cell.gd"
+"path": "res://board/cell.gd"
 }, {
 "base": "Resource",
 "class": "ChapterData",
 "language": "GDScript",
-"path": "res://chapter_data/ChapterData.gd"
+"path": "res://chapter_data/chapter_data.gd"
 }, {
 "base": "Resource",
 "class": "ChapterList",
 "language": "GDScript",
-"path": "res://chapter_data/ChapterList.gd"
+"path": "res://chapter_data/chapter_list.gd"
 }, {
 "base": "Node",
 "class": "ChapterSaveData",
 "language": "GDScript",
-"path": "res://save_data/ChapterSaveData.gd"
+"path": "res://save_data/chapter_save_data.gd"
 }, {
 "base": "Unit",
 "class": "Enemy",
 "language": "GDScript",
-"path": "res://units/Enemy.gd"
+"path": "res://units/enemy.gd"
 }, {
 "base": "Node2D",
 "class": "Grid",
 "language": "GDScript",
-"path": "res://board/Grid.gd"
+"path": "res://board/grid.gd"
 }, {
 "base": "Resource",
 "class": "Job",
 "language": "GDScript",
-"path": "res://jobs/Job.gd"
+"path": "res://jobs/job.gd"
 }, {
 "base": "Reference",
 "class": "Pincer",
 "language": "GDScript",
-"path": "res://board/Pincer.gd"
+"path": "res://board/pincer.gd"
 }, {
 "base": "Node",
 "class": "Pincerer",
 "language": "GDScript",
-"path": "res://board/Pincerer.gd"
+"path": "res://board/pincerer.gd"
 }, {
 "base": "Reference",
 "class": "PossiblePincer",
 "language": "GDScript",
-"path": "res://units/ai/PossiblePincer.gd"
+"path": "res://units/ai/possible_pincer.gd"
 }, {
-"base": "Node",
+"base": "Reference",
 "class": "Pusher",
 "language": "GDScript",
-"path": "res://board/Pusher.gd"
+"path": "res://board/pusher.gd"
 }, {
 "base": "Resource",
 "class": "SaveData",
 "language": "GDScript",
-"path": "res://save_data/SaveData.gd"
+"path": "res://save_data/save_data.gd"
 }, {
 "base": "Resource",
 "class": "Skill",
 "language": "GDScript",
-"path": "res://skills/Skill.gd"
+"path": "res://skills/skill.gd"
 }, {
 "base": "Node2D",
 "class": "SkillEffect",
 "language": "GDScript",
-"path": "res://skills/effects/SkillEffect.gd"
+"path": "res://skills/effects/skill_effect.gd"
 }, {
 "base": "Control",
 "class": "StackBasedMenuScreen",
 "language": "GDScript",
-"path": "res://ui/StackBasedMenuScreen.gd"
+"path": "res://ui/stack_based_menu_screen.gd"
 }, {
 "base": "Resource",
 "class": "Stats",
 "language": "GDScript",
-"path": "res://stats/Stats.gd"
+"path": "res://stats/stats.gd"
 }, {
 "base": "StatusEffect",
 "class": "StatsModifier",
 "language": "GDScript",
-"path": "res://status_effects/stats_modifiers/StatsModifier.gd"
+"path": "res://status_effects/stats_modifiers/stats_modifier.gd"
 }, {
 "base": "Resource",
 "class": "StatusEffect",
 "language": "GDScript",
-"path": "res://status_effects/StatusEffect.gd"
+"path": "res://status_effects/status_effect.gd"
 }, {
 "base": "Reference",
 "class": "SupportDialogueData",
 "language": "GDScript",
-"path": "res://ui/cutscenes/SupportDialogueData.gd"
+"path": "res://ui/cutscenes/support_dialogue_data.gd"
 }, {
 "base": "Node2D",
 "class": "Trap",
 "language": "GDScript",
-"path": "res://board/Trap.gd"
+"path": "res://board/trap.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "Unit",
 "language": "GDScript",
-"path": "res://units/Unit.gd"
+"path": "res://units/unit.gd"
 } ]
 _global_script_class_icons={
 "Action": "",
@@ -201,17 +201,17 @@ _global_script_class_icons={
 [application]
 
 config/name="Genso Battle"
-run/main_scene="res://battles/introduction/GreavesOfClay.tscn"
+run/main_scene="res://battles/introduction/greaves_of_clay.tscn"
 boot_splash/image="res://assets/ui/splash_screen.png"
 config/icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"
 
 [autoload]
 
-Utils="*res://Utils.gd"
-Enums="*res://Enums.gd"
-Loader="*res://Loader.gd"
-GameData="*res://save_data/GameData.gd"
+Utils="*res://utils.gd"
+Enums="*res://enums.gd"
+Loader="*res://loader.gd"
+GameData="*res://save_data/game_data.gd"
 AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
 
 [debug]

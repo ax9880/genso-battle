@@ -1,0 +1,122 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://ui/pre_battle_menu/unit_stats_container.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ui/pre_battle_menu/unit_icon.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/ui/red_panel_border.png" type="Texture" id=4]
+[ext_resource path="res://assets/sfx/ceramic_place_1.wav" type="AudioStream" id=5]
+[ext_resource path="res://ui/pre_battle_menu/unit_item_container.gd" type="Script" id=6]
+[ext_resource path="res://ui/audio_button.tscn" type="PackedScene" id=7]
+
+[sub_resource type="Animation" id=1]
+resource_name = "highlight"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("UnitIcon/TextureRect2:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("UnitIcon/TextureRect2:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("UnitIcon/TextureRect2:rect_scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
+}
+
+[node name="UnitItemContainer" type="HBoxContainer"]
+anchor_right = 1.0
+margin_bottom = 100.0
+mouse_filter = 2
+size_flags_horizontal = 3
+theme = ExtResource( 1 )
+custom_constants/separation = 16
+script = ExtResource( 6 )
+
+[node name="UnitIcon" parent="." instance=ExtResource( 3 )]
+margin_right = 100.0
+margin_bottom = 101.0
+
+[node name="TextureRect2" type="TextureRect" parent="UnitIcon"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -50.0
+margin_top = -50.0
+margin_right = 50.0
+margin_bottom = 50.0
+rect_pivot_offset = Vector2( 50, 50 )
+mouse_filter = 2
+texture = ExtResource( 4 )
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 116.0
+margin_right = 584.0
+margin_bottom = 101.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 468.0
+margin_bottom = 29.0
+
+[node name="NameLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_right = 130.0
+margin_bottom = 29.0
+custom_colors/font_color = Color( 1, 0.976471, 0.443137, 1 )
+text = "UNIT_NAME"
+
+[node name="UnitStatsContainer" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 37.0
+margin_right = 468.0
+margin_bottom = 101.0
+
+[node name="ChangeButton" parent="." instance=ExtResource( 7 )]
+margin_left = 600.0
+margin_right = 720.0
+margin_bottom = 101.0
+rect_min_size = Vector2( 120, 0 )
+text = "CHANGE"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/highlight = SubResource( 1 )
+
+[node name="HighlightAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+bus = "Sound effects"
+
+[connection signal="gui_input" from="UnitIcon" to="." method="_on_UnitIcon_gui_input"]
+[connection signal="mouse_entered" from="UnitIcon" to="." method="_on_UnitIcon_mouse_entered"]
+[connection signal="mouse_exited" from="UnitIcon" to="." method="_on_UnitIcon_mouse_exited"]
+[connection signal="pressed" from="ChangeButton" to="." method="_on_ChangeButton_pressed"]

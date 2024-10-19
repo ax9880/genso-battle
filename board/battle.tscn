@@ -1,0 +1,584 @@
+[gd_scene load_steps=41 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://board/cell.tscn" type="PackedScene" id=2]
+[ext_resource path="res://board/highlights/trail2d.tscn" type="PackedScene" id=3]
+[ext_resource path="res://board/highlights/chain_previewer.tscn" type="PackedScene" id=4]
+[ext_resource path="res://board/highlights/pincer_highlight.tscn" type="PackedScene" id=5]
+[ext_resource path="res://board/board.gd" type="Script" id=6]
+[ext_resource path="res://board/battle.gd" type="Script" id=7]
+[ext_resource path="res://assets/ui/yellow_bar_progress_big.png" type="Texture" id=8]
+[ext_resource path="res://assets/ui/big_bar_progress_bg.png" type="Texture" id=12]
+[ext_resource path="res://board/pincer_executor.gd" type="Script" id=15]
+[ext_resource path="res://board/pincerer.gd" type="Script" id=16]
+[ext_resource path="res://board/grid.gd" type="Script" id=17]
+[ext_resource path="res://board/pusher.gd" type="Script" id=18]
+[ext_resource path="res://assets/ui/grid.png" type="Texture" id=19]
+[ext_resource path="res://assets/ui/bright_red_panel_transparent.png" type="Texture" id=20]
+[ext_resource path="res://assets/music/Unlocated_Hell.mp3" type="AudioStream" id=21]
+[ext_resource path="res://assets/ui/city_bg.png" type="Texture" id=22]
+[ext_resource path="res://ui/drag_mode_option_button.tscn" type="PackedScene" id=23]
+[ext_resource path="res://board/attacker.tscn" type="PackedScene" id=24]
+[ext_resource path="res://units/unit.tscn" type="PackedScene" id=25]
+[ext_resource path="res://ui/defeat_screen.tscn" type="PackedScene" id=26]
+[ext_resource path="res://ui/victory_screen.tscn" type="PackedScene" id=27]
+[ext_resource path="res://ui/view_unit_menu.tscn" type="PackedScene" id=28]
+[ext_resource path="res://assets/sfx/bells.wav" type="AudioStream" id=29]
+[ext_resource path="res://assets/sfx/spell_1.wav" type="AudioStream" id=30]
+[ext_resource path="res://assets/fonts/CinzelDecorativeBold40.tres" type="DynamicFont" id=31]
+[ext_resource path="res://board/highlights/delayed_skill_highlighter.tscn" type="PackedScene" id=32]
+[ext_resource path="res://ui/audio_button.tscn" type="PackedScene" id=33]
+[ext_resource path="res://assets/sfx/chess_place_2.wav" type="AudioStream" id=34]
+[ext_resource path="res://board/highlights/trails.gd" type="Script" id=35]
+[ext_resource path="res://assets/ui/ui_icons.png" type="Texture" id=36]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 324, 8 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 12, 399 )
+
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 0, 0.237 )
+colors = PoolColorArray( 0, 0, 0, 0, 0.65098, 0.14902, 0.329412, 1 )
+
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0, 0.237 )
+colors = PoolColorArray( 0, 0, 0, 0, 0.780392, 0.968627, 0.94902, 1 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 256, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=8]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 0, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 320, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 128, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 5
+atlas = ExtResource( 36 )
+region = Rect2( 64, 0, 64, 64 )
+
+[node name="Battle" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource( 1 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_lock_": true
+}
+next_scene = "res://ui/cutscenes/PostBattleScriptCutscene.tscn"
+enemy_phase_container_fade_time_seconds = 0.5
+view_unit_menu_packed_scene = ExtResource( 28 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 720.0
+margin_bottom = 960.0
+mouse_filter = 2
+color = Color( 0.207843, 0.0313726, 0.164706, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 720.0
+margin_bottom = 960.0
+mouse_filter = 2
+texture = ExtResource( 22 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+margin_right = 720.0
+margin_bottom = 960.0
+mouse_filter = 2
+color = Color( 0.207843, 0.0313726, 0.164706, 0.752941 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Board" type="Node2D" parent="."]
+position = Vector2( 59, 128 )
+script = ExtResource( 6 )
+
+[node name="Grid" type="Node2D" parent="Board"]
+script = ExtResource( 17 )
+__meta__ = {
+"_edit_lock_": true
+}
+cell_packed_scene = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="Board/Grid"]
+texture = ExtResource( 19 )
+centered = false
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Cells" type="Node2D" parent="Board/Grid"]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Pincerer" type="Node" parent="Board"]
+script = ExtResource( 16 )
+
+[node name="Pusher" type="Node" parent="Board"]
+script = ExtResource( 18 )
+
+[node name="EnemyAppearanceTimer" type="Timer" parent="Board"]
+wait_time = 0.3
+one_shot = true
+
+[node name="PlayerAppearanceTimer" type="Timer" parent="Board"]
+wait_time = 0.5
+one_shot = true
+
+[node name="DragTimer" type="Timer" parent="Board"]
+wait_time = 4.0
+one_shot = true
+
+[node name="PlayerSkipTurnTimer" type="Timer" parent="Board"]
+one_shot = true
+
+[node name="StatusEffectIconAnimationTimer" type="Timer" parent="Board"]
+autostart = true
+
+[node name="UpperBounds" type="StaticBody2D" parent="Board"]
+position = Vector2( 301, -8 )
+collision_mask = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Board/UpperBounds"]
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LowerBounds" type="StaticBody2D" parent="Board"]
+position = Vector2( 301, 810 )
+collision_mask = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Board/LowerBounds"]
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="RightBounds" type="StaticBody2D" parent="Board"]
+position = Vector2( 614, 401 )
+collision_mask = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Board/RightBounds"]
+shape = SubResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LeftBounds" type="StaticBody2D" parent="Board"]
+position = Vector2( -12, 401 )
+collision_mask = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Board/LeftBounds"]
+shape = SubResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Traps" type="Node2D" parent="Board"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ChainPreviewer" parent="Board" instance=ExtResource( 4 )]
+
+[node name="Trails" type="Node2D" parent="Board"]
+script = ExtResource( 35 )
+trail_2d_packed_scene = ExtResource( 3 )
+player_trail_gradient = SubResource( 3 )
+enemy_trail_gradient = SubResource( 4 )
+
+[node name="EnemyPhases" type="Node2D" parent="Board"]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Phase1" type="Node2D" parent="Board/EnemyPhases"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Phase2" type="Node2D" parent="Board/EnemyPhases"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Phase3" type="Node2D" parent="Board/EnemyPhases"]
+visible = false
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Phase4" type="Node2D" parent="Board/EnemyPhases"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Phase5" type="Node2D" parent="Board/EnemyPhases"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="PlayerUnits" type="Node2D" parent="Board"]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Unit" parent="Board/PlayerUnits" instance=ExtResource( 25 )]
+position = Vector2( 251, 456 )
+
+[node name="Unit2" parent="Board/PlayerUnits" instance=ExtResource( 25 )]
+position = Vector2( 354, 455 )
+
+[node name="Unit3" parent="Board/PlayerUnits" instance=ExtResource( 25 )]
+position = Vector2( 453, 552 )
+
+[node name="Unit4" parent="Board/PlayerUnits" instance=ExtResource( 25 )]
+position = Vector2( 149, 549 )
+
+[node name="Unit5" parent="Board/PlayerUnits" instance=ExtResource( 25 )]
+position = Vector2( 156, 648 )
+
+[node name="Unit6" parent="Board/PlayerUnits" instance=ExtResource( 25 )]
+position = Vector2( 449, 649 )
+
+[node name="DebugUnits" type="Node2D" parent="Board"]
+visible = false
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="DelayedSkillHighlighter" parent="Board" instance=ExtResource( 32 )]
+z_index = 2
+cell_highlight_color = Color( 0.780392, 0.968627, 0.94902, 0.752941 )
+
+[node name="Attacker" parent="Board" instance=ExtResource( 24 )]
+z_index = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="PincerExecutor" type="Node2D" parent="Board"]
+z_index = 1
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_lock_": true
+}
+chain_previewer_packed_scene = ExtResource( 4 )
+pincer_highlight_packed_scene = ExtResource( 5 )
+
+[node name="NoSkillsActivatedTimer" type="Timer" parent="Board/PincerExecutor"]
+wait_time = 0.3
+one_shot = true
+
+[node name="SkillActivationTimer" type="Timer" parent="Board/PincerExecutor"]
+wait_time = 0.25
+
+[node name="BeforeSkillActivationPhaseFinishesTimer" type="Timer" parent="Board/PincerExecutor"]
+
+[node name="DeathAnimationTimer" type="Timer" parent="Board/PincerExecutor"]
+wait_time = 0.5
+
+[node name="StatusEffectTimer" type="Timer" parent="Board/PincerExecutor"]
+one_shot = true
+
+[node name="PoisonAudio" type="AudioStreamPlayer" parent="Board/PincerExecutor"]
+stream = ExtResource( 30 )
+bus = "Sound effects"
+
+[node name="RegenerateAudio" type="AudioStreamPlayer" parent="Board/PincerExecutor"]
+stream = ExtResource( 29 )
+bus = "Sound effects"
+
+[node name="Tween" type="Tween" parent="Board"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+margin_right = 720.0
+margin_bottom = 120.0
+mouse_filter = 2
+size_flags_vertical = 0
+theme = ExtResource( 1 )
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 700.0
+margin_bottom = 100.0
+custom_constants/separation = 16
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer"]
+margin_right = 250.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 250, 80 )
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer"]
+margin_right = 250.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = SubResource( 9 )
+expand = true
+
+[node name="TextureProgress" type="TextureProgress" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 40.0
+margin_top = 8.0
+margin_right = 240.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 200, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+value = 50.0
+texture_under = ExtResource( 12 )
+texture_progress = ExtResource( 8 )
+nine_patch_stretch = true
+stretch_margin_left = 10
+stretch_margin_top = 8
+stretch_margin_right = 10
+stretch_margin_bottom = 8
+
+[node name="Tween" type="Tween" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2/TextureProgress"]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer"]
+margin_top = 40.0
+margin_right = 250.0
+margin_bottom = 72.0
+custom_constants/separation = -4
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = SubResource( 8 )
+expand = true
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 28.0
+margin_right = 60.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = SubResource( 5 )
+expand = true
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 56.0
+margin_right = 88.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = SubResource( 6 )
+expand = true
+
+[node name="TextureRect4" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 84.0
+margin_right = 116.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = SubResource( 5 )
+expand = true
+
+[node name="TextureRect5" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 112.0
+margin_right = 144.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = SubResource( 7 )
+expand = true
+
+[node name="TextureRect6" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 140.0
+margin_right = 172.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = SubResource( 5 )
+expand = true
+
+[node name="TextureRect7" type="TextureRect" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 168.0
+margin_right = 200.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = SubResource( 8 )
+expand = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer"]
+margin_top = 80.0
+margin_right = 250.0
+margin_bottom = 80.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer"]
+margin_left = 266.0
+margin_right = 470.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+custom_constants/separation = -12
+
+[node name="TurnLabel" type="Label" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2"]
+margin_right = 204.0
+margin_bottom = 29.0
+text = "Turn"
+
+[node name="TurnCountLabel" type="Label" parent="CanvasLayer/MarginContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 21.0
+margin_right = 204.0
+margin_bottom = 76.0
+size_flags_vertical = 6
+custom_fonts/font = ExtResource( 31 )
+text = "1"
+
+[node name="DragModeOptionButton" parent="CanvasLayer/MarginContainer/HBoxContainer" instance=ExtResource( 23 )]
+margin_left = 486.0
+margin_right = 560.0
+
+[node name="GiveUpButton" parent="CanvasLayer/MarginContainer/HBoxContainer" instance=ExtResource( 33 )]
+margin_left = 576.0
+margin_right = 680.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 100, 0 )
+text = "GIVE_UP"
+
+[node name="EnemyPhaseCenterContainer" type="CenterContainer" parent="CanvasLayer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/EnemyPhaseCenterContainer"]
+margin_left = 200.0
+margin_top = 448.0
+margin_right = 520.0
+margin_bottom = 512.0
+rect_min_size = Vector2( 320, 64 )
+texture = ExtResource( 20 )
+patch_margin_left = 26
+patch_margin_top = 29
+patch_margin_right = 27
+patch_margin_bottom = 19
+
+[node name="Label" type="Label" parent="CanvasLayer/EnemyPhaseCenterContainer/NinePatchRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+text = "BATTLE 1/5"
+align = 1
+valign = 1
+
+[node name="Tween" type="Tween" parent="CanvasLayer/EnemyPhaseCenterContainer"]
+
+[node name="DefeatScreen" parent="CanvasLayer" instance=ExtResource( 26 )]
+visible = false
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 720.0
+margin_bottom = 960.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="VictoryScreen" parent="CanvasLayer" instance=ExtResource( 27 )]
+visible = false
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 720.0
+margin_bottom = 960.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ViewUnitMenuCanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Tween" type="Tween" parent="ViewUnitMenuCanvasLayer"]
+
+[node name="SelectUnitAudio" type="AudioStreamPlayer" parent="ViewUnitMenuCanvasLayer"]
+stream = ExtResource( 34 )
+bus = "Sound effects"
+
+[node name="BattleTheme" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 21 )
+volume_db = 1.0
+bus = "Music"
+
+[connection signal="defeat" from="Board" to="." method="_on_Board_defeat"]
+[connection signal="drag_timer_reset" from="Board" to="." method="_on_Board_drag_timer_reset"]
+[connection signal="drag_timer_started" from="Board" to="." method="_on_Board_drag_timer_started"]
+[connection signal="drag_timer_stopped" from="Board" to="." method="_on_Board_drag_timer_stopped"]
+[connection signal="enemies_appeared" from="Board" to="." method="_on_Board_enemies_appeared"]
+[connection signal="enemy_phase_started" from="Board" to="." method="_on_Board_enemy_phase_started"]
+[connection signal="player_turn_started" from="Board" to="." method="_on_Board_player_turn_started"]
+[connection signal="tree_exiting" from="Board" to="Board" method="_on_Board_tree_exiting"]
+[connection signal="unit_selected_for_view" from="Board" to="." method="_on_Board_unit_selected_for_view"]
+[connection signal="victory" from="Board" to="." method="_on_Board_victory"]
+[connection signal="timeout" from="Board/DragTimer" to="Board" method="_on_DragTimer_timeout"]
+[connection signal="timeout" from="Board/StatusEffectIconAnimationTimer" to="Board" method="_on_StatusEffectIconAnimationTimer_timeout"]
+[connection signal="tree_exiting" from="Board/PincerExecutor" to="Board/PincerExecutor" method="_on_PincerExecutor_tree_exiting"]
+[connection signal="timeout" from="Board/PincerExecutor/SkillActivationTimer" to="Board/PincerExecutor" method="_on_SkillActivationTimer_timeout"]
+[connection signal="timeout" from="Board/PincerExecutor/DeathAnimationTimer" to="Board/PincerExecutor" method="_on_DeathAnimationTimer_timeout"]
+[connection signal="drag_mode_changed" from="CanvasLayer/MarginContainer/HBoxContainer/DragModeOptionButton" to="." method="_on_DragModeOptionButton_drag_mode_changed"]
+[connection signal="pressed" from="CanvasLayer/MarginContainer/HBoxContainer/GiveUpButton" to="." method="_on_GiveUpButton_pressed"]
+[connection signal="quit_button_pressed" from="CanvasLayer/DefeatScreen" to="." method="_on_DefeatScreen_quit_button_pressed"]
+[connection signal="try_again_button_pressed" from="CanvasLayer/DefeatScreen" to="." method="_on_DefeatScreen_try_again_button_pressed"]
+[connection signal="continue_button_pressed" from="CanvasLayer/VictoryScreen" to="." method="_on_VictoryScreen_continue_button_pressed"]

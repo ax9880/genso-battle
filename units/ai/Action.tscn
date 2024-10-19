@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://units/ai/Action.gd" type="Script" id=3]
-
-[node name="Action" type="Node"]
-script = ExtResource( 3 )
-__meta__ = {
-"_editor_description_": "Should have Conditions as children."
-}

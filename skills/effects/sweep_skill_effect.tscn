@@ -1,0 +1,12 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/sfx/wind_whoosh.wav" type="AudioStream" id=1]
+[ext_resource path="res://skills/effects/sweep_animation.tscn" type="PackedScene" id=2]
+[ext_resource path="res://skills/effects/static_skill_effect.tscn" type="PackedScene" id=3]
+
+[node name="StaticSkillEffect" instance=ExtResource( 3 )]
+animation_packed_scene = ExtResource( 2 )
+
+[node name="SkillSound" parent="." index="2"]
+stream = ExtResource( 1 )
+volume_db = 12.0

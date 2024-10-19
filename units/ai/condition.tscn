@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://units/ai/condition.gd" type="Script" id=1]
+
+[node name="Condition" type="Node"]
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "To execute condition every turn:
+- Set offset to 1 and steps to 1
+
+To execute condition in turn 1:
+- Set offset to 1 and steps to 0"
+}

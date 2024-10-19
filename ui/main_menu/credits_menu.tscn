@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://theme.tres" type="Theme" id=1]
+[ext_resource path="res://ui/main_menu/credits_menu.gd" type="Script" id=2]
+[ext_resource path="res://ui/audio_button.tscn" type="PackedScene" id=3]
+
+[node name="CreditsMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.207843, 0.0313726, 0.164706, 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+custom_constants/margin_right = 50
+custom_constants/margin_top = 50
+custom_constants/margin_left = 50
+custom_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 670.0
+margin_bottom = 910.0
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+margin_right = 620.0
+margin_bottom = 775.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "illusorybread: Programming, UI, sound effects
+Manwad: Writing
+Panchamon: Character art
+Saishoo: Music
+
+Florentine24 palette by Haboo
+Kenney Particles Pack
+Sounds from freesound.org: InspectorJ, Barone026, Timbre, opticaillusions, cedarstudios, Bane_Sound, Rock Savage, adambar, EminYILDIRIM, lukabea, kessir, Kinoton, Clearwavsound
+
+Sounds from Duelyst
+
+Additional Thanks:
+Terra Battle wiki editors & Youtube uploaders
+Mistwalker team (unofficially, of course)
+
+"
+align = 1
+autowrap = true
+
+[node name="ReturnButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 3 )]
+margin_left = 190.0
+margin_top = 783.0
+margin_right = 430.0
+margin_bottom = 860.0
+size_flags_horizontal = 4
+text = "RETURN"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton" to="." method="_on_ReturnButton_pressed"]
