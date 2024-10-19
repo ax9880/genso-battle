@@ -2,7 +2,7 @@
 
 [ext_resource path="res://assets/player/eagle_1_full.png" type="Texture" id=1]
 [ext_resource path="res://assets/player/eagle_1.png" type="Texture" id=2]
-[ext_resource path="res://stats/animal_spirit/EagleSpiritStats.tres" type="Resource" id=3]
+[ext_resource path="res://stats/animal_spirit/eagle_spirit_stats.tres" type="Resource" id=3]
 [ext_resource path="res://skills/resources/circle_slash.tres" type="Resource" id=4]
 [ext_resource path="res://jobs/job.gd" type="Script" id=5]
 

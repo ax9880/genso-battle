@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://stats/stats.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+unit_name = "EVIL_SPIRIT"
+unit_type = "SOUL"
+health_percentage = 4.8
+attack_percentage = 2.07349054912841
+defense_percentage = 0.8792
+spiritual_attack_percentage = 2.07349054912841
+spiritual_defense_percentage = 0.8792
+status_ailment_vulnerability = 1
+status_ailment_vulnerabilities = {
+}
+same_attribute_resistance = 0
+attribute = 0
+weapon_type = 3
+max_turn_counter = 1
+can_randomize_turn_counter = 0
+movement_range = 4
+skill_activation_rate_modifier = 0.0

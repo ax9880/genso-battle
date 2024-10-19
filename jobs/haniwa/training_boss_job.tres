@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=4 format=2]
 
-[ext_resource path="res://stats/TrainingBoss.tres" type="Resource" id=1]
+[ext_resource path="res://stats/training_boss_stats.tres" type="Resource" id=1]
 [ext_resource path="res://assets/enemies/big_mayumi.png" type="Texture" id=2]
 [ext_resource path="res://jobs/job.gd" type="Script" id=3]
 
