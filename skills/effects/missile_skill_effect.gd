@@ -1,5 +1,6 @@
 extends SkillEffect
 
+
 export(PackedScene) var particle_arc_scene: PackedScene
 export(PackedScene) var hit_effect_packed_scene: PackedScene
 
@@ -24,7 +25,7 @@ func _start(unit: Unit, skill: Skill, target_cells: Array) -> void:
 
 
 # Instance heal particles / instance the next effect on arrival
-# It should free itself oncen it's done
+# It should free itself once it's done
 func _on_ParticleArc_target_reached(unit: Unit, skill: Skill, target_cell: Cell) -> void:
 	var hit_effect: Node2D = hit_effect_packed_scene.instance()
 	

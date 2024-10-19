@@ -2,17 +2,17 @@ extends AnimatedSprite
 
 export(float) var float_duration_seconds: float = 0.65
 
-var random: RandomNumberGenerator = RandomNumberGenerator.new()
+var _random: RandomNumberGenerator = RandomNumberGenerator.new()
 
 
 func _ready() -> void:
-	random.randomize()
+	_random.randomize()
 	
 	frame = 0
 	play("default")
-	rotation_degrees = random.randf_range(0, 360)
+	rotation_degrees = _random.randf_range(0, 360)
 	
-	if random.randf() < 0.5:
+	if _random.randf() < 0.5:
 		flip_h = true
 
 
