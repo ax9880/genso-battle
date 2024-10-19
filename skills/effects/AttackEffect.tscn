@@ -1,44 +1,44 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://skills/AttackEffect.gd" type="Script" id=2]
-[ext_resource path="res://assets/vfx/hit_cross.png" type="Texture" id=3]
+[ext_resource path="res://skills/effects/AttackEffect.gd" type="Script" id=1]
+[ext_resource path="res://assets/vfx/hit_cross.png" type="Texture" id=2]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 blend_mode = 1
 
 [sub_resource type="AtlasTexture" id=2]
 flags = 5
-atlas = ExtResource( 3 )
+atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 512, 512 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 5
-atlas = ExtResource( 3 )
+atlas = ExtResource( 2 )
 region = Rect2( 512, 0, 512, 512 )
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 5
-atlas = ExtResource( 3 )
+atlas = ExtResource( 2 )
 region = Rect2( 1024, 0, 512, 512 )
 
 [sub_resource type="AtlasTexture" id=5]
 flags = 5
-atlas = ExtResource( 3 )
+atlas = ExtResource( 2 )
 region = Rect2( 0, 512, 512, 512 )
 
 [sub_resource type="AtlasTexture" id=6]
 flags = 5
-atlas = ExtResource( 3 )
+atlas = ExtResource( 2 )
 region = Rect2( 512, 512, 512, 512 )
 
 [sub_resource type="AtlasTexture" id=7]
 flags = 5
-atlas = ExtResource( 3 )
+atlas = ExtResource( 2 )
 region = Rect2( 1024, 512, 512, 512 )
 
 [sub_resource type="AtlasTexture" id=9]
 flags = 5
-atlas = ExtResource( 3 )
+atlas = ExtResource( 2 )
 region = Rect2( 0, 1024, 512, 512 )
 
 [sub_resource type="SpriteFrames" id=8]
@@ -56,6 +56,6 @@ scale = Vector2( 0.175, 0.175 )
 frames = SubResource( 8 )
 frame = 6
 playing = true
-script = ExtResource( 2 )
+script = ExtResource( 1 )
 
 [connection signal="animation_finished" from="." to="." method="_on_AttackEffect_animation_finished"]

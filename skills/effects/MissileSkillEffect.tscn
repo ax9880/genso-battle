@@ -2,8 +2,8 @@
 
 [ext_resource path="res://skills/effects/SkillEffect.tscn" type="PackedScene" id=1]
 [ext_resource path="res://skills/effects/MissileSkillEffect.gd" type="Script" id=2]
-[ext_resource path="res://skills/HealingParticleArc.tscn" type="PackedScene" id=3]
-[ext_resource path="res://skills/HealParticles.tscn" type="PackedScene" id=4]
+[ext_resource path="res://skills/effects/HealingParticleArc.tscn" type="PackedScene" id=3]
+[ext_resource path="res://skills/effects/HealParticles.tscn" type="PackedScene" id=4]
 
 [node name="MissileSkillEffect" instance=ExtResource( 1 )]
 script = ExtResource( 2 )

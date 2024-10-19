@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://skills/ParticleArc.tscn" type="PackedScene" id=1]
-[ext_resource path="res://skills/AntidoteParticles.tscn" type="PackedScene" id=2]
+[ext_resource path="res://skills/effects/ParticleArc.tscn" type="PackedScene" id=1]
+[ext_resource path="res://skills/effects/AntidoteParticles.tscn" type="PackedScene" id=2]
 
 [node name="ParticleArc" instance=ExtResource( 1 )]
 particles_node_path = NodePath("AntidoteParticles")

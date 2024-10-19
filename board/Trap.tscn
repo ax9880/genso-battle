@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://board/Trap.gd" type="Script" id=1]
-[ext_resource path="res://skills/AttackEffect.tscn" type="PackedScene" id=2]
+[ext_resource path="res://skills/effects/AttackEffect.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/ui/arrow_right.png" type="Texture" id=3]
 [ext_resource path="res://assets/sfx/sfx_neutral_beastsaberspinetiger_attack_impact.wav" type="AudioStream" id=4]
 
