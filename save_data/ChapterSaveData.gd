@@ -1,6 +1,5 @@
-extends Node
-
 class_name ChapterSaveData
+extends Node
 
 
 # Chapter title

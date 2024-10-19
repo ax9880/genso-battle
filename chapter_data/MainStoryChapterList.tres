@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=6 format=2]
+
+[ext_resource path="res://chapter_data/ChapterList.gd" type="Script" id=1]
+[ext_resource path="res://chapter_data/TutorialChapterData.tres" type="Resource" id=2]
+[ext_resource path="res://chapter_data/GreavesOfClay.tres" type="Resource" id=3]
+[ext_resource path="res://chapter_data/ToOldHell.tres" type="Resource" id=4]
+[ext_resource path="res://chapter_data/ToOldHell2.tres" type="Resource" id=5]
+
+[resource]
+script = ExtResource( 1 )
+chapters = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ]

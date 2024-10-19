@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
-[ext_resource path="res://save_data/chapter_data/GreavesOfClay.tres" type="Resource" id=2]
+[ext_resource path="res://chapter_data/GreavesOfClay.tres" type="Resource" id=2]
 [ext_resource path="res://assets/ui/circle_gradient.png" type="Texture" id=3]
 [ext_resource path="res://ui/cutscenes/ScriptCutscene.gd" type="Script" id=4]
 [ext_resource path="res://ui/cutscenes/ScriptLabel.tscn" type="PackedScene" id=5]

@@ -47,7 +47,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "BattleInfo",
 "language": "GDScript",
-"path": "res://save_data/chapter_data/BattleInfo.gd"
+"path": "res://chapter_data/BattleInfo.gd"
 }, {
 "base": "Node2D",
 "class": "Board",
@@ -67,12 +67,12 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "ChapterData",
 "language": "GDScript",
-"path": "res://save_data/chapter_data/ChapterData.gd"
+"path": "res://chapter_data/ChapterData.gd"
 }, {
 "base": "Resource",
 "class": "ChapterList",
 "language": "GDScript",
-"path": "res://save_data/chapter_data/ChapterList.gd"
+"path": "res://chapter_data/ChapterList.gd"
 }, {
 "base": "Node",
 "class": "ChapterSaveData",

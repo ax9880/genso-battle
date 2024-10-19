@@ -1,6 +1,5 @@
-extends Resource
-
 class_name SaveData
+extends Resource
 
 
 const MAX_SQUAD_SIZE: int = 6
@@ -49,7 +48,7 @@ func unlock_chapter(title: String) -> void:
 
 
 func find_chapter_data_by_title(title: String) -> ChapterData:
-	var chapter_list: ChapterList = load("res://save_data/chapter_data/MainStoryChapterList.tres")
+	var chapter_list: ChapterList = load("res://chapter_data/MainStoryChapterList.tres")
 	
 	return chapter_list.find_by_title(title)
 

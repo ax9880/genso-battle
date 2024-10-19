@@ -1,6 +1,6 @@
+class_name ChapterList
 extends Resource
 
-class_name ChapterList
 
 # Array<ChapterData>
 # Collection of all the chapters that can be unlocked in the game

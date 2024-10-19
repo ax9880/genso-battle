@@ -1,13 +1,14 @@
 tool
 extends EditorPlugin
-
 # This plugin loads the chapter list and inspects each battle scene to get the
 # number of enemy types for each weapon type and the total number of enemy
 # phases. It then updates the ChapterList resource with this information.
 # When the pre-battle menu loads the chapter list, it can use the information
 # in the resource to show that in the menu.
 
-const CHAPTER_LIST_PATH := "res://save_data/chapter_data/MainStoryChapterList.tres"
+
+const CHAPTER_LIST_PATH := "res://chapter_data/MainStoryChapterList.tres"
+
 
 func _enter_tree() -> void:
 	pass

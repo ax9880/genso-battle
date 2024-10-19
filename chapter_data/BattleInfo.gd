@@ -1,6 +1,5 @@
-extends Resource
-
 class_name BattleInfo
+extends Resource
 
 
 export(int) var sword_enemy_count: int = 0

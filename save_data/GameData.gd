@@ -1,5 +1,6 @@
 extends Node
 
+
 const _UNIT_DATA_SECTION: String = "unit_data"
 const _SETTINGS_SECTION: String = "settings"
 

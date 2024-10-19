@@ -1,6 +1,5 @@
-extends Resource
-
 class_name ChapterData
+extends Resource
 
 
 export(String) var title: String
