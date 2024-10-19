@@ -1,6 +1,6 @@
+class_name Job
 extends Resource
 
-class_name Job
 
 # Unlock skills every X levels
 const _UNLOCK_SKILL_LEVEL_MULTIPLE: int = 10
