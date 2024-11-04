@@ -1,4 +1,4 @@
-extends "res://ui/cutscenes/DialogueCutscene.gd"
+extends DialogueCutscene
 
 
 func get_dialogue_json_filename() -> String:
@@ -9,7 +9,7 @@ func _skip_dialogue() -> void:
 	if not is_dialogue_skipped:
 		is_dialogue_skipped = true
 		
-		if Loader.change_scene("res://ui/cutscenes/support_selection_menu.tscn", chapter_data) != OK:
+		if Loader.change_scene("res://ui/pre_battle_menu/stack_based_pre_battle_menu.tscn", chapter_data) != OK:
 			printerr("Failed to change scene")
 
 		set_process(false)

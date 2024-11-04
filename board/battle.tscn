@@ -82,7 +82,7 @@ script = ExtResource( 7 )
 __meta__ = {
 "_edit_lock_": true
 }
-next_scene = "res://ui/cutscenes/PostBattleScriptCutscene.tscn"
+next_scene = "res://ui/cutscenes/post_battle_script_cutscene.tscn"
 enemy_phase_container_fade_time_seconds = 0.5
 view_unit_menu_packed_scene = ExtResource( 28 )
 

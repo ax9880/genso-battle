@@ -16,7 +16,7 @@ theme = ExtResource( 1 )
 script = ExtResource( 4 )
 chapter_data = ExtResource( 2 )
 text_label_packed_scene = ExtResource( 5 )
-dialogue_scene_path = "res://ui/cutscenes/DialogueCutscene.tscn"
+dialogue_scene_path = "res://ui/cutscenes/dialogue_cutscene.tscn"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0

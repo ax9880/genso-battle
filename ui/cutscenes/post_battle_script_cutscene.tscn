@@ -3,5 +3,5 @@
 [ext_resource path="res://ui/cutscenes/script_cutscene.tscn" type="PackedScene" id=1]
 
 [node name="ScriptCutscene" instance=ExtResource( 1 )]
-dialogue_scene_path = "res://ui/cutscenes/PostBattleDialogueCutscene.tscn"
+dialogue_scene_path = "res://ui/cutscenes/post_battle_dialogue_cutscene.tscn"
 title_suffix = "_POST_BATTLE"
