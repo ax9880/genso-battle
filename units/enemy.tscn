@@ -87,7 +87,6 @@ stream = ExtResource( 3 )
 
 [node name="JobTool" type="Node" parent="." index="14"]
 script = ExtResource( 13 )
-_unit_node_path = NodePath("..")
 _sprite_node_path = NodePath("../Sprite/Icon")
 _job_node_path = NodePath("../Job")
 _weapon_type_node_path = NodePath("../Control/WeaponType")
