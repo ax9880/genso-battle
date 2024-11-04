@@ -985,12 +985,6 @@ anims/death = SubResource( 10 )
 "anims/scale up and down" = SubResource( 12 )
 anims/shake = SubResource( 13 )
 
-[node name="Icon" parent="Board/EnemyPhases/Phase5/TrainingOrbling5/CanvasLayer/StatusEffectsIcons" index="0"]
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 48.0
-margin_bottom = 48.0
-
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling5/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 14 )
 
@@ -1009,12 +1003,6 @@ anims/death = SubResource( 17 )
 "anims/scale up and down" = SubResource( 19 )
 anims/shake = SubResource( 20 )
 
-[node name="Icon" parent="Board/EnemyPhases/Phase5/TrainingOrbling6/CanvasLayer/StatusEffectsIcons" index="0"]
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 48.0
-margin_bottom = 48.0
-
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling6/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 21 )
 
@@ -1032,12 +1020,6 @@ anims/death = SubResource( 24 )
 "anims/hide name" = SubResource( 25 )
 "anims/scale up and down" = SubResource( 26 )
 anims/shake = SubResource( 27 )
-
-[node name="Icon" parent="Board/EnemyPhases/Phase5/TrainingOrbling7/CanvasLayer/StatusEffectsIcons" index="0"]
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 48.0
-margin_bottom = 48.0
 
 [node name="AnimationPlayer" parent="Board/EnemyPhases/Phase5/TrainingOrbling7/CanvasLayer/ActivatedSkillMarginContainer" index="0"]
 "anims/Fade in and then out" = SubResource( 28 )
