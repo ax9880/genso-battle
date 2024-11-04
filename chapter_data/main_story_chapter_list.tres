@@ -1,11 +1,9 @@
-[gd_resource type="Resource" load_steps=6 format=2]
+[gd_resource type="Resource" load_steps=4 format=2]
 
 [ext_resource path="res://chapter_data/chapter_list.gd" type="Script" id=1]
 [ext_resource path="res://chapter_data/tutorial.tres" type="Resource" id=2]
 [ext_resource path="res://chapter_data/greaves_of_clay.tres" type="Resource" id=3]
-[ext_resource path="res://chapter_data/to_old_hell.tres" type="Resource" id=4]
-[ext_resource path="res://chapter_data/to_old_hell_2.tres" type="Resource" id=5]
 
 [resource]
 script = ExtResource( 1 )
-chapters = [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ]
+chapters = [ ExtResource( 2 ), ExtResource( 3 ) ]

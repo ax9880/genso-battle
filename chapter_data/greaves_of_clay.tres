@@ -14,5 +14,5 @@ phases_count = 5
 [resource]
 script = ExtResource( 1 )
 title = "GREAVES_OF_CLAY"
-battle_scene_path = "res://battles/introduction/GreavesOfClay.tscn"
+battle_scene_path = "res://battles/introduction/greaves_of_clay.tscn"
 battle_info = SubResource( 1 )
