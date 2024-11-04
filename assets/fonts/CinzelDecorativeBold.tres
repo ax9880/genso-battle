@@ -4,5 +4,5 @@
 font_path = "res://assets/fonts/CinzelDecorative-Bold.ttf"
 
 [resource]
-size = 48
+size = 54
 font_data = SubResource( 1 )
