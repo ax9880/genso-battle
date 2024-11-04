@@ -31,36 +31,44 @@ margin_top = 50.0
 margin_right = 670.0
 margin_bottom = 910.0
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 margin_right = 620.0
-margin_bottom = 775.0
+margin_bottom = 779.0
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+margin_right = 596.0
+margin_bottom = 939.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "illusorybread: Programming, UI, sound effects
+text = "~ Team ~
 Manwad: Writing
 Panchamon: Character art
 Saishoo: Music
+illusorybread: Programming, UI
 
+~ Additional Graphics ~
+City background: Shinjuku Station South Entrance area at night, Tokyo, Japan (2015-01-24 by calvision @Pixabay 617590)
 Florentine24 palette by Haboo
+Fonts from Google Fonts: Cinzel Decorative, EB Garamond, Exo 2
 Kenney Particles Pack
-Sounds from freesound.org: InspectorJ, Barone026, Timbre, opticaillusions, cedarstudios, Bane_Sound, Rock Savage, adambar, EminYILDIRIM, lukabea, kessir, Kinoton, Clearwavsound
+Antialiased Line2D addon copyright © 2022-present Hugo Locurcio and contributors
 
-Sounds from Duelyst
+~ Sounds ~
+Duelyst
+freesound.org: adambar, Bane_Sound, Barone026, cedarstudios, Clearwavsound, EminYILDIRIM, InspectorJ, kessir, Kinoton, lukabea, opticaillusions, Rock Savage, Timbre
+Kenney Casino Audio
 
-Additional Thanks:
-Terra Battle wiki editors & Youtube uploaders
-Mistwalker team (unofficially, of course)
-
-"
+~ Additional Thanks ~
+Terra Battle wiki & community"
 align = 1
 autowrap = true
 
 [node name="ReturnButton" parent="MarginContainer/VBoxContainer" instance=ExtResource( 3 )]
 margin_left = 190.0
-margin_top = 783.0
+margin_top = 787.0
 margin_right = 430.0
 margin_bottom = 860.0
-size_flags_horizontal = 4
 text = "RETURN"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton" to="." method="_on_ReturnButton_pressed"]
