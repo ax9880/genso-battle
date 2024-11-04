@@ -19,6 +19,9 @@ texture = ExtResource( 6 )
 [node name="WeaponType" parent="Control" index="2"]
 texture = ExtResource( 7 )
 
+[node name="UnitName" parent="CanvasLayer" index="2"]
+text = "HANIWA_GUNNER"
+
 [node name="AIController" parent="." index="13"]
 chance_to_move_after_using_skill = 0.0
 

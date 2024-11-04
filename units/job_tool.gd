@@ -2,8 +2,6 @@ tool
 extends Node
 
 
-export(NodePath) var _unit_node_path: NodePath
-
 export(NodePath) var _sprite_node_path: NodePath
 export(NodePath) var _job_node_path: NodePath
 
@@ -23,9 +21,12 @@ func _ready() -> void:
 	var sprite: Sprite = get_node(_sprite_node_path)
 	sprite.texture = job.portrait
 	
-	var unit: Unit = get_node(_unit_node_path)
-	var turn_count_label: Label = get_node(_turn_count_node_path)
-	turn_count_label.text = str(unit.turn_counter)
+	var unit: Unit = get_parent()
+	
+	if unit.turn_counter != null:
+		var turn_count_label: Label = get_node(_turn_count_node_path)
+		
+		turn_count_label.text = str(unit.turn_counter)
 	
 	var weapon_type_icon: TextureRect = get_node(_weapon_type_node_path)
 	weapon_type_icon.texture = load(Enums.WEAPON_TYPE_TEXTURES[job.stats.weapon_type])

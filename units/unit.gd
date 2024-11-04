@@ -262,8 +262,6 @@ func _load_job_textures() -> void:
 	$Sprite/Icon.texture = $Job.job.portrait
 	
 	$CanvasLayer/UnitName.text = tr($Job.job.job_name)
-	
-	$CanvasLayer/StatusEffectsIcons/AnimationPlayer.play("show icon and fade")
 
 
 ## Setters

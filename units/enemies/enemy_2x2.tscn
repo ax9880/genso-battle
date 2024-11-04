@@ -61,12 +61,6 @@ __meta__ = {
 [node name="CanvasLayer" parent="." index="10"]
 position = Vector2( 48, 48 )
 
-[node name="Icon" parent="CanvasLayer/StatusEffectsIcons" index="0"]
-margin_left = -24.0
-margin_top = -24.0
-margin_right = 24.0
-margin_bottom = 24.0
-
 [node name="ActivatedSkillMarginContainer" parent="CanvasLayer" index="1"]
 margin_left = 0.0
 margin_right = 0.0
