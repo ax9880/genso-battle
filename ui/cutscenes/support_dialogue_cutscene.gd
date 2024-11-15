@@ -1,4 +1,4 @@
-extends "res://ui/cutscenes/DialogueCutscene.gd"
+extends DialogueCutscene
 
 
 export(String) var pair: String = "YACHIE_AND_SAKI"
