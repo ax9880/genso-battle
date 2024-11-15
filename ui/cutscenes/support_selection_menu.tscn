@@ -1,11 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/cutscenes/support_selection_menu.gd" type="Script" id=2]
-[ext_resource path="res://chapter_data/to_old_hell.tres" type="Resource" id=3]
 [ext_resource path="res://ui/cutscenes/chapter_clearer.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ui/audio_button.tscn" type="PackedScene" id=6]
-[ext_resource path="res://chapter_data/to_old_hell_2.tres" type="Resource" id=7]
 [ext_resource path="res://chapter_data/greaves_of_clay.tres" type="Resource" id=8]
 
 [node name="SupportSelectionMenu" type="Control"]
@@ -13,8 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
-chapter_data = ExtResource( 3 )
-support_level_chapters = [ ExtResource( 8 ), ExtResource( 3 ), null, null ]
+support_level_chapters = [ ExtResource( 8 ), null, null, null ]
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -99,15 +96,5 @@ text = "RETURN"
 
 [node name="GreavesOfClay" parent="ChapterClearers" instance=ExtResource( 5 )]
 current_chapter_data = ExtResource( 8 )
-next_chapter_data = ExtResource( 3 )
-
-[node name="ToOldHell" parent="ChapterClearers" instance=ExtResource( 5 )]
-current_chapter_data = ExtResource( 3 )
-next_chapter_data = ExtResource( 7 )
-
-[node name="ToOldHell2" parent="ChapterClearers" instance=ExtResource( 5 )]
-current_chapter_data = ExtResource( 7 )
-next_chapter_data = ExtResource( 8 )
-levels_to_add = 1
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/VBoxContainer/ReturnButton" to="." method="_on_ReturnButton_pressed"]

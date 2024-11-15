@@ -9,7 +9,6 @@ SOUND_EFFECTS,Sound effects,Efectos de sonido
 LANGUAGE,Language,Idioma
 RETURN,Return,Regresar
 SKIP,Skip,Saltar
-CREDITS_TEXT,"TODO: Write credits","TODO: Escribir créditos"
 YACHIE,Yachie,Yachie
 SAKI,Saki,Saki
 YUUMA,Yuuma,Yuuma
@@ -41,7 +40,6 @@ CHOOSE_A_PAIR,Choose a pair.,Elige una pareja.
 YACHIE_AND_SAKI,Yachie and Saki,Yachie y Saki
 SAKI_AND_YUUMA,Saki and Yuuma,Saki y Yuuma
 YUUMA_AND_YACHIE,Yuuma and Yachie,Yuuma y Yachie
-THIS_IS_IT,"This is it for now, but please look forward to the rest of the game soon!","Eso es todo por ahora, pero por favor espera próximamente al resto del juego."
 TUTORIAL,Tutorial,Tutorial
 TUTORIAL_SWAP_PROMPT,"All but one units have been disabled.
 
@@ -80,7 +78,6 @@ VERTICAL_STAB,Vertical stab,Puñalada vertical
 CIRCLE_SLASH,Circle slash,Corte circular
 POISONED_DAGGER,Poisoned dagger,Daga envenenada
 REGENERATE,Regenerate,Regenerar
-HANIWA_WARRIOR,Haniwa Warrior,Guerrero Haniwa
 HANIWA_ORBLING,Haniwa Orbling,Orbe Haniwa
 DRACORIN,Dracorin,Dracorín
 TRAINING_ORBLING,Training orbling,Orbe de entrenamiento
