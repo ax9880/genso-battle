@@ -1049,7 +1049,10 @@ func _filter_pincers_with_active_unit(pincers: Array, unit: Unit) -> Array:
 	var filtered_pincers := []
 	
 	for pincer in pincers:
-		if pincer.pincering_units.find(unit) != -1 and not _has_executed_pincer_before(pincer):
+		# Also check that the active unit can actually act this turn to avoid
+		# pincering units when none of the enemies can act, for example when the
+		# player is between two enemies and does not move
+		if pincer.pincering_units.find(unit) != -1 and not _has_executed_pincer_before(pincer) and unit.turn_counter == 0:
 			filtered_pincers.push_back(pincer)
 	
 	return filtered_pincers
