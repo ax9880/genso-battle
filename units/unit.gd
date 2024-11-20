@@ -412,7 +412,7 @@ func activate_skills() -> Array:
 
 
 func play_skill_activation_animation(activated_skills: Array, layer_z_index: int) -> void:
-	$CanvasLayer/ActivatedSkillMarginContainer.play(activated_skills)
+	$CanvasLayer/ActivatedSkillMarginContainer.play(activated_skills, position)
 	$CanvasLayer.z_index = layer_z_index
 	
 	$Sound/SkillActivationAudio.play()
