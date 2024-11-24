@@ -21,7 +21,6 @@ turn_counter = 2
 
 [node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="1" instance=ExtResource( 2 )]
 position = Vector2( 250, 253 )
-turn_counter = 2
 
 [node name="Phase2" parent="Board/EnemyPhases" index="1"]
 visible = false
@@ -31,6 +30,7 @@ position = Vector2( 153, 354 )
 
 [node name="HaniwaOrbling4" parent="Board/EnemyPhases/Phase2" index="1" instance=ExtResource( 2 )]
 position = Vector2( 442, 352 )
+turn_counter = 2
 
 [node name="HaniwaOrbling5" parent="Board/EnemyPhases/Phase2" index="2" instance=ExtResource( 2 )]
 position = Vector2( 457, 148 )
@@ -53,7 +53,6 @@ turn_counter = 2
 
 [node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase3" index="3" instance=ExtResource( 2 )]
 position = Vector2( 555, 552 )
-turn_counter = 2
 
 [node name="Phase4" parent="Board/EnemyPhases" index="3"]
 visible = false
@@ -64,7 +63,6 @@ turn_counter = 2
 
 [node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase4" index="1" instance=ExtResource( 2 )]
 position = Vector2( 545, 47 )
-turn_counter = 2
 
 [node name="Dracorin2" parent="Board/EnemyPhases/Phase4" index="2" instance=ExtResource( 3 )]
 position = Vector2( 259, 246 )
@@ -73,20 +71,20 @@ position = Vector2( 259, 246 )
 position = Vector2( 149, 152 )
 turn_counter = 2
 
-[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase5" index="1" instance=ExtResource( 2 )]
-position = Vector2( 253, 744 )
-turn_counter = 3
+[node name="Dracorin5" parent="Board/EnemyPhases/Phase5" index="1" instance=ExtResource( 3 )]
+position = Vector2( 347, 245 )
 
-[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase5" index="2" instance=ExtResource( 2 )]
-position = Vector2( 341, 656 )
-turn_counter = 2
+[node name="Dracorin4" parent="Board/EnemyPhases/Phase5" index="2" instance=ExtResource( 3 )]
+position = Vector2( 256, 357 )
 
 [node name="HaniwaOrbling3" parent="Board/EnemyPhases/Phase5" index="3" instance=ExtResource( 2 )]
 position = Vector2( 253, 566 )
 turn_counter = 2
 
-[node name="Dracorin4" parent="Board/EnemyPhases/Phase5" index="4" instance=ExtResource( 3 )]
-position = Vector2( 256, 357 )
+[node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase5" index="4" instance=ExtResource( 2 )]
+position = Vector2( 341, 656 )
+turn_counter = 2
 
-[node name="Dracorin5" parent="Board/EnemyPhases/Phase5" index="5" instance=ExtResource( 3 )]
-position = Vector2( 347, 245 )
+[node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase5" index="5" instance=ExtResource( 2 )]
+position = Vector2( 253, 744 )
+turn_counter = 3
