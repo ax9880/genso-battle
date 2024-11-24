@@ -6,12 +6,15 @@ signal unit_selected
 signal unit_dropped_on_unit(target_unit_item, dropped_unit_item)
 signal unit_double_clicked()
 
+var job: Job
+
 var _is_draggable: bool = false
 
 onready var _name_label: Label = $VBoxContainer/HBoxContainer/NameLabel
 
 
-func initialize(job: Job, is_draggable: bool = false, compare_job: Job = null) -> void:
+func initialize(_job: Job, is_draggable: bool = false, compare_job: Job = null) -> void:
+	job = _job
 	_is_draggable = is_draggable
 	
 	_name_label.text = tr(job.job_name)
