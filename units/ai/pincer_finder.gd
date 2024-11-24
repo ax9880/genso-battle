@@ -30,22 +30,9 @@ class PathLengthAndUnitsPinceredSorter:
 # Returns Array<PossiblePincer> with possible cells were the unit can navigate
 # to to perform a pincer, and pincers it can coordinate with another ally
 func find_possible_pincers(unit: Unit, grid: Grid, allies: Array, enemies: Array, navigation_graph: Dictionary, allies_queue: Array) -> Array:
-	# TODO: Remove timing logs
-	var start = OS.get_ticks_msec()
-	
 	var reachable_pincers: Array = _find_reachable_possible_pincers(unit, grid, navigation_graph, allies)
 	
-	var end = OS.get_ticks_msec()
-	
-	print("reachable_pincers %f" % [end - start])
-	
-	start = OS.get_ticks_msec()
-	
-	var coordinated_pincers: Array = _find_reachable_coordinated_pincers(unit, grid, enemies, navigation_graph, allies_queue)
-	
-	end = OS.get_ticks_msec()
-	
-	print("coordinated_pincers %f" % [end - start])
+	var coordinated_pincers: Array = _find_reachable_coordinated_pincers(unit, grid, enemies, navigation_graph, allies_queue)	
 	
 	reachable_pincers.append_array(coordinated_pincers)
 	
