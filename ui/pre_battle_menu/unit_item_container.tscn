@@ -58,6 +58,8 @@ custom_constants/separation = 16
 script = ExtResource( 6 )
 
 [node name="UnitIcon" parent="." instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_right = 100.0
 margin_bottom = 101.0
 
@@ -89,7 +91,6 @@ margin_bottom = 29.0
 [node name="NameLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
 margin_right = 130.0
 margin_bottom = 29.0
-custom_colors/font_color = Color( 1, 0.976471, 0.443137, 1 )
 text = "UNIT_NAME"
 
 [node name="UnitStatsContainer" parent="VBoxContainer" instance=ExtResource( 2 )]
