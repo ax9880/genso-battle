@@ -19,12 +19,6 @@ texture = ExtResource( 6 )
 [node name="WeaponType" parent="Control" index="2"]
 texture = ExtResource( 7 )
 
-[node name="Icon" parent="CanvasLayer/StatusEffectsIcons" index="0"]
-margin_left = -24.0
-margin_top = -24.0
-margin_right = 24.0
-margin_bottom = 24.0
-
 [node name="UnitName" parent="CanvasLayer" index="2"]
 text = "DRACORIN"
 
@@ -34,12 +28,13 @@ chance_to_move_after_using_skill = 0.0
 [node name="Action" parent="AIController" index="1" instance=ExtResource( 3 )]
 behavior = 1
 skill = ExtResource( 4 )
+preference = 1
 
 [node name="Condition" parent="AIController/Action" index="0" instance=ExtResource( 5 )]
 
 [node name="Action2" parent="AIController" index="2" instance=ExtResource( 3 )]
 behavior = 2
-weight = 3
+weight = 2
 
 [node name="Condition2" parent="AIController/Action2" index="0" instance=ExtResource( 5 )]
 turn_steps = 2

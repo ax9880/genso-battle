@@ -15,6 +15,12 @@ job = ExtResource( 2 )
 [node name="Icon" parent="Sprite" index="1"]
 texture = ExtResource( 6 )
 
+[node name="Icon" parent="CanvasLayer/StatusEffectsIcons" index="0"]
+margin_left = -24.0
+margin_top = -24.0
+margin_right = 24.0
+margin_bottom = 24.0
+
 [node name="UnitName" parent="CanvasLayer" index="2"]
 text = "HANIWA_ORBLING"
 
