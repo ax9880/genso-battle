@@ -16,32 +16,12 @@ margin_bottom = 480.0
 
 [node name="Enemy2x2" parent="Board/EnemyPhases/Phase1" index="0" instance=ExtResource( 2 )]
 position = Vector2( 446, 551 )
-velocity_pixels_per_second = 10.0
-snap_velocity_pixels_per_second = 200.0
-max_velocity_pixels_per_second = 2048.0
-kp = 1.4
-is_click_to_drag = true
-level = 10
 
 [node name="HaniwaOrbling" parent="Board/EnemyPhases/Phase1" index="1" instance=ExtResource( 1 )]
 position = Vector2( 156, 257 )
-size = 0
-velocity_pixels_per_second = 10.0
-snap_velocity_pixels_per_second = 200.0
-max_velocity_pixels_per_second = 2048.0
-kp = 1.4
-is_click_to_drag = true
-level = 10
 
 [node name="HaniwaOrbling2" parent="Board/EnemyPhases/Phase1" index="2" instance=ExtResource( 1 )]
 position = Vector2( 336, 255 )
-size = 0
-velocity_pixels_per_second = 10.0
-snap_velocity_pixels_per_second = 200.0
-max_velocity_pixels_per_second = 2048.0
-kp = 1.4
-is_click_to_drag = true
-level = 10
 
 [node name="Unit" parent="Board/PlayerUnits" index="0"]
 position = Vector2( 350, 145 )
