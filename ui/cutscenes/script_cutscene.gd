@@ -150,6 +150,9 @@ func _evaluate_input(event: InputEvent) -> void:
 
 
 func _on_press_ui_select() -> void:
+	if _current_label == null:
+		return
+	
 	if _current_label.percent_visible >= 1:
 		_advance_to_next_paragraph()
 	else:

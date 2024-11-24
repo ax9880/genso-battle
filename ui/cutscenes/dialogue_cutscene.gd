@@ -135,6 +135,9 @@ func _evaluate_input(event: InputEvent) -> void:
 
 
 func _on_press_ui_select() -> void:
+	if _current_dialogue_message_container == null:
+		return
+	
 	if _current_dialogue_message_container.is_text_fully_visible():
 		_advance_to_next_line()
 	else:
