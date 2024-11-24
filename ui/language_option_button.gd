@@ -8,10 +8,10 @@ const LANGUAGE_ES_INDEX: int = 1
 func _ready() -> void:
 	var locale = TranslationServer.get_locale()
 	
-	if locale == "en":
-		select(LANGUAGE_EN_INDEX)
-	elif locale == "es":
+	if locale.begins_with("es"):
 		select(LANGUAGE_ES_INDEX)
+	else:
+		select(LANGUAGE_EN_INDEX)
 
 
 func _on_LanguageOptionButton_item_selected(index: int) -> void:
