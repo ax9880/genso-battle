@@ -93,6 +93,8 @@ func _add_page(key: String) -> void:
 
 
 func _start_showing_text() -> void:
+	$MarginContainer/VBoxContainer/SkipButton.grab_focus()
+	
 	_set_parameters_from_chapter_data()
 	
 	_show_next_paragraph()

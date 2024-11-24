@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://chapter_data/greaves_of_clay.tres" type="Resource" id=2]
@@ -6,7 +6,6 @@
 [ext_resource path="res://ui/cutscenes/script_cutscene.gd" type="Script" id=4]
 [ext_resource path="res://ui/cutscenes/script_label.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ui/auto_fading_audio_stream_player.tscn" type="PackedScene" id=6]
-[ext_resource path="res://assets/music/Unlocated_Hell.mp3" type="AudioStream" id=7]
 [ext_resource path="res://ui/audio_button.tscn" type="PackedScene" id=8]
 
 [node name="ScriptCutscene" type="Control"]
@@ -71,6 +70,5 @@ size_flags_horizontal = 8
 text = "SKIP"
 
 [node name="AudioStreamPlayer" parent="." instance=ExtResource( 6 )]
-stream = ExtResource( 7 )
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_SkipButton_pressed"]
