@@ -6,11 +6,11 @@
 script = ExtResource( 1 )
 unit_name = "DRACORIN"
 unit_type = "HANIWA"
-health_percentage = 0.648
-attack_percentage = 0.879707536808951
-defense_percentage = 0.6908
-spiritual_attack_percentage = 0.0195490563735322
-spiritual_defense_percentage = 1.91888888888889
+health_percentage = 1.08
+attack_percentage = 1.44551
+defense_percentage = 0.921067
+spiritual_attack_percentage = 0.0321224
+spiritual_defense_percentage = 2.87833
 status_ailment_vulnerability = 1
 status_ailment_vulnerabilities = {
 }
