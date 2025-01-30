@@ -11,13 +11,13 @@ attack_percentage = 1.3
 defense_percentage = 1.0
 spiritual_attack_percentage = 0.95
 spiritual_defense_percentage = 0.85
-status_ailment_vulnerability = 1
+status_ailment_vulnerability = 1.0
 status_ailment_vulnerabilities = {
 }
-same_attribute_resistance = 0
+same_attribute_resistance = 0.0
 attribute = 0
 weapon_type = 0
 max_turn_counter = 1
-can_randomize_turn_counter = 0
+can_randomize_turn_counter = false
 movement_range = 5
 skill_activation_rate_modifier = 0.0

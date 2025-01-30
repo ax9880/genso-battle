@@ -55,6 +55,12 @@ export(int, 0, 15, 1) var movement_range: int = 5
 # > 0 -> skills are activated more often
 export(float, -1, 1, 0.1) var skill_activation_rate_modifier: float = 0.0
 
+# These stats are calculated from the percentages above and the unit level,
+# using a linear growth per level. The percentages represent the stats differences
+# in relation to a unit with _DEFAULT_STAT in all stats and _DEFAULT_HP. This
+# allows way you can balance player and enemy units around a default "standard" unit
+# (e.g 110% stronger than base unit, 50% less defense than base unit, kills base unit
+# in X turns, etc).
 var health: int = 0
 
 var attack: int = 0
