@@ -15,7 +15,7 @@ The story text belongs to [Manwad](https://minmaximalistgames.itch.io/).
 - [Manwad](https://minmaximalistgames.itch.io/): Writing.
 - [Panchamon](https://www.instagram.com/pancha_mon/): Character art.
 - [Saishoo](https://saishoo.itch.io/): Music.
-- [illusorybread / ax9880](https://illusorybread.itch.io/): Programming, UI
+- [illusorybread / ax9880](https://illusorybread.itch.io/): Programming, UI, additional graphics.
 
 ### Graphics
 
@@ -39,7 +39,7 @@ All other original graphics are licensed under the [CC-BY-4.0](https://creativec
 
 ### Sounds and music
 
-The following assets and belong to [Saishoo](https://saishoo.itch.io/) and are not allowed for reuse or redistribution:
+The following assets belong to [Saishoo](https://saishoo.itch.io/) and are not allowed for reuse or redistribution:
 - `Unlocated_Hell.mp3`
 
 Sounds:

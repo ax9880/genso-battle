@@ -19,6 +19,8 @@ data_*/
 *.pck
 *.zip
 
+*.png~
+
 web_build/
 
 # Ignore save files except debug save files for convenience
